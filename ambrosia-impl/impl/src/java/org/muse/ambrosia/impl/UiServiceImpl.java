@@ -23,6 +23,8 @@ package org.muse.ambrosia.impl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
@@ -90,6 +92,7 @@ import org.muse.ambrosia.api.UiService;
 import org.muse.ambrosia.api.UrlPropertyReference;
 import org.muse.ambrosia.api.UserInfoPropertyReference;
 import org.muse.ambrosia.api.Value;
+import org.muse.ambrosia.api.View;
 import org.sakaiproject.i18n.InternationalizedMessages;
 import org.sakaiproject.tool.api.ActiveTool;
 import org.sakaiproject.tool.api.SessionManager;
@@ -829,5 +832,28 @@ public class UiServiceImpl implements UiService
 	{
 		context.setUi(ui);
 		ui.render(context, null);
+	}
+
+	/*************************************************************************************************************************************************
+	 * View methods
+	 ************************************************************************************************************************************************/
+
+	/** Registered views - keyed by toolId-viewId. */
+	protected Map<String, View> m_views = new HashMap<String, View>();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void registerView(View view, String toolId)
+	{
+		m_views.put(toolId + "-" + view.getId(), view);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public View getView(String viewId, String toolId)
+	{
+		return m_views.get(toolId + "-" + viewId);
 	}
 }

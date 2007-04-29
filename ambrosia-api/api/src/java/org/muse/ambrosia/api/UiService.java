@@ -522,4 +522,29 @@ public interface UiService
 	 *        The context.
 	 */
 	void render(Controller ui, Context context);
+
+	/*************************************************************************************************************************************************
+	 * View methods
+	 ************************************************************************************************************************************************/
+
+	/**
+	 * Register a view in a tool.
+	 * 
+	 * @param view
+	 *        The view.
+	 * @param toolId
+	 *        The tool id.
+	 */
+	void registerView(View view, String toolId);
+
+	/**
+	 * Find the view with this id in this tool.
+	 * 
+	 * @param viewId
+	 *        The view id.
+	 * @param toolId
+	 *        The tool id.
+	 * @return The View, or null if none found.
+	 */
+	View getView(String viewId, String toolId);
 }
