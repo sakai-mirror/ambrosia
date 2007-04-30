@@ -22,6 +22,7 @@
 package org.muse.ambrosia.api;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -294,6 +295,15 @@ public interface UiService
 	 * @return a new Interface
 	 */
 	Interface newInterface();
+
+	/**
+	 * Construct a new Interface from XML in this stream.
+	 * 
+	 * @param in
+	 *        The XML input stream.
+	 * @return a new Interface
+	 */
+	Interface newInterface(InputStream in);
 
 	/**
 	 * Construct a new Match

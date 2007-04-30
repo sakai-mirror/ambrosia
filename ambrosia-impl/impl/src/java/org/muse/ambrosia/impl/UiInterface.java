@@ -31,6 +31,7 @@ import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.UiService;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiInterface is the top most container for each user interface.<br />
@@ -47,6 +48,50 @@ public class UiInterface extends UiContainer implements Interface
 
 	/** The message selector and properties for the title. */
 	protected Message title = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiInterface()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiInterface(UiServiceImpl service, Element xml)
+	{
+		// do the container thing
+		super(service, xml);
+
+		// short form for title - attribute "title" as the selector
+		String title = xml.getAttribute("title");
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
+		// short form for header - attribute "header" as the selector
+		String header = xml.getAttribute("header");
+		if (header != null)
+		{
+			setHeader(header);
+		}
+
+		String noAutoComplete = xml.getAttribute("noAutoComplete");
+		if (noAutoComplete != null)
+		{
+			this.setNoAutoComplete();
+		}
+
+		// long form (child node) for title
+		// long form (child node) for header
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -83,7 +128,8 @@ public class UiInterface extends UiContainer implements Interface
 			}
 
 			// our js
-			response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/ambrosia_library/js/ambrosia_" + UiService.VERSION + ".js\"></script>\n");
+			response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/ambrosia_library/js/ambrosia_" + UiService.VERSION
+					+ ".js\"></script>\n");
 
 			// our css
 			response.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"/ambrosia_library/skin/ambrosia_" + UiService.VERSION + ".css\" />");

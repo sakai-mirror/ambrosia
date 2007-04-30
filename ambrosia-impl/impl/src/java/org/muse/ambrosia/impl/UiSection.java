@@ -30,6 +30,7 @@ import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Section;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiSection is a container within a user interface. Each interface should have one section, and may have many. Sections should not be nested.<br />
@@ -60,6 +61,42 @@ public class UiSection extends UiContainer implements Section
 
 	/** The include decision array for the itle. */
 	protected Decision[] titleIncluded = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiSection()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiSection(UiServiceImpl service, Element xml)
+	{
+		// do the container thing
+		super(service, xml);
+
+		// parse anchor
+		// parse entity included
+		// parse focus
+		// parse iterator
+		// parse title
+		// parse titleHighlighted
+		// parse titleIncluded
+
+		// short form for title - attribute "title" as the selector
+		String title = xml.getAttribute("title");
+		if (title != null)
+		{
+			setTitle(title);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

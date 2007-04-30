@@ -56,6 +56,12 @@
 			<version>2.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>${sakai.spring.groupId}</groupId>
+			<artifactId>${sakai.spring.artifactId}</artifactId>
+			<version>${sakai.spring.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -21,30 +21,40 @@
 
 package org.muse.ambrosia.util;
 
+import java.io.IOException;
+
+import org.muse.ambrosia.api.Controller;
 import org.muse.ambrosia.api.UiService;
 import org.muse.ambrosia.api.View;
 import org.sakaiproject.i18n.InternationalizedMessages;
 import org.sakaiproject.util.ResourceLoader;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * A View
  */
 public abstract class ViewImpl implements View
 {
-	/** ui service reference. */
-	protected UiService ui = null;
-
-	/** The tool id. */
-	protected String toolId = null;
-
-	/** The view id. */
-	protected String viewId = null;
+	/** Messages bundle name. */
+	protected String bundle = null;
 
 	/** Localized messages. */
 	protected InternationalizedMessages messages = null;
 
-	/** messages bundle name. */
-	protected String bundle = null;
+	/** The tool id. */
+	protected String toolId = null;
+
+	/** The UI. */
+	protected Controller ui = null;
+
+	/** ui service reference. */
+	protected UiService uiService = null;
+
+	/** The view id. */
+	protected String viewId = null;
+
+	/** The view declaration xml path. */
+	protected String viewPath = null;
 
 	/**
 	 * {@inheritDoc}
@@ -68,10 +78,23 @@ public abstract class ViewImpl implements View
 	public void init()
 	{
 		// register
-		this.ui.registerView(this, this.toolId);
+		this.uiService.registerView(this, this.toolId);
 
 		// messages
 		this.messages = new ResourceLoader(this.bundle);
+
+		// interface from XML in the class path
+		if (viewPath != null)
+		{
+			try
+			{
+				ClassPathResource rsrc = new ClassPathResource(viewPath);
+				this.ui = uiService.newInterface(rsrc.getInputStream());
+			}
+			catch (IOException e)
+			{
+			}
+		}
 	}
 
 	/**
@@ -104,11 +127,11 @@ public abstract class ViewImpl implements View
 	 */
 	public void setUi(UiService service)
 	{
-		this.ui = service;
+		this.uiService = service;
 	}
 
 	/**
-	 * Set the vew id.
+	 * Set the view id.
 	 * 
 	 * @param id
 	 *        The view id.
@@ -116,5 +139,16 @@ public abstract class ViewImpl implements View
 	public void setViewId(String id)
 	{
 		this.viewId = id;
+	}
+
+	/**
+	 * Set the view declaration xml path.
+	 * 
+	 * @param path
+	 *        The view declaration xml path.
+	 */
+	public void setViewPath(String path)
+	{
+		this.viewPath = path;
 	}
 }

@@ -27,6 +27,9 @@ import java.util.List;
 import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Controller;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiContainer is the base class of all UiControllers that contain collections of other controllers.<br />
@@ -37,6 +40,61 @@ public class UiContainer extends UiController implements Container
 {
 	/** Controllers contained in this container. */
 	protected List<Controller> contained = new ArrayList<Controller>();
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiContainer()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        The UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiContainer(UiServiceImpl service, Element xml)
+	{
+		// find the first container child node
+		Element container = null;
+		NodeList containers = xml.getChildNodes();
+		for (int i = 0; i < containers.getLength(); i++)
+		{
+			Node node = containers.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element element = (Element) node;
+				if (element.getTagName().equals("container"))
+				{
+					container = element;
+					break;
+				}
+			}
+		}
+
+		if (container != null)
+		{
+			NodeList contained = container.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element controllerXml = (Element) node;
+
+					// create a controller from each node in the container
+					Controller c = service.parseController(controllerXml);
+					if (c != null)
+					{
+						add(c);
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

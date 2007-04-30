@@ -27,6 +27,7 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Text;
+import org.w3c.dom.Element;
 
 /**
  * UiText implements Text.
@@ -35,6 +36,39 @@ public class UiText extends UiController implements Text
 {
 	/** The message that will provide text to display. */
 	protected Message message = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiText()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiText(UiServiceImpl service, Element xml)
+	{
+		// short for for text - attribute "selector" for the selector, and attribute "ref" for a single reference.
+		String selector = xml.getAttribute("selector");
+		String ref = xml.getAttribute("ref");
+		if ((selector != null) || (ref != null))
+		{
+			if (ref == null)
+			{
+				setText(selector);
+			}
+			else
+			{
+				setText(selector, service.newPropertyReference().setReference(ref));
+			}
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

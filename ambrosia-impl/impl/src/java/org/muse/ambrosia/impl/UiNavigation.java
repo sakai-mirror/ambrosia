@@ -30,6 +30,7 @@ import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiNavigation presents a navigation control (button or text link) to the user. The result of the press is a navigation to some tool destination.
@@ -83,6 +84,52 @@ public class UiNavigation extends UiController implements Navigation
 
 	/** Decision to force form validation when pressed. */
 	protected Decision validationDecision = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiNavigation()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiNavigation(UiServiceImpl service, Element xml)
+	{
+		// short form for title - attribute "title" as the selector
+		String title = xml.getAttribute("title");
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
+		// short form for style - attribute "style" as BUTTON or LINK
+		String style = xml.getAttribute("style");
+		if (style != null)
+		{
+			setStyle("BUTTON".equals(style) ? Style.button : Style.link);
+		}
+
+		// short form for destination - attribute "destination" as the destination
+		String destination = xml.getAttribute("destination");
+		if (destination != null)
+		{
+			setDestination(service.newDestination().setDestination(destination));
+		}
+
+		// short form for submit
+		String submit = xml.getAttribute("submit");
+		if ((submit != null) && ("TRUE".equals(submit)))
+		{
+			setSubmit();
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

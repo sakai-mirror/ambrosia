@@ -28,6 +28,7 @@ import org.muse.ambrosia.api.Controller;
 import org.muse.ambrosia.api.Divider;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.NavigationBar;
+import org.w3c.dom.Element;
 
 /**
  * UiNavigationBar implements NavigationBar
@@ -36,6 +37,27 @@ public class UiNavigationBar extends UiSection implements NavigationBar
 {
 	/** The width (in some css value such as "60em" or "100px" or "90%" etc.) */
 	protected String width = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiNavigationBar()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiNavigationBar(UiServiceImpl service, Element xml)
+	{
+		// do the container thing
+		super(service, xml);
+	}
 
 	/**
 	 * {@inheritDoc}

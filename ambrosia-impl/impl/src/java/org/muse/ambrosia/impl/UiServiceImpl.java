@@ -22,6 +22,7 @@
 package org.muse.ambrosia.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -100,6 +101,11 @@ import org.sakaiproject.tool.api.Tool;
 import org.sakaiproject.tool.api.ToolSession;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Web;
+import org.sakaiproject.util.Xml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * <p>
@@ -642,6 +648,54 @@ public class UiServiceImpl implements UiService
 	public Value newValue()
 	{
 		return new UiValue();
+	}
+
+	/*************************************************************************************************************************************************
+	 * Interface loading from XML
+	 ************************************************************************************************************************************************/
+
+	/**
+	 * Check the element's tag for a known Controller tag, and create the controller from the tag.
+	 * 
+	 * @param xml
+	 *        The element.
+	 */
+	protected Controller parseController(Element xml)
+	{
+		if (xml.getTagName().equals("instructions")) return new UiInstructions(this, xml);
+		if (xml.getTagName().equals("interface")) return new UiInterface(this, xml);
+		if (xml.getTagName().equals("navigation")) return new UiNavigation(this, xml);
+		if (xml.getTagName().equals("navigationBar")) return new UiNavigationBar(this, xml);
+		if (xml.getTagName().equals("section")) return new UiSection(this, xml);
+		if (xml.getTagName().equals("text")) return new UiText(this, xml);
+
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Interface newInterface(InputStream in)
+	{
+		UiInterface iface = null;
+		Document doc = Xml.readDocumentFromStream(in);
+
+		// verify the don has a single root element
+		if ((doc != null) && (doc.hasChildNodes()) && (doc.getChildNodes().getLength() == 1)
+				&& (doc.getFirstChild().getNodeType() == Node.ELEMENT_NODE) && (((Element) doc.getFirstChild()).getTagName().equals("interface")))
+		{
+			// build the interface from this element
+			iface = new UiInterface(this, (Element) doc.getFirstChild());
+		}
+
+		// else we have an invalid
+		else
+		{
+			M_log.warn("newInterface: stream xml root element not \"interface\"");
+			iface = new UiInterface();
+		}
+
+		return iface;
 	}
 
 	/*************************************************************************************************************************************************

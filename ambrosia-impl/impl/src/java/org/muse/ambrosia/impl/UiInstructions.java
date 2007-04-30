@@ -25,12 +25,33 @@ import java.io.PrintWriter;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Instructions;
+import org.w3c.dom.Element;
 
 /**
  * UiInstructions implements Instructions.
  */
 public class UiInstructions extends UiText implements Instructions
 {
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiInstructions()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiInstructions(UiServiceImpl service, Element xml)
+	{
+		super(service, xml);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
