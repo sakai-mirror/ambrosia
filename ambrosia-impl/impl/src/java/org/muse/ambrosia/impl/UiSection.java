@@ -45,7 +45,7 @@ public class UiSection extends UiContainer implements Section
 	protected PropertyReference focusReference = null;
 
 	/** The inclusion decision for each entity. */
-	protected Decision included = null;
+	protected Decision entityIncluded = null;
 
 	/** The context name for the current iteration object. */
 	protected String iteratorName = null;
@@ -134,16 +134,17 @@ public class UiSection extends UiContainer implements Section
 			{
 				index++;
 
-				// check if this entity is to be included
-				if ((this.included != null) && (!this.included.decide(context, o))) continue;
-
 				// place the context item
 				if (this.iteratorName != null)
 				{
 					context.put(this.iteratorName, o, this.iteratorReference.getEncoding(context, o, index));
 				}
 
-				renderContents(context, o);
+				// check if this entity is to be included
+				if ((this.entityIncluded == null) || (this.entityIncluded.decide(context, o)))
+				{
+					renderContents(context, o);
+				}
 
 				// remove the context item
 				if (this.iteratorName != null)
@@ -164,16 +165,17 @@ public class UiSection extends UiContainer implements Section
 			{
 				index++;
 
-				// check if this entity is to be included
-				if ((this.included != null) && (!this.included.decide(context, o))) continue;
-
 				// place the context item
 				if (this.iteratorName != null)
 				{
 					context.put(this.iteratorName, o, this.iteratorReference.getEncoding(context, o, index));
 				}
 
-				renderContents(context, o);
+				// check if this entity is to be included
+				if ((this.entityIncluded == null) || (this.entityIncluded.decide(context, o)))
+				{
+					renderContents(context, o);
+				}
 
 				// remove the context item
 				if (this.iteratorName != null)
@@ -203,7 +205,7 @@ public class UiSection extends UiContainer implements Section
 	 */
 	public Section setEntityIncluded(Decision inclusionDecision)
 	{
-		this.included = inclusionDecision;
+		this.entityIncluded = inclusionDecision;
 		return this;
 	}
 
