@@ -50,7 +50,7 @@ public class UiDecision implements Decision
 		// delegte if setup to do so
 		if (this.delegate != null)
 		{
-			decision = delegate.decide(this, context, focus);
+			decision = delegateDecision(context, focus);
 		}
 		else
 		{
@@ -97,6 +97,28 @@ public class UiDecision implements Decision
 	{
 		this.reversed = true;
 		return this;
+	}
+
+	/**
+	 * Delegate the decision.
+	 * 
+	 * @param context
+	 *        The Context.
+	 * @param focus
+	 *        The entity object focus.
+	 * @return the decision.
+	 */
+	protected boolean delegateDecision(Context context, Object focus)
+	{
+		Object value = focus;
+
+		// read the property as an object, use it as focus if defined and found
+		if (this.propertyReference != null)
+		{
+			value = this.propertyReference.readObject(context, focus);
+		}
+
+		return delegate.decide(this, context, value);
 	}
 
 	/**
