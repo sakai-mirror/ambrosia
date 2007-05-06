@@ -24,11 +24,15 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 
 import org.muse.ambrosia.api.Context;
+import org.muse.ambrosia.api.Controller;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.TextEdit;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiTextEdit presents a text input for the user to edit.
@@ -61,6 +65,71 @@ public class UiTextEdit extends UiController implements TextEdit
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiTextEdit()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiTextEdit(UiServiceImpl service, Element xml)
+	{
+
+		// parse onEmptyAlert
+		// parse focus decision
+		// parse propert (model)
+		// parse read only
+
+		// short form for title - attribute "title" as the selector
+		String title = xml.getAttribute("title");
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
+		// size
+		try
+		{
+			int rows = Integer.parseInt(xml.getAttribute("rows"));
+			int cols = Integer.parseInt(xml.getAttribute("cols"));
+			setSize(rows, cols);
+		}
+		catch (Throwable ignore)
+		{
+		}
+
+		NodeList settings = xml.getChildNodes();
+		for (int i = 0; i < settings.getLength(); i++)
+		{
+			Node node = settings.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element settingsXml = (Element) node;
+				
+				// model
+				if (settingsXml.getTagName().equals("model"))
+				{
+					String ref = settingsXml.getAttribute("ref");
+					if (ref != null)
+					{
+						PropertyReference pRef = service.newPropertyReference().setReference(ref);
+						setProperty(pRef);
+					}
+				}
+
+			}
+		}
+
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -154,8 +223,8 @@ public class UiTextEdit extends UiController implements TextEdit
 				response.println("</label>");
 			}
 
-			response.println("<textarea " + (readOnly ? " class=\"ambrosiaTextEditDisabled\"" : "") + "id=\"" + id + "\" name=\"" + id + "\" cols=" + Integer.toString(numCols) + " rows="
-					+ Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
+			response.println("<textarea " + (readOnly ? " class=\"ambrosiaTextEditDisabled\"" : "") + "id=\"" + id + "\" name=\"" + id + "\" cols="
+					+ Integer.toString(numCols) + " rows=" + Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
 			response.println("</div>");

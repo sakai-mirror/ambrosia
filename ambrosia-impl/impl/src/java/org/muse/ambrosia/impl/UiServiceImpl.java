@@ -668,6 +668,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("navigationBar")) return new UiNavigationBar(this, xml);
 		if (xml.getTagName().equals("section")) return new UiSection(this, xml);
 		if (xml.getTagName().equals("text")) return new UiText(this, xml);
+		if (xml.getTagName().equals("textEdit")) return new UiTextEdit(this, xml);
 
 		return null;
 	}
