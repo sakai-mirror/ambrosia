@@ -27,6 +27,7 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Text;
+import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -55,8 +56,8 @@ public class UiText extends UiController implements Text
 	protected UiText(UiServiceImpl service, Element xml)
 	{
 		// short for for text - attribute "selector" for the selector, and attribute "ref" for a single reference.
-		String selector = xml.getAttribute("selector");
-		String ref = xml.getAttribute("ref");
+		String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
+		String ref = StringUtil.trimToNull(xml.getAttribute("ref"));
 		if ((selector != null) || (ref != null))
 		{
 			if (ref == null)

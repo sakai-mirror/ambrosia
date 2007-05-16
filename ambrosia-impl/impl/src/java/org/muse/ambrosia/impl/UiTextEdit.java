@@ -29,6 +29,7 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.TextEdit;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -90,7 +91,7 @@ public class UiTextEdit extends UiController implements TextEdit
 		// parse read only
 
 		// short form for title - attribute "title" as the selector
-		String title = xml.getAttribute("title");
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
 		if (title != null)
 		{
 			setTitle(title);
@@ -118,7 +119,7 @@ public class UiTextEdit extends UiController implements TextEdit
 				// model
 				if (settingsXml.getTagName().equals("model"))
 				{
-					String ref = settingsXml.getAttribute("ref");
+					String ref = StringUtil.trimToNull(settingsXml.getAttribute("ref"));
 					if (ref != null)
 					{
 						PropertyReference pRef = service.newPropertyReference().setReference(ref);

@@ -29,6 +29,7 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Section;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
@@ -91,7 +92,7 @@ public class UiSection extends UiContainer implements Section
 		// parse titleIncluded
 
 		// short form for title - attribute "title" as the selector
-		String title = xml.getAttribute("title");
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
 		if (title != null)
 		{
 			setTitle(title);

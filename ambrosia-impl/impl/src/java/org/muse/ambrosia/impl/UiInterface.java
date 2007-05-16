@@ -30,6 +30,7 @@ import org.muse.ambrosia.api.Interface;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.UiService;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
@@ -70,20 +71,20 @@ public class UiInterface extends UiContainer implements Interface
 		super(service, xml);
 
 		// short form for title - attribute "title" as the selector
-		String title = xml.getAttribute("title");
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
 		if (title != null)
 		{
 			setTitle(title);
 		}
 
 		// short form for header - attribute "header" as the selector
-		String header = xml.getAttribute("header");
+		String header = StringUtil.trimToNull(xml.getAttribute("header"));
 		if (header != null)
 		{
 			setHeader(header);
 		}
 
-		String noAutoComplete = xml.getAttribute("noAutoComplete");
+		String noAutoComplete = StringUtil.trimToNull(xml.getAttribute("noAutoComplete"));
 		if (noAutoComplete != null)
 		{
 			this.setNoAutoComplete();

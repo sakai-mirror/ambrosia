@@ -680,19 +680,25 @@ public class UiServiceImpl implements UiService
 	{
 		UiInterface iface = null;
 		Document doc = Xml.readDocumentFromStream(in);
+		if ((doc == null) || (!doc.hasChildNodes())) return iface;
 
-		// verify the don has a single root element
-		if ((doc != null) && (doc.hasChildNodes()) && (doc.getChildNodes().getLength() == 1)
-				&& (doc.getFirstChild().getNodeType() == Node.ELEMENT_NODE) && (((Element) doc.getFirstChild()).getTagName().equals("interface")))
+		// allowing for comments, use the first element node that is our interface
+		NodeList nodes = doc.getChildNodes();
+		for (int i = 0; i < nodes.getLength(); i++)
 		{
+			Node node = nodes.item(i);			
+			if (node.getNodeType() != Node.ELEMENT_NODE) continue;
+			if (!(((Element) node).getTagName().equals("interface"))) continue;
+			
 			// build the interface from this element
-			iface = new UiInterface(this, (Element) doc.getFirstChild());
+			iface = new UiInterface(this, (Element) node);
+			break;
 		}
 
 		// else we have an invalid
-		else
+		if (iface == null)
 		{
-			M_log.warn("newInterface: stream xml root element not \"interface\"");
+			M_log.warn("newInterface: element \"interface\" not found in stream xml");
 			iface = new UiInterface();
 		}
 

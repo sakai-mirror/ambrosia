@@ -29,6 +29,7 @@ import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
@@ -103,28 +104,28 @@ public class UiNavigation extends UiController implements Navigation
 	protected UiNavigation(UiServiceImpl service, Element xml)
 	{
 		// short form for title - attribute "title" as the selector
-		String title = xml.getAttribute("title");
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
 		if (title != null)
 		{
 			setTitle(title);
 		}
 
 		// short form for style - attribute "style" as BUTTON or LINK
-		String style = xml.getAttribute("style");
+		String style = StringUtil.trimToNull(xml.getAttribute("style"));
 		if (style != null)
 		{
 			setStyle("BUTTON".equals(style) ? Style.button : Style.link);
 		}
 
 		// short form for destination - attribute "destination" as the destination
-		String destination = xml.getAttribute("destination");
+		String destination = StringUtil.trimToNull(xml.getAttribute("destination"));
 		if (destination != null)
 		{
 			setDestination(service.newDestination().setDestination(destination));
 		}
 
 		// short form for submit
-		String submit = xml.getAttribute("submit");
+		String submit = StringUtil.trimToNull(xml.getAttribute("submit"));
 		if ((submit != null) && ("TRUE".equals(submit)))
 		{
 			setSubmit();
