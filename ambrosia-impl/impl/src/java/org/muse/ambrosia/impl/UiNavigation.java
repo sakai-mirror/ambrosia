@@ -32,6 +32,8 @@ import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiNavigation presents a navigation control (button or text link) to the user. The result of the press is a navigation to some tool destination.
@@ -129,6 +131,49 @@ public class UiNavigation extends UiController implements Navigation
 		if ((submit != null) && ("TRUE".equals(submit)))
 		{
 			setSubmit();
+		}
+
+		// sub-element configuration
+		NodeList settings = xml.getChildNodes();
+		for (int i = 0; i < settings.getLength(); i++)
+		{
+			Node node = settings.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element settingsXml = (Element) node;
+
+				// confirm
+				if (settingsXml.getTagName().equals("confirm"))
+				{
+					// short form for decision is TRUE
+					String decisionTrue = StringUtil.trimToNull(settingsXml.getAttribute("decision"));
+					Decision decision = null;
+					if ("TRUE".equals(decisionTrue))
+						decision = service.newDecision().setProperty(service.newConstantPropertyReference().setValue("true"));
+					String cancelMsg = StringUtil.trimToNull(settingsXml.getAttribute("cancelSelector"));
+					String cancelIcon = StringUtil.trimToNull(settingsXml.getAttribute("cancelIcon"));
+					String msg = StringUtil.trimToNull(settingsXml.getAttribute("selector"));
+					String ref = StringUtil.trimToNull(settingsXml.getAttribute("ref"));
+					PropertyReference pRef = null;
+					if (ref != null) pRef = service.newPropertyReference().setReference(ref);
+
+					if (pRef == null)
+					{
+						setConfirm(decision, cancelMsg, cancelIcon, msg);
+					}
+					else
+					{
+						setConfirm(decision, cancelMsg, cancelIcon, msg, pRef);
+					}
+				}
+
+				// title
+				else if (settingsXml.getTagName().equals("title"))
+				{
+					// let Message parse this
+					this.title = new UiMessage(service, settingsXml);
+				}
+			}
 		}
 	}
 

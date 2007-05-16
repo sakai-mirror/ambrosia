@@ -115,7 +115,7 @@ public class UiTextEdit extends UiController implements TextEdit
 			if (node.getNodeType() == Node.ELEMENT_NODE)
 			{
 				Element settingsXml = (Element) node;
-				
+
 				// model
 				if (settingsXml.getTagName().equals("model"))
 				{
@@ -127,9 +127,13 @@ public class UiTextEdit extends UiController implements TextEdit
 					}
 				}
 
+				else if (settingsXml.getTagName().equals("title"))
+				{
+					// let Message parse this
+					this.titleMessage = new UiMessage(service, settingsXml);
+				}
 			}
 		}
-
 	}
 
 	/**

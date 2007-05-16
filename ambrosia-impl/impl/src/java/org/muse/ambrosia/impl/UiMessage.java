@@ -21,9 +21,16 @@
 
 package org.muse.ambrosia.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiMessage is a message from the message bundle that can have property reference parameters.
@@ -44,6 +51,77 @@ public class UiMessage implements Message
 		this.selector = selector;
 		this.references = references;
 		return this;
+	}
+	
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiMessage()
+	{
+		
+	}
+	
+	/**
+	 * Construct from a dom element.  The definition may be in the element or in a child.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiMessage(UiServiceImpl service, Element xml)
+	{
+		// xml may be tag name "message".  If not, find one in the children
+		if (!xml.getTagName().equals("message"))
+		{
+			List<PropertyReference> refs = new ArrayList<PropertyReference>();
+			NodeList settings = xml.getChildNodes();
+			for (int i = 0; i < settings.getLength(); i++)
+			{
+				Node node = settings.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element settingsXml = (Element) node;
+					if (settingsXml.getTagName().equals("message"))
+					{
+						xml = settingsXml;
+						break;
+					}
+				}
+			}
+		}
+		
+		String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
+		
+		// use all the direct model references
+		List<PropertyReference> refs = new ArrayList<PropertyReference>();
+		NodeList settings = xml.getChildNodes();
+		for (int i = 0; i < settings.getLength(); i++)
+		{
+			Node node = settings.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element settingsXml = (Element) node;
+
+				// model
+				if (settingsXml.getTagName().equals("model"))
+				{
+					String ref = StringUtil.trimToNull(settingsXml.getAttribute("ref"));
+					String refClass = StringUtil.trimToNull(settingsXml.getAttribute("class"));
+					// TODO: different objects for different classes
+					PropertyReference pRef = service.newPropertyReference().setReference(ref);
+					refs.add(pRef);
+				}
+			}
+		}
+		
+		// convert the refs into an array
+		PropertyReference[] refsArray = new PropertyReference[0];
+		refsArray = refs.toArray(refsArray);
+
+		// set
+		this.selector = selector;
+		this.references = refsArray;
 	}
 
 	/**

@@ -33,6 +33,8 @@ import org.muse.ambrosia.api.UiService;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiInterface is the top most container for each user interface.<br />
@@ -90,8 +92,27 @@ public class UiInterface extends UiContainer implements Interface
 			this.setNoAutoComplete();
 		}
 
-		// long form (child node) for title
-		// long form (child node) for header
+		// sub-element configuration
+		NodeList settings = xml.getChildNodes();
+		for (int i = 0; i < settings.getLength(); i++)
+		{
+			Node node = settings.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element settingsXml = (Element) node;
+				if (settingsXml.getTagName().equals("title"))
+				{
+					// let Message parse this
+					this.title = new UiMessage(service, settingsXml);
+				}
+
+				else if (settingsXml.getTagName().equals("header"))
+				{
+					// let Message parse this
+					this.header = new UiMessage(service, settingsXml);
+				}
+			}
+		}
 	}
 
 	/**

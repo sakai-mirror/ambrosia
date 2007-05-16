@@ -32,6 +32,8 @@ import org.muse.ambrosia.api.Section;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiSection is a container within a user interface. Each interface should have one section, and may have many. Sections should not be nested.<br />
@@ -87,7 +89,6 @@ public class UiSection extends UiContainer implements Section
 		// parse entity included
 		// parse focus
 		// parse iterator
-		// parse title
 		// parse titleHighlighted
 		// parse titleIncluded
 
@@ -97,6 +98,26 @@ public class UiSection extends UiContainer implements Section
 		{
 			setTitle(title);
 		}
+		
+		// sub-element configuration
+		NodeList settings = xml.getChildNodes();
+		for (int i = 0; i < settings.getLength(); i++)
+		{
+			Node node = settings.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element settingsXml = (Element) node;
+				if (settingsXml.getTagName().equals("title"))
+				{
+					// parse titleHighlighted
+					// parse titleIncluded
+
+					// let Message parse this
+					this.title = new UiMessage(service, settingsXml);
+				}
+			}
+		}
+
 	}
 
 	/**

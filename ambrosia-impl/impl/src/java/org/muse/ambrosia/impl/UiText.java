@@ -29,6 +29,8 @@ import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Text;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiText implements Text.
@@ -67,6 +69,22 @@ public class UiText extends UiController implements Text
 			else
 			{
 				setText(selector, service.newPropertyReference().setReference(ref));
+			}
+		}
+
+		// sub-element configuration
+		NodeList settings = xml.getChildNodes();
+		for (int i = 0; i < settings.getLength(); i++)
+		{
+			Node node = settings.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element settingsXml = (Element) node;
+				if (settingsXml.getTagName().equals("message"))
+				{
+					// let Message parse this
+					this.message = new UiMessage(service, settingsXml);
+				}
 			}
 		}
 	}
