@@ -100,24 +100,15 @@ public class UiSection extends UiContainer implements Section
 		}
 		
 		// sub-element configuration
-		NodeList settings = xml.getChildNodes();
-		for (int i = 0; i < settings.getLength(); i++)
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
 		{
-			Node node = settings.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE)
-			{
-				Element settingsXml = (Element) node;
-				if (settingsXml.getTagName().equals("title"))
-				{
-					// parse titleHighlighted
-					// parse titleIncluded
+			// parse titleHighlighted
+			// parse titleIncluded
 
-					// let Message parse this
-					this.title = new UiMessage(service, settingsXml);
-				}
-			}
+			// let Message parse this
+			this.title = new UiMessage(service, settingsXml);
 		}
-
 	}
 
 	/**

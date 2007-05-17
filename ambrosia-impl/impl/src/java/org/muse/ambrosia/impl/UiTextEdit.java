@@ -87,7 +87,6 @@ public class UiTextEdit extends UiController implements TextEdit
 
 		// parse onEmptyAlert
 		// parse focus decision
-		// parse propert (model)
 		// parse read only
 
 		// short form for title - attribute "title" as the selector
@@ -108,31 +107,22 @@ public class UiTextEdit extends UiController implements TextEdit
 		{
 		}
 
-		NodeList settings = xml.getChildNodes();
-		for (int i = 0; i < settings.getLength(); i++)
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
 		{
-			Node node = settings.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE)
+			// let Message parse this
+			this.titleMessage = new UiMessage(service, settingsXml);			
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			String ref = StringUtil.trimToNull(settingsXml.getAttribute("ref"));
+			if (ref != null)
 			{
-				Element settingsXml = (Element) node;
-
-				// model
-				if (settingsXml.getTagName().equals("model"))
-				{
-					String ref = StringUtil.trimToNull(settingsXml.getAttribute("ref"));
-					if (ref != null)
-					{
-						PropertyReference pRef = service.newPropertyReference().setReference(ref);
-						setProperty(pRef);
-					}
-				}
-
-				else if (settingsXml.getTagName().equals("title"))
-				{
-					// let Message parse this
-					this.titleMessage = new UiMessage(service, settingsXml);
-				}
-			}
+				PropertyReference pRef = service.newPropertyReference().setReference(ref);
+				setProperty(pRef);
+			}			
 		}
 	}
 

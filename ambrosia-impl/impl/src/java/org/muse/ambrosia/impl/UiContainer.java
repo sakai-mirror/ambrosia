@@ -59,21 +59,7 @@ public class UiContainer extends UiController implements Container
 	protected UiContainer(UiServiceImpl service, Element xml)
 	{
 		// find the first container child node
-		Element container = null;
-		NodeList containers = xml.getChildNodes();
-		for (int i = 0; i < containers.getLength(); i++)
-		{
-			Node node = containers.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE)
-			{
-				Element element = (Element) node;
-				if (element.getTagName().equals("container"))
-				{
-					container = element;
-					break;
-				}
-			}
-		}
+		Element container = XmlHelper.getChildElementNamed(xml, "container");
 
 		if (container != null)
 		{

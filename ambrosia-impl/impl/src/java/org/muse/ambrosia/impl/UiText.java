@@ -73,19 +73,11 @@ public class UiText extends UiController implements Text
 		}
 
 		// sub-element configuration
-		NodeList settings = xml.getChildNodes();
-		for (int i = 0; i < settings.getLength(); i++)
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "message");
+		if (settingsXml != null)
 		{
-			Node node = settings.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE)
-			{
-				Element settingsXml = (Element) node;
-				if (settingsXml.getTagName().equals("message"))
-				{
-					// let Message parse this
-					this.message = new UiMessage(service, settingsXml);
-				}
-			}
+			// let Message parse this
+			this.message = new UiMessage(service, settingsXml);
 		}
 	}
 

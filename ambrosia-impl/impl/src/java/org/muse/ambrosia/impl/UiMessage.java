@@ -74,21 +74,7 @@ public class UiMessage implements Message
 		// xml may be tag name "message".  If not, find one in the children
 		if (!xml.getTagName().equals("message"))
 		{
-			List<PropertyReference> refs = new ArrayList<PropertyReference>();
-			NodeList settings = xml.getChildNodes();
-			for (int i = 0; i < settings.getLength(); i++)
-			{
-				Node node = settings.item(i);
-				if (node.getNodeType() == Node.ELEMENT_NODE)
-				{
-					Element settingsXml = (Element) node;
-					if (settingsXml.getTagName().equals("message"))
-					{
-						xml = settingsXml;
-						break;
-					}
-				}
-			}
+			xml = XmlHelper.getChildElementNamed(xml, "message");
 		}
 		
 		String selector = StringUtil.trimToNull(xml.getAttribute("selector"));

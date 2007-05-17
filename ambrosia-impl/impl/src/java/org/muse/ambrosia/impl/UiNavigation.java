@@ -134,46 +134,52 @@ public class UiNavigation extends UiController implements Navigation
 		}
 
 		// sub-element configuration
-		NodeList settings = xml.getChildNodes();
-		for (int i = 0; i < settings.getLength(); i++)
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "confirm");
+		if (settingsXml != null)
 		{
-			Node node = settings.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE)
+			// short form for decision is TRUE
+			String decisionTrue = StringUtil.trimToNull(settingsXml.getAttribute("decision"));
+			Decision decision = null;
+			if ("TRUE".equals(decisionTrue))
+				decision = service.newDecision().setProperty(service.newConstantPropertyReference().setValue("true"));
+			String cancelMsg = StringUtil.trimToNull(settingsXml.getAttribute("cancelSelector"));
+			String cancelIcon = StringUtil.trimToNull(settingsXml.getAttribute("cancelIcon"));
+			String msg = StringUtil.trimToNull(settingsXml.getAttribute("selector"));
+			String ref = StringUtil.trimToNull(settingsXml.getAttribute("ref"));
+			PropertyReference pRef = null;
+			if (ref != null) pRef = service.newPropertyReference().setReference(ref);
+
+			if (pRef == null)
 			{
-				Element settingsXml = (Element) node;
-
-				// confirm
-				if (settingsXml.getTagName().equals("confirm"))
-				{
-					// short form for decision is TRUE
-					String decisionTrue = StringUtil.trimToNull(settingsXml.getAttribute("decision"));
-					Decision decision = null;
-					if ("TRUE".equals(decisionTrue))
-						decision = service.newDecision().setProperty(service.newConstantPropertyReference().setValue("true"));
-					String cancelMsg = StringUtil.trimToNull(settingsXml.getAttribute("cancelSelector"));
-					String cancelIcon = StringUtil.trimToNull(settingsXml.getAttribute("cancelIcon"));
-					String msg = StringUtil.trimToNull(settingsXml.getAttribute("selector"));
-					String ref = StringUtil.trimToNull(settingsXml.getAttribute("ref"));
-					PropertyReference pRef = null;
-					if (ref != null) pRef = service.newPropertyReference().setReference(ref);
-
-					if (pRef == null)
-					{
-						setConfirm(decision, cancelMsg, cancelIcon, msg);
-					}
-					else
-					{
-						setConfirm(decision, cancelMsg, cancelIcon, msg, pRef);
-					}
-				}
-
-				// title
-				else if (settingsXml.getTagName().equals("title"))
-				{
-					// let Message parse this
-					this.title = new UiMessage(service, settingsXml);
-				}
+				setConfirm(decision, cancelMsg, cancelIcon, msg);
 			}
+			else
+			{
+				setConfirm(decision, cancelMsg, cancelIcon, msg, pRef);
+			}
+			
+			// TODO: allow sub elements, decision
+			Element innerSettingsXml = XmlHelper.getChildElementNamed(settingsXml, "message");
+			if (innerSettingsXml != null)
+			{
+				this.confirmMsg = new UiMessage(service, innerSettingsXml);
+			}
+			
+			innerSettingsXml = XmlHelper.getChildElementNamed(settingsXml, "cancel");
+			if (innerSettingsXml != null)
+			{
+				cancelMsg = StringUtil.trimToNull(innerSettingsXml.getAttribute("selector"));
+				if (cancelMsg != null) this.confirmCancelMsg = new UiMessage().setMessage(cancelMsg);
+				cancelIcon = StringUtil.trimToNull(innerSettingsXml.getAttribute("icon"));	
+				if (cancelIcon != null) this.confirmCancelIcon = cancelIcon;
+			}
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.title = new UiMessage(service, settingsXml);
 		}
 	}
 

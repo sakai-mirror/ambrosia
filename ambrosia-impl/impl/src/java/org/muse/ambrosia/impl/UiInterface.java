@@ -93,25 +93,18 @@ public class UiInterface extends UiContainer implements Interface
 		}
 
 		// sub-element configuration
-		NodeList settings = xml.getChildNodes();
-		for (int i = 0; i < settings.getLength(); i++)
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
 		{
-			Node node = settings.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE)
-			{
-				Element settingsXml = (Element) node;
-				if (settingsXml.getTagName().equals("title"))
-				{
-					// let Message parse this
-					this.title = new UiMessage(service, settingsXml);
-				}
+			// let Message parse this
+			this.title = new UiMessage(service, settingsXml);
+		}
 
-				else if (settingsXml.getTagName().equals("header"))
-				{
-					// let Message parse this
-					this.header = new UiMessage(service, settingsXml);
-				}
-			}
+		settingsXml = XmlHelper.getChildElementNamed(xml, "header");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.header = new UiMessage(service, settingsXml);
 		}
 	}
 
