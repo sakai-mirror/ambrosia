@@ -25,12 +25,36 @@ import java.util.Collection;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.HasValueDecision;
+import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiHasValueDecision is a decision that is true if the property has a value - not null, and if string or Collection, not empty.
  */
 public class UiHasValueDecision extends UiDecision implements HasValueDecision
 {
+	/**
+	 * No-arg constructor.
+	 */
+	public UiHasValueDecision()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiHasValueDecision(UiServiceImpl service, Element xml)
+	{
+		// do the Decision stuff
+		super(service, xml);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -50,7 +74,7 @@ public class UiHasValueDecision extends UiDecision implements HasValueDecision
 						return false;
 					}
 				}
-				
+
 				else if (value instanceof Collection)
 				{
 					Collection c = (Collection) value;

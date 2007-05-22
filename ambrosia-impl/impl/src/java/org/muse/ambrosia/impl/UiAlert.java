@@ -27,6 +27,8 @@ import org.muse.ambrosia.api.Alert;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiAlert presents implements Alert.
@@ -35,6 +37,47 @@ public class UiAlert extends UiController implements Alert
 {
 	/** The message for the instruction text. */
 	protected Message text = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiAlert()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiAlert(UiServiceImpl service, Element xml)
+	{
+		// short for for text - attribute "selector" for the selector, and attribute "ref" for a single reference.
+		String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
+		String ref = StringUtil.trimToNull(xml.getAttribute("ref"));
+		if ((selector != null) || (ref != null))
+		{
+			if (ref == null)
+			{
+				setText(selector);
+			}
+			else
+			{
+				setText(selector, service.newPropertyReference().setReference(ref));
+			}
+		}
+
+		// sub-element configuration
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "message");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.text = new UiMessage(service, settingsXml);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

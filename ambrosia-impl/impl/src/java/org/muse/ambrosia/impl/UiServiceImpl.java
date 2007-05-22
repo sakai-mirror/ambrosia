@@ -662,6 +662,7 @@ public class UiServiceImpl implements UiService
 	 */
 	protected Controller parseController(Element xml)
 	{
+		if (xml.getTagName().equals("alert")) return new UiAlert(this, xml);
 		if (xml.getTagName().equals("instructions")) return new UiInstructions(this, xml);
 		if (xml.getTagName().equals("interface")) return new UiInterface(this, xml);
 		if (xml.getTagName().equals("navigation")) return new UiNavigation(this, xml);
@@ -671,6 +672,50 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("textEdit")) return new UiTextEdit(this, xml);
 
 		return null;
+	}
+
+	/**
+	 * Create the appropriate Decision based on the XML element.
+	 * 
+	 * @param xml
+	 *        The xml element.
+	 * @return a Decision object.
+	 */
+	protected Decision parseDecision(Element xml)
+	{
+		if (xml == null) return null;
+
+		if (xml.getTagName().equals("hasValueDecision")) return new UiHasValueDecision(this, xml);
+		
+		if (!xml.getTagName().equals("decision")) return null;
+
+		// TODO: support types?
+		String type = StringUtil.trimToNull(xml.getAttribute("type"));
+		if ("hasValue".equals(type)) return new UiHasValueDecision(this, xml);
+
+		return new UiDecision(this, xml);
+	}
+
+	/**
+	 * Create the appropriate PropertyReference based on the XML element.
+	 * 
+	 * @param xml
+	 *        The xml element.
+	 * @return a Decision object.
+	 */
+	protected PropertyReference parsePropertyReference(Element xml)
+	{
+		if (xml == null) return null;
+
+//		if (xml.getTagName().equals("hasValueDecision")) return new UiHasValueDecision(this, xml);
+		
+		if (!xml.getTagName().equals("model")) return null;
+
+		// TODO: support types?
+		String type = StringUtil.trimToNull(xml.getAttribute("type"));
+		//if ("hasValue".equals(type)) return new UiHasValueDecision(this, xml);
+
+		return new UiPropertyReference(this, xml);
 	}
 
 	/**

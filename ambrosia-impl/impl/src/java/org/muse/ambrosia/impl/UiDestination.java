@@ -21,9 +21,16 @@
 
 package org.muse.ambrosia.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiDestination forms a tool destination, from a template, with possible embedded fill-in-the-blanks, and property references to fill them in.<br />
@@ -36,6 +43,49 @@ public class UiDestination implements Destination
 
 	/** The template. */
 	protected String template = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiDestination()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiDestination(UiServiceImpl service, Element xml)
+	{
+		this.template = StringUtil.trimToNull(xml.getAttribute("template"));
+		
+		// short for a single reference
+		String ref = StringUtil.trimToNull(xml.getAttribute("ref"));
+		
+		// use all the direct model references
+		List<PropertyReference> refs = new ArrayList<PropertyReference>();
+		if (ref != null) refs.add(service.newPropertyReference().setReference(ref));
+		NodeList settings = xml.getChildNodes();
+		for (int i = 0; i < settings.getLength(); i++)
+		{
+			Node node = settings.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element settingsXml = (Element) node;
+				PropertyReference pRef = service.parsePropertyReference(settingsXml);
+				if (pRef != null) refs.add(pRef);
+			}
+		}
+
+		if (!refs.isEmpty())
+		{
+			this.references = refs.toArray(new PropertyReference[refs.size()]);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -62,7 +112,7 @@ public class UiDestination implements Destination
 			// read the value
 			String value = ref.read(context, focus);
 			if (value == null) value = "";
-			
+
 			// replace
 			rv = rv.replaceAll("\\{" + Integer.toString(i++) + "\\}", value);
 		}

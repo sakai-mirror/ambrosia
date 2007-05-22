@@ -88,16 +88,8 @@ public class UiMessage implements Message
 			if (node.getNodeType() == Node.ELEMENT_NODE)
 			{
 				Element settingsXml = (Element) node;
-
-				// model
-				if (settingsXml.getTagName().equals("model"))
-				{
-					String ref = StringUtil.trimToNull(settingsXml.getAttribute("ref"));
-					String refClass = StringUtil.trimToNull(settingsXml.getAttribute("class"));
-					// TODO: different objects for different classes
-					PropertyReference pRef = service.newPropertyReference().setReference(ref);
-					refs.add(pRef);
-				}
+				PropertyReference pRef = service.parsePropertyReference(settingsXml);
+				if (pRef != null) refs.add(pRef);
 			}
 		}
 		

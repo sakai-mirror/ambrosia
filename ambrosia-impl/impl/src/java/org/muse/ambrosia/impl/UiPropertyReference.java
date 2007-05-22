@@ -37,6 +37,7 @@ import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiPropertyReference accesses a particular selector of a model entity. If the reference is not set, we attempt to just get the object itself.<br />
@@ -68,6 +69,30 @@ public class UiPropertyReference implements PropertyReference
 
 	/** The entity selector reference. */
 	protected String propertyReference = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiPropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiPropertyReference(UiServiceImpl service, Element xml)
+	{
+		String ref = StringUtil.trimToNull(xml.getAttribute("ref"));
+		if (ref != null)
+		{
+			setReference(ref);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -121,8 +146,7 @@ public class UiPropertyReference implements PropertyReference
 			}
 		}
 
-		return (entityRefName == null ? "" : entityRefName)
-				+ (this.propertyReference == null ? "" : ("." + this.propertyReference));
+		return (entityRefName == null ? "" : entityRefName) + (this.propertyReference == null ? "" : ("." + this.propertyReference));
 	}
 
 	/**
@@ -235,7 +259,7 @@ public class UiPropertyReference implements PropertyReference
 			this.entityReference = fullReference.substring(0, pos);
 			this.propertyReference = fullReference.substring(pos + 1);
 		}
-		
+
 		// if this is just an entity reference
 		else
 		{
@@ -513,8 +537,7 @@ public class UiPropertyReference implements PropertyReference
 			}
 			else
 			{
-				M_log.warn("setFileValue: method: " + property + " object: " + entity.getClass()
-						+ " : no one parameter setter method defined");
+				M_log.warn("setFileValue: method: " + property + " object: " + entity.getClass() + " : no one parameter setter method defined");
 			}
 		}
 		catch (IntrospectionException ie)
@@ -691,8 +714,7 @@ public class UiPropertyReference implements PropertyReference
 			}
 			else
 			{
-				M_log.warn("setValue: method: " + property + " object: " + entity.getClass()
-						+ " : no one parameter setter method defined");
+				M_log.warn("setValue: method: " + property + " object: " + entity.getClass() + " : no one parameter setter method defined");
 			}
 		}
 		catch (IntrospectionException ie)

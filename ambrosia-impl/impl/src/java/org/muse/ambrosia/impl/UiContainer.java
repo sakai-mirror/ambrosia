@@ -58,6 +58,9 @@ public class UiContainer extends UiController implements Container
 	 */
 	protected UiContainer(UiServiceImpl service, Element xml)
 	{
+		// do the controller thing
+		super(service, xml);
+
 		// find the first container child node
 		Element container = XmlHelper.getChildElementNamed(xml, "container");
 

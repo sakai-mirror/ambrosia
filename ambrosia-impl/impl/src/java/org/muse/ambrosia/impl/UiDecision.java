@@ -25,6 +25,8 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.DecisionDelegate;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiDecision controls making an Entity selector based decision.
@@ -39,6 +41,49 @@ public class UiDecision implements Decision
 
 	/** If true, the test is reveresed. */
 	protected boolean reversed = false;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiDecision()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiDecision(UiServiceImpl service, Element xml)
+	{
+		// reversed
+		String reversed = StringUtil.trimToNull(xml.getAttribute("reversed"));
+		if ((reversed != null) && ("TRUE".equals(reversed)))
+		{
+			setReversed();
+		}
+
+		// short for model
+		String model = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(model);
+			setProperty(pRef);
+		}
+
+		// the full model reference
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) setProperty(pRef);
+		}
+
+		// TODO: parse delegate
+	}
 
 	/**
 	 * {@inheritDoc}

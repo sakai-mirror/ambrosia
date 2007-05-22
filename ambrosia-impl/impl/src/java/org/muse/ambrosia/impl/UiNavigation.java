@@ -133,6 +133,13 @@ public class UiNavigation extends UiController implements Navigation
 			setSubmit();
 		}
 
+		// short form for default
+		String dflt = StringUtil.trimToNull(xml.getAttribute("default"));
+		if ((submit != null) && ("TRUE".equals(submit)))
+		{
+			setDefault();
+		}
+
 		// sub-element configuration
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "confirm");
 		if (settingsXml != null)
@@ -180,6 +187,13 @@ public class UiNavigation extends UiController implements Navigation
 		{
 			// let Message parse this
 			this.title = new UiMessage(service, settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "destination");
+		if (settingsXml != null)
+		{
+			// let Destination parse this
+			this.destination = new UiDestination(service, settingsXml);
 		}
 	}
 

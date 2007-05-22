@@ -117,12 +117,8 @@ public class UiTextEdit extends UiController implements TextEdit
 		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
 		if (settingsXml != null)
 		{
-			String ref = StringUtil.trimToNull(settingsXml.getAttribute("ref"));
-			if (ref != null)
-			{
-				PropertyReference pRef = service.newPropertyReference().setReference(ref);
-				setProperty(pRef);
-			}			
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) setProperty(pRef);
 		}
 	}
 
