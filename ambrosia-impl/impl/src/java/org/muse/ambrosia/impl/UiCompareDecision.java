@@ -21,10 +21,16 @@
 
 package org.muse.ambrosia.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.muse.ambrosia.api.CompareDecision;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiCompareDecision is a UiDecision that compares the value to some other value.
@@ -36,6 +42,74 @@ public class UiCompareDecision extends UiDecision implements CompareDecision
 
 	/** If we don't have a compare property, use this value. */
 	protected String[] compareReferenceValue = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiCompareDecision()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiCompareDecision(UiServiceImpl service, Element xml)
+	{
+		// do the Decision stuff
+		super(service, xml);
+
+		List<String> values = new ArrayList<String>();
+
+		// shortcut for a single constant
+		String value = StringUtil.trimToNull(xml.getAttribute("constant"));
+		if (value != null)
+		{
+			values.add(value);
+		}
+
+		// comparison - values or a model
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "comparison");
+		if (settingsXml != null)
+		{
+			// constants
+			NodeList settings = settingsXml.getChildNodes();
+			for (int i = 0; i < settings.getLength(); i++)
+			{
+				Node node = settings.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element innerXml = (Element) node;
+					if ("constant".equals(innerXml.getTagName()))
+					{
+						value = StringUtil.trimToNull(innerXml.getAttribute("value"));
+						if (value != null)
+						{
+							values.add(value);
+						}						
+					}
+				}
+			}
+			
+			// model
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) this.compareReference = pRef;
+			}
+		}
+		
+		// convert the refs into an array
+		if (!values.isEmpty())
+		{
+			this.compareReferenceValue = values.toArray(new String[values.size()]);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

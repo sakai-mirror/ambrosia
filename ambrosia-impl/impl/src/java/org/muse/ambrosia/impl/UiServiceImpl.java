@@ -24,7 +24,9 @@ package org.muse.ambrosia.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,6 +67,7 @@ import org.muse.ambrosia.api.Evaluation;
 import org.muse.ambrosia.api.FileUpload;
 import org.muse.ambrosia.api.FillIn;
 import org.muse.ambrosia.api.Footnote;
+import org.muse.ambrosia.api.FormatDelegate;
 import org.muse.ambrosia.api.Gap;
 import org.muse.ambrosia.api.HasValueDecision;
 import org.muse.ambrosia.api.HtmlPropertyReference;
@@ -663,6 +666,7 @@ public class UiServiceImpl implements UiService
 	protected Controller parseController(Element xml)
 	{
 		if (xml.getTagName().equals("alert")) return new UiAlert(this, xml);
+		if (xml.getTagName().equals("entityList")) return new UiEntityList(this, xml);
 		if (xml.getTagName().equals("instructions")) return new UiInstructions(this, xml);
 		if (xml.getTagName().equals("interface")) return new UiInterface(this, xml);
 		if (xml.getTagName().equals("navigation")) return new UiNavigation(this, xml);
@@ -686,14 +690,80 @@ public class UiServiceImpl implements UiService
 		if (xml == null) return null;
 
 		if (xml.getTagName().equals("hasValueDecision")) return new UiHasValueDecision(this, xml);
-		
+		if (xml.getTagName().equals("compareDecision")) return new UiCompareDecision(this, xml);
+
 		if (!xml.getTagName().equals("decision")) return null;
 
 		// TODO: support types?
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
 		if ("hasValue".equals(type)) return new UiHasValueDecision(this, xml);
+		if ("compare".equals(type)) return new UiCompareDecision(this, xml);
 
 		return new UiDecision(this, xml);
+	}
+
+	/**
+	 * Parse a set of decisions from this element and its children.
+	 * 
+	 * @param xml
+	 *        The element tree to parse.
+	 * @return An array of decisions, or null if there are none.
+	 */
+	protected Decision[] parseArrayDecisions(Element xml)
+	{
+		Decision[] rv = null;
+
+		List<Decision> decisions = new ArrayList<Decision>();
+
+		// short form for decision is TRUE
+		String decisionTrue = StringUtil.trimToNull(xml.getAttribute("decision"));
+		if ("TRUE".equals(decisionTrue))
+		{
+			Decision decision = new UiDecision().setProperty(new UiConstantPropertyReference().setValue("true"));
+			decisions.add(decision);
+		}
+
+		NodeList contained = xml.getChildNodes();
+		for (int i = 0; i < contained.getLength(); i++)
+		{
+			Node node = contained.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element containedXml = (Element) node;
+
+				// let the service parse this as a decision
+				Decision decision = parseDecision(containedXml);
+				if (decision != null) decisions.add(decision);
+			}
+		}
+
+		if (!decisions.isEmpty())
+		{
+			rv = decisions.toArray(new Decision[decisions.size()]);
+		}
+
+		return rv;
+	}
+
+	/**
+	 * Parse a set of decisions from this element and its children into a single AND decision.
+	 * 
+	 * @param xml
+	 *        The element tree to parse.
+	 * @return The decisions wrapped in a single AND decision, or null if there are none.
+	 */
+	protected Decision parseDecisions(Element xml)
+	{
+		Decision[] decisions = parseArrayDecisions(xml);
+		if (decisions == null) return null;
+		
+		if (decisions.length == 1)
+		{
+			return decisions[0];
+		}
+
+		AndDecision rv = new UiAndDecision().setRequirements(decisions);
+		return rv;
 	}
 
 	/**
@@ -701,21 +771,43 @@ public class UiServiceImpl implements UiService
 	 * 
 	 * @param xml
 	 *        The xml element.
-	 * @return a Decision object.
+	 * @return a PropertyReference object.
 	 */
 	protected PropertyReference parsePropertyReference(Element xml)
 	{
 		if (xml == null) return null;
 
-//		if (xml.getTagName().equals("hasValueDecision")) return new UiHasValueDecision(this, xml);
-		
+		if (xml.getTagName().equals("htmlModel")) return new UiHtmlPropertyReference(this, xml);
+
 		if (!xml.getTagName().equals("model")) return null;
 
 		// TODO: support types?
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
-		//if ("hasValue".equals(type)) return new UiHasValueDecision(this, xml);
+		if ("html".equals(type)) return new UiHtmlPropertyReference(this, xml);
 
 		return new UiPropertyReference(this, xml);
+	}
+
+	/**
+	 * Create the appropriate EntityListColumn based on the XML element.
+	 * 
+	 * @param xml
+	 *        The xml element.
+	 * @return a EntityListColumn object.
+	 */
+	protected EntityListColumn parseEntityListColumn(Element xml)
+	{
+		if (xml == null) return null;
+
+		if (xml.getTagName().equals("modelColumn")) return new UiPropertyColumn(this, xml);
+
+		if (!xml.getTagName().equals("column")) return null;
+
+		// TODO: support types?
+		String type = StringUtil.trimToNull(xml.getAttribute("type"));
+		// if ("model".equals(type)) return new UiPropertyColumn(this, xml);
+
+		return new UiEntityListColumn(this, xml);
 	}
 
 	/**
@@ -731,10 +823,10 @@ public class UiServiceImpl implements UiService
 		NodeList nodes = doc.getChildNodes();
 		for (int i = 0; i < nodes.getLength(); i++)
 		{
-			Node node = nodes.item(i);			
+			Node node = nodes.item(i);
 			if (node.getNodeType() != Node.ELEMENT_NODE) continue;
 			if (!(((Element) node).getTagName().equals("interface"))) continue;
-			
+
 			// build the interface from this element
 			iface = new UiInterface(this, (Element) node);
 			break;
@@ -947,6 +1039,9 @@ public class UiServiceImpl implements UiService
 	/** Registered views - keyed by toolId-viewId. */
 	protected Map<String, View> m_views = new HashMap<String, View>();
 
+	/** Registered format delegates - keyed by toolId-id. */
+	protected Map<String, FormatDelegate> m_formatDelegates = new HashMap<String, FormatDelegate>();
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -961,5 +1056,21 @@ public class UiServiceImpl implements UiService
 	public View getView(String viewId, String toolId)
 	{
 		return m_views.get(toolId + "-" + viewId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void registerFormatDelegate(FormatDelegate delegate, String id, String toolId)
+	{
+		m_formatDelegates.put(toolId + "-" + id, delegate);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FormatDelegate getFormatDelegate(String id, String toolId)
+	{
+		return m_formatDelegates.get(toolId + "-" + id);
 	}
 }

@@ -25,6 +25,7 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyColumn;
 import org.muse.ambrosia.api.PropertyReference;
+import org.w3c.dom.Element;
 
 /**
  * UiPropertyColumn describes one column of a UiEntityList...
@@ -36,6 +37,36 @@ public class UiPropertyColumn extends UiEntityListColumn implements PropertyColu
 
 	/** The PropertyReference for this column. */
 	protected PropertyReference propertyReference = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiPropertyColumn()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiPropertyColumn(UiServiceImpl service, Element xml)
+	{
+		// EntityListColumn stuff
+		super(service, xml);
+
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) setProperty(pRef);
+		}
+		
+		// TODO: or message...
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -76,5 +107,4 @@ public class UiPropertyColumn extends UiEntityListColumn implements PropertyColu
 		this.propertyMessage = new UiMessage().setMessage(selector, references);
 		return this;
 	}
-
 }

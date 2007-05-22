@@ -33,6 +33,10 @@ import org.muse.ambrosia.api.Footnote;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * AutoColumn provides automatic numbering for columns in an entity list.
@@ -68,9 +72,6 @@ public class UiEntityListColumn implements EntityListColumn
 	/** The no-wrapping indicator for the column. */
 	protected boolean noWrap = false;
 
-	/** The sortable flag - if set and TRUE, the column is sortable by the end-user. */
-	protected Boolean sortable = Boolean.FALSE;
-
 	/** The destination that leads to this column asc sort. */
 	protected Destination sortAsc = null;
 
@@ -105,11 +106,244 @@ public class UiEntityListColumn implements EntityListColumn
 	protected Integer widthEm = null;
 
 	/**
+	 * Public no-arg constructor.
+	 */
+	public UiEntityListColumn()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiEntityListColumn(UiServiceImpl service, Element xml)
+	{
+		// alert
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "alert");
+		if (settingsXml != null)
+		{
+			Decision decision = service.parseDecisions(settingsXml);
+			setAlert(decision);
+		}
+
+		// short form for centered
+		String centered = StringUtil.trimToNull(xml.getAttribute("centered"));
+		if ((centered != null) && ("TRUE".equals(centered)))
+		{
+			setCentered();
+		}
+
+		// entity included
+		settingsXml = XmlHelper.getChildElementNamed(xml, "entityIncluded");
+		if (settingsXml != null)
+		{
+			// the message if not included
+			String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
+
+			Decision decision = service.parseDecisions(settingsXml);
+			setEntityIncluded(decision, selector);
+		}
+
+		// included
+		settingsXml = XmlHelper.getChildElementNamed(xml, "included");
+		if (settingsXml != null)
+		{
+			this.included = service.parseDecisions(settingsXml);
+		}
+
+		// no wrap
+		String noWrap = StringUtil.trimToNull(xml.getAttribute("wrap"));
+		if ((noWrap != null) && ("FALSE".equals(noWrap)))
+		{
+			setNoWrap();
+		}
+
+		// sort
+		settingsXml = XmlHelper.getChildElementNamed(xml, "sort");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "active");
+			if (innerXml != null)
+			{
+				this.sorting = service.parseDecisions(innerXml);
+			}
+
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "direction");
+			if (innerXml != null)
+			{
+				this.sortingAsc = service.parseDecisions(innerXml);
+			}
+
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "asc");
+			if (innerXml != null)
+			{
+				this.sortAscIconPath = StringUtil.trimToNull(innerXml.getAttribute("icon"));
+
+				Element wayInnerXml = XmlHelper.getChildElementNamed(innerXml, "message");
+				if (wayInnerXml != null)
+				{
+					this.sortAscIconMsg = new UiMessage(service, wayInnerXml);
+				}
+
+				wayInnerXml = XmlHelper.getChildElementNamed(innerXml, "destination");
+				if (wayInnerXml != null)
+				{
+					this.sortAsc = new UiDestination(service, wayInnerXml);
+				}
+			}
+
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "desc");
+			if (innerXml != null)
+			{
+				this.sortDescIconPath = StringUtil.trimToNull(innerXml.getAttribute("icon"));
+
+				Element wayInnerXml = XmlHelper.getChildElementNamed(innerXml, "message");
+				if (wayInnerXml != null)
+				{
+					this.sortDescIconMsg = new UiMessage(service, wayInnerXml);
+				}
+
+				wayInnerXml = XmlHelper.getChildElementNamed(innerXml, "destination");
+				if (wayInnerXml != null)
+				{
+					this.sortDesc = new UiDestination(service, wayInnerXml);
+				}
+			}
+		}
+
+		// short form for title - attribute "title" as the selector
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
+		// title
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			this.title = new UiMessage(service, settingsXml);
+		}
+
+		// width - pixels
+		String width = StringUtil.trimToNull(xml.getAttribute("pixels"));
+		if (width != null)
+		{
+			try
+			{
+				setWidth(Integer.parseInt(width));
+			}
+			catch (NumberFormatException e)
+			{
+			}
+		}
+
+		// width - em
+		width = StringUtil.trimToNull(xml.getAttribute("em"));
+		if (width != null)
+		{
+			try
+			{
+				setWidthEm(Integer.parseInt(width));
+			}
+			catch (NumberFormatException e)
+			{
+			}
+		}
+
+		// controllers
+		settingsXml = XmlHelper.getChildElementNamed(xml, "contained");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element controllerXml = (Element) node;
+
+					// create a controller from each node in the container
+					Controller c = service.parseController(controllerXml);
+					if (c != null)
+					{
+						this.contained.add(c);
+					}
+				}
+			}
+		}
+
+		// entity navigations
+		settingsXml = XmlHelper.getChildElementNamed(xml, "entityNavigations");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element innerXml = (Element) node;
+					if ("navigation".equals(innerXml.getTagName()))
+					{
+						Navigation n = new UiNavigation(service, innerXml);
+						this.entityNavigations.add(n);
+					}
+				}
+			}
+		}
+
+		// footnotes
+		settingsXml = XmlHelper.getChildElementNamed(xml, "footnotes");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element innerXml = (Element) node;
+					if ("footnote".equals(innerXml.getTagName()))
+					{
+						Footnote f = new UiFootnote();
+						this.footnotes.add(f);
+					}
+				}
+			}
+		}
+
+		// navigations
+		settingsXml = XmlHelper.getChildElementNamed(xml, "navigations");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element innerXml = (Element) node;
+					if ("navigation".equals(innerXml.getTagName()))
+					{
+						Navigation n = new UiNavigation(service, innerXml);
+						this.navigations.add(n);
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public EntityListColumn add(Controller controller)
 	{
-		contained.add(controller);
+		this.contained.add(controller);
 
 		return this;
 	}
@@ -137,7 +371,7 @@ public class UiEntityListColumn implements EntityListColumn
 	 */
 	public EntityListColumn addNavigation(Navigation navigation)
 	{
-		navigations.add(navigation);
+		this.navigations.add(navigation);
 		return this;
 	}
 
@@ -394,15 +628,6 @@ public class UiEntityListColumn implements EntityListColumn
 	public EntityListColumn setNoWrap()
 	{
 		this.noWrap = true;
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityListColumn setSortable(Boolean sortable)
-	{
-		this.sortable = (sortable == null) ? Boolean.FALSE : sortable;
 		return this;
 	}
 

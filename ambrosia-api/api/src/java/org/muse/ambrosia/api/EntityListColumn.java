@@ -303,14 +303,6 @@ public interface EntityListColumn
 	EntityListColumn setNoWrap();
 
 	/**
-	 * Set if this is to be a sortable column or not
-	 * 
-	 * @param sortable
-	 *        TRUE to have a sortable column, FALSE to not.
-	 */
-	EntityListColumn setSortable(Boolean sortable);
-
-	/**
 	 * Set the two destinations for the sort headers - one for the one leading to the ascending sort, one for the one leading to the descending sort.
 	 * 
 	 * @param asc

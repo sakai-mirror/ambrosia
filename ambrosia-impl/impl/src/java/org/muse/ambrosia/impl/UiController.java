@@ -39,8 +39,8 @@ public class UiController implements Controller
 	/** The id of this element - can be referenced by an alias, for instance. */
 	protected String id = null;
 
-	/** The include decision array. */
-	protected Decision[] included = null;
+	/** The include decision. */
+	protected Decision included = null;
 
 	/**
 	 * Public no-arg constructor.
@@ -64,26 +64,7 @@ public class UiController implements Controller
 
 		if (settingsXml != null)
 		{
-			List<Decision> decisions = new ArrayList<Decision>();
-
-			NodeList contained = settingsXml.getChildNodes();
-			for (int i = 0; i < contained.getLength(); i++)
-			{
-				Node node = contained.item(i);
-				if (node.getNodeType() == Node.ELEMENT_NODE)
-				{
-					Element containedXml = (Element) node;
-
-					// let the service parse this as a decision
-					Decision decision = service.parseDecision(containedXml);
-					if (decision != null) decisions.add(decision);
-				}
-			}
-
-			if (!decisions.isEmpty())
-			{
-				this.included = decisions.toArray(new Decision[decisions.size()]);
-			}
+			this.included = service.parseDecisions(settingsXml);
 		}
 	}
 
@@ -101,15 +82,7 @@ public class UiController implements Controller
 	public boolean isIncluded(Context context, Object focus)
 	{
 		if (this.included == null) return true;
-		for (Decision decision : this.included)
-		{
-			if (!decision.decide(context, focus))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return this.included.decide(context, focus);
 	}
 
 	/**
@@ -133,7 +106,19 @@ public class UiController implements Controller
 	 */
 	public Controller setIncluded(Decision... decision)
 	{
-		this.included = decision;
+		if (decision != null)
+		{
+			if (decision.length == 1)
+			{
+				this.included = decision[0];
+			}
+
+			else
+			{
+				this.included = new UiAndDecision().setRequirements(decision);
+			}
+		}
+
 		return this;
 	}
 }

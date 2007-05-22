@@ -92,6 +92,21 @@ public class UiPropertyReference implements PropertyReference
 		{
 			setReference(ref);
 		}
+
+		String formatDelegate = StringUtil.trimToNull(xml.getAttribute("delegate"));
+		String tool = StringUtil.trimToNull(xml.getAttribute("tool"));
+		if ((formatDelegate != null) || (tool != null))
+		{
+			FormatDelegate d = service.getFormatDelegate(formatDelegate, tool);
+			if (d != null)
+			{
+				this.formatDelegate = d;
+			}
+			else
+			{
+				M_log.warn("missing delegate: " + formatDelegate + " tool: " + tool);
+			}
+		}
 	}
 
 	/**

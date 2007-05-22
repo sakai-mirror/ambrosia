@@ -36,7 +36,11 @@ import org.muse.ambrosia.api.Footnote;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiEntityList presents a multi-column multi-item listing of entites from the model.<br />
@@ -80,7 +84,155 @@ public class UiEntityList extends UiController implements EntityList
 	protected Message title = null;
 
 	/** The include decision array for the title. */
-	protected Decision[] titleIncluded = null;
+	protected Decision titleIncluded = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiEntityList()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiEntityList(UiServiceImpl service, Element xml)
+	{
+		// controller stuff
+		super(service, xml);
+
+		// empty title
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "emptyTitle");
+		if (settingsXml != null)
+		{
+			this.emptyTitle = new UiMessage(service, settingsXml);
+		}
+
+		// entity included
+		settingsXml = XmlHelper.getChildElementNamed(xml, "entityIncluded");
+		if (settingsXml != null)
+		{
+			Decision decision = service.parseDecisions(settingsXml);
+			this.included = decision;
+		}
+
+		// iterator
+		settingsXml = XmlHelper.getChildElementNamed(xml, "iterator");
+		if (settingsXml != null)
+		{
+			// short cut for model
+			String model = StringUtil.trimToNull(settingsXml.getAttribute("model"));
+			if (model != null)
+			{
+				this.iteratorReference = new UiPropertyReference().setReference(model);
+			}
+
+			// name
+			String name = StringUtil.trimToNull(settingsXml.getAttribute("name"));
+			if (name != null)
+			{
+				this.iteratorName = name;
+			}
+
+			// inner model
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) this.iteratorReference = pRef;
+			}
+		}
+
+		// style
+		String style = StringUtil.trimToNull(settingsXml.getAttribute("style"));
+		if (style != null)
+		{
+			if ("FLAT".equals(style))
+			{
+				setStyle(Style.flat);
+			}
+			else if ("FORM".equals(style))
+			{
+				setStyle(Style.form);
+			}
+		}
+
+		// title
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			this.title = new UiMessage(service, settingsXml);
+		}
+
+		// title includede
+		settingsXml = XmlHelper.getChildElementNamed(xml, "titleIncluded");
+		if (settingsXml != null)
+		{
+			this.titleIncluded = service.parseDecisions(settingsXml);
+		}
+
+		// columns
+		settingsXml = XmlHelper.getChildElementNamed(xml, "columns");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element containedXml = (Element) node;
+
+					// let the service parse this as a column
+					EntityListColumn column = service.parseEntityListColumn(containedXml);
+					if (column != null) this.columns.add(column);
+				}
+			}
+		}
+		
+		// headings
+		settingsXml = XmlHelper.getChildElementNamed(xml, "headings");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element containedXml = (Element) node;
+					if ("heading".equals(containedXml.getTagName()))
+					{
+						Decision d = service.parseDecisions(containedXml);
+						Message m = null;
+						Navigation n = null;
+						
+						Element innerXml = XmlHelper.getChildElementNamed(containedXml, "message");
+						if (innerXml != null)
+						{
+							m = new UiMessage(service, innerXml);
+						}
+
+						innerXml = XmlHelper.getChildElementNamed(containedXml, "navigation");
+						if (innerXml != null)
+						{
+							n = new UiNavigation(service, innerXml);
+						}
+
+						this.headingDecisions.add(d);
+						this.headingMessages.add(m);
+						this.headingNavigations.add(n);
+					}
+				}
+			}
+		}
+
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -221,7 +373,7 @@ public class UiEntityList extends UiController implements EntityList
 							+ "\">"
 							+ Validator.escapeHtml(title.getMessage(context, focus))
 							+ ((icon != null) ? ("&nbsp;<img src=\"" + context.get("sakai.return.url") + icon + "\""
-									+ ((iconAlt != null) ? ("alt=\"" + Validator.escapeHtml(iconAlt) + "\"") : "") + " />") : "") + "</a></th>");
+									+ ((iconAlt != null) ? (" alt=\"" + Validator.escapeHtml(iconAlt) + "\"") : "") + " />") : "") + "</a></th>");
 				}
 
 				// not currently sorting... can we sort?
@@ -491,7 +643,18 @@ public class UiEntityList extends UiController implements EntityList
 	 */
 	public EntityList setTitleIncluded(Decision... decision)
 	{
-		this.titleIncluded = decision;
+		if (decision != null)
+		{
+			if (decision.length == 1)
+			{
+				this.titleIncluded = decision[0];
+			}
+			else
+			{
+				this.titleIncluded = new UiAndDecision().setRequirements(decision);
+			}
+		}
+
 		return this;
 	}
 
@@ -507,14 +670,6 @@ public class UiEntityList extends UiController implements EntityList
 	protected boolean isTitleIncluded(Context context, Object focus)
 	{
 		if (this.titleIncluded == null) return true;
-		for (Decision decision : this.titleIncluded)
-		{
-			if (!decision.decide(context, focus))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return this.titleIncluded.decide(context, focus);
 	}
 }

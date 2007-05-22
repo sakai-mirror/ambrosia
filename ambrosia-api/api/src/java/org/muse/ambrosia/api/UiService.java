@@ -557,4 +557,27 @@ public interface UiService
 	 * @return The View, or null if none found.
 	 */
 	View getView(String viewId, String toolId);
+
+	/**
+	 * Register a format delegate in a tool.
+	 * 
+	 * @param delegate
+	 *        The FormatDelegate.
+	 * @param id
+	 *        The id of the delegate.
+	 * @param toolId
+	 *        The tool id.
+	 */
+	void registerFormatDelegate(FormatDelegate delegate, String id, String toolId);
+
+	/**
+	 * Find the format delegate with this id in this tool.
+	 * 
+	 * @param id
+	 *        The id.
+	 * @param toolId
+	 *        The tool id.
+	 * @return The FormatDelegate, or null if none found.
+	 */
+	FormatDelegate getFormatDelegate(String id, String toolId);
 }

@@ -23,6 +23,8 @@ package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.HtmlPropertyReference;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiHtmlPropertyReference implements HtmlPropertyReference
@@ -30,6 +32,40 @@ import org.muse.ambrosia.api.HtmlPropertyReference;
 public class UiHtmlPropertyReference extends UiPropertyReference implements HtmlPropertyReference
 {
 	protected int maxChars = -1;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiHtmlPropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiHtmlPropertyReference(UiServiceImpl service, Element xml)
+	{
+		// do the property reference stuff
+		super(service, xml);
+
+		// max length
+		String max = StringUtil.trimToNull(xml.getAttribute("max"));
+		if (max != null)
+		{
+			try
+			{
+				setMaxLength(Integer.parseInt(max));
+			}
+			catch (NumberFormatException e)
+			{
+			}
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

@@ -23,6 +23,7 @@ package org.muse.ambrosia.impl;
 
 import java.io.PrintWriter;
 
+import org.muse.ambrosia.api.AndDecision;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Destination;
@@ -105,6 +106,9 @@ public class UiNavigation extends UiController implements Navigation
 	 */
 	protected UiNavigation(UiServiceImpl service, Element xml)
 	{
+		// controll stuff
+		super(service, xml);
+
 		// short form for title - attribute "title" as the selector
 		String title = StringUtil.trimToNull(xml.getAttribute("title"));
 		if (title != null)
@@ -144,11 +148,9 @@ public class UiNavigation extends UiController implements Navigation
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "confirm");
 		if (settingsXml != null)
 		{
-			// short form for decision is TRUE
-			String decisionTrue = StringUtil.trimToNull(settingsXml.getAttribute("decision"));
-			Decision decision = null;
-			if ("TRUE".equals(decisionTrue))
-				decision = service.newDecision().setProperty(service.newConstantPropertyReference().setValue("true"));
+			// decision
+			Decision decision = service.parseDecisions(settingsXml);
+
 			String cancelMsg = StringUtil.trimToNull(settingsXml.getAttribute("cancelSelector"));
 			String cancelIcon = StringUtil.trimToNull(settingsXml.getAttribute("cancelIcon"));
 			String msg = StringUtil.trimToNull(settingsXml.getAttribute("selector"));
