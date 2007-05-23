@@ -151,6 +151,14 @@ public class UiNavigation extends UiController implements Navigation
 			this.disabledDecision = new UiDecision().setProperty(new UiConstantPropertyReference().setValue("TRUE"));
 		}
 
+		// short for access key
+		String accessKey = StringUtil.trimToNull(xml.getAttribute("accessKey"));
+		if (accessKey != null) setAccessKey(accessKey);
+
+		// short for description
+		String description = StringUtil.trimToNull(xml.getAttribute("description"));
+		if (description != null) setDescription(description);
+
 		// sub-element configuration
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "confirm");
 		if (settingsXml != null)
@@ -209,6 +217,15 @@ public class UiNavigation extends UiController implements Navigation
 		if (settingsXml != null)
 		{
 			this.disabledDecision = service.parseDecisions(settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "icon");
+		if (settingsXml != null)
+		{
+			String icon = StringUtil.trimToNull(settingsXml.getAttribute("icon"));
+			String iStyle = StringUtil.trimToNull(settingsXml.getAttribute("style"));
+			IconStyle is = "LEFT".equals(iStyle) ? IconStyle.left : IconStyle.right;
+			setIcon(icon, is);
 		}
 	}
 

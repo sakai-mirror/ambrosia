@@ -666,12 +666,15 @@ public class UiServiceImpl implements UiService
 	protected Controller parseController(Element xml)
 	{
 		if (xml.getTagName().equals("alert")) return new UiAlert(this, xml);
+		if (xml.getTagName().equals("attachments")) return new UiAttachments(this, xml);
 		if (xml.getTagName().equals("countdownTimer")) return new UiCountdownTimer(this, xml);
 		if (xml.getTagName().equals("entityList")) return new UiEntityList(this, xml);
+		if (xml.getTagName().equals("gap")) return new UiGap();
 		if (xml.getTagName().equals("instructions")) return new UiInstructions(this, xml);
 		if (xml.getTagName().equals("interface")) return new UiInterface(this, xml);
 		if (xml.getTagName().equals("navigation")) return new UiNavigation(this, xml);
 		if (xml.getTagName().equals("navigationBar")) return new UiNavigationBar(this, xml);
+		if (xml.getTagName().equals("password")) return new UiPassword(this, xml);
 		if (xml.getTagName().equals("section")) return new UiSection(this, xml);
 		if (xml.getTagName().equals("text")) return new UiText(this, xml);
 		if (xml.getTagName().equals("textEdit")) return new UiTextEdit(this, xml);
@@ -761,7 +764,7 @@ public class UiServiceImpl implements UiService
 	{
 		Decision[] decisions = parseArrayDecisions(xml);
 		if (decisions == null) return null;
-		
+
 		if (decisions.length == 1)
 		{
 			return decisions[0];
@@ -782,17 +785,19 @@ public class UiServiceImpl implements UiService
 	{
 		if (xml == null) return null;
 
-		if (xml.getTagName().equals("htmlModel")) return new UiHtmlPropertyReference(this, xml);
 		if (xml.getTagName().equals("dateModel")) return new UiDatePropertyReference(this, xml);
 		if (xml.getTagName().equals("durationModel")) return new UiDurationPropertyReference(this, xml);
+		if (xml.getTagName().equals("htmlModel")) return new UiHtmlPropertyReference(this, xml);
+		if (xml.getTagName().equals("iconModel")) return new UiIconPropertyReference(this, xml);
 
 		if (!xml.getTagName().equals("model")) return null;
 
 		// TODO: support types?
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
-		if ("html".equals(type)) return new UiHtmlPropertyReference(this, xml);
 		if ("date".equals(type)) return new UiDatePropertyReference(this, xml);
 		if ("duration".equals(type)) return new UiDurationPropertyReference(this, xml);
+		if ("html".equals(type)) return new UiHtmlPropertyReference(this, xml);
+		if ("icon".equals(type)) return new UiIconPropertyReference(this, xml);
 
 		return new UiPropertyReference(this, xml);
 	}

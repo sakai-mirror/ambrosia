@@ -36,7 +36,9 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiAttachments...
@@ -62,6 +64,63 @@ public class UiAttachments extends UiController implements Attachments
 
 	/** The message that will provide title to display. */
 	protected Message title = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiAttachments()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiAttachments(UiServiceImpl service, Element xml)
+	{
+		// do the controller stuff
+		super(service, xml);
+
+		// short form for title - attribute "title" as the selector
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			this.title = new UiMessage().setMessage(title);
+		}
+
+		// short for model
+		String model = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(model);
+			this.attachments = pRef;
+		}
+
+		// name
+		String name = StringUtil.trimToNull(xml.getAttribute("name"));
+		if (name != null)
+		{
+			this.iteratorName = name;
+		}
+
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.title = new UiMessage(service, settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) this.attachments = pRef;
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -208,8 +267,7 @@ public class UiAttachments extends UiController implements Attachments
 					// for folders
 					if (props.getBooleanProperty(ResourceProperties.PROP_IS_COLLECTION))
 					{
-						response.print("<li><img src = \"/library/" + ContentTypeImageService.getContentTypeImage("folder")
-								+ "\" border=\"0\" />");
+						response.print("<li><img src = \"/library/" + ContentTypeImageService.getContentTypeImage("folder") + "\" border=\"0\" />");
 					}
 
 					// otherwise lookup the icon from the mime type

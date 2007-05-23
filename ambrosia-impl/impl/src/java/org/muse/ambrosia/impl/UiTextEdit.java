@@ -96,6 +96,14 @@ public class UiTextEdit extends UiController implements TextEdit
 			setTitle(title);
 		}
 
+		// short for model
+		String model = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(model);
+			setProperty(pRef);
+		}
+
 		// size
 		try
 		{
@@ -111,7 +119,7 @@ public class UiTextEdit extends UiController implements TextEdit
 		if (settingsXml != null)
 		{
 			// let Message parse this
-			this.titleMessage = new UiMessage(service, settingsXml);			
+			this.titleMessage = new UiMessage(service, settingsXml);
 		}
 
 		settingsXml = XmlHelper.getChildElementNamed(xml, "model");

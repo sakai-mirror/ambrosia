@@ -132,6 +132,13 @@ public class UiCountdownTimer extends UiController implements CountdownTimer
 			}
 		}
 
+		// short form for disabled
+		String disabled = StringUtil.trimToNull(xml.getAttribute("disabled"));
+		if ((disabled != null) && ("TRUE".equals(disabled)))
+		{
+			this.disabledDecision = new UiDecision().setProperty(new UiConstantPropertyReference().setValue("TRUE"));
+		}
+
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "disabled");
 		if (settingsXml != null)
 		{

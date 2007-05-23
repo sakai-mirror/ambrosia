@@ -28,8 +28,9 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Password;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.TextEdit;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiPassword implements Password.
@@ -53,6 +54,53 @@ public class UiPassword extends UiController implements Password
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiPassword()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiPassword(UiServiceImpl service, Element xml)
+	{
+		// short form for title - attribute "title" as the selector
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
+		// short for model
+		String model = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(model);
+			setProperty(pRef);
+		}
+
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.titleMessage = new UiMessage(service, settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) setProperty(pRef);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

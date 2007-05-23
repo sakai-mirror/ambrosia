@@ -23,7 +23,9 @@ package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.IconPropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiIconPropertyReference implements IconPropertyReference
@@ -31,6 +33,31 @@ import org.sakaiproject.util.Validator;
 public class UiIconPropertyReference extends UiPropertyReference implements IconPropertyReference
 {
 	protected String name = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiIconPropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiIconPropertyReference(UiServiceImpl service, Element xml)
+	{
+		// do the property reference stuff
+		super(service, xml);
+
+		// icon
+		String icon = StringUtil.trimToNull(xml.getAttribute("icon"));
+		if (icon != null) setIcon(icon);
+	}
 
 	/**
 	 * {@inheritDoc}

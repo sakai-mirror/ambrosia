@@ -21,15 +21,11 @@
 
 package org.muse.ambrosia.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Controller;
 import org.muse.ambrosia.api.Decision;
+import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * UiController implements Controller.
@@ -61,11 +57,14 @@ public class UiController implements Controller
 	{
 		// included decisions
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "included");
-
 		if (settingsXml != null)
 		{
 			this.included = service.parseDecisions(settingsXml);
 		}
+
+		// id
+		String id = StringUtil.trimToNull(xml.getAttribute("id"));
+		if (id != null) setId(id);
 	}
 
 	/**

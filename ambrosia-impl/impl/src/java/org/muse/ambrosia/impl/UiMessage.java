@@ -77,29 +77,32 @@ public class UiMessage implements Message
 			xml = XmlHelper.getChildElementNamed(xml, "message");
 		}
 		
-		String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
-		
-		// use all the direct model references
-		List<PropertyReference> refs = new ArrayList<PropertyReference>();
-		NodeList settings = xml.getChildNodes();
-		for (int i = 0; i < settings.getLength(); i++)
+		if (xml != null)
 		{
-			Node node = settings.item(i);
-			if (node.getNodeType() == Node.ELEMENT_NODE)
+			String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
+			
+			// use all the direct model references
+			List<PropertyReference> refs = new ArrayList<PropertyReference>();
+			NodeList settings = xml.getChildNodes();
+			for (int i = 0; i < settings.getLength(); i++)
 			{
-				Element settingsXml = (Element) node;
-				PropertyReference pRef = service.parsePropertyReference(settingsXml);
-				if (pRef != null) refs.add(pRef);
+				Node node = settings.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element settingsXml = (Element) node;
+					PropertyReference pRef = service.parsePropertyReference(settingsXml);
+					if (pRef != null) refs.add(pRef);
+				}
 			}
+			
+			// convert the refs into an array
+			PropertyReference[] refsArray = new PropertyReference[0];
+			refsArray = refs.toArray(refsArray);
+	
+			// set
+			this.selector = selector;
+			this.references = refsArray;
 		}
-		
-		// convert the refs into an array
-		PropertyReference[] refsArray = new PropertyReference[0];
-		refsArray = refs.toArray(refsArray);
-
-		// set
-		this.selector = selector;
-		this.references = refsArray;
 	}
 
 	/**
