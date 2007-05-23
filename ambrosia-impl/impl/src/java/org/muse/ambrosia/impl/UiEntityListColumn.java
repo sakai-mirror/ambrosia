@@ -132,17 +132,14 @@ public class UiEntityListColumn implements EntityListColumn
 
 		// short form for centered
 		String centered = StringUtil.trimToNull(xml.getAttribute("centered"));
-		if ((centered != null) && ("TRUE".equals(centered)))
-		{
-			setCentered();
-		}
+		if ((centered != null) && ("TRUE".equals(centered))) setCentered();
 
 		// entity included
 		settingsXml = XmlHelper.getChildElementNamed(xml, "entityIncluded");
 		if (settingsXml != null)
 		{
 			// the message if not included
-			String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
+			String selector = StringUtil.trimToNull(settingsXml.getAttribute("selector"));
 
 			Decision decision = service.parseDecisions(settingsXml);
 			setEntityIncluded(decision, selector);
@@ -157,10 +154,7 @@ public class UiEntityListColumn implements EntityListColumn
 
 		// no wrap
 		String noWrap = StringUtil.trimToNull(xml.getAttribute("wrap"));
-		if ((noWrap != null) && ("FALSE".equals(noWrap)))
-		{
-			setNoWrap();
-		}
+		if ((noWrap != null) && ("FALSE".equals(noWrap))) setNoWrap();
 
 		// sort
 		settingsXml = XmlHelper.getChildElementNamed(xml, "sort");

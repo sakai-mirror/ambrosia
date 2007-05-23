@@ -666,6 +666,7 @@ public class UiServiceImpl implements UiService
 	protected Controller parseController(Element xml)
 	{
 		if (xml.getTagName().equals("alert")) return new UiAlert(this, xml);
+		if (xml.getTagName().equals("countdownTimer")) return new UiCountdownTimer(this, xml);
 		if (xml.getTagName().equals("entityList")) return new UiEntityList(this, xml);
 		if (xml.getTagName().equals("instructions")) return new UiInstructions(this, xml);
 		if (xml.getTagName().equals("interface")) return new UiInterface(this, xml);

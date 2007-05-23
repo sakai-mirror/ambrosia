@@ -28,8 +28,9 @@ import org.muse.ambrosia.api.CountdownTimer;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.Message;
-import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiCountdownTimer implements CountdownTimer.
@@ -40,7 +41,7 @@ public class UiCountdownTimer extends UiController implements CountdownTimer
 	protected Destination destination = null;
 
 	/** The disabled decision array. */
-	protected Decision[] disabledDecision = null;
+	protected Decision disabledDecision = null;
 
 	/** Duration in ms of the entire timer. */
 	protected PropertyReference duration = null;
@@ -74,6 +75,125 @@ public class UiCountdownTimer extends UiController implements CountdownTimer
 
 	/** Width in pixels of the graphic display. */
 	protected int width = 200;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiCountdownTimer()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        The UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiCountdownTimer(UiServiceImpl service, Element xml)
+	{
+		// do the controller stuff
+		super(service, xml);
+
+		String submit = StringUtil.trimToNull(xml.getAttribute("submit"));
+		if ((submit != null) && ("TRUE".equals(submit))) setSubmit();
+
+		String tight = StringUtil.trimToNull(xml.getAttribute("tight"));
+		if ((tight != null) && ("TRUE".equals(tight))) setTight();
+
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			this.title = new UiMessage().setMessage(title);
+		}
+
+		String warn = StringUtil.trimToNull(xml.getAttribute("warn"));
+		if (warn != null)
+		{
+			try
+			{
+				this.warn = Long.parseLong(warn);
+			}
+			catch (NumberFormatException e)
+			{
+			}
+		}
+
+		String pixels = StringUtil.trimToNull(xml.getAttribute("pixels"));
+		if (pixels != null)
+		{
+			try
+			{
+				this.width = Integer.parseInt(pixels);
+			}
+			catch (NumberFormatException e)
+			{
+			}
+		}
+
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "disabled");
+		if (settingsXml != null)
+		{
+			this.disabledDecision = service.parseDecision(settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "duration");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
+			if (innerXml != null)
+			{
+				this.durationMessage = new UiMessage(service, innerXml);
+			}
+
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.duration = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "destination");
+		if (settingsXml != null)
+		{
+			this.destination = new UiDestination(service, settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "hide");
+		if (settingsXml != null)
+		{
+			this.hideMessage = new UiMessage(service, settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "remaining");
+		if (settingsXml != null)
+		{
+			this.remainingMessage = new UiMessage(service, settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "show");
+		if (settingsXml != null)
+		{
+			this.showMessage = new UiMessage(service, settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "timeTillExpire");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.tillExpire = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			this.title = new UiMessage(service, settingsXml);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -329,7 +449,16 @@ public class UiCountdownTimer extends UiController implements CountdownTimer
 	 */
 	public CountdownTimer setDisabled(Decision... decision)
 	{
-		this.disabledDecision = decision;
+		if (decision != null)
+		{
+			if (decision.length == 1)
+			{
+				this.disabledDecision = decision[0];
+			}
+
+			this.disabledDecision = new UiAndDecision().setRequirements(decision);
+		}
+
 		return this;
 	}
 
@@ -462,15 +591,6 @@ public class UiCountdownTimer extends UiController implements CountdownTimer
 	protected boolean isDisabled(Context context, Object focus)
 	{
 		if (this.disabledDecision == null) return false;
-		for (Decision decision : this.disabledDecision)
-		{
-			if (!decision.decide(context, focus))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return this.disabledDecision.decide(context, focus);
 	}
-
 }
