@@ -24,7 +24,9 @@ package org.muse.ambrosia.impl;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.DatePropertyReference;
 import org.sakaiproject.time.api.Time;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiDatePropertyReference handles Time objects formatted in the standard way.
@@ -33,6 +35,31 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 {
 	/** If set, split the date to date on top, time below. */
 	protected boolean multiLine = false;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiDatePropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiDatePropertyReference(UiServiceImpl service, Element xml)
+	{
+		// do the property reference stuff
+		super(service, xml);
+
+		// two line
+		String twoLine = StringUtil.trimToNull(xml.getAttribute("twoLine"));
+		if ((twoLine != null) && (twoLine.equals("TRUE"))) setTwoLine();
+	}
 
 	/**
 	 * {@inheritDoc}

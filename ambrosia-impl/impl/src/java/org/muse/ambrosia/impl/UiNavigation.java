@@ -68,8 +68,8 @@ public class UiNavigation extends UiController implements Navigation
 	/** The tool destination for this navigation. */
 	protected Destination destination = null;
 
-	/** The disabled decision array. */
-	protected Decision[] disabledDecision = null;
+	/** The disabled decision. */
+	protected Decision disabledDecision = null;
 
 	/** Full URL to the icon. */
 	protected String icon = null;
@@ -144,6 +144,13 @@ public class UiNavigation extends UiController implements Navigation
 			setDefault();
 		}
 
+		// short form for disabled
+		String disabled = StringUtil.trimToNull(xml.getAttribute("disabled"));
+		if ((disabled != null) && ("TRUE".equals(disabled)))
+		{
+			this.disabledDecision = new UiDecision().setProperty(new UiConstantPropertyReference().setValue("TRUE"));
+		}
+
 		// sub-element configuration
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "confirm");
 		if (settingsXml != null)
@@ -166,20 +173,20 @@ public class UiNavigation extends UiController implements Navigation
 			{
 				setConfirm(decision, cancelMsg, cancelIcon, msg, pRef);
 			}
-			
+
 			// TODO: allow sub elements, decision
 			Element innerSettingsXml = XmlHelper.getChildElementNamed(settingsXml, "message");
 			if (innerSettingsXml != null)
 			{
 				this.confirmMsg = new UiMessage(service, innerSettingsXml);
 			}
-			
+
 			innerSettingsXml = XmlHelper.getChildElementNamed(settingsXml, "cancel");
 			if (innerSettingsXml != null)
 			{
 				cancelMsg = StringUtil.trimToNull(innerSettingsXml.getAttribute("selector"));
 				if (cancelMsg != null) this.confirmCancelMsg = new UiMessage().setMessage(cancelMsg);
-				cancelIcon = StringUtil.trimToNull(innerSettingsXml.getAttribute("icon"));	
+				cancelIcon = StringUtil.trimToNull(innerSettingsXml.getAttribute("icon"));
 				if (cancelIcon != null) this.confirmCancelIcon = cancelIcon;
 			}
 		}
@@ -196,6 +203,12 @@ public class UiNavigation extends UiController implements Navigation
 		{
 			// let Destination parse this
 			this.destination = new UiDestination(service, settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "disabled");
+		if (settingsXml != null)
+		{
+			this.disabledDecision = service.parseDecisions(settingsXml);
 		}
 	}
 
@@ -511,7 +524,18 @@ public class UiNavigation extends UiController implements Navigation
 	 */
 	public Navigation setDisabled(Decision... decision)
 	{
-		this.disabledDecision = decision;
+		if (decision != null)
+		{
+			if (decision.length == 1)
+			{
+				this.disabledDecision = decision[0];
+			}
+			else
+			{
+				this.disabledDecision = new UiAndDecision().setRequirements(decision);
+			}
+		}
+
 		return this;
 	}
 
@@ -606,14 +630,6 @@ public class UiNavigation extends UiController implements Navigation
 	protected boolean isDisabled(Context context, Object focus)
 	{
 		if (this.disabledDecision == null) return false;
-		for (Decision decision : this.disabledDecision)
-		{
-			if (!decision.decide(context, focus))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return this.disabledDecision.decide(context, focus);
 	}
 }

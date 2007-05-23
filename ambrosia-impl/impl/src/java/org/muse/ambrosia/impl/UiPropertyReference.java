@@ -107,6 +107,9 @@ public class UiPropertyReference implements PropertyReference
 				M_log.warn("missing delegate: " + formatDelegate + " tool: " + tool);
 			}
 		}
+		
+		String missingText = StringUtil.trimToNull(xml.getAttribute("missing"));
+		if (missingText != null) setMissingText(missingText);
 	}
 
 	/**

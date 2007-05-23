@@ -24,6 +24,7 @@ package org.muse.ambrosia.impl;
 import org.muse.ambrosia.api.AndDecision;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
+import org.w3c.dom.Element;
 
 /**
  * UiAndDecision implements AndDecision.
@@ -32,6 +33,30 @@ public class UiAndDecision extends UiDecision implements AndDecision
 {
 	/** The decisions that will be ANDed for the overall decision. */
 	protected Decision[] requirements = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiAndDecision()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiAndDecision(UiServiceImpl service, Element xml)
+	{
+		// do the Decision stuff
+		super(service, xml);
+		
+		// take all decision children
+		requirements = service.parseArrayDecisions(xml);
+	}
 
 	/**
 	 * {@inheritDoc}

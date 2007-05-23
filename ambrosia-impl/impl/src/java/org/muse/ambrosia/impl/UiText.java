@@ -57,6 +57,9 @@ public class UiText extends UiController implements Text
 	 */
 	protected UiText(UiServiceImpl service, Element xml)
 	{
+		// do the controller stuff
+		super(service, xml);
+
 		// short for for text - attribute "selector" for the selector, and attribute "ref" for a single reference.
 		String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
 		String ref = StringUtil.trimToNull(xml.getAttribute("ref"));

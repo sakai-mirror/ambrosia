@@ -43,6 +43,7 @@ public interface PropertyColumn extends EntityListColumn
 	 * @param references
 	 *        one or more (or an array) of UiPropertyReferences to form the additional values in the formatted message.
 	 * @return self.
+	 * @deprecated
 	 */
 	PropertyColumn setProperty(String selector, PropertyReference... references);
 }

@@ -691,6 +691,8 @@ public class UiServiceImpl implements UiService
 
 		if (xml.getTagName().equals("hasValueDecision")) return new UiHasValueDecision(this, xml);
 		if (xml.getTagName().equals("compareDecision")) return new UiCompareDecision(this, xml);
+		if (xml.getTagName().equals("andDecision")) return new UiAndDecision(this, xml);
+		if (xml.getTagName().equals("orDecision")) return new UiOrDecision(this, xml);
 
 		if (!xml.getTagName().equals("decision")) return null;
 
@@ -698,6 +700,8 @@ public class UiServiceImpl implements UiService
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
 		if ("hasValue".equals(type)) return new UiHasValueDecision(this, xml);
 		if ("compare".equals(type)) return new UiCompareDecision(this, xml);
+		if ("and".equals(type)) return new UiAndDecision(this, xml);
+		if ("or".equals(type)) return new UiOrDecision(this, xml);
 
 		return new UiDecision(this, xml);
 	}
@@ -778,12 +782,16 @@ public class UiServiceImpl implements UiService
 		if (xml == null) return null;
 
 		if (xml.getTagName().equals("htmlModel")) return new UiHtmlPropertyReference(this, xml);
+		if (xml.getTagName().equals("dateModel")) return new UiDatePropertyReference(this, xml);
+		if (xml.getTagName().equals("durationModel")) return new UiDurationPropertyReference(this, xml);
 
 		if (!xml.getTagName().equals("model")) return null;
 
 		// TODO: support types?
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
 		if ("html".equals(type)) return new UiHtmlPropertyReference(this, xml);
+		if ("date".equals(type)) return new UiDatePropertyReference(this, xml);
+		if ("duration".equals(type)) return new UiDurationPropertyReference(this, xml);
 
 		return new UiPropertyReference(this, xml);
 	}

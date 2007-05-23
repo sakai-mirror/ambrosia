@@ -256,7 +256,7 @@ public class UiEntityListColumn implements EntityListColumn
 		}
 
 		// controllers
-		settingsXml = XmlHelper.getChildElementNamed(xml, "contained");
+		settingsXml = XmlHelper.getChildElementNamed(xml, "container");
 		if (settingsXml != null)
 		{
 			NodeList contained = settingsXml.getChildNodes();

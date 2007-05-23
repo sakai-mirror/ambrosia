@@ -23,7 +23,9 @@ package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.DurationPropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiDurationPropertyReference implements DurationPropertyReference.
@@ -33,6 +35,31 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 	// TODO: support various display options
 
 	protected boolean concise = false;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiDurationPropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiDurationPropertyReference(UiServiceImpl service, Element xml)
+	{
+		// do the property reference stuff
+		super(service, xml);
+
+		// concise
+		String concise = StringUtil.trimToNull(xml.getAttribute("concise"));
+		if ((concise != null) && (concise.equals("TRUE"))) setConcise();
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -96,7 +123,6 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 			return Validator.escapeHtml(fmtTwoDigit(hours) + ":" + fmtTwoDigit(minutes) + ":" + fmtTwoDigit(seconds));
 		}
 
-		return Validator.escapeHtml(Long.toString(hours) + " hours, " + Long.toString(minutes) + " minutes, "
-				+ Long.toString(seconds) + " seconds");
+		return Validator.escapeHtml(Long.toString(hours) + " hours, " + Long.toString(minutes) + " minutes, " + Long.toString(seconds) + " seconds");
 	}
 }

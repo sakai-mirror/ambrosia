@@ -24,6 +24,7 @@ package org.muse.ambrosia.impl;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.OrDecision;
+import org.w3c.dom.Element;
 
 /**
  * UiOrDecision implements OrDecision.
@@ -32,6 +33,30 @@ public class UiOrDecision extends UiDecision implements OrDecision
 {
 	/** The decisions that will be ORed for the overall decision. */
 	protected Decision[] options = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiOrDecision()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiOrDecision(UiServiceImpl service, Element xml)
+	{
+		// do the Decision stuff
+		super(service, xml);
+
+		// take all decision children
+		options = service.parseArrayDecisions(xml);
+	}
 
 	/**
 	 * {@inheritDoc}
