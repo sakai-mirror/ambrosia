@@ -667,16 +667,27 @@ public class UiServiceImpl implements UiService
 	protected Controller parseController(Element xml)
 	{
 		if (xml.getTagName().equals("alert")) return new UiAlert(this, xml);
+		if (xml.getTagName().equals("alias")) return new UiAlias(this, xml);
 		if (xml.getTagName().equals("attachments")) return new UiAttachments(this, xml);
 		if (xml.getTagName().equals("countdownTimer")) return new UiCountdownTimer(this, xml);
+		if (xml.getTagName().equals("courier")) return new UiCourier(this, xml);
+		if (xml.getTagName().equals("divider")) return new UiDivider(this, xml);
+		if (xml.getTagName().equals("entityDisplay")) return new UiEntityDisplay(this, xml);
 		if (xml.getTagName().equals("entityList")) return new UiEntityList(this, xml);
+		if (xml.getTagName().equals("evaluation")) return new UiEvaluation(this, xml);
+		if (xml.getTagName().equals("fileUpload")) return new UiFileUpload(this, xml);
+		if (xml.getTagName().equals("fillIn")) return new UiFillIn(this, xml);
 		if (xml.getTagName().equals("gap")) return new UiGap();
+		if (xml.getTagName().equals("iconKey")) return new UiIconKey(this, xml);
 		if (xml.getTagName().equals("instructions")) return new UiInstructions(this, xml);
 		if (xml.getTagName().equals("interface")) return new UiInterface(this, xml);
+		if (xml.getTagName().equals("match")) return new UiMatch(this, xml);
+		if (xml.getTagName().equals("menuBar")) return new UiMenuBar();
 		if (xml.getTagName().equals("navigation")) return new UiNavigation(this, xml);
 		if (xml.getTagName().equals("navigationBar")) return new UiNavigationBar(this, xml);
 		if (xml.getTagName().equals("password")) return new UiPassword(this, xml);
 		if (xml.getTagName().equals("section")) return new UiSection(this, xml);
+		if (xml.getTagName().equals("selection")) return new UiSelection(this, xml);
 		if (xml.getTagName().equals("text")) return new UiText(this, xml);
 		if (xml.getTagName().equals("textEdit")) return new UiTextEdit(this, xml);
 
@@ -698,15 +709,16 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("compareDecision")) return new UiCompareDecision(this, xml);
 		if (xml.getTagName().equals("andDecision")) return new UiAndDecision(this, xml);
 		if (xml.getTagName().equals("orDecision")) return new UiOrDecision(this, xml);
+		if (xml.getTagName().equals("pastDateDecision")) return new UiPastDateDecision(this, xml);
 
 		if (!xml.getTagName().equals("decision")) return null;
 
-		// TODO: support types?
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
 		if ("hasValue".equals(type)) return new UiHasValueDecision(this, xml);
 		if ("compare".equals(type)) return new UiCompareDecision(this, xml);
 		if ("and".equals(type)) return new UiAndDecision(this, xml);
 		if ("or".equals(type)) return new UiOrDecision(this, xml);
+		if ("pastDate".equals(type)) return new UiPastDateDecision(this, xml);
 
 		return new UiDecision(this, xml);
 	}
@@ -786,19 +798,30 @@ public class UiServiceImpl implements UiService
 	{
 		if (xml == null) return null;
 
+		if (xml.getTagName().equals("booleanModel")) return new UiBooleanPropertyReference(this, xml);
+		if (xml.getTagName().equals("constantModel")) return new UiConstantPropertyReference(this, xml);
+		if (xml.getTagName().equals("contextInfoModel")) return new UiContextInfoPropertyReference(this, xml);
 		if (xml.getTagName().equals("dateModel")) return new UiDatePropertyReference(this, xml);
 		if (xml.getTagName().equals("durationModel")) return new UiDurationPropertyReference(this, xml);
 		if (xml.getTagName().equals("htmlModel")) return new UiHtmlPropertyReference(this, xml);
 		if (xml.getTagName().equals("iconModel")) return new UiIconPropertyReference(this, xml);
+		if (xml.getTagName().equals("textModel")) return new UiTextPropertyReference(this, xml);
+		if (xml.getTagName().equals("urlModel")) return new UiUrlPropertyReference(this, xml);
+		if (xml.getTagName().equals("userInfoModel")) return new UiUserInfoPropertyReference(this, xml);
 
 		if (!xml.getTagName().equals("model")) return null;
 
-		// TODO: support types?
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
+		if ("boolean".equals(type)) return new UiBooleanPropertyReference(this, xml);
+		if ("constant".equals(type)) return new UiConstantPropertyReference(this, xml);
+		if ("contextInfo".equals(type)) return new UiContextInfoPropertyReference(this, xml);
 		if ("date".equals(type)) return new UiDatePropertyReference(this, xml);
 		if ("duration".equals(type)) return new UiDurationPropertyReference(this, xml);
 		if ("html".equals(type)) return new UiHtmlPropertyReference(this, xml);
 		if ("icon".equals(type)) return new UiIconPropertyReference(this, xml);
+		if ("text".equals(type)) return new UiTextPropertyReference(this, xml);
+		if ("url".equals(type)) return new UiUrlPropertyReference(this, xml);
+		if ("userInfo".equals(type)) return new UiUserInfoPropertyReference(this, xml);
 
 		return new UiPropertyReference(this, xml);
 	}
@@ -814,13 +837,16 @@ public class UiServiceImpl implements UiService
 	{
 		if (xml == null) return null;
 
+		if (xml.getTagName().equals("autoColumn")) return new UiAutoColumn();
 		if (xml.getTagName().equals("modelColumn")) return new UiPropertyColumn(this, xml);
+		if (xml.getTagName().equals("selectionColumn")) return new UiSelectionColumn(this, xml);
 
 		if (!xml.getTagName().equals("column")) return null;
 
-		// TODO: support types?
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
-		// if ("model".equals(type)) return new UiPropertyColumn(this, xml);
+		if ("auto".equals(type)) return new UiAutoColumn();
+		if ("model".equals(type)) return new UiPropertyColumn(this, xml);
+		if ("selection".equals(type)) return new UiSelectionColumn(this, xml);
 
 		return new UiEntityListColumn(this, xml);
 	}
