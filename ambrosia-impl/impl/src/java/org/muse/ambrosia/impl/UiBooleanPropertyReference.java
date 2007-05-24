@@ -23,6 +23,8 @@ package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.BooleanPropertyReference;
 import org.muse.ambrosia.api.Context;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiBooleanPropertyReference implements BooleanPropertyReference.
@@ -34,6 +36,31 @@ public class UiBooleanPropertyReference extends UiPropertyReference implements B
 
 	/** Message selector for true values. */
 	protected String trueText = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiBooleanPropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiBooleanPropertyReference(UiServiceImpl service, Element xml)
+	{
+		// do the property reference stuff
+		super(service, xml);
+
+		String trueText = StringUtil.trimToNull(xml.getAttribute("true"));
+		String falseText = StringUtil.trimToNull(xml.getAttribute("false"));
+		setText(trueText, falseText);
+	}
 
 	/**
 	 * {@inheritDoc}

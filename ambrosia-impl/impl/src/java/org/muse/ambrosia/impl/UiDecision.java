@@ -21,9 +21,12 @@
 
 package org.muse.ambrosia.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.DecisionDelegate;
+import org.muse.ambrosia.api.FormatDelegate;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
@@ -33,6 +36,9 @@ import org.w3c.dom.Element;
  */
 public class UiDecision implements Decision
 {
+	/** Our log (commons). */
+	private static Log M_log = LogFactory.getLog(UiDecision.class);
+
 	/** The delegate who, if defined, will make the decision. */
 	protected DecisionDelegate delegate = null;
 
@@ -82,7 +88,20 @@ public class UiDecision implements Decision
 			if (pRef != null) setProperty(pRef);
 		}
 
-		// TODO: parse delegate
+		String decisionDelegate = StringUtil.trimToNull(xml.getAttribute("delegate"));
+		String tool = StringUtil.trimToNull(xml.getAttribute("tool"));
+		if ((decisionDelegate != null) || (tool != null))
+		{
+			DecisionDelegate d = service.getDecisionDelegate(decisionDelegate, tool);
+			if (d != null)
+			{
+				this.delegate = d;
+			}
+			else
+			{
+				M_log.warn("missing delegate: " + decisionDelegate + " tool: " + tool);
+			}
+		}
 	}
 
 	/**

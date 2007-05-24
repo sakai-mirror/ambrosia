@@ -24,6 +24,8 @@ package org.muse.ambrosia.impl;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Courier;
 import org.muse.ambrosia.api.Destination;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiCourier implements Courier.
@@ -35,6 +37,52 @@ public class UiCourier extends UiController implements Courier
 
 	/** The frequency (seconds). */
 	protected int frequency = 0;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiCourier()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiCourier(UiServiceImpl service, Element xml)
+	{
+		super(service, xml);
+
+		// frequency
+		String frequency = StringUtil.trimToNull(xml.getAttribute("frequency"));
+		if (frequency != null)
+		{
+			try
+			{
+				this.frequency = Integer.parseInt(frequency);
+			}
+			catch (NumberFormatException e)
+			{
+			}
+		}
+
+		// short form for destination - attribute "destination" as the destination
+		String destination = StringUtil.trimToNull(xml.getAttribute("destination"));
+		if (destination != null)
+		{
+			this.destination = service.newDestination().setDestination(destination);
+		}
+
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "destination");
+		if (settingsXml != null)
+		{
+			this.destination = new UiDestination(service, settingsXml);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

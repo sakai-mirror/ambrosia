@@ -26,7 +26,9 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.cover.SiteService;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.ContextInfoPropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiContextInfoPropertyReference handles context id values by providing some context information for the display.
@@ -35,6 +37,31 @@ public class UiContextInfoPropertyReference extends UiPropertyReference implemen
 {
 	/** The context info we want. */
 	protected Selector selector = Selector.title;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiContextInfoPropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiContextInfoPropertyReference(UiServiceImpl service, Element xml)
+	{
+		// do the property reference stuff
+		super(service, xml);
+
+		// selector
+		String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
+		if ("TITLE".equals(selector)) setSelector(Selector.title);
+	}
 
 	/**
 	 * {@inheritDoc}

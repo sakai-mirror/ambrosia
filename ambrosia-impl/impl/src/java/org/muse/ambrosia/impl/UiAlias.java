@@ -26,6 +26,8 @@ import java.util.List;
 import org.muse.ambrosia.api.Alias;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Controller;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiAlias presents implements Alias.
@@ -34,6 +36,30 @@ public class UiAlias extends UiController implements Alias
 {
 	/** The id of the controller to render. */
 	protected String to = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiAlias()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiAlias(UiServiceImpl service, Element xml)
+	{
+		super(service, xml);
+
+		// to
+		String to = StringUtil.trimToNull(xml.getAttribute("to"));
+		if (to != null) setTo(to);
+	}
 
 	/**
 	 * {@inheritDoc}

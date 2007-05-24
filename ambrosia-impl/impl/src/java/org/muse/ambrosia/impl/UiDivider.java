@@ -25,12 +25,34 @@ import java.io.PrintWriter;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Divider;
+import org.w3c.dom.Element;
 
 /**
  * UiDivider implements Divider.
  */
 public class UiDivider extends UiController implements Divider
 {
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiDivider()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        The UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiDivider(UiServiceImpl service, Element xml)
+	{
+		// controller stuff
+		super(service, xml);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

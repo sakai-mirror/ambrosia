@@ -30,6 +30,10 @@ import org.muse.ambrosia.api.EntityDisplay;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.PropertyRow;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiEntityDisplay presents a multi-row single-item display of properties of one entity from the model.<br />
@@ -46,6 +50,76 @@ public class UiEntityDisplay extends UiController implements EntityDisplay
 
 	/** The message for the title. */
 	protected Message title = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiEntityDisplay()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        The UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiEntityDisplay(UiServiceImpl service, Element xml)
+	{
+		// controller stuff
+		super(service, xml);
+
+		// short for model
+		String model = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(model);
+			this.entityReference = pRef;
+		}
+
+		// short form for title
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
+		// model
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) this.entityReference = pRef;
+		}
+
+		// title
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			this.title = new UiMessage(service, settingsXml);
+		}
+		
+		// rows
+		settingsXml = XmlHelper.getChildElementNamed(xml, "rows");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element containedXml = (Element) node;
+
+					// let the service parse this as a column
+					PropertyRow row = service.parsePropertyRow(containedXml);
+					if (row != null) this.rows.add(row);
+				}
+			}
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

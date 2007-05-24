@@ -23,6 +23,8 @@ package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.ConstantPropertyReference;
 import org.muse.ambrosia.api.Context;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiConstantPropertyReference implements ConstantPropertyReference
@@ -30,6 +32,31 @@ import org.muse.ambrosia.api.Context;
 public class UiConstantPropertyReference extends UiPropertyReference implements ConstantPropertyReference
 {
 	protected String value = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiConstantPropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiConstantPropertyReference(UiServiceImpl service, Element xml)
+	{
+		// do the property reference stuff
+		super(service, xml);
+
+		// value
+		String value = StringUtil.trimToNull(xml.getAttribute("value"));
+		setValue(value);
+	}
 
 	/**
 	 * {@inheritDoc}

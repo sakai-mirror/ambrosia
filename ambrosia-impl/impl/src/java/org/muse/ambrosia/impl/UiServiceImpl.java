@@ -55,6 +55,7 @@ import org.muse.ambrosia.api.CountdownTimer;
 import org.muse.ambrosia.api.Courier;
 import org.muse.ambrosia.api.DatePropertyReference;
 import org.muse.ambrosia.api.Decision;
+import org.muse.ambrosia.api.DecisionDelegate;
 import org.muse.ambrosia.api.Decoder;
 import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.DistributionChart;
@@ -825,6 +826,28 @@ public class UiServiceImpl implements UiService
 	}
 
 	/**
+	 * Create the appropriate PropertyRow based on the XML element.
+	 * 
+	 * @param xml
+	 *        The xml element.
+	 * @return a PropertyRow object.
+	 */
+	protected PropertyRow parsePropertyRow(Element xml)
+	{
+		if (xml == null) return null;
+
+		//if (xml.getTagName().equals("modelColumn")) return new UiPropertyColumn(this, xml);
+
+		if (!xml.getTagName().equals("row")) return null;
+
+		// TODO: support types?
+		String type = StringUtil.trimToNull(xml.getAttribute("type"));
+		// if ("model".equals(type)) return new UiPropertyColumn(this, xml);
+
+		return new UiPropertyRow(this, xml);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public Interface newInterface(InputStream in)
@@ -1056,6 +1079,9 @@ public class UiServiceImpl implements UiService
 	/** Registered format delegates - keyed by toolId-id. */
 	protected Map<String, FormatDelegate> m_formatDelegates = new HashMap<String, FormatDelegate>();
 
+	/** Registered decision delegates - keyed by toolId-id. */
+	protected Map<String, DecisionDelegate> m_decisionDelegates = new HashMap<String, DecisionDelegate>();
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -1083,8 +1109,24 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public void registerDecisionDelegate(DecisionDelegate delegate, String id, String toolId)
+	{
+		m_decisionDelegates.put(toolId + "-" + id, delegate);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public FormatDelegate getFormatDelegate(String id, String toolId)
 	{
 		return m_formatDelegates.get(toolId + "-" + id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public DecisionDelegate getDecisionDelegate(String id, String toolId)
+	{
+		return m_decisionDelegates.get(toolId + "-" + id);
 	}
 }

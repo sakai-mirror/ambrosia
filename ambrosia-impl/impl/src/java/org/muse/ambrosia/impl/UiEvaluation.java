@@ -27,7 +27,9 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Evaluation;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiEvaluation implements Evaluation.
@@ -39,6 +41,45 @@ public class UiEvaluation extends UiText implements Evaluation
 
 	/** The alt text for the icon. */
 	protected Message iconAlt = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiEvaluation()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiEvaluation(UiServiceImpl service, Element xml)
+	{
+		// do the text stuff
+		super(service, xml);
+
+		// icon
+		String icon = StringUtil.trimToNull(xml.getAttribute("icon"));
+		if (icon != null) this.icon = icon;
+
+		// icon
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "icon");
+		if (settingsXml != null)
+		{
+			icon = StringUtil.trimToNull(settingsXml.getAttribute("icon"));
+			if (icon != null) this.icon = icon;
+
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
+			if (innerXml != null)
+			{
+				this.iconAlt = new UiMessage(service, innerXml);
+			}
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

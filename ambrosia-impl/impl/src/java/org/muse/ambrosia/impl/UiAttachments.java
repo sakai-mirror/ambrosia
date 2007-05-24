@@ -107,6 +107,27 @@ public class UiAttachments extends UiController implements Attachments
 			this.iteratorName = name;
 		}
 
+		// raw
+		String raw = StringUtil.trimToNull(xml.getAttribute("raw"));
+		if (raw != null)
+		{
+			setRaw(Boolean.parseBoolean(raw));
+		}
+
+		// size
+		String size = StringUtil.trimToNull(xml.getAttribute("size"));
+		if (size != null)
+		{
+			setSize(Boolean.parseBoolean(size));
+		}
+
+		// timestamp
+		String timestamp = StringUtil.trimToNull(xml.getAttribute("timestamp"));
+		if (timestamp != null)
+		{
+			setTimestamp(Boolean.parseBoolean(timestamp));
+		}
+
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
 		if (settingsXml != null)
 		{

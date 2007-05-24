@@ -29,7 +29,9 @@ import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.FileUpload;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiFileUpload...
@@ -43,25 +45,101 @@ public class UiFileUpload extends UiController implements FileUpload
 	protected Message onEmptyAlertMsg = null;
 
 	/**
-	 * The PropertyReference for encoding and decoding this selection - this is what will be updated with the end-user's uploaded
-	 * file.
+	 * The PropertyReference for encoding and decoding this selection - this is what will be updated with the end-user's uploaded file.
 	 */
 	protected PropertyReference propertyReference = null;
 
-	/** The property reference to provide the read only setting. */
-	protected PropertyReference readOnlyReference = null;
+	/** The read only decision. */
+	protected Decision readOnly = null;
 
 	/** The message that will provide title to display. */
 	protected Message title = null;
 
-	/** The include decision array for the title. */
-	protected Decision[] titleIncluded = null;
+	/** The include decision for the title. */
+	protected Decision titleIncluded = null;
 
 	/** The tool destination for the upload button. */
 	protected Destination uploadDestination = null;
 
 	/** The message for an upload button - if null, no button. */
 	protected Message uploadSubmit = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiFileUpload()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        The UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiFileUpload(UiServiceImpl service, Element xml)
+	{
+		// controller stuff
+		super(service, xml);
+
+		// onEmptyAlert
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			if (innerXml != null)
+			{
+				this.onEmptyAlertMsg = new UiMessage(service, innerXml);
+			}
+
+			this.onEmptyAlertDecision = service.parseDecisions(settingsXml);
+		}
+
+		// model
+		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			this.propertyReference = service.parsePropertyReference(settingsXml);
+		}
+
+		// read only
+		settingsXml = XmlHelper.getChildElementNamed(xml, "readOnly");
+		if (settingsXml != null)
+		{
+			this.readOnly = service.parseDecisions(settingsXml);
+		}
+
+		// title
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
+		// title
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			this.title = new UiMessage(service, settingsXml);
+
+			// title included
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "included");
+			if (innerXml != null)
+			{
+				this.titleIncluded = service.parseDecisions(innerXml);
+			}
+		}
+		
+		// upload message
+		settingsXml = XmlHelper.getChildElementNamed(xml, "upload");
+		if (settingsXml != null)
+		{
+			this.uploadSubmit = new UiMessage(service, settingsXml);
+		}
+
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -73,13 +151,9 @@ public class UiFileUpload extends UiController implements FileUpload
 
 		// read only?
 		boolean readOnly = false;
-		if (this.readOnlyReference != null)
+		if (this.readOnly != null)
 		{
-			String value = this.readOnlyReference.read(context, focus);
-			if (value != null)
-			{
-				readOnly = Boolean.parseBoolean(value);
-			}
+			readOnly = this.readOnly.decide(context, focus);
 		}
 
 		// alert if empty at submit?
@@ -112,8 +186,7 @@ public class UiFileUpload extends UiController implements FileUpload
 		// title
 		if ((this.title != null) && (isTitleIncluded(context, focus)))
 		{
-			response.println("<label for=\"" + id + "\">" + Validator.escapeHtml(this.title.getMessage(context, focus))
-					+ "</label><br />");
+			response.println("<label for=\"" + id + "\">" + Validator.escapeHtml(this.title.getMessage(context, focus)) + "</label><br />");
 		}
 
 		// the file chooser
@@ -124,9 +197,8 @@ public class UiFileUpload extends UiController implements FileUpload
 			// the decode directive
 			if ((this.propertyReference != null) && (!readOnly))
 			{
-				response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />"
-						+ "<input type=\"hidden\" name=\"" + "prop_" + decodeId + "\" value=\""
-						+ this.propertyReference.getFullReference(context) + "\" />");
+				response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\""
+						+ "prop_" + decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
 			}
 
 			if (this.uploadSubmit != null)
@@ -135,8 +207,8 @@ public class UiFileUpload extends UiController implements FileUpload
 				String href = (String) context.get("sakai.destination.url");
 				boolean dflt = false;
 
-				response.println("<input type=\"submit\" " + (dflt ? "class=\"active\"" : "") + " name=\"" + id + "_u" + "\" id=\""
-						+ id + "_u" + "\" value=\"" + Validator.escapeHtml(this.uploadSubmit.getMessage(context, focus)) + "\" />");
+				response.println("<input type=\"submit\" " + (dflt ? "class=\"active\"" : "") + " name=\"" + id + "_u" + "\" id=\"" + id + "_u"
+						+ "\" value=\"" + Validator.escapeHtml(this.uploadSubmit.getMessage(context, focus)) + "\" />");
 
 				// if we have a destination set, encode it
 				if (this.uploadDestination != null)
@@ -145,14 +217,13 @@ public class UiFileUpload extends UiController implements FileUpload
 							+ this.uploadDestination.getDestination(context, focus) + "\" />");
 				}
 			}
-			
+
 			// for onEmptyAlert, add some client-side validation
-			if ((onEmptyAlert)  && (!readOnly))
+			if ((onEmptyAlert) && (!readOnly))
 			{
 				context.addValidation("	if (trim(document.getElementById('" + id + "').value) == \"\")\n" + "	{\n"
 						+ "		if (document.getElementById('alert_" + id + "').style.display == \"none\")\n" + "		{\n"
-						+ "			document.getElementById('alert_" + id + "').style.display = \"\";\n" + "			rv=false;\n" + "		}\n"
-						+ "	}\n");
+						+ "			document.getElementById('alert_" + id + "').style.display = \"\";\n" + "			rv=false;\n" + "		}\n" + "	}\n");
 			}
 
 			response.println("</div>");
@@ -182,9 +253,9 @@ public class UiFileUpload extends UiController implements FileUpload
 	/**
 	 * {@inheritDoc}
 	 */
-	public FileUpload setReadOnly(PropertyReference reference)
+	public FileUpload setReadOnly(Decision decision)
 	{
-		this.readOnlyReference = reference;
+		this.readOnly = decision;
 		return this;
 	}
 
@@ -202,7 +273,19 @@ public class UiFileUpload extends UiController implements FileUpload
 	 */
 	public FileUpload setTitleIncluded(Decision... decision)
 	{
-		this.titleIncluded = decision;
+		if (decision != null)
+		{
+			if (decision.length == 1)
+			{
+				this.titleIncluded = decision[0];
+			}
+
+			else
+			{
+				this.titleIncluded = new UiAndDecision().setRequirements(decision);
+			}
+		}
+
 		return this;
 	}
 
@@ -227,14 +310,6 @@ public class UiFileUpload extends UiController implements FileUpload
 	protected boolean isTitleIncluded(Context context, Object focus)
 	{
 		if (this.titleIncluded == null) return true;
-		for (Decision decision : this.titleIncluded)
-		{
-			if (!decision.decide(context, focus))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return this.titleIncluded.decide(context, focus);
 	}
 }

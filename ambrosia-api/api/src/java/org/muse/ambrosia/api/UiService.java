@@ -580,4 +580,28 @@ public interface UiService
 	 * @return The FormatDelegate, or null if none found.
 	 */
 	FormatDelegate getFormatDelegate(String id, String toolId);
+
+	/**
+	 * Register a decision delegate in a tool.
+	 * 
+	 * @param delegate
+	 *        The DecisionDelegate.
+	 * @param id
+	 *        The id of the delegate.
+	 * @param toolId
+	 *        The tool id.
+	 */
+	void registerDecisionDelegate(DecisionDelegate delegate, String id, String toolId);
+
+	/**
+	 * Find the decision delegate with this id in this tool.
+	 * 
+	 * @param id
+	 *        The id.
+	 * @param toolId
+	 *        The tool id.
+	 * @return The DecisionDelegate, or null if none found.
+	 */
+	DecisionDelegate getDecisionDelegate(String id, String toolId);
+
 }

@@ -139,6 +139,7 @@ public class UiCountdownTimer extends UiController implements CountdownTimer
 			this.disabledDecision = new UiDecision().setProperty(new UiConstantPropertyReference().setValue("TRUE"));
 		}
 
+		// short form for destination - attribute "destination" as the destination
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "disabled");
 		if (settingsXml != null)
 		{
@@ -159,6 +160,13 @@ public class UiCountdownTimer extends UiController implements CountdownTimer
 			{
 				this.duration = service.parsePropertyReference(innerXml);
 			}
+		}
+
+		// short form for destination - attribute "destination" as the destination
+		String destination = StringUtil.trimToNull(xml.getAttribute("destination"));
+		if (destination != null)
+		{
+			this.destination = service.newDestination().setDestination(destination);
 		}
 
 		settingsXml = XmlHelper.getChildElementNamed(xml, "destination");

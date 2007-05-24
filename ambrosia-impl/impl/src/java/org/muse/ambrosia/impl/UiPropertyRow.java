@@ -26,6 +26,7 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.PropertyRow;
+import org.w3c.dom.Element;
 
 /**
  * UiPropertyRow describes one row of a UiEntityDisplay...
@@ -40,6 +41,25 @@ public class UiPropertyRow implements PropertyRow
 
 	/** The message for the column title. */
 	protected Message title = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiPropertyRow()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        The UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiPropertyRow(UiServiceImpl service, Element xml)
+	{
+	}
 
 	/**
 	 * {@inheritDoc}

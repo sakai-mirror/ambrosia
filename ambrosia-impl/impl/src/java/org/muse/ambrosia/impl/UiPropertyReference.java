@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
 public class UiPropertyReference implements PropertyReference
 {
 	/** Our log (commons). */
-	private static Log M_log = LogFactory.getLog(PropertyReference.class);
+	private static Log M_log = LogFactory.getLog(UiPropertyReference.class);
 
 	/** The entity reference. */
 	protected String entityReference = null;
