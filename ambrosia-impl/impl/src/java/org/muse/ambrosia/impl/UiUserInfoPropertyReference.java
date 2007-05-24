@@ -23,10 +23,13 @@ package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.UserInfoPropertyReference;
+import org.muse.ambrosia.api.ContextInfoPropertyReference.Selector;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.cover.UserDirectoryService;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiUserInfoPropertyReference handles user id values by providing some user information for the display.
@@ -35,6 +38,31 @@ public class UiUserInfoPropertyReference extends UiPropertyReference implements 
 {
 	/** The user info we want. */
 	protected UserInfoPropertyReference.Selector selector = UserInfoPropertyReference.Selector.displayName;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiUserInfoPropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiUserInfoPropertyReference(UiServiceImpl service, Element xml)
+	{
+		// property reference stuff
+		super(service, xml);
+
+		// selector
+		String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
+		if ("DISPLAYNAME".equals(selector)) setSelector(Selector.displayName);
+	}
 
 	/**
 	 * {@inheritDoc}

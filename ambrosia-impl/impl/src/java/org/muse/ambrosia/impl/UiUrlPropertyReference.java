@@ -23,13 +23,36 @@ package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.UrlPropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiUrlPropertyReference implements UrlPropertyReference.
  */
 public class UiUrlPropertyReference extends UiPropertyReference implements UrlPropertyReference
 {
+	/**
+	 * No-arg constructor.
+	 */
+	public UiUrlPropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiUrlPropertyReference(UiServiceImpl service, Element xml)
+	{
+		// property reference stuff
+		super(service, xml);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

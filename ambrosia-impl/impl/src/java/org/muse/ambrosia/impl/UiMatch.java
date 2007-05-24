@@ -31,7 +31,9 @@ import org.muse.ambrosia.api.FillIn;
 import org.muse.ambrosia.api.Match;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiMatch is the assessment tool's matching interface. <br />
@@ -57,7 +59,7 @@ public class UiMatch extends UiController implements Match
 	protected PropertyReference choiceTextReference = null;
 
 	/** The decision to include the correct marking. */
-	protected Decision[] correctDecision = null;
+	protected Decision correctDecision = null;
 
 	/** The icon to use to mark correct parts. */
 	protected String correctIcon = null;
@@ -69,7 +71,7 @@ public class UiMatch extends UiController implements Match
 	protected PropertyReference correctsReference = null;
 
 	/** The decision to include the feedback display. */
-	protected Decision[] feedbackDecision = null;
+	protected Decision feedbackDecision = null;
 
 	/** The message key for the feedback. */
 	protected String feedbackMessage = null;
@@ -104,14 +106,183 @@ public class UiMatch extends UiController implements Match
 	 */
 	protected PropertyReference propertyReference = null;
 
-	/** The property reference to provide the read only setting. */
-	protected PropertyReference readOnlyReference = null;
+	/** The read only decision. */
+	protected Decision readOnly = null;
 
 	/** The message that will head the choice dropdowns (i.e. 'select:'). */
 	protected Message selectMessage = null;
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiMatch()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiMatch(UiServiceImpl service, Element xml)
+	{
+		// controller stuff
+		super(service, xml);
+
+		// correct marker
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "correctMarker");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "model");
+			if (settingsXml != null)
+			{
+				this.correctsReference = service.parsePropertyReference(innerXml);
+			}
+
+			String correctIcon = StringUtil.trimToNull(xml.getAttribute("correctIcon"));
+			if (correctIcon != null) this.correctIcon = correctIcon;
+
+			String correctSelector = StringUtil.trimToNull(xml.getAttribute("correctSelector"));
+			if (correctSelector != null) this.correctMessage = correctSelector;
+
+			String incorrectIcon = StringUtil.trimToNull(xml.getAttribute("incorrectIcon"));
+			if (incorrectIcon != null) this.incorrectIcon = incorrectIcon;
+
+			String incorrectSelector = StringUtil.trimToNull(xml.getAttribute("incorrectSelector"));
+			if (incorrectSelector != null) this.incorrectMessage = incorrectSelector;
+
+			this.correctDecision = service.parseDecisions(settingsXml);
+		}
+
+		// choice id
+		settingsXml = XmlHelper.getChildElementNamed(xml, "choiceId");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.choiceIdReference = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		// choice label
+		settingsXml = XmlHelper.getChildElementNamed(xml, "choiceId");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.choiceLabelReference = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		// choice text
+		settingsXml = XmlHelper.getChildElementNamed(xml, "choiceText");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.choiceTextReference = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		// feedback
+		settingsXml = XmlHelper.getChildElementNamed(xml, "feedback");
+		if (settingsXml != null)
+		{
+			String selector = StringUtil.trimToNull(settingsXml.getAttribute("selector"));
+			if (selector != null) this.feedbackMessage = selector;
+
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.feedbacksReference = service.parsePropertyReference(innerXml);
+			}
+
+			this.feedbackDecision = service.parseDecisions(settingsXml);
+		}
+
+		// onEmptyAlert
+		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			if (innerXml != null)
+			{
+				this.onEmptyAlertMsg = new UiMessage(service, innerXml);
+			}
+
+			this.onEmptyAlertDecision = service.parseDecisions(settingsXml);
+		}
+
+		// parts
+		settingsXml = XmlHelper.getChildElementNamed(xml, "parts");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.partsReference = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		// parts choices
+		settingsXml = XmlHelper.getChildElementNamed(xml, "partsChoices");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.partsChoiceReference = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		// parts title
+		settingsXml = XmlHelper.getChildElementNamed(xml, "partsTitle");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.partsTitleReference = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		// model
+		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			this.propertyReference = service.parsePropertyReference(settingsXml);
+		}
+
+		// read only
+		settingsXml = XmlHelper.getChildElementNamed(xml, "readOnly");
+		if (settingsXml != null)
+		{
+			this.readOnly = service.parseDecisions(settingsXml);
+		}
+
+		// select
+		settingsXml = XmlHelper.getChildElementNamed(xml, "select");
+		if (settingsXml != null)
+		{
+			this.selectMessage = new UiMessage(service, settingsXml);
+		}
+
+		// title
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			this.titleMessage = new UiMessage(service, settingsXml);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -123,13 +294,9 @@ public class UiMatch extends UiController implements Match
 
 		// read only?
 		boolean readOnly = false;
-		if (this.readOnlyReference != null)
+		if (this.readOnly != null)
 		{
-			String value = this.readOnlyReference.read(context, focus);
-			if (value != null)
-			{
-				readOnly = Boolean.parseBoolean(value);
-			}
+			readOnly = this.readOnly.decide(context, focus);
 		}
 
 		// alert if empty at submit?
@@ -173,14 +340,7 @@ public class UiMatch extends UiController implements Match
 		boolean correctMarkingIncluded = true;
 		if (this.correctDecision != null)
 		{
-			for (Decision decision : this.correctDecision)
-			{
-				if (!decision.decide(context, focus))
-				{
-					correctMarkingIncluded = false;
-					break;
-				}
-			}
+			correctMarkingIncluded = this.correctDecision.decide(context, focus);
 		}
 
 		// read the correct flags - we want a Boolean[]
@@ -206,14 +366,7 @@ public class UiMatch extends UiController implements Match
 		boolean feedbackIncluded = true;
 		if (this.feedbackDecision != null)
 		{
-			for (Decision decision : this.feedbackDecision)
-			{
-				if (!decision.decide(context, focus))
-				{
-					feedbackIncluded = false;
-					break;
-				}
-			}
+			feedbackIncluded = this.feedbackDecision.decide(context, focus);
 		}
 
 		// read the feedback texts - we want a String[]
@@ -440,7 +593,19 @@ public class UiMatch extends UiController implements Match
 		this.correctMessage = correctMessage;
 		this.incorrectIcon = incorrectIcon;
 		this.incorrectMessage = incorrectMessage;
-		this.correctDecision = decision;
+
+		if (decision != null)
+		{
+			if (decision.length == 1)
+			{
+				this.correctDecision = decision[0];
+			}
+			else
+			{
+				this.correctDecision = new UiAndDecision().setRequirements(decision);
+			}
+		}
+
 		return this;
 	}
 
@@ -451,7 +616,19 @@ public class UiMatch extends UiController implements Match
 	{
 		this.feedbacksReference = propertyReference;
 		this.feedbackMessage = message;
-		this.feedbackDecision = decision;
+
+		if (decision != null)
+		{
+			if (decision.length == 1)
+			{
+				this.feedbackDecision = decision[0];
+			}
+			else
+			{
+				this.feedbackDecision = new UiAndDecision().setRequirements(decision);
+			}
+		}
+
 		return this;
 	}
 
@@ -505,9 +682,9 @@ public class UiMatch extends UiController implements Match
 	/**
 	 * {@inheritDoc}
 	 */
-	public Match setReadOnly(PropertyReference reference)
+	public Match setReadOnly(Decision decision)
 	{
-		this.readOnlyReference = reference;
+		this.readOnly = decision;
 		return this;
 	}
 

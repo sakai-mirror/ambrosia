@@ -24,7 +24,9 @@ package org.muse.ambrosia.impl;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.TextPropertyReference;
 import org.sakaiproject.util.FormattedText;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiTextPropertyReference handles plain text String selector values.
@@ -34,6 +36,44 @@ public class UiTextPropertyReference extends UiPropertyReference implements Text
 	protected int maxChars = -1;
 
 	protected boolean stripHtml = false;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiTextPropertyReference()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiTextPropertyReference(UiServiceImpl service, Element xml)
+	{
+		// property reference stuff
+		super(service, xml);
+
+		// max length
+		String max = StringUtil.trimToNull(xml.getAttribute("max"));
+		if (max != null)
+		{
+			try
+			{
+				setMaxLength(Integer.parseInt(max));
+			}
+			catch (NumberFormatException e)
+			{
+			}
+		}
+
+		// strip html
+		String strip = StringUtil.trimToNull(xml.getAttribute("stripHtml"));
+		if ((strip != null) && ("TRUE".equals(strip))) setStripHtml();
+	}
 
 	/**
 	 * {@inheritDoc}

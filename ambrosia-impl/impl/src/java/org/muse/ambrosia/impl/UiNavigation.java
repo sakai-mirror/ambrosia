@@ -56,8 +56,8 @@ public class UiNavigation extends UiController implements Navigation
 	/** The confirm message. */
 	protected Message confirmMsg = null;
 
-	/** The default decision array. */
-	protected Decision[] defaultDecision = null;
+	/** The default decision. */
+	protected Decision defaultDecision = null;
 
 	/** If set to true, this is a default decision - overrides the defaultDecision set. */
 	protected boolean defaultSet = false;
@@ -159,7 +159,7 @@ public class UiNavigation extends UiController implements Navigation
 		String description = StringUtil.trimToNull(xml.getAttribute("description"));
 		if (description != null) setDescription(description);
 
-		// sub-element configuration
+		// confirm
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "confirm");
 		if (settingsXml != null)
 		{
@@ -182,7 +182,6 @@ public class UiNavigation extends UiController implements Navigation
 				setConfirm(decision, cancelMsg, cancelIcon, msg, pRef);
 			}
 
-			// TODO: allow sub elements, decision
 			Element innerSettingsXml = XmlHelper.getChildElementNamed(settingsXml, "message");
 			if (innerSettingsXml != null)
 			{
@@ -217,6 +216,18 @@ public class UiNavigation extends UiController implements Navigation
 		if (settingsXml != null)
 		{
 			this.disabledDecision = service.parseDecisions(settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "default");
+		if (settingsXml != null)
+		{
+			this.defaultDecision = service.parseDecisions(settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "validate");
+		if (settingsXml != null)
+		{
+			this.validationDecision = service.parseDecisions(settingsXml);
 		}
 
 		settingsXml = XmlHelper.getChildElementNamed(xml, "icon");
@@ -514,7 +525,19 @@ public class UiNavigation extends UiController implements Navigation
 	 */
 	public Navigation setDefault(Decision... defaultDecision)
 	{
-		this.defaultDecision = defaultDecision;
+		if (defaultDecision != null)
+		{
+			if (defaultDecision.length == 1)
+			{
+				this.defaultDecision = defaultDecision[0];
+			}
+
+			else
+			{
+				this.defaultDecision = new UiAndDecision().setRequirements(defaultDecision);
+			}
+		}
+
 		return this;
 	}
 
@@ -624,15 +647,7 @@ public class UiNavigation extends UiController implements Navigation
 	{
 		if (this.defaultSet) return true;
 		if (this.defaultDecision == null) return false;
-		for (Decision decision : this.defaultDecision)
-		{
-			if (!decision.decide(context, focus))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return this.defaultDecision.decide(context, focus);
 	}
 
 	/**

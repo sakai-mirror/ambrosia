@@ -32,12 +32,15 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.muse.ambrosia.api.Context;
+import org.muse.ambrosia.api.Controller;
 import org.muse.ambrosia.api.FormatDelegate;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiPropertyReference accesses a particular selector of a model entity. If the reference is not set, we attempt to just get the object itself.<br />
@@ -110,6 +113,31 @@ public class UiPropertyReference implements PropertyReference
 		
 		String missingText = StringUtil.trimToNull(xml.getAttribute("missing"));
 		if (missingText != null) setMissingText(missingText);
+		
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "missingValues");
+		if (settingsXml != null)
+		{
+			List<String> missingValues = new ArrayList<String>();
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element valueXml = (Element) node;
+					if ("missing".equals(valueXml.getTagName()))
+					{
+						String value = StringUtil.trimToNull(xml.getAttribute("value"));
+						if (value != null) missingValues.add(value);
+					}
+				}
+			}
+			
+			if (!missingValues.isEmpty())
+			{
+				this.missingValues = missingValues.toArray(new String[missingValues.size()]);
+			}
+		}
 	}
 
 	/**

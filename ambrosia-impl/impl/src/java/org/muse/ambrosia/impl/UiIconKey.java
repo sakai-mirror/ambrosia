@@ -27,10 +27,15 @@ import java.util.Collection;
 import java.util.List;
 
 import org.muse.ambrosia.api.Context;
+import org.muse.ambrosia.api.Controller;
 import org.muse.ambrosia.api.IconKey;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiIconKey presents a key to icon use for some other part of the interface using icons. Each icon is shown with a description.
@@ -57,6 +62,95 @@ public class UiIconKey extends UiController implements IconKey
 
 	/** The column width. */
 	protected String width = "16px";
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiIconKey()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiIconKey(UiServiceImpl service, Element xml)
+	{
+		// controller stuff
+		super(service, xml);
+
+		// icons
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "icons");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element iconXml = (Element) node;
+					if ("icon".equals(iconXml.getTagName()))
+					{
+						String icon = StringUtil.trimToNull(iconXml.getAttribute("icon"));
+
+						Message message = null;
+						Element messageXml = XmlHelper.getChildElementNamed(iconXml, "message");
+						if (messageXml != null)
+						{
+							message = new UiMessage(service, messageXml);
+						}
+
+						addIcon(icon, message);
+					}
+				}
+			}
+		}
+
+		// description reference
+		settingsXml = XmlHelper.getChildElementNamed(xml, "descriptionModel");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.descriptionReference = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		// icon reference
+		settingsXml = XmlHelper.getChildElementNamed(xml, "iconModel");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.iconReference = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		// keys reference
+		settingsXml = XmlHelper.getChildElementNamed(xml, "keysModel");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.keysReference = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		// title
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			this.title = new UiMessage(service, settingsXml);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

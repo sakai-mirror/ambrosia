@@ -129,13 +129,13 @@ public interface Match extends Controller
 	Match setProperty(PropertyReference propertyReference);
 
 	/**
-	 * Set the read-only setting to the Boolean result of this reference.
+	 * Set the read-only decision.
 	 * 
-	 * @param reference
-	 *        The property reference to provide the read only setting.
+	 * @param decision
+	 *        The read only decision.
 	 * @return self.
 	 */
-	Match setReadOnly(PropertyReference reference);
+	Match setReadOnly(Decision decision);
 
 	/**
 	 * Set the select text.

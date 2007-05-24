@@ -28,7 +28,9 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.SelectionColumn;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiSelectionColumn implements SelectionColum.
@@ -47,8 +49,8 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/** The PropertyReference for decoding this column - this is what will be updated with the selected value(s). */
 	protected PropertyReference propertyReference = null;
 
-	/** The property reference to provide the read only setting. */
-	protected PropertyReference readOnlyReference = null;
+	/** The rad-only decision. */
+	protected Decision readOnly = null;
 
 	/** If true, we are selecting a single value, else we can select many values. */
 	protected boolean singleSelect = true;
@@ -60,6 +62,94 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	protected PropertyReference valuePropertyReference = null;
 
 	/**
+	 * Public no-arg constructor.
+	 */
+	public UiSelectionColumn()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiSelectionColumn(UiServiceImpl service, Element xml)
+	{
+		// entity list column stuff
+		super(service, xml);
+
+		// label
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "label");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			if (innerXml != null) this.label = new UiMessage(service, innerXml);
+		}
+
+		// multiple select
+		String multiple = StringUtil.trimToNull(xml.getAttribute("multiple"));
+		if ((multiple != null) && ("TRUE".equals(multiple))) setMultiple();
+
+		// single select
+		String single = StringUtil.trimToNull(xml.getAttribute("single"));
+		if ((multiple != null) && ("TRUE".equals(multiple))) setSingle();
+
+		// onEmptyAlert
+		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			if (innerXml != null)
+			{
+				this.onEmptyAlertMsg = new UiMessage(service, innerXml);
+			}
+
+			this.onEmptyAlertDecision = service.parseDecisions(settingsXml);
+		}
+
+		// short for model
+		String model = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(model);
+			setProperty(pRef);
+		}
+
+		// model
+		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) setProperty(pRef);
+		}
+
+		// read only
+		settingsXml = XmlHelper.getChildElementNamed(xml, "readOnly");
+		if (settingsXml != null)
+		{
+			this.readOnly = service.parseDecisions(settingsXml);
+		}
+
+		// single select
+		settingsXml = XmlHelper.getChildElementNamed(xml, "singleSelect");
+		if (settingsXml != null)
+		{
+			this.singleSelectDecision = service.parseDecisions(settingsXml);
+		}
+
+		// value
+		settingsXml = XmlHelper.getChildElementNamed(xml, "value");
+		if (settingsXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) setValueProperty(pRef);
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public String getDisplayText(Context context, Object entity, int row, int idRoot)
@@ -69,13 +159,9 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 
 		// read only?
 		boolean readOnly = false;
-		if (this.readOnlyReference != null)
+		if (this.readOnly != null)
 		{
-			String value = this.readOnlyReference.read(context, entity);
-			if (value != null)
-			{
-				readOnly = Boolean.parseBoolean(value);
-			}
+			readOnly = this.readOnly.decide(context, entity);
 		}
 
 		// alert if empty at submit?
@@ -193,13 +279,9 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	{
 		// read only?
 		boolean readOnly = false;
-		if (this.readOnlyReference != null)
+		if (this.readOnly != null)
 		{
-			String value = this.readOnlyReference.read(context, focus);
-			if (value != null)
-			{
-				readOnly = Boolean.parseBoolean(value);
-			}
+			readOnly = this.readOnly.decide(context, focus);
 		}
 
 		if (readOnly) return "";
@@ -253,13 +335,9 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	{
 		// read only?
 		boolean readOnly = false;
-		if (this.readOnlyReference != null)
+		if (this.readOnly != null)
 		{
-			String value = this.readOnlyReference.read(context, focus);
-			if (value != null)
-			{
-				readOnly = Boolean.parseBoolean(value);
-			}
+			readOnly = this.readOnly.decide(context, focus);
 		}
 
 		if (readOnly) return null;
@@ -326,9 +404,9 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/**
 	 * {@inheritDoc}
 	 */
-	public SelectionColumn setReadOnly(PropertyReference reference)
+	public SelectionColumn setReadOnly(Decision decision)
 	{
-		this.readOnlyReference = reference;
+		this.readOnly = decision;
 		return this;
 	}
 

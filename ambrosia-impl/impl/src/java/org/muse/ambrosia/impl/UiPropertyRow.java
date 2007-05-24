@@ -26,6 +26,7 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.PropertyRow;
+import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -59,6 +60,41 @@ public class UiPropertyRow implements PropertyRow
 	 */
 	protected UiPropertyRow(UiServiceImpl service, Element xml)
 	{
+		// included decisions
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "included");
+		if (settingsXml != null)
+		{
+			this.included = service.parseDecisions(settingsXml);
+		}
+
+		// short form for title - attribute "title" as the selector
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
+		// short for model
+		String model = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(model);
+			setProperty(pRef);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.title = new UiMessage(service, settingsXml);
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) setProperty(pRef);
+		}
 	}
 
 	/**

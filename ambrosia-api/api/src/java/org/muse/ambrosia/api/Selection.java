@@ -36,13 +36,13 @@ public interface Selection extends Controller
 	Selection setProperty(PropertyReference propertyReference);
 
 	/**
-	 * Set the read-only setting to the Boolean result of this reference.
+	 * Set the read-only decision.
 	 * 
-	 * @param reference
-	 *        The property reference to provide the read only setting.
+	 * @param decision
+	 *        The read-only decision.
 	 * @return self.
 	 */
-	Selection setReadOnly(PropertyReference reference);
+	Selection setReadOnly(Decision decision);
 
 	/**
 	 * Set the value that is decoded when the user makes the selection.

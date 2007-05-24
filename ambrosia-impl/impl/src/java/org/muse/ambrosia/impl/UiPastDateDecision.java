@@ -25,6 +25,7 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.PastDateDecision;
 import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
+import org.w3c.dom.Element;
 
 /**
  * UiPastDateDecision is a decision that is true if the value, a Time type, is in the past.
@@ -32,6 +33,27 @@ import org.sakaiproject.time.cover.TimeService;
 public class UiPastDateDecision extends UiDecision implements PastDateDecision
 {
 	// TODO: add a date against which to check rather than now -ggolden
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiPastDateDecision()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiPastDateDecision(UiServiceImpl service, Element xml)
+	{
+		// do the Decision stuff
+		super(service, xml);
+	}
 
 	/**
 	 * {@inheritDoc}

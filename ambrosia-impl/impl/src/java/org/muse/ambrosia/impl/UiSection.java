@@ -60,10 +60,10 @@ public class UiSection extends UiContainer implements Section
 	protected Message title = null;
 
 	/** The highlight decision for the title. */
-	protected Decision[] titleHighlighted = null;
+	protected Decision titleHighlighted = null;
 
-	/** The include decision array for the itle. */
-	protected Decision[] titleIncluded = null;
+	/** The include decision for the title. */
+	protected Decision titleIncluded = null;
 
 	/**
 	 * Public no-arg constructor.
@@ -98,16 +98,64 @@ public class UiSection extends UiContainer implements Section
 		{
 			setTitle(title);
 		}
-		
-		// sub-element configuration
+
+		// title
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
 		if (settingsXml != null)
 		{
-			// parse titleHighlighted
-			// parse titleIncluded
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "highlighted");
+			if (innerXml != null)
+			{
+				this.titleHighlighted = service.parseDecisions(innerXml);
+			}
 
-			// let Message parse this
+			innerXml = XmlHelper.getChildElementNamed(xml, "included");
+			if (innerXml != null)
+			{
+				this.included = service.parseDecisions(innerXml);
+			}
+
 			this.title = new UiMessage(service, settingsXml);
+		}
+
+		// anchor
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			this.anchor = new UiMessage(service, settingsXml);
+		}
+
+		// entity included
+		settingsXml = XmlHelper.getChildElementNamed(xml, "entityIncluded");
+		if (settingsXml != null)
+		{
+			Decision decision = service.parseDecisions(settingsXml);
+			this.included = decision;
+		}
+
+		// focus
+		settingsXml = XmlHelper.getChildElementNamed(xml, "focus");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "model");
+			if (innerXml != null)
+			{
+				this.focusReference = service.parsePropertyReference(innerXml);
+			}
+		}
+
+		// iterator
+		settingsXml = XmlHelper.getChildElementNamed(xml, "iterator");
+		if (settingsXml != null)
+		{
+			String name = StringUtil.trimToNull(xml.getAttribute("name"));
+			if (name != null) this.iteratorName = name;
+
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "model");
+			if (innerXml != null)
+			{
+				this.focusReference = service.parsePropertyReference(innerXml);
+			}
 		}
 	}
 
@@ -255,7 +303,18 @@ public class UiSection extends UiContainer implements Section
 	 */
 	public Section setTitleHighlighted(Decision... decision)
 	{
-		this.titleHighlighted = decision;
+		if (decision != null)
+		{
+			if (decision.length == 1)
+			{
+				this.titleHighlighted = decision[0];
+			}
+			else
+			{
+				this.titleHighlighted = new UiAndDecision().setRequirements(decision);
+			}
+		}
+
 		return this;
 	}
 
@@ -264,7 +323,18 @@ public class UiSection extends UiContainer implements Section
 	 */
 	public Section setTitleIncluded(Decision... decision)
 	{
-		this.titleIncluded = decision;
+		if (decision != null)
+		{
+			if (decision.length == 1)
+			{
+				this.titleIncluded = decision[0];
+			}
+			else
+			{
+				this.titleIncluded = new UiAndDecision().setRequirements(decision);
+			}
+		}
+
 		return this;
 	}
 
@@ -280,15 +350,7 @@ public class UiSection extends UiContainer implements Section
 	protected boolean isTitleHighlighted(Context context, Object focus)
 	{
 		if (this.titleHighlighted == null) return false;
-		for (Decision decision : this.titleHighlighted)
-		{
-			if (!decision.decide(context, focus))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return this.titleHighlighted.decide(context, focus);
 	}
 
 	/**
@@ -303,15 +365,7 @@ public class UiSection extends UiContainer implements Section
 	protected boolean isTitleIncluded(Context context, Object focus)
 	{
 		if (this.titleIncluded == null) return true;
-		for (Decision decision : this.titleIncluded)
-		{
-			if (!decision.decide(context, focus))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return this.titleIncluded.decide(context, focus);
 	}
 
 	/**

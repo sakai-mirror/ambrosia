@@ -79,13 +79,13 @@ public interface FillIn extends Controller
 	FillIn setProperty(PropertyReference propertyReference);
 
 	/**
-	 * Set the read-only setting to the Boolean result of this reference.
+	 * Set the decision for read-only.
 	 * 
-	 * @param reference
-	 *        The property reference to provide the read only setting.
+	 * @param decision
+	 *        The Decision to provide the read only setting.
 	 * @return self.
 	 */
-	FillIn setReadOnly(PropertyReference reference);
+	FillIn setReadOnly(Decision decision);
 
 	/**
 	 * Set the fill-in text.

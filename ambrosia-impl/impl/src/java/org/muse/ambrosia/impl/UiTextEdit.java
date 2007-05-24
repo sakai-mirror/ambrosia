@@ -61,8 +61,8 @@ public class UiTextEdit extends UiController implements TextEdit
 	 */
 	protected PropertyReference propertyReference = null;
 
-	/** The property reference to provide the read only setting. */
-	protected PropertyReference readOnlyReference = null;
+	/** The read-only decision. */
+	protected Decision readOnly = null;
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
@@ -84,10 +84,8 @@ public class UiTextEdit extends UiController implements TextEdit
 	 */
 	protected UiTextEdit(UiServiceImpl service, Element xml)
 	{
-
-		// parse onEmptyAlert
-		// parse focus decision
-		// parse read only
+		// controller stuff
+		super(service, xml);
 
 		// short form for title - attribute "title" as the selector
 		String title = StringUtil.trimToNull(xml.getAttribute("title"));
@@ -115,6 +113,7 @@ public class UiTextEdit extends UiController implements TextEdit
 		{
 		}
 
+		// title
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
 		if (settingsXml != null)
 		{
@@ -122,11 +121,39 @@ public class UiTextEdit extends UiController implements TextEdit
 			this.titleMessage = new UiMessage(service, settingsXml);
 		}
 
+		// model
 		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
 		if (settingsXml != null)
 		{
 			PropertyReference pRef = service.parsePropertyReference(settingsXml);
 			if (pRef != null) setProperty(pRef);
+		}
+
+		// onEmptyAlert
+		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			if (innerXml != null)
+			{
+				this.onEmptyAlertMsg = new UiMessage(service, innerXml);
+			}
+
+			this.onEmptyAlertDecision = service.parseDecisions(settingsXml);
+		}
+
+		// read only
+		settingsXml = XmlHelper.getChildElementNamed(xml, "readOnly");
+		if (settingsXml != null)
+		{
+			this.readOnly = service.parseDecisions(settingsXml);
+		}
+
+		// focus
+		settingsXml = XmlHelper.getChildElementNamed(xml, "focus");
+		if (settingsXml != null)
+		{
+			this.focusDecision = service.parseDecisions(settingsXml);
 		}
 	}
 
@@ -140,13 +167,9 @@ public class UiTextEdit extends UiController implements TextEdit
 
 		// read only?
 		boolean readOnly = false;
-		if (this.readOnlyReference != null)
+		if (this.readOnly != null)
 		{
-			String value = this.readOnlyReference.read(context, focus);
-			if (value != null)
-			{
-				readOnly = Boolean.parseBoolean(value);
-			}
+			readOnly = this.readOnly.decide(context, focus);
 		}
 
 		// alert if empty at submit?
@@ -286,9 +309,9 @@ public class UiTextEdit extends UiController implements TextEdit
 	/**
 	 * {@inheritDoc}
 	 */
-	public TextEdit setReadOnly(PropertyReference reference)
+	public TextEdit setReadOnly(Decision decision)
 	{
-		this.readOnlyReference = reference;
+		this.readOnly = decision;
 		return this;
 	}
 

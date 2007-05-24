@@ -28,6 +28,7 @@ import org.muse.ambrosia.api.Controller;
 import org.muse.ambrosia.api.Divider;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.NavigationBar;
+import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -57,6 +58,9 @@ public class UiNavigationBar extends UiSection implements NavigationBar
 	{
 		// do the container thing
 		super(service, xml);
+
+		String width = StringUtil.trimToNull(xml.getAttribute("width"));
+		if (width != null) this.width = width;
 	}
 
 	/**

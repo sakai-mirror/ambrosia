@@ -30,7 +30,9 @@ import org.muse.ambrosia.api.FillIn;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.TextEdit;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
+import org.w3c.dom.Element;
 
 /**
  * UiFillIn presents a set of text inputs for the user to edit embedded in a surrounding string. The string is formatted with "{}" where the fill-ins
@@ -40,7 +42,7 @@ import org.sakaiproject.util.Validator;
 public class UiFillIn extends UiController implements FillIn
 {
 	/** The decision to include the correct marking. */
-	protected Decision[] correctDecision = null;
+	protected Decision correctDecision = null;
 
 	/** The icon to use to mark correct parts. */
 	protected String correctIcon = null;
@@ -75,14 +77,121 @@ public class UiFillIn extends UiController implements FillIn
 	 */
 	protected PropertyReference propertyReference = null;
 
-	/** The property reference to provide the read only setting. */
-	protected PropertyReference readOnlyReference = null;
+	/** The read only decision. */
+	protected Decision readOnly = null;
 
 	/** The message that will provide fill-in text. */
 	protected Message textMessage = null;
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiFillIn()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiFillIn(UiServiceImpl service, Element xml)
+	{
+		// controller stuff
+		super(service, xml);
+
+		// correct marker
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "correctMarker");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "model");
+			if (settingsXml != null)
+			{
+				this.correctsReference = service.parsePropertyReference(innerXml);
+			}
+
+			String correctIcon = StringUtil.trimToNull(xml.getAttribute("correctIcon"));
+			if (correctIcon != null) this.correctIcon = correctIcon;
+
+			String correctSelector = StringUtil.trimToNull(xml.getAttribute("correctSelector"));
+			if (correctSelector != null) this.correctMessage = correctSelector;
+
+			String incorrectIcon = StringUtil.trimToNull(xml.getAttribute("incorrectIcon"));
+			if (incorrectIcon != null) this.incorrectIcon = incorrectIcon;
+
+			String incorrectSelector = StringUtil.trimToNull(xml.getAttribute("incorrectSelector"));
+			if (incorrectSelector != null) this.incorrectMessage = incorrectSelector;
+
+			this.correctDecision = service.parseDecisions(settingsXml);
+		}
+
+		// focus
+		settingsXml = XmlHelper.getChildElementNamed(xml, "focus");
+		if (settingsXml != null)
+		{
+			this.focusDecision = service.parseDecisions(settingsXml);
+		}
+
+		// onEmptyAlert
+		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			if (innerXml != null)
+			{
+				this.onEmptyAlertMsg = new UiMessage(service, innerXml);
+			}
+
+			this.onEmptyAlertDecision = service.parseDecisions(settingsXml);
+		}
+
+		// model
+		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			this.propertyReference = service.parsePropertyReference(settingsXml);
+		}
+
+		// read only
+		settingsXml = XmlHelper.getChildElementNamed(xml, "readOnly");
+		if (settingsXml != null)
+		{
+			this.readOnly = service.parseDecisions(settingsXml);
+		}
+
+		// text
+		settingsXml = XmlHelper.getChildElementNamed(xml, "text");
+		if (settingsXml != null)
+		{
+			this.textMessage = new UiMessage(service, settingsXml);
+		}
+
+		// title
+		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			this.titleMessage = new UiMessage(service, settingsXml);
+		}
+
+		// width
+		String width = StringUtil.trimToNull(xml.getAttribute("cols"));
+		if (width != null)
+		{
+			try
+			{
+				this.numCols = Integer.parseInt(width);
+			}
+			catch (NumberFormatException e)
+			{
+			}
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -94,13 +203,9 @@ public class UiFillIn extends UiController implements FillIn
 
 		// read only?
 		boolean readOnly = false;
-		if (this.readOnlyReference != null)
+		if (this.readOnly != null)
 		{
-			String value = this.readOnlyReference.read(context, focus);
-			if (value != null)
-			{
-				readOnly = Boolean.parseBoolean(value);
-			}
+			readOnly = this.readOnly.decide(context, focus);
 		}
 
 		// alert if empty at submit?
@@ -171,14 +276,7 @@ public class UiFillIn extends UiController implements FillIn
 		boolean correctMarkingIncluded = true;
 		if (this.correctDecision != null)
 		{
-			for (Decision decision : this.correctDecision)
-			{
-				if (!decision.decide(context, focus))
-				{
-					correctMarkingIncluded = false;
-					break;
-				}
-			}
+			correctMarkingIncluded = this.correctDecision.decide(context, focus);
 		}
 
 		// read the correct flags - we want a Boolean[]
@@ -323,7 +421,19 @@ public class UiFillIn extends UiController implements FillIn
 		this.correctMessage = correctMessage;
 		this.incorrectIcon = incorrectIcon;
 		this.incorrectMessage = incorrectMessage;
-		this.correctDecision = decision;
+
+		if (decision != null)
+		{
+			if (decision.length == 1)
+			{
+				this.correctDecision = decision[0];
+			}
+			else
+			{
+				this.correctDecision = new UiAndDecision().setRequirements(decision);
+			}
+		}
+
 		return this;
 	}
 
@@ -360,9 +470,9 @@ public class UiFillIn extends UiController implements FillIn
 	/**
 	 * {@inheritDoc}
 	 */
-	public FillIn setReadOnly(PropertyReference reference)
+	public FillIn setReadOnly(Decision decision)
 	{
-		this.readOnlyReference = reference;
+		this.readOnly = decision;
 		return this;
 	}
 

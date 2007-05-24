@@ -64,8 +64,12 @@ public class UiPropertyColumn extends UiEntityListColumn implements PropertyColu
 			PropertyReference pRef = service.parsePropertyReference(settingsXml);
 			if (pRef != null) setProperty(pRef);
 		}
-		
-		// TODO: or message...
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "message");
+		if (settingsXml != null)
+		{
+			this.propertyMessage = new UiMessage(service, settingsXml);
+		}
 	}
 
 	/**

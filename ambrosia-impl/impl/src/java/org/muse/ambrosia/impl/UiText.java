@@ -75,11 +75,10 @@ public class UiText extends UiController implements Text
 			}
 		}
 
-		// sub-element configuration
+		// message
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "message");
 		if (settingsXml != null)
 		{
-			// let Message parse this
 			this.message = new UiMessage(service, settingsXml);
 		}
 	}

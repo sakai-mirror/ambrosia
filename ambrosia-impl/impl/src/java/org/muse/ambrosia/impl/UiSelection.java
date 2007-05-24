@@ -24,10 +24,12 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 
 import org.muse.ambrosia.api.Context;
+import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Selection;
-import org.sakaiproject.util.Validator;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * UiSelection presents a selection for the user to choose or not.<br />
@@ -39,19 +41,82 @@ public class UiSelection extends UiController implements Selection
 	protected String notSelectedValue = "false";
 
 	/**
-	 * The PropertyReference for encoding and decoding this selection - this is what will be updated with the end-user's selection
-	 * choice, and what value seeds the display.
+	 * The PropertyReference for encoding and decoding this selection - this is what will be updated with the end-user's selection choice, and what
+	 * value seeds the display.
 	 */
 	protected PropertyReference propertyReference = null;
 
-	/** The property reference to provide the read only setting. */
-	protected PropertyReference readOnlyReference = null;
+	/** The read only decision. */
+	protected Decision readOnly = null;
 
 	/** The value we find if the user selects the selection. */
 	protected String selectedValue = "true";
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
+
+	/**
+	 * No-arg constructor.
+	 */
+	public UiSelection()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiSelection(UiServiceImpl service, Element xml)
+	{
+		// controller stuff
+		super(service, xml);
+
+		// short form for title - attribute "title" as the selector
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
+		// short for model
+		String model = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(model);
+			setProperty(pRef);
+		}
+
+		// selected value
+		String value = StringUtil.trimToNull(xml.getAttribute("value"));
+		if (value != null) this.selectedValue = value;
+
+		// title
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.titleMessage = new UiMessage(service, settingsXml);
+		}
+
+		// model
+		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) setProperty(pRef);
+		}
+
+		// read only
+		settingsXml = XmlHelper.getChildElementNamed(xml, "readOnly");
+		if (settingsXml != null)
+		{
+			this.readOnly = service.parseDecisions(settingsXml);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -63,13 +128,9 @@ public class UiSelection extends UiController implements Selection
 
 		// read only?
 		boolean readOnly = false;
-		if (this.readOnlyReference != null)
+		if (this.readOnly != null)
 		{
-			String value = this.readOnlyReference.read(context, focus);
-			if (value != null)
-			{
-				readOnly = Boolean.parseBoolean(value);
-			}
+			readOnly = this.readOnly.decide(context, focus);
 		}
 
 		// generate some ids
@@ -92,16 +153,15 @@ public class UiSelection extends UiController implements Selection
 		response.println("<div class=\"ambrosiaSelection\">");
 
 		// the check box
-		response.println("<input type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + this.selectedValue
-				+ "\" " + (checked ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
+		response.println("<input type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + this.selectedValue + "\" "
+				+ (checked ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 
 		// the decode directive
 		if ((this.propertyReference != null) && (!readOnly))
 		{
-			response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />"
-					+ "<input type=\"hidden\" name=\"" + "prop_" + decodeId + "\" value=\""
-					+ this.propertyReference.getFullReference(context) + "\" />" + "<input type=\"hidden\" name=\"" + "null_"
-					+ decodeId + "\" value=\"" + this.notSelectedValue + "\" />");
+			response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\"" + "prop_"
+					+ decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />" + "<input type=\"hidden\" name=\""
+					+ "null_" + decodeId + "\" value=\"" + this.notSelectedValue + "\" />");
 		}
 
 		// title after
@@ -111,7 +171,7 @@ public class UiSelection extends UiController implements Selection
 			response.println(this.titleMessage.getMessage(context, focus));
 			response.println("</label>");
 		}
-		
+
 		response.println("</div>");
 	}
 
@@ -127,9 +187,9 @@ public class UiSelection extends UiController implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
-	public Selection setReadOnly(PropertyReference reference)
+	public Selection setReadOnly(Decision decision)
 	{
-		this.readOnlyReference = reference;
+		this.readOnly = decision;
 		return this;
 	}
 
