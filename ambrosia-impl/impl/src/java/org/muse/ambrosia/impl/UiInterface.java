@@ -86,10 +86,10 @@ public class UiInterface extends UiContainer implements Interface
 			setHeader(header);
 		}
 
-		String noAutoComplete = StringUtil.trimToNull(xml.getAttribute("noAutoComplete"));
-		if (noAutoComplete != null)
+		String autoComplete = StringUtil.trimToNull(xml.getAttribute("autoComplete"));
+		if ((autoComplete != null) && ("FALSE".equals(autoComplete)))
 		{
-			this.setNoAutoComplete();
+			setNoAutoComplete();
 		}
 
 		// sub-element configuration

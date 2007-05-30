@@ -139,22 +139,22 @@ public class UiMatch extends UiController implements Match
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "correctMarker");
 		if (settingsXml != null)
 		{
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "model");
-			if (settingsXml != null)
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
 			{
 				this.correctsReference = service.parsePropertyReference(innerXml);
 			}
 
-			String correctIcon = StringUtil.trimToNull(xml.getAttribute("correctIcon"));
+			String correctIcon = StringUtil.trimToNull(settingsXml.getAttribute("correctIcon"));
 			if (correctIcon != null) this.correctIcon = correctIcon;
 
-			String correctSelector = StringUtil.trimToNull(xml.getAttribute("correctSelector"));
+			String correctSelector = StringUtil.trimToNull(settingsXml.getAttribute("correctSelector"));
 			if (correctSelector != null) this.correctMessage = correctSelector;
 
-			String incorrectIcon = StringUtil.trimToNull(xml.getAttribute("incorrectIcon"));
+			String incorrectIcon = StringUtil.trimToNull(settingsXml.getAttribute("incorrectIcon"));
 			if (incorrectIcon != null) this.incorrectIcon = incorrectIcon;
 
-			String incorrectSelector = StringUtil.trimToNull(xml.getAttribute("incorrectSelector"));
+			String incorrectSelector = StringUtil.trimToNull(settingsXml.getAttribute("incorrectSelector"));
 			if (incorrectSelector != null) this.incorrectMessage = incorrectSelector;
 
 			this.correctDecision = service.parseDecisions(settingsXml);
@@ -172,7 +172,7 @@ public class UiMatch extends UiController implements Match
 		}
 
 		// choice label
-		settingsXml = XmlHelper.getChildElementNamed(xml, "choiceId");
+		settingsXml = XmlHelper.getChildElementNamed(xml, "choiceLabel");
 		if (settingsXml != null)
 		{
 			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
@@ -213,7 +213,7 @@ public class UiMatch extends UiController implements Match
 		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
 		if (settingsXml != null)
 		{
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
 			if (innerXml != null)
 			{
 				this.onEmptyAlertMsg = new UiMessage(service, innerXml);

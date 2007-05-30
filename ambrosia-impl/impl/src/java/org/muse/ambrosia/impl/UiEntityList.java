@@ -149,7 +149,7 @@ public class UiEntityList extends UiController implements EntityList
 		}
 
 		// style
-		String style = StringUtil.trimToNull(settingsXml.getAttribute("style"));
+		String style = StringUtil.trimToNull(xml.getAttribute("style"));
 		if (style != null)
 		{
 			if ("FLAT".equals(style))

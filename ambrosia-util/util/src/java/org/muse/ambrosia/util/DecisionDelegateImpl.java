@@ -19,50 +19,72 @@
  *
  **********************************************************************************/
 
-package org.muse.ambrosia.impl;
+package org.muse.ambrosia.util;
 
-import java.io.PrintWriter;
-
-import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Gap;
-import org.w3c.dom.Element;
+import org.muse.ambrosia.api.DecisionDelegate;
+import org.muse.ambrosia.api.UiService;
 
 /**
- * UiGap presents implements Gap.
+ * A DecisionDelegate
  */
-public class UiGap extends UiController implements Gap
+public abstract class DecisionDelegateImpl implements DecisionDelegate
 {
-	/**
-	 * No-arg constructor.
-	 */
-	public UiGap()
-	{
-	}
+	/** The id. */
+	protected String id = null;
 
-	/**
-	 * Construct from a dom element.
-	 * 
-	 * @param service
-	 *        the UiService.
-	 * @param xml
-	 *        The dom element.
-	 */
-	protected UiGap(UiServiceImpl service, Element xml)
-	{
-		// to do the controler stuff
-		super(service, xml);
-	}
+	/** The tool id. */
+	protected String toolId = null;
+
+	/** ui service reference. */
+	protected UiService uiService = null;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public String getId()
 	{
-		// included?
-		if (!isIncluded(context, focus)) return;
+		return id;
+	}
 
-		PrintWriter response = context.getResponseWriter();
+	/**
+	 * Final initialization, once all dependencies are set.
+	 */
+	public void init()
+	{
+		// register
+		this.uiService.registerDecisionDelegate(this, this.id, this.toolId);
+	}
 
-		response.println("<div class=\"ambrosiaGap\"></div>");
+	/**
+	 * Set the id.
+	 * 
+	 * @param id
+	 *        The id.
+	 */
+	public void setId(String id)
+	{
+		this.id = id;
+	}
+
+	/**
+	 * Set the tool id.
+	 * 
+	 * @param id
+	 *        The tool id.
+	 */
+	public void setToolId(String id)
+	{
+		this.toolId = id;
+	}
+
+	/**
+	 * Set the UI service.
+	 * 
+	 * @param service
+	 *        The UI service.
+	 */
+	public void setUi(UiService service)
+	{
+		this.uiService = service;
 	}
 }

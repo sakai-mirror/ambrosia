@@ -304,7 +304,7 @@ public class UiEntityListColumn implements EntityListColumn
 					Element innerXml = (Element) node;
 					if ("footnote".equals(innerXml.getTagName()))
 					{
-						Footnote f = new UiFootnote();
+						Footnote f = new UiFootnote(service, innerXml);
 						this.footnotes.add(f);
 					}
 				}

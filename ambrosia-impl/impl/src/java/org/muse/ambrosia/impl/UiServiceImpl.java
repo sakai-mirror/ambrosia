@@ -677,7 +677,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("evaluation")) return new UiEvaluation(this, xml);
 		if (xml.getTagName().equals("fileUpload")) return new UiFileUpload(this, xml);
 		if (xml.getTagName().equals("fillIn")) return new UiFillIn(this, xml);
-		if (xml.getTagName().equals("gap")) return new UiGap();
+		if (xml.getTagName().equals("gap")) return new UiGap(this, xml);
 		if (xml.getTagName().equals("iconKey")) return new UiIconKey(this, xml);
 		if (xml.getTagName().equals("instructions")) return new UiInstructions(this, xml);
 		if (xml.getTagName().equals("interface")) return new UiInterface(this, xml);

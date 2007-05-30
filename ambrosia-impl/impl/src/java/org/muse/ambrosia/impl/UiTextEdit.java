@@ -133,7 +133,7 @@ public class UiTextEdit extends UiController implements TextEdit
 		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
 		if (settingsXml != null)
 		{
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
 			if (innerXml != null)
 			{
 				this.onEmptyAlertMsg = new UiMessage(service, innerXml);

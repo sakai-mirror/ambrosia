@@ -72,6 +72,12 @@ public class UiEvaluation extends UiText implements Evaluation
 		{
 			icon = StringUtil.trimToNull(settingsXml.getAttribute("icon"));
 			if (icon != null) this.icon = icon;
+			
+			String selector =  StringUtil.trimToNull(settingsXml.getAttribute("selector"));
+			if (selector != null)
+			{
+				this.iconAlt = new UiMessage().setMessage(selector);
+			}
 
 			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
 			if (innerXml != null)

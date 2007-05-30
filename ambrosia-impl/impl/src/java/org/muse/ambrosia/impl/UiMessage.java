@@ -52,17 +52,17 @@ public class UiMessage implements Message
 		this.references = references;
 		return this;
 	}
-	
+
 	/**
 	 * Public no-arg constructor.
 	 */
 	public UiMessage()
 	{
-		
+
 	}
-	
+
 	/**
-	 * Construct from a dom element.  The definition may be in the element or in a child.
+	 * Construct from a dom element. The definition may be in the element or in a child.
 	 * 
 	 * @param service
 	 *        the UiService.
@@ -71,18 +71,27 @@ public class UiMessage implements Message
 	 */
 	protected UiMessage(UiServiceImpl service, Element xml)
 	{
-		// xml may be tag name "message".  If not, find one in the children
+		// xml may be tag name "message". If not, find one in the children
 		if (!xml.getTagName().equals("message"))
 		{
 			xml = XmlHelper.getChildElementNamed(xml, "message");
 		}
-		
+
 		if (xml != null)
 		{
+			List<PropertyReference> refs = new ArrayList<PropertyReference>();
+
 			String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
 			
+			// short for model
+			String ref = StringUtil.trimToNull(xml.getAttribute("model"));
+			if (ref != null)
+			{
+				PropertyReference pRef = service.newPropertyReference().setReference(ref);
+				if (pRef != null) refs.add(pRef);
+			}
+
 			// use all the direct model references
-			List<PropertyReference> refs = new ArrayList<PropertyReference>();
 			NodeList settings = xml.getChildNodes();
 			for (int i = 0; i < settings.getLength(); i++)
 			{
@@ -94,11 +103,11 @@ public class UiMessage implements Message
 					if (pRef != null) refs.add(pRef);
 				}
 			}
-			
+
 			// convert the refs into an array
 			PropertyReference[] refsArray = new PropertyReference[0];
 			refsArray = refs.toArray(refsArray);
-	
+
 			// set
 			this.selector = selector;
 			this.references = refsArray;
@@ -119,7 +128,7 @@ public class UiMessage implements Message
 			}
 			return null;
 		}
-		
+
 		// if there is no selector, just read the first reference as the value
 		if (selector == null)
 		{
@@ -136,7 +145,7 @@ public class UiMessage implements Message
 		for (PropertyReference reference : references)
 		{
 			String value = reference.read(context, focus);
-			
+
 			// if any are null, null the entire message
 			// TODO: make this an option rather than default behavior? -ggolden
 			// if (value == null) value = "";

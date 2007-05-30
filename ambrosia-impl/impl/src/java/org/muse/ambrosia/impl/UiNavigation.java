@@ -164,12 +164,21 @@ public class UiNavigation extends UiController implements Navigation
 		if (settingsXml != null)
 		{
 			// decision
-			Decision decision = service.parseDecisions(settingsXml);
+			Decision decision = null;
+			String decisionShort = StringUtil.trimToNull(settingsXml.getAttribute("decision"));
+			if ((decisionShort != null) && ("TRUE".equals(decisionShort)))
+			{
+				decision = new UiDecision().setProperty(new UiConstantPropertyReference().setValue("TRUE"));
+			}
+			else
+			{
+				decision = service.parseDecisions(settingsXml);
+			}
 
 			String cancelMsg = StringUtil.trimToNull(settingsXml.getAttribute("cancelSelector"));
 			String cancelIcon = StringUtil.trimToNull(settingsXml.getAttribute("cancelIcon"));
 			String msg = StringUtil.trimToNull(settingsXml.getAttribute("selector"));
-			String ref = StringUtil.trimToNull(settingsXml.getAttribute("ref"));
+			String ref = StringUtil.trimToNull(settingsXml.getAttribute("model"));
 			PropertyReference pRef = null;
 			if (ref != null) pRef = service.newPropertyReference().setReference(ref);
 

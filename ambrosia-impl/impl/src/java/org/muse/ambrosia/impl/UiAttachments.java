@@ -39,6 +39,8 @@ import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiAttachments...
@@ -140,6 +142,26 @@ public class UiAttachments extends UiController implements Attachments
 		{
 			PropertyReference pRef = service.parsePropertyReference(settingsXml);
 			if (pRef != null) this.attachments = pRef;
+		}
+
+		// navigations
+		settingsXml = XmlHelper.getChildElementNamed(xml, "navigations");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element innerXml = (Element) node;
+					if ("navigation".equals(innerXml.getTagName()))
+					{
+						Navigation n = new UiNavigation(service, innerXml);
+						this.navigations.add(n);
+					}
+				}
+			}
 		}
 	}
 

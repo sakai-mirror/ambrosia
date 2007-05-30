@@ -85,7 +85,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "label");
 		if (settingsXml != null)
 		{
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
 			if (innerXml != null) this.label = new UiMessage(service, innerXml);
 		}
 
@@ -101,7 +101,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
 		if (settingsXml != null)
 		{
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
 			if (innerXml != null)
 			{
 				this.onEmptyAlertMsg = new UiMessage(service, innerXml);
@@ -144,8 +144,12 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		settingsXml = XmlHelper.getChildElementNamed(xml, "value");
 		if (settingsXml != null)
 		{
-			PropertyReference pRef = service.parsePropertyReference(settingsXml);
-			if (pRef != null) setValueProperty(pRef);
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setValueProperty(pRef);
+			}
 		}
 	}
 

@@ -72,6 +72,9 @@ public class UiPassword extends UiController implements Password
 	 */
 	protected UiPassword(UiServiceImpl service, Element xml)
 	{
+		// do the controller stuff
+		super(service, xml);
+
 		// short form for title - attribute "title" as the selector
 		String title = StringUtil.trimToNull(xml.getAttribute("title"));
 		if (title != null)
@@ -105,7 +108,7 @@ public class UiPassword extends UiController implements Password
 		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
 		if (settingsXml != null)
 		{
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
 			if (innerXml != null)
 			{
 				this.onEmptyAlertMsg = new UiMessage(service, innerXml);

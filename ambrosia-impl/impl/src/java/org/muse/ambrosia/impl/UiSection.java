@@ -85,13 +85,6 @@ public class UiSection extends UiContainer implements Section
 		// do the container thing
 		super(service, xml);
 
-		// parse anchor
-		// parse entity included
-		// parse focus
-		// parse iterator
-		// parse titleHighlighted
-		// parse titleIncluded
-
 		// short form for title - attribute "title" as the selector
 		String title = StringUtil.trimToNull(xml.getAttribute("title"));
 		if (title != null)
@@ -103,13 +96,19 @@ public class UiSection extends UiContainer implements Section
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
 		if (settingsXml != null)
 		{
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "highlighted");
+			String highlighted = StringUtil.trimToNull(settingsXml.getAttribute("highlighted"));
+			if ((highlighted != null) && ("TRUE".equals(highlighted)))
+			{
+				this.titleHighlighted = new UiDecision().setProperty(new UiConstantPropertyReference().setValue("true"));
+			}
+
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "highlighted");
 			if (innerXml != null)
 			{
 				this.titleHighlighted = service.parseDecisions(innerXml);
 			}
 
-			innerXml = XmlHelper.getChildElementNamed(xml, "included");
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "included");
 			if (innerXml != null)
 			{
 				this.included = service.parseDecisions(innerXml);
@@ -119,7 +118,7 @@ public class UiSection extends UiContainer implements Section
 		}
 
 		// anchor
-		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		settingsXml = XmlHelper.getChildElementNamed(xml, "anchor");
 		if (settingsXml != null)
 		{
 			this.anchor = new UiMessage(service, settingsXml);
@@ -137,7 +136,7 @@ public class UiSection extends UiContainer implements Section
 		settingsXml = XmlHelper.getChildElementNamed(xml, "focus");
 		if (settingsXml != null)
 		{
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "model");
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
 			if (innerXml != null)
 			{
 				this.focusReference = service.parsePropertyReference(innerXml);
@@ -148,13 +147,13 @@ public class UiSection extends UiContainer implements Section
 		settingsXml = XmlHelper.getChildElementNamed(xml, "iterator");
 		if (settingsXml != null)
 		{
-			String name = StringUtil.trimToNull(xml.getAttribute("name"));
+			String name = StringUtil.trimToNull(settingsXml.getAttribute("name"));
 			if (name != null) this.iteratorName = name;
 
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "model");
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
 			if (innerXml != null)
 			{
-				this.focusReference = service.parsePropertyReference(innerXml);
+				this.iteratorReference = service.parsePropertyReference(innerXml);
 			}
 		}
 	}

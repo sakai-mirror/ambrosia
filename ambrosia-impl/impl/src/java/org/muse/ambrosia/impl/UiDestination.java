@@ -64,7 +64,7 @@ public class UiDestination implements Destination
 		this.template = StringUtil.trimToNull(xml.getAttribute("template"));
 		
 		// short for a single reference
-		String ref = StringUtil.trimToNull(xml.getAttribute("ref"));
+		String ref = StringUtil.trimToNull(xml.getAttribute("model"));
 		
 		// use all the direct model references
 		List<PropertyReference> refs = new ArrayList<PropertyReference>();

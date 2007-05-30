@@ -88,7 +88,7 @@ public class UiFileUpload extends UiController implements FileUpload
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
 		if (settingsXml != null)
 		{
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "message");
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
 			if (innerXml != null)
 			{
 				this.onEmptyAlertMsg = new UiMessage(service, innerXml);
@@ -125,20 +125,19 @@ public class UiFileUpload extends UiController implements FileUpload
 			this.title = new UiMessage(service, settingsXml);
 
 			// title included
-			Element innerXml = XmlHelper.getChildElementNamed(xml, "included");
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "included");
 			if (innerXml != null)
 			{
 				this.titleIncluded = service.parseDecisions(innerXml);
 			}
 		}
-		
+
 		// upload message
 		settingsXml = XmlHelper.getChildElementNamed(xml, "upload");
 		if (settingsXml != null)
 		{
 			this.uploadSubmit = new UiMessage(service, settingsXml);
 		}
-
 	}
 
 	/**

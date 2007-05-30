@@ -127,7 +127,7 @@ public class UiPropertyReference implements PropertyReference
 					Element valueXml = (Element) node;
 					if ("missing".equals(valueXml.getTagName()))
 					{
-						String value = StringUtil.trimToNull(xml.getAttribute("value"));
+						String value = StringUtil.trimToNull(valueXml.getAttribute("value"));
 						if (value != null) missingValues.add(value);
 					}
 				}

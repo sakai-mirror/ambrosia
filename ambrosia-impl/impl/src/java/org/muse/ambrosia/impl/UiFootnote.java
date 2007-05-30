@@ -26,6 +26,7 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Footnote;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.w3c.dom.Element;
 
 /**
  * UiFootnote describes a footnote...
@@ -40,6 +41,26 @@ public class UiFootnote implements Footnote
 
 	/** The message for the footnote text. */
 	protected Message text = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiFootnote()
+	{
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiFootnote(UiServiceImpl service, Element xml)
+	{
+		// TODO: !
+	}
 
 	/**
 	 * {@inheritDoc}
