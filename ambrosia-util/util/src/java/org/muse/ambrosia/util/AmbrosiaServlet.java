@@ -149,6 +149,7 @@ public class AmbrosiaServlet extends HttpServlet
 		View destination = ui.getView(parts[1], this.toolId);
 		if (destination == null)
 		{
+			M_log.warn("doGet: no view registered for: " + destination + " tool: " + this.toolId);
 			redirectError(req, res);
 		}
 

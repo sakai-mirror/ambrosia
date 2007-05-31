@@ -97,8 +97,14 @@ public class UiIconKey extends UiController implements IconKey
 					if ("icon".equals(iconXml.getTagName()))
 					{
 						String icon = StringUtil.trimToNull(iconXml.getAttribute("icon"));
-
 						Message message = null;
+
+						String messageStr = StringUtil.trimToNull(iconXml.getAttribute("message"));
+						if (messageStr != null)
+						{
+							message = new UiMessage().setMessage(messageStr);
+						}
+
 						Element messageXml = XmlHelper.getChildElementNamed(iconXml, "message");
 						if (messageXml != null)
 						{
@@ -142,6 +148,13 @@ public class UiIconKey extends UiController implements IconKey
 			{
 				this.keysReference = service.parsePropertyReference(innerXml);
 			}
+		}
+
+		// short form for title - attribute "title" as the selector
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			setTitle(title);
 		}
 
 		// title
