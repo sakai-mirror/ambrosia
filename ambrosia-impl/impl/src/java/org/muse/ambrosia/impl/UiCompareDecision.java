@@ -60,6 +60,8 @@ public class UiCompareDecision extends UiDecision implements CompareDecision
 	 */
 	protected UiCompareDecision(UiServiceImpl service, Element xml)
 	{
+		// TODO: no xml support for comparing one model to another -ggolden
+
 		// do the Decision stuff
 		super(service, xml);
 
@@ -72,38 +74,40 @@ public class UiCompareDecision extends UiDecision implements CompareDecision
 			values.add(value);
 		}
 
-		// comparison - values or a model
-		Element settingsXml = XmlHelper.getChildElementNamed(xml, "comparison");
-		if (settingsXml != null)
+		// shortcut for model
+		String model = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (model != null)
 		{
-			// constants
-			NodeList settings = settingsXml.getChildNodes();
-			for (int i = 0; i < settings.getLength(); i++)
+			this.propertyReference = new UiPropertyReference().setReference(model);
+		}
+
+		// constants
+		NodeList settings = xml.getChildNodes();
+		for (int i = 0; i < settings.getLength(); i++)
+		{
+			Node node = settings.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
 			{
-				Node node = settings.item(i);
-				if (node.getNodeType() == Node.ELEMENT_NODE)
+				Element innerXml = (Element) node;
+				if ("constant".equals(innerXml.getTagName()))
 				{
-					Element innerXml = (Element) node;
-					if ("constant".equals(innerXml.getTagName()))
+					value = StringUtil.trimToNull(innerXml.getAttribute("value"));
+					if (value != null)
 					{
-						value = StringUtil.trimToNull(innerXml.getAttribute("value"));
-						if (value != null)
-						{
-							values.add(value);
-						}						
+						values.add(value);
 					}
 				}
 			}
-			
-			// model
-			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
-			if (innerXml != null)
-			{
-				PropertyReference pRef = service.parsePropertyReference(innerXml);
-				if (pRef != null) this.compareReference = pRef;
-			}
 		}
-		
+
+		// model
+		Element innerXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (innerXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(innerXml);
+			if (pRef != null) this.propertyReference = pRef;
+		}
+
 		// convert the refs into an array
 		if (!values.isEmpty())
 		{

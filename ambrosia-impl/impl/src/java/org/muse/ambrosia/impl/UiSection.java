@@ -111,7 +111,7 @@ public class UiSection extends UiContainer implements Section
 			innerXml = XmlHelper.getChildElementNamed(settingsXml, "included");
 			if (innerXml != null)
 			{
-				this.included = service.parseDecisions(innerXml);
+				this.titleIncluded = service.parseDecisions(innerXml);
 			}
 
 			this.title = new UiMessage(service, settingsXml);
