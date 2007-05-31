@@ -136,6 +136,13 @@ public class UiSection extends UiContainer implements Section
 		settingsXml = XmlHelper.getChildElementNamed(xml, "focus");
 		if (settingsXml != null)
 		{
+			// short for model
+			String model = StringUtil.trimToNull(settingsXml.getAttribute("model"));
+			if (model != null)
+			{
+				this.focusReference = service.newPropertyReference().setReference(model);
+			}
+
 			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
 			if (innerXml != null)
 			{
@@ -149,6 +156,13 @@ public class UiSection extends UiContainer implements Section
 		{
 			String name = StringUtil.trimToNull(settingsXml.getAttribute("name"));
 			if (name != null) this.iteratorName = name;
+
+			// short for model
+			String model = StringUtil.trimToNull(settingsXml.getAttribute("model"));
+			if (model != null)
+			{
+				this.iteratorReference = service.newPropertyReference().setReference(model);
+			}
 
 			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
 			if (innerXml != null)
