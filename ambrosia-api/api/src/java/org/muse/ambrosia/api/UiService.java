@@ -493,6 +493,16 @@ public interface UiService
 	Context prepareGet(HttpServletRequest req, HttpServletResponse res, InternationalizedMessages messages, String home) throws IOException;
 
 	/**
+	 * Undo state changes from a prepareGet previously called in this thread.
+	 * 
+	 * @param req
+	 *        The servlet request.
+	 * @param res
+	 *        The servlet response.
+	 */
+	void undoPrepareGet(HttpServletRequest req, HttpServletResponse res);
+
+	/**
 	 * For an HTTP POST response, start the response and return the context that can be populated and sent into decode() (then redirect) to complete
 	 * the response.
 	 * 

@@ -99,6 +99,7 @@ import org.muse.ambrosia.api.UserInfoPropertyReference;
 import org.muse.ambrosia.api.Value;
 import org.muse.ambrosia.api.View;
 import org.sakaiproject.i18n.InternationalizedMessages;
+import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.api.ActiveTool;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.Tool;
@@ -163,6 +164,9 @@ public class UiServiceImpl implements UiService
 	/** Dependency: SessionManager */
 	protected SessionManager m_sessionManager = null;
 
+	/** Dependency: ThreadLocal */
+	protected ThreadLocalManager m_threadLocalManager = null;
+
 	/**
 	 * Dependency: SessionManager.
 	 * 
@@ -172,6 +176,17 @@ public class UiServiceImpl implements UiService
 	public void setSessionManager(SessionManager service)
 	{
 		m_sessionManager = service;
+	}
+
+	/**
+	 * Dependency: ThreadLocalManager.
+	 * 
+	 * @param service
+	 *        The ThreadLocalManager.
+	 */
+	public void setThreadLocalManager(ThreadLocalManager service)
+	{
+		m_threadLocalManager = service;
 	}
 
 	/*************************************************************************************************************************************************
@@ -862,7 +877,7 @@ public class UiServiceImpl implements UiService
 	{
 		if (xml == null) return null;
 
-		//if (xml.getTagName().equals("modelColumn")) return new UiPropertyColumn(this, xml);
+		// if (xml.getTagName().equals("modelColumn")) return new UiPropertyColumn(this, xml);
 
 		if (!xml.getTagName().equals("row")) return null;
 
@@ -982,6 +997,7 @@ public class UiServiceImpl implements UiService
 
 		// record the current destination before this request; i.e. the previous destination
 		String previousDestination = (String) toolSession.getAttribute(ActiveTool.TOOL_ATTR_CURRENT_DESTINATION);
+		m_threadLocalManager.set("ambrosia_" + ActiveTool.TOOL_ATTR_CURRENT_DESTINATION, previousDestination);
 
 		// keep track (manually, for now) of our current destination
 		String destination = req.getPathInfo();
@@ -1019,6 +1035,8 @@ public class UiServiceImpl implements UiService
 		context.put("sakai_destination", destination);
 
 		// setup that a POST to this destination will be expected
+		String previousExpected = (String) toolSession.getAttribute(ActiveTool.TOOL_ATTR_CURRENT_DESTINATION + ".expected");
+		m_threadLocalManager.set("ambrosia_" + ActiveTool.TOOL_ATTR_CURRENT_DESTINATION + ".expected", previousExpected);
 		toolSession.setAttribute(ActiveTool.TOOL_ATTR_CURRENT_DESTINATION + ".expected", destination);
 
 		// // setup a valid POST receipt for this tool destination
@@ -1034,6 +1052,21 @@ public class UiServiceImpl implements UiService
 		// }
 
 		return context;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void undoPrepareGet(HttpServletRequest req, HttpServletResponse res)
+	{
+		// get the Tool session
+		ToolSession toolSession = m_sessionManager.getCurrentToolSession();
+
+		String destination = (String) m_threadLocalManager.get("ambrosia_" + ActiveTool.TOOL_ATTR_CURRENT_DESTINATION);
+		toolSession.setAttribute(ActiveTool.TOOL_ATTR_CURRENT_DESTINATION, destination);
+
+		String expected = (String) m_threadLocalManager.get("ambrosia_" + ActiveTool.TOOL_ATTR_CURRENT_DESTINATION + ".expected");
+		toolSession.setAttribute(ActiveTool.TOOL_ATTR_CURRENT_DESTINATION + ".expected", expected);
 	}
 
 	/**
