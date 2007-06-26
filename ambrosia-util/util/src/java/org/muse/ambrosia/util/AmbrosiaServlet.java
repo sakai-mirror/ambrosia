@@ -35,7 +35,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.UiService;
-import org.muse.ambrosia.api.View;
+import org.muse.ambrosia.api.Controller;
 import org.sakaiproject.component.cover.ComponentManager;
 import org.sakaiproject.util.ResourceLoader;
 import org.sakaiproject.util.Web;
@@ -146,7 +146,7 @@ public class AmbrosiaServlet extends HttpServlet
 		String[] parts = context.getDestination().split("/");
 
 		// which destination?
-		View destination = ui.getView(parts[1], this.toolId);
+		Controller destination = ui.getController(parts[1], this.toolId);
 		if (destination == null)
 		{
 			M_log.warn("doGet: no view registered for: " + parts[1] + " tool: " + this.toolId);
@@ -186,7 +186,7 @@ public class AmbrosiaServlet extends HttpServlet
 		String[] parts = context.getDestination().split("/");
 
 		// which destination?
-		View destination = ui.getView(parts[1], this.toolId);
+		Controller destination = ui.getController(parts[1], this.toolId);
 		if (destination == null)
 		{
 			redirectError(req, res);

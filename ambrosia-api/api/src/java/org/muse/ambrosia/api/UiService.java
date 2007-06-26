@@ -548,25 +548,25 @@ public interface UiService
 	 ************************************************************************************************************************************************/
 
 	/**
-	 * Register a view in a tool.
+	 * Register a controller in a tool.
 	 * 
-	 * @param view
-	 *        The view.
+	 * @param controller
+	 *        The controller.
 	 * @param toolId
 	 *        The tool id.
 	 */
-	void registerView(View view, String toolId);
+	void registerController(Controller controller, String toolId);
 
 	/**
-	 * Find the view with this id in this tool.
+	 * Find the controller with this id in this tool.
 	 * 
-	 * @param viewId
-	 *        The view id.
+	 * @param id
+	 *        The destination id.
 	 * @param toolId
 	 *        The tool id.
-	 * @return The View, or null if none found.
+	 * @return The Controller, or null if none found.
 	 */
-	View getView(String viewId, String toolId);
+	Controller getController(String id, String toolId);
 
 	/**
 	 * Register a format delegate in a tool.

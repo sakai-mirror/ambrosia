@@ -25,21 +25,24 @@ import java.io.IOException;
 
 import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.UiService;
-import org.muse.ambrosia.api.View;
+import org.muse.ambrosia.api.Controller;
 import org.sakaiproject.i18n.InternationalizedMessages;
 import org.sakaiproject.util.ResourceLoader;
 import org.springframework.core.io.ClassPathResource;
 
 /**
- * A View
+ * A Controller
  */
-public abstract class ViewImpl implements View
+public abstract class ControllerImpl implements Controller
 {
 	/** Messages bundle name. */
 	protected String bundle = null;
 
 	/** Localized messages. */
 	protected InternationalizedMessages messages = null;
+
+	/** The URL path that addresses the view. */
+	protected String path = null;
 
 	/** The tool id. */
 	protected String toolId = null;
@@ -50,19 +53,8 @@ public abstract class ViewImpl implements View
 	/** ui service reference. */
 	protected UiService uiService = null;
 
-	/** The view id. */
-	protected String viewId = null;
-
 	/** The view declaration xml path. */
 	protected String viewPath = null;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getId()
-	{
-		return viewId;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -73,12 +65,20 @@ public abstract class ViewImpl implements View
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public String getPath()
+	{
+		return path;
+	}
+
+	/**
 	 * Final initialization, once all dependencies are set.
 	 */
 	public void init()
 	{
 		// register
-		this.uiService.registerView(this, this.toolId);
+		this.uiService.registerController(this, this.toolId);
 
 		// messages
 		this.messages = new ResourceLoader(this.bundle);
@@ -109,6 +109,28 @@ public abstract class ViewImpl implements View
 	}
 
 	/**
+	 * Set the class path to the components XML declaration for the view.
+	 * 
+	 * @param path
+	 *        The class path to the components XML declaration for the view.
+	 */
+	public void setComponents(String path)
+	{
+		this.viewPath = path;
+	}
+
+	/**
+	 * Set the URL path that addresses the view.
+	 * 
+	 * @param path
+	 *        The URL path that addresses the view.
+	 */
+	public void setPath(String path)
+	{
+		this.path = path;
+	}
+
+	/**
 	 * Set the tool id.
 	 * 
 	 * @param id
@@ -128,27 +150,5 @@ public abstract class ViewImpl implements View
 	public void setUi(UiService service)
 	{
 		this.uiService = service;
-	}
-
-	/**
-	 * Set the view id.
-	 * 
-	 * @param id
-	 *        The view id.
-	 */
-	public void setViewId(String id)
-	{
-		this.viewId = id;
-	}
-
-	/**
-	 * Set the view declaration xml path.
-	 * 
-	 * @param path
-	 *        The view declaration xml path.
-	 */
-	public void setViewPath(String path)
-	{
-		this.viewPath = path;
 	}
 }

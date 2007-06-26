@@ -97,7 +97,7 @@ import org.muse.ambrosia.api.UiService;
 import org.muse.ambrosia.api.UrlPropertyReference;
 import org.muse.ambrosia.api.UserInfoPropertyReference;
 import org.muse.ambrosia.api.Value;
-import org.muse.ambrosia.api.View;
+import org.muse.ambrosia.api.Controller;
 import org.sakaiproject.i18n.InternationalizedMessages;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.api.ActiveTool;
@@ -1133,7 +1133,7 @@ public class UiServiceImpl implements UiService
 	 ************************************************************************************************************************************************/
 
 	/** Registered views - keyed by toolId-viewId. */
-	protected Map<String, View> m_views = new HashMap<String, View>();
+	protected Map<String, Controller> m_controllers = new HashMap<String, Controller>();
 
 	/** Registered format delegates - keyed by toolId-id. */
 	protected Map<String, FormatDelegate> m_formatDelegates = new HashMap<String, FormatDelegate>();
@@ -1144,17 +1144,17 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void registerView(View view, String toolId)
+	public void registerController(Controller controller, String toolId)
 	{
-		m_views.put(toolId + "-" + view.getId(), view);
+		m_controllers.put(toolId + "-" + controller.getPath(), controller);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public View getView(String viewId, String toolId)
+	public Controller getController(String id, String toolId)
 	{
-		return m_views.get(toolId + "-" + viewId);
+		return m_controllers.get(toolId + "-" + id);
 	}
 
 	/**

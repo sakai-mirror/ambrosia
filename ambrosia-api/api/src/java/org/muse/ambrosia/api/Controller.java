@@ -29,9 +29,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.sakaiproject.i18n.InternationalizedMessages;
 
 /**
- * View handles a single view of the UI.
+ * Controller handles a view.
  */
-public interface View
+public interface Controller
 {
 	/**
 	 * Handle GET
@@ -54,16 +54,16 @@ public interface View
 	void post(HttpServletRequest req, HttpServletResponse res, Context context, String[] params) throws IOException;
 
 	/**
-	 * Access the view id. This forms the view's place in the tool URL space.
+	 * Access the URL path that addresses this view.
 	 * 
-	 * @return The view id.
+	 * @return The URL path.
 	 */
-	String getId();
+	String getPath();
 
 	/**
-	 * Get the messages for the view.
+	 * Get the messages.
 	 * 
-	 * @return The messages for the view.
+	 * @return The messages.
 	 */
 	InternationalizedMessages getMessages();
 }
