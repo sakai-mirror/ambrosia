@@ -25,7 +25,7 @@ package org.muse.ambrosia.api;
  * UiSelection presents a selection for the user to choose or not.<br />
  * The text can be either a property reference or a message.
  */
-public interface Selection extends Controller
+public interface Selection extends Component
 {
 	/**
 	 * Set the property reference for the encode / decode.

@@ -129,11 +129,11 @@ public interface UiService
 	ContextInfoPropertyReference newContextInfoPropertyReference();
 
 	/**
-	 * Construct a new Controller
+	 * Construct a new Component
 	 * 
-	 * @return a new Controller
+	 * @return a new Component
 	 */
-	Controller newController();
+	Component newComponent();
 
 	/**
 	 * Construct a new CountdownTimer
@@ -541,7 +541,7 @@ public interface UiService
 	 * @param context
 	 *        The context.
 	 */
-	void render(Controller ui, Context context);
+	void render(Component ui, Context context);
 
 	/*************************************************************************************************************************************************
 	 * View methods

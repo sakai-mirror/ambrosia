@@ -40,7 +40,7 @@ import org.w3c.dom.NodeList;
  * setEntityReference() sets the reference to the entity to display.<br />
  * addRow() sets the rows, each a UiPropertyRow, that references some selector of the entity.<br />
  */
-public class UiEntityDisplay extends UiController implements EntityDisplay
+public class UiEntityDisplay extends UiComponent implements EntityDisplay
 {
 	/** The reference to the entity to display. */
 	protected PropertyReference entityReference = null;
@@ -68,7 +68,7 @@ public class UiEntityDisplay extends UiController implements EntityDisplay
 	 */
 	protected UiEntityDisplay(UiServiceImpl service, Element xml)
 	{
-		// controller stuff
+		// component stuff
 		super(service, xml);
 
 		// short for model

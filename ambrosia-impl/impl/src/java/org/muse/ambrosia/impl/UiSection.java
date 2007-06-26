@@ -36,8 +36,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * UiSection is a container within a user interface. Each interface should have one section, and may have many. Sections should not be nested.<br />
- * The section title is rendered, along with the controllers added to the section container.
+ * UiSection implements Section.
  */
 public class UiSection extends UiContainer implements Section
 {

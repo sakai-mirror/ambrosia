@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * Attachments presents a clickable attachment list to the user.
  */
-public interface Attachments extends Controller
+public interface Attachments extends Component
 {
 	/**
 	 * Add a navigation to include in each attachment display line

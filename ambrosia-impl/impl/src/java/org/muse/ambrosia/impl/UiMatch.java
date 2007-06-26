@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
 /**
  * UiMatch is the assessment tool's matching interface. <br />
  */
-public class UiMatch extends UiController implements Match
+public class UiMatch extends UiComponent implements Match
 {
 	public class Choice
 	{
@@ -132,7 +132,7 @@ public class UiMatch extends UiController implements Match
 	 */
 	protected UiMatch(UiServiceImpl service, Element xml)
 	{
-		// controller stuff
+		// component stuff
 		super(service, xml);
 
 		// correct marker

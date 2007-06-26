@@ -32,7 +32,7 @@ import org.muse.ambrosia.api.PropertyReference;
 /**
  * UiBarChart implements BarChart
  */
-public class UiBarChart extends UiController implements BarChart
+public class UiBarChart extends UiComponent implements BarChart
 {
 	/** Data samples to chart. */
 	protected PropertyReference data = null;

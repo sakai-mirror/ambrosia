@@ -24,6 +24,6 @@ package org.muse.ambrosia.api;
 /**
  * Gap provides a few 'em' gap of vertical space in the interface
  */
-public interface Gap extends Controller
+public interface Gap extends Component
 {
 }

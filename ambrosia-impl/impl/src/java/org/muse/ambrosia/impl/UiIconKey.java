@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.IconKey;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
@@ -40,7 +40,7 @@ import org.w3c.dom.NodeList;
 /**
  * UiIconKey presents a key to icon use for some other part of the interface using icons. Each icon is shown with a description.
  */
-public class UiIconKey extends UiController implements IconKey
+public class UiIconKey extends UiComponent implements IconKey
 {
 	/** The reference to the description property in each entity. */
 	protected PropertyReference descriptionReference = null;
@@ -80,7 +80,7 @@ public class UiIconKey extends UiController implements IconKey
 	 */
 	protected UiIconKey(UiServiceImpl service, Element xml)
 	{
-		// controller stuff
+		// component stuff
 		super(service, xml);
 
 		// icons

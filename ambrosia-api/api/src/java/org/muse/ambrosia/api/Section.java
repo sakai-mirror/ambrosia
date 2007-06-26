@@ -22,9 +22,9 @@
 package org.muse.ambrosia.api;
 
 /**
- * UiSection is a container within a user interface. Each interface should have one section, and may have many.<br />
- * The section title is rendered, along with the controllers added to the section container.<br />
- * A section may be declared to reference Collection of entities so that the section is repeated, in sequence, for each entity.
+ * Section is a container within a user interface.<br />
+ * The section title is rendered, along with the components added to the section container.<br />
+ * A section may be declared to reference a Collection of entities so that the section is repeated, in sequence, for each entity.
  */
 public interface Section extends Container
 {

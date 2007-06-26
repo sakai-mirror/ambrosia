@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * Alert presents a rich-textual (html) alert to the user.
  */
-public interface Alert extends Controller
+public interface Alert extends Component
 {
 	/**
 	 * Set the instructions message.

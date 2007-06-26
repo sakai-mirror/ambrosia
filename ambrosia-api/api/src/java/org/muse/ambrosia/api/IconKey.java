@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * IconKey presents a key to icon use for some other part of the interface using icons. Each icon is shown with a description.
  */
-public interface IconKey extends Controller
+public interface IconKey extends Component
 {
 	/**
 	 * Add one more icon to the key

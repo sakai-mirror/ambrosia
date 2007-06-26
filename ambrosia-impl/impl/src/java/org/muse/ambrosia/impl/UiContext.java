@@ -32,11 +32,10 @@ import java.util.Map;
 import org.sakaiproject.i18n.InternationalizedMessages;
 import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 
 /**
- * UiContext contains the runtime specific information needed with the UiController tree to work a response.<br />
- * This is a set of internationalized messages that the UI tree references, along with a map of named objects that the UI tree references.
+ *  UiContext implements Context.
  */
 public class UiContext implements Context
 {
@@ -79,8 +78,8 @@ public class UiContext implements Context
 	/** Collect various javascript. */
 	protected StringBuffer scriptCode = new StringBuffer();
 
-	/** The top controller in the interface being rendered. */
-	protected Controller ui = null;
+	/** The top component in the interface being rendered. */
+	protected Component ui = null;
 
 	/** Place to collect validation javascript code. */
 	protected StringBuffer validationCode = new StringBuffer();
@@ -123,11 +122,11 @@ public class UiContext implements Context
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<Controller> findControllers(String id)
+	public List<Component> findComponents(String id)
 	{
-		if (this.ui == null) return new ArrayList<Controller>();
+		if (this.ui == null) return new ArrayList<Component>();
 
-		if (this.ui instanceof Container) return ((Container) this.ui).findControllers(id);
+		if (this.ui instanceof Container) return ((Container) this.ui).findComponents(id);
 
 		return null;
 	}
@@ -266,7 +265,7 @@ public class UiContext implements Context
 	/**
 	 * {@inheritDoc}
 	 */
-	public Controller getUi()
+	public Component getUi()
 	{
 		return this.ui;
 	}
@@ -405,7 +404,7 @@ public class UiContext implements Context
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setUi(Controller ui)
+	public void setUi(Component ui)
 	{
 		this.ui = ui;
 	}

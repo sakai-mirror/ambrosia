@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * CountdownTimer presents a countdown timer display, with text and graphic components, a warning zone near the end, and a possible action when done.
  */
-public interface CountdownTimer extends Controller
+public interface CountdownTimer extends Component
 {
 	/**
 	 * Set the decision to be disabled (inactive, but visible).

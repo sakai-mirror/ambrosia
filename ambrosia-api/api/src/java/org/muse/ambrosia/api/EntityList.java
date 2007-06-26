@@ -22,15 +22,9 @@
 package org.muse.ambrosia.api;
 
 /**
- * UiEntityList presents a multi-column multi-item listing of entites from the model.<br />
- * setEntityReferemce() sets the reference to the Collection of model items, one for each row.<br />
- * addColumn() sets the columns, each a UiPropertyColumn, that references some selector of the entities in the model. Columns may be sortable.<br />
- * setSelection() sets the SelectionController. If set, then each row can be selected by the user. When selected, the identity of the item is reported
- * as part of the tool destination of the user request.<br />
- * setEmptyTitle() sets an alternate title to use if the list is empty.<br />
- * setIncluded() establishes include control over the entire list.
+ * UiEntityList presents a multi-column multi-item listing of entites from the model.
  */
-public interface EntityList extends Controller
+public interface EntityList extends Component
 {
 	/** rendering styles. */
 	enum Style

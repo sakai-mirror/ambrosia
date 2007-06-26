@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
 /**
  * UiCourier implements Courier.
  */
-public class UiCourier extends UiController implements Courier
+public class UiCourier extends UiComponent implements Courier
 {
 	/** The destination. */
 	protected Destination destination = null;

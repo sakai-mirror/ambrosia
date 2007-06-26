@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * UiSelection presents a selection for the user to choose or not.<br />
  * The text can be either a property reference or a message.
  */
-public class UiSelection extends UiController implements Selection
+public class UiSelection extends UiComponent implements Selection
 {
 	/** The value we use if the user does not selecet the selection. */
 	protected String notSelectedValue = "false";
@@ -72,7 +72,7 @@ public class UiSelection extends UiController implements Selection
 	 */
 	protected UiSelection(UiServiceImpl service, Element xml)
 	{
-		// controller stuff
+		// component stuff
 		super(service, xml);
 
 		// short form for title - attribute "title" as the selector

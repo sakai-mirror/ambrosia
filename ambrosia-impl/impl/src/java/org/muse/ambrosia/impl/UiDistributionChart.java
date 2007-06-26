@@ -32,7 +32,7 @@ import org.muse.ambrosia.api.PropertyReference;
 /**
  * UiDistributionChart implements DistributionChart
  */
-public class UiDistributionChart extends UiController implements DistributionChart
+public class UiDistributionChart extends UiComponent implements DistributionChart
 {
 	/** percent clumping - number of percents per bucket. */
 	protected int clump = 1;

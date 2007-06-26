@@ -23,7 +23,7 @@ package org.muse.ambrosia.util;
 
 import java.io.IOException;
 
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.UiService;
 import org.muse.ambrosia.api.View;
 import org.sakaiproject.i18n.InternationalizedMessages;
@@ -45,7 +45,7 @@ public abstract class ViewImpl implements View
 	protected String toolId = null;
 
 	/** The UI. */
-	protected Controller ui = null;
+	protected Component ui = null;
 
 	/** ui service reference. */
 	protected UiService uiService = null;

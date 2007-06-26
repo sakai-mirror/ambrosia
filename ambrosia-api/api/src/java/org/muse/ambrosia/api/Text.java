@@ -25,7 +25,7 @@ package org.muse.ambrosia.api;
  * UiText presents textual information to the user.<br />
  * The text can be either a property reference or a message.
  */
-public interface Text extends Controller
+public interface Text extends Component
 {
 	/**
 	 * Set the text message.

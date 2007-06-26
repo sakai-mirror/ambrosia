@@ -26,7 +26,7 @@ package org.muse.ambrosia.api;
  * are expected.<br />
  * The values are taken from / returned to an array property by reference.
  */
-public interface FillIn extends Controller
+public interface FillIn extends Component
 {
 	/**
 	 * Set the relative icon path to the icon to use to mark already correct entries.

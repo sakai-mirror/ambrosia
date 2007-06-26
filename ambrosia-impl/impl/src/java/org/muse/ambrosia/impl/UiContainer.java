@@ -26,20 +26,18 @@ import java.util.List;
 
 import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * UiContainer is the base class of all UiControllers that contain collections of other controllers.<br />
- * add() us called to populate the controllers that are contained withing.<br />
- * The controllers that are contained are rendered inside this container.
+ * UiContainer implements Container.
  */
-public class UiContainer extends UiController implements Container
+public class UiContainer extends UiComponent implements Container
 {
-	/** Controllers contained in this container. */
-	protected List<Controller> contained = new ArrayList<Controller>();
+	/** Components contained in this container. */
+	protected List<Component> contained = new ArrayList<Component>();
 
 	/**
 	 * Public no-arg constructor.
@@ -58,7 +56,7 @@ public class UiContainer extends UiController implements Container
 	 */
 	protected UiContainer(UiServiceImpl service, Element xml)
 	{
-		// do the controller thing
+		// do the component thing
 		super(service, xml);
 
 		// find the first container child node
@@ -72,10 +70,10 @@ public class UiContainer extends UiController implements Container
 				Node node = contained.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE)
 				{
-					Element controllerXml = (Element) node;
+					Element componentXml = (Element) node;
 
-					// create a controller from each node in the container
-					Controller c = service.parseController(controllerXml);
+					// create a component from each node in the container
+					Component c = service.parseComponent(componentXml);
 					if (c != null)
 					{
 						add(c);
@@ -88,9 +86,9 @@ public class UiContainer extends UiController implements Container
 	/**
 	 * {@inheritDoc}
 	 */
-	public Container add(Controller controller)
+	public Container add(Component component)
 	{
-		contained.add(controller);
+		contained.add(component);
 
 		return this;
 	}
@@ -98,14 +96,14 @@ public class UiContainer extends UiController implements Container
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<Controller> findControllers(String id)
+	public List<Component> findComponents(String id)
 	{
-		List<Controller> rv = new ArrayList<Controller>();
+		List<Component> rv = new ArrayList<Component>();
 
 		if (id == null) return rv;
 
 		// search the contained
-		for (Controller c : this.contained)
+		for (Component c : this.contained)
 		{
 			// this one?
 			if (id.equals(c.getId())) rv.add(c);
@@ -113,7 +111,7 @@ public class UiContainer extends UiController implements Container
 			// if a container, search in there
 			if (c instanceof Container)
 			{
-				List<Controller> found = ((Container) c).findControllers(id);
+				List<Component> found = ((Container) c).findComponents(id);
 				rv.addAll(found);
 			}
 		}
@@ -127,7 +125,7 @@ public class UiContainer extends UiController implements Container
 	public void render(Context context, Object focus)
 	{
 		// render the contained
-		for (Controller c : this.contained)
+		for (Component c : this.contained)
 		{
 			c.render(context, focus);
 		}

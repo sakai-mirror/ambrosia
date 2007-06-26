@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
 /**
  * UiGap presents implements Gap.
  */
-public class UiGap extends UiController implements Gap
+public class UiGap extends UiComponent implements Gap
 {
 	/**
 	 * No-arg constructor.

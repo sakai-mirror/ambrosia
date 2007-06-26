@@ -26,7 +26,7 @@ package org.muse.ambrosia.api;
  * setEntityReference() sets the reference to the entity to display.<br />
  * addRow() sets the rows, each a UiPropertyRow, that references some selector of the entity.<br />
  */
-public interface EntityDisplay extends Controller
+public interface EntityDisplay extends Component
 {
 	/**
 	 * Add a row to display some selector of the entity.

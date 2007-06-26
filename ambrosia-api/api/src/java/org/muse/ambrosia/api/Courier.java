@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * Courier sets up a courier in the view.
  */
-public interface Courier extends Controller
+public interface Courier extends Component
 {
 	/**
 	 * Set the tool destination to use when the courier fires (this tool destination will get a GET and return javascript that will be run).

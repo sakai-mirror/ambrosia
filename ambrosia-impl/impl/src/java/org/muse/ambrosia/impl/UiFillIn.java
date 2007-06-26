@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * are expected.<br />
  * The values are taken from / returned to an array property by reference.
  */
-public class UiFillIn extends UiController implements FillIn
+public class UiFillIn extends UiComponent implements FillIn
 {
 	/** The decision to include the correct marking. */
 	protected Decision correctDecision = null;
@@ -103,7 +103,7 @@ public class UiFillIn extends UiController implements FillIn
 	 */
 	protected UiFillIn(UiServiceImpl service, Element xml)
 	{
-		// controller stuff
+		// component stuff
 		super(service, xml);
 
 		// correct marker

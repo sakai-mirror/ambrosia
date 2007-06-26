@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
 /**
  * UiCountdownTimer implements CountdownTimer.
  */
-public class UiCountdownTimer extends UiController implements CountdownTimer
+public class UiCountdownTimer extends UiComponent implements CountdownTimer
 {
 	/** The tool destination for this navigation. */
 	protected Destination destination = null;
@@ -93,7 +93,7 @@ public class UiCountdownTimer extends UiController implements CountdownTimer
 	 */
 	protected UiCountdownTimer(UiServiceImpl service, Element xml)
 	{
-		// do the controller stuff
+		// do the component stuff
 		super(service, xml);
 
 		String submit = StringUtil.trimToNull(xml.getAttribute("submit"));

@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * BarChart presents a bar chart.
  */
-public interface BarChart extends Controller
+public interface BarChart extends Component
 {
 	/**
 	 * Set the property reference for the data items to chart.

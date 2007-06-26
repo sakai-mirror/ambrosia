@@ -22,15 +22,15 @@
 package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Decision;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 
 /**
- * UiController implements Controller.
+ * UiComponent implements Component.
  */
-public class UiController implements Controller
+public class UiComponent implements Component
 {
 	/** The id of this element - can be referenced by an alias, for instance. */
 	protected String id = null;
@@ -41,7 +41,7 @@ public class UiController implements Controller
 	/**
 	 * Public no-arg constructor.
 	 */
-	public UiController()
+	public UiComponent()
 	{
 	}
 
@@ -53,7 +53,7 @@ public class UiController implements Controller
 	 * @param xml
 	 *        The dom element.
 	 */
-	protected UiController(UiServiceImpl service, Element xml)
+	protected UiComponent(UiServiceImpl service, Element xml)
 	{
 		// included decisions
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "included");
@@ -94,7 +94,7 @@ public class UiController implements Controller
 	/**
 	 * {@inheritDoc}
 	 */
-	public Controller setId(String id)
+	public Component setId(String id)
 	{
 		this.id = id;
 		return this;
@@ -103,7 +103,7 @@ public class UiController implements Controller
 	/**
 	 * {@inheritDoc}
 	 */
-	public Controller setIncluded(Decision... decision)
+	public Component setIncluded(Decision... decision)
 	{
 		if (decision != null)
 		{

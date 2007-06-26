@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
 /**
  * UiNavigation presents a navigation control (button or text link) to the user. The result of the press is a navigation to some tool destination.
  */
-public class UiNavigation extends UiController implements Navigation
+public class UiNavigation extends UiComponent implements Navigation
 {
 	/** Message to form the access key. */
 	protected Message accessKey = null;

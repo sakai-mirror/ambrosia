@@ -24,26 +24,26 @@ package org.muse.ambrosia.api;
 import java.util.List;
 
 /**
- * UiContainer is the base class of all UiControllers that contain collections of other controllers.<br />
- * add() us called to populate the controllers that are contained withing.<br />
- * The controllers that are contained are rendered inside this container.
+ * Container is the base class of all components that contain collections of other components.<br />
+ * add() is called to populate the components that are contained withing.<br />
+ * The components that are contained are rendered inside this container.
  */
-public interface Container extends Controller
+public interface Container extends Component
 {
 	/**
-	 * Add a controller to the container.
+	 * Add a component to the container.
 	 * 
-	 * @param controller
-	 *        the controller to add.
+	 * @param component
+	 *        the component to add.
 	 */
-	Container add(Controller controller);
+	Container add(Component component);
 
 	/**
-	 * Find the contained controllers with this id.
+	 * Find the contained components with this id.
 	 * 
 	 * @param id
 	 *        The container id.
-	 * @return The contained controllers with this id, or an empty list not found.
+	 * @return The contained components with this id, or an empty list not found.
 	 */
-	List<Controller> findControllers(String id);
+	List<Component> findComponents(String id);
 }

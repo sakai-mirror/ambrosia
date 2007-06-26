@@ -24,13 +24,13 @@ package org.muse.ambrosia.api;
 /**
  * Alias calls for some other, sibling element to be rendered here as well as it's natural placement.
  */
-public interface Alias extends Controller
+public interface Alias extends Component
 {
 	/**
-	 * Set the id of the other controller to use here.
+	 * Set the id of the other component to use here.
 	 * 
 	 * @param id
-	 *        The id of the other controller to use here.
+	 *        The id of the other component to use here.
 	 * @return self.
 	 */
 	Alias setTo(String id);

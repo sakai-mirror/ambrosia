@@ -35,7 +35,7 @@ import org.w3c.dom.NodeList;
 /**
  * UiText implements Text.
  */
-public class UiText extends UiController implements Text
+public class UiText extends UiComponent implements Text
 {
 	/** The message that will provide text to display. */
 	protected Message message = null;
@@ -57,7 +57,7 @@ public class UiText extends UiController implements Text
 	 */
 	protected UiText(UiServiceImpl service, Element xml)
 	{
-		// do the controller stuff
+		// do the component stuff
 		super(service, xml);
 
 		// short for for text - attribute "selector" for the selector, and attribute "model" for a single reference.

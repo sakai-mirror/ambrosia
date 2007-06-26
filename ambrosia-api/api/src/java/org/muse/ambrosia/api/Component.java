@@ -22,9 +22,9 @@
 package org.muse.ambrosia.api;
 
 /**
- * Controller is the base interface of all user interface controller interfaces.
+ * Component is the base interface of all user interface component interfaces.
  */
-public interface Controller
+public interface Component
 {
 	/**
 	 * Access the id.
@@ -34,7 +34,7 @@ public interface Controller
 	String getId();
 
 	/**
-	 * Check if this controller is to be included in the interface.
+	 * Check if this component is to be included in the interface.
 	 * 
 	 * @param context
 	 *        The Context.
@@ -45,7 +45,7 @@ public interface Controller
 	boolean isIncluded(Context context, Object focus);
 
 	/**
-	 * Render the controller.
+	 * Render the component.
 	 * 
 	 * @param context
 	 *        The UI context.
@@ -55,13 +55,13 @@ public interface Controller
 	void render(Context context, Object focus);
 
 	/**
-	 * Set the id of this controller, which can be referenced by an Alias, for example.
+	 * Set the id of this component, which can be referenced by an Alias, for example.
 	 * 
 	 * @param id
-	 *        The controller's id.
+	 *        The component's id.
 	 * @return self.
 	 */
-	Controller setId(String id);
+	Component setId(String id);
 
 	/**
 	 * Set the decision to include this in the interface.
@@ -70,5 +70,5 @@ public interface Controller
 	 *        The decision, or set of decisions, all of which must pass to be included.
 	 * @return self.
 	 */
-	Controller setIncluded(Decision... decision);
+	Component setIncluded(Decision... decision);
 }

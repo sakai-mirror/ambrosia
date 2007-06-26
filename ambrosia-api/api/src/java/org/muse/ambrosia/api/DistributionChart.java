@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * DistributionChart ...
  */
-public interface DistributionChart extends Controller
+public interface DistributionChart extends Component
 {
 	/**
 	 * Set the clumping, the number of percent points per bar, of the chart.

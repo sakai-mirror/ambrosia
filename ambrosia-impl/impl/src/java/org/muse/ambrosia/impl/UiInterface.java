@@ -25,7 +25,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Interface;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
@@ -111,9 +111,9 @@ public class UiInterface extends UiContainer implements Interface
 	/**
 	 * {@inheritDoc}
 	 */
-	public Interface add(Controller controller)
+	public Interface add(Component component)
 	{
-		super.add(controller);
+		super.add(component);
 		return this;
 	}
 
@@ -201,7 +201,7 @@ public class UiInterface extends UiContainer implements Interface
 		}
 
 		// render the contained
-		for (Controller c : this.contained)
+		for (Component c : this.contained)
 		{
 			c.render(context, focus);
 		}
@@ -229,7 +229,7 @@ public class UiInterface extends UiContainer implements Interface
 		response.println("  return rv;");
 		response.println("}");
 
-		// add a variable that controllers can use to set / test if we have submitted already
+		// add a variable that components can use to set / test if we have submitted already
 		response.println("var submitted=false;");
 
 		// add any other script we have accumulated

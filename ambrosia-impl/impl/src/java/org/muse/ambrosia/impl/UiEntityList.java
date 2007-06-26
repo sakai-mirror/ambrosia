@@ -43,15 +43,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * UiEntityList presents a multi-column multi-item listing of entites from the model.<br />
- * setEntityReferemce() sets the reference to the Collection of model items, one for each row.<br />
- * addColumn() sets the columns, each a UiPropertyColumn, that references some selector of the entities in the model. Columns may be sortable.<br />
- * setSelection() sets the SelectionController. If set, then each row can be selected by the user. When selected, the identity of the item is reported
- * as part of the tool destination of the user request.<br />
- * setEmptyTitle() sets an alternate title to use if the list is empty.<br />
- * setIncluded() establishes include control over the entire list.
+ * UiEntityList implements EntityList.
  */
-public class UiEntityList extends UiController implements EntityList
+public class UiEntityList extends UiComponent implements EntityList
 {
 	/** Columns for this list. */
 	protected List<EntityListColumn> columns = new ArrayList<EntityListColumn>();
@@ -103,7 +97,7 @@ public class UiEntityList extends UiController implements EntityList
 	 */
 	protected UiEntityList(UiServiceImpl service, Element xml)
 	{
-		// controller stuff
+		// component stuff
 		super(service, xml);
 
 		// empty title

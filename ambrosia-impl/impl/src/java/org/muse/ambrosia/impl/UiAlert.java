@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
 /**
  * UiAlert presents implements Alert.
  */
-public class UiAlert extends UiController implements Alert
+public class UiAlert extends UiComponent implements Alert
 {
 	/** The message for the instruction text. */
 	protected Message text = null;
@@ -55,7 +55,7 @@ public class UiAlert extends UiController implements Alert
 	 */
 	protected UiAlert(UiServiceImpl service, Element xml)
 	{
-		// do the controller stuff
+		// do the component stuff
 		super(service, xml);
 
 		// short for for text - attribute "selector" for the selector, and attribute "model" for a single reference.

@@ -24,7 +24,7 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.MenuBar;
 
 /**
@@ -46,7 +46,7 @@ public class UiMenuBar extends UiSection implements MenuBar
 
 		response.println("<div class=\"ambrosiaMenuBar\">");
 
-		for (Controller c : this.contained)
+		for (Component c : this.contained)
 		{
 			c.render(context, focus);
 		}

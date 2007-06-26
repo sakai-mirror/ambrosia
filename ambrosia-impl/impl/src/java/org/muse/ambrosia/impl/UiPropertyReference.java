@@ -32,7 +32,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.FormatDelegate;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.time.api.Time;

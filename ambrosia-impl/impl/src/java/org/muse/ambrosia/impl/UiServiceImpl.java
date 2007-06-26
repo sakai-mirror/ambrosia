@@ -50,7 +50,7 @@ import org.muse.ambrosia.api.ConstantPropertyReference;
 import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.ContextInfoPropertyReference;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.CountdownTimer;
 import org.muse.ambrosia.api.Courier;
 import org.muse.ambrosia.api.DatePropertyReference;
@@ -320,9 +320,9 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
-	public Controller newController()
+	public Component newComponent()
 	{
-		return new UiController();
+		return new UiComponent();
 	}
 
 	/**
@@ -674,12 +674,12 @@ public class UiServiceImpl implements UiService
 	 ************************************************************************************************************************************************/
 
 	/**
-	 * Check the element's tag for a known Controller tag, and create the controller from the tag.
+	 * Check the element's tag for a known Component tag, and create the component from the tag.
 	 * 
 	 * @param xml
 	 *        The element.
 	 */
-	protected Controller parseController(Element xml)
+	protected Component parseComponent(Element xml)
 	{
 		if (xml.getTagName().equals("alert")) return new UiAlert(this, xml);
 		if (xml.getTagName().equals("alias")) return new UiAlias(this, xml);
@@ -1122,7 +1122,7 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Controller ui, Context context)
+	public void render(Component ui, Context context)
 	{
 		context.setUi(ui);
 		ui.render(context, null);

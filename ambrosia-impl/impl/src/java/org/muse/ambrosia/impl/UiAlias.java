@@ -25,16 +25,16 @@ import java.util.List;
 
 import org.muse.ambrosia.api.Alias;
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 
 /**
  * UiAlias presents implements Alias.
  */
-public class UiAlias extends UiController implements Alias
+public class UiAlias extends UiComponent implements Alias
 {
-	/** The id of the controller to render. */
+	/** The id of the component to render. */
 	protected String to = null;
 
 	/**
@@ -72,10 +72,10 @@ public class UiAlias extends UiController implements Alias
 		if (!isIncluded(context, focus)) return;
 
 		// find the other guys
-		List<Controller> controllers = context.findControllers(this.to);
+		List<Component> components = context.findComponents(this.to);
 
 		// and render them
-		for (Controller c : controllers)
+		for (Component c : components)
 		{
 			// block the infinite loop of rendering me!
 			if (c != this)

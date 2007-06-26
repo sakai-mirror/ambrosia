@@ -25,7 +25,7 @@ package org.muse.ambrosia.api;
  * Navigation presents a navigation control (button or text link) to the user. The result of the press is a navigation to some tool destination. A
  * form submit is optional.
  */
-public interface Navigation extends Controller
+public interface Navigation extends Component
 {
 	/** Icon styles. */
 	enum IconStyle

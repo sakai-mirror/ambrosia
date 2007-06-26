@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
 /**
  * UiDivider implements Divider.
  */
-public class UiDivider extends UiController implements Divider
+public class UiDivider extends UiComponent implements Divider
 {
 	/**
 	 * Public no-arg constructor.
@@ -49,7 +49,7 @@ public class UiDivider extends UiController implements Divider
 	 */
 	protected UiDivider(UiServiceImpl service, Element xml)
 	{
-		// controller stuff
+		// component stuff
 		super(service, xml);
 	}
 

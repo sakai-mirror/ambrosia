@@ -24,7 +24,7 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
@@ -38,7 +38,7 @@ import org.w3c.dom.NodeList;
 /**
  * UiTextEdit presents a text input for the user to edit.
  */
-public class UiTextEdit extends UiController implements TextEdit
+public class UiTextEdit extends UiComponent implements TextEdit
 {
 	/** The decision that controls if the field should get on-load focus. */
 	protected Decision focusDecision = null;
@@ -84,7 +84,7 @@ public class UiTextEdit extends UiController implements TextEdit
 	 */
 	protected UiTextEdit(UiServiceImpl service, Element xml)
 	{
-		// controller stuff
+		// component stuff
 		super(service, xml);
 
 		// short form for title - attribute "title" as the selector

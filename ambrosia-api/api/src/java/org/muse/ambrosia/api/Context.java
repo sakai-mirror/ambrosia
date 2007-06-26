@@ -27,7 +27,7 @@ import java.util.List;
 import org.sakaiproject.i18n.InternationalizedMessages;
 
 /**
- * UiContext contains the runtime specific information needed with the UiController tree to work a response.<br />
+ * Context contains the runtime specific information needed with the Component tree to work a response.<br />
  * This is a set of internationalized messages that the UI tree references, along with a map of named objects that the UI tree references.
  */
 public interface Context
@@ -65,13 +65,13 @@ public interface Context
 	void clear();
 
 	/**
-	 * Find a controllers in the interface being rendered with this id.
+	 * Find the components in the interface being rendered with this id.
 	 * 
 	 * @param id
 	 *        The id to search for.
-	 * @return The controllers in the interface that has this id, or an empty list if not found.
+	 * @return The components in the interface that has this id, or an empty list if not found.
 	 */
-	List<Controller> findControllers(String id);
+	List<Component> findComponents(String id);
 
 	/**
 	 * Access the named object's value in the context.
@@ -164,11 +164,11 @@ public interface Context
 	String getScript();
 
 	/**
-	 * Set the top controller of the interface being rendered.
+	 * Get the top component of the interface being rendered.
 	 * 
-	 * @retur The top controller of the interface being rendered.
+	 * @return The top component of the interface being rendered.
 	 */
-	Controller getUi();
+	Component getUi();
 
 	/**
 	 * Get a number to use in making a unique (in-context) id.
@@ -270,10 +270,10 @@ public interface Context
 	void setPreviousDestination(String destination);
 
 	/**
-	 * Set the top controller of the interface being rendered.
+	 * Set the top component of the interface being rendered.
 	 * 
 	 * @param ui
-	 *        The top controller of the interface being rendered.
+	 *        The top component of the interface being rendered.
 	 */
-	void setUi(Controller ui);
+	void setUi(Component ui);
 }

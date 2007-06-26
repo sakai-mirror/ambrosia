@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
 /**
  * UiPassword implements Password.
  */
-public class UiPassword extends UiController implements Password
+public class UiPassword extends UiComponent implements Password
 {
 	/** The number of columns per row for the box. */
 	protected int numCols = 30;
@@ -72,7 +72,7 @@ public class UiPassword extends UiController implements Password
 	 */
 	protected UiPassword(UiServiceImpl service, Element xml)
 	{
-		// do the controller stuff
+		// do the component stuff
 		super(service, xml);
 
 		// short form for title - attribute "title" as the selector

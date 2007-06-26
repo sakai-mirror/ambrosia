@@ -24,6 +24,6 @@ package org.muse.ambrosia.api;
 /**
  * Divider puts some space between things, such as Navigations in a bar.
  */
-public interface Divider extends Controller
+public interface Divider extends Component
 {
 }

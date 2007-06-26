@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 /**
  * UiFileUpload...
  */
-public class UiFileUpload extends UiController implements FileUpload
+public class UiFileUpload extends UiComponent implements FileUpload
 {
 	/** The decision to control the onEmptyAlert. */
 	protected Decision onEmptyAlertDecision = null;
@@ -81,7 +81,7 @@ public class UiFileUpload extends UiController implements FileUpload
 	 */
 	protected UiFileUpload(UiServiceImpl service, Element xml)
 	{
-		// controller stuff
+		// component stuff
 		super(service, xml);
 
 		// onEmptyAlert

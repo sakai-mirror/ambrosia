@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * FileUpload presents a file upload control.
  */
-public interface FileUpload extends Controller
+public interface FileUpload extends Component
 {
 	/**
 	 * Set an alert that will triger once on submit if the field is empty.

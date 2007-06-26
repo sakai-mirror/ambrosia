@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * UiMatch is the assessment tool's matching interface. <br />
  */
-public interface Match extends Controller
+public interface Match extends Component
 {
 	/**
 	 * Set the property reference for items in the choices to get the id.

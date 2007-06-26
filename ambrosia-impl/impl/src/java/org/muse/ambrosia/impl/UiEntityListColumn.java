@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.EntityListColumn;
@@ -49,8 +49,8 @@ public class UiEntityListColumn implements EntityListColumn
 	/** The centered setting. */
 	protected boolean centered = false;
 
-	/** Controllers contained in this container. */
-	protected List<Controller> contained = new ArrayList<Controller>();
+	/** Components contained in this container. */
+	protected List<Component> contained = new ArrayList<Component>();
 
 	/** The inclusion decision for each entity. */
 	protected Decision entityIncluded = null;
@@ -249,7 +249,7 @@ public class UiEntityListColumn implements EntityListColumn
 			}
 		}
 
-		// controllers
+		// components
 		settingsXml = XmlHelper.getChildElementNamed(xml, "container");
 		if (settingsXml != null)
 		{
@@ -259,10 +259,10 @@ public class UiEntityListColumn implements EntityListColumn
 				Node node = contained.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE)
 				{
-					Element controllerXml = (Element) node;
+					Element componentXml = (Element) node;
 
-					// create a controller from each node in the container
-					Controller c = service.parseController(controllerXml);
+					// create a component from each node in the container
+					Component c = service.parseComponent(componentXml);
 					if (c != null)
 					{
 						this.contained.add(c);
@@ -335,9 +335,9 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityListColumn add(Controller controller)
+	public EntityListColumn add(Component component)
 	{
-		this.contained.add(controller);
+		this.contained.add(component);
 
 		return this;
 	}
@@ -396,7 +396,7 @@ public class UiEntityListColumn implements EntityListColumn
 		context.setCollecting();
 
 		// render the contained
-		for (Controller c : this.contained)
+		for (Component c : this.contained)
 		{
 			c.render(context, entity);
 		}

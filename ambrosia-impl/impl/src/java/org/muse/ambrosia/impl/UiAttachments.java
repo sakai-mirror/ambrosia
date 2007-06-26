@@ -45,7 +45,7 @@ import org.w3c.dom.NodeList;
 /**
  * UiAttachments...
  */
-public class UiAttachments extends UiController implements Attachments
+public class UiAttachments extends UiComponent implements Attachments
 {
 	/** The attachments reference. */
 	protected PropertyReference attachments = null;
@@ -84,7 +84,7 @@ public class UiAttachments extends UiController implements Attachments
 	 */
 	protected UiAttachments(UiServiceImpl service, Element xml)
 	{
-		// do the controller stuff
+		// do the component stuff
 		super(service, xml);
 
 		// short form for title - attribute "title" as the selector

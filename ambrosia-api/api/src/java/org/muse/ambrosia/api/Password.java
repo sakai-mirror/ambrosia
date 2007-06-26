@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * Password presents a text input for the user to enter a password.
  */
-public interface Password extends Controller
+public interface Password extends Component
 {
 	/**
 	 * Set an alert that will triger once on submit if the field is empty.

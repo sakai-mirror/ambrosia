@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * UiTextEdit presents a text input for the user to edit.
  */
-public interface TextEdit extends Controller
+public interface TextEdit extends Component
 {
 	/**
 	 * Set a decision to enable on-load cursor focus on this field.

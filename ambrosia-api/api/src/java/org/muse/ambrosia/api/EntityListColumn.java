@@ -29,12 +29,12 @@ import java.util.List;
 public interface EntityListColumn
 {
 	/**
-	 * Add a controller to the column.
+	 * Add a component to the column.
 	 * 
-	 * @param controller
-	 *        the controller to add.
+	 * @param component
+	 *        the component to add.
 	 */
-	EntityListColumn add(Controller controller);
+	EntityListColumn add(Component component);
 
 	/**
 	 * Add a navigation to use for the main text of the column. If multiple defined, the first enabled included non-null one wins.
