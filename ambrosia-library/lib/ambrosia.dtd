@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT interface (included | header | title | container)* >
+<!ATTLIST interface id CDATA #IMPLIED >
+<!ATTLIST interface autoComplete (TRUE|FALSE) "FALSE" >
+<!ATTLIST interface title CDATA #IMPLIED >
+<!ATTLIST interface header CDATA #IMPLIED >
+
+<!ELEMENT title (message) >
+
+<!ELEMENT header (message) >
+
+<!ELEMENT message (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | textModel | urlModel | userInfoModel)* >
+<!ATTLIST message selector CDATA #IMPLIED >
+<!ATTLIST message model CDATA #IMPLIED >
+
+<!ELEMENT model (missingValues)* >
+<!ATTLIST model ref CDATA #IMPLIED >
+<!ATTLIST model delegate CDATA #IMPLIED >
+<!ATTLIST model tool CDATA #IMPLIED >
+<!ATTLIST model missing CDATA #IMPLIED >
+<!ATTLIST model type (boolean|constant|contextInfo|date|duration|html|icon|text|url|userInfo) #IMPLIED >
+<!ATTLIST model concise (TRUE|FALSE) "FALSE" >
+<!ATTLIST model selector (DISPLAYNAME|TITLE) #IMPLIED >
+<!ATTLIST model max CDATA #IMPLIED >
+<!ATTLIST model stripHtml (TRUE|FALSE) "FALSE" >
+<!ATTLIST model icon CDATA #IMPLIED >
+<!ATTLIST model twoLine (TRUE|FALSE) "FALSE" >
+<!ATTLIST model value CDATA #IMPLIED >
+<!ATTLIST model true CDATA #IMPLIED >
+<!ATTLIST model false CDATA #IMPLIED >
+
+<!ELEMENT missingValues (missing)* >
+<!ELEMENT missing EMPTY >
+<!ATTLIST missing value CDATA #IMPLIED >
+
+<!ELEMENT booleanModel (missingValues)* >
+<!ATTLIST booleanModel ref CDATA #REQUIRED >
+<!ATTLIST booleanModel delegate CDATA #IMPLIED>
+<!ATTLIST booleanModel tool CDATA #IMPLIED >
+<!ATTLIST booleanModel missing CDATA #IMPLIED >
+<!ATTLIST booleanModel true CDATA #IMPLIED >
+<!ATTLIST booleanModel false CDATA #IMPLIED >
+
+<!ELEMENT constantModel (missingValues)* >
+<!ATTLIST constantModel ref CDATA #IMPLIED >
+<!ATTLIST constantModel delegate CDATA #IMPLIED>
+<!ATTLIST constantModel tool CDATA #IMPLIED >
+<!ATTLIST constantModel missing CDATA #IMPLIED >
+<!ATTLIST constantModel value CDATA #IMPLIED >
+
+<!ELEMENT contextInfoModel (missingValues)* >
+<!ATTLIST contextInfoModel ref CDATA #REQUIRED >
+<!ATTLIST contextInfoModel delegate CDATA #IMPLIED>
+<!ATTLIST contextInfoModel tool CDATA #IMPLIED >
+<!ATTLIST contextInfoModel missing CDATA #IMPLIED >
+<!ATTLIST contextInfoModel selector (TITLE) "TITLE" >
+
+<!ELEMENT dateModel (missingValues)* >
+<!ATTLIST dateModel ref CDATA #REQUIRED >
+<!ATTLIST dateModel delegate CDATA #IMPLIED>
+<!ATTLIST dateModel tool CDATA #IMPLIED >
+<!ATTLIST dateModel missing CDATA #IMPLIED >
+<!ATTLIST dateModel twoLine (TRUE|FALSE) "FALSE" >
+
+<!ELEMENT durationModel (missingValues)* >
+<!ATTLIST durationModel ref CDATA #REQUIRED >
+<!ATTLIST durationModel delegate CDATA #IMPLIED>
+<!ATTLIST durationModel tool CDATA #IMPLIED >
+<!ATTLIST durationModel missing CDATA #IMPLIED >
+<!ATTLIST durationModel concise (TRUE|FALSE) "FALSE" >
+
+<!ELEMENT htmlModel (missingValues)* >
+<!ATTLIST htmlModel ref CDATA #REQUIRED >
+<!ATTLIST htmlModel delegate CDATA #IMPLIED>
+<!ATTLIST htmlModel tool CDATA #IMPLIED >
+<!ATTLIST htmlModel missing CDATA #IMPLIED >
+<!ATTLIST htmlModel max CDATA #IMPLIED >
+
+<!ELEMENT iconModel (missingValues)* >
+<!ATTLIST iconModel ref CDATA #IMPLIED >
+<!ATTLIST iconModel delegate CDATA #IMPLIED>
+<!ATTLIST iconModel tool CDATA #IMPLIED >
+<!ATTLIST iconModel missing CDATA #IMPLIED >
+<!ATTLIST iconModel icon CDATA #IMPLIED >
+
+<!ELEMENT textModel (missingValues)* >
+<!ATTLIST textModel ref CDATA #REQUIRED >
+<!ATTLIST textModel delegate CDATA #IMPLIED>
+<!ATTLIST textModel tool CDATA #IMPLIED >
+<!ATTLIST textModel missing CDATA #IMPLIED >
+<!ATTLIST textModel max CDATA #IMPLIED >
+<!ATTLIST textModel stripHtml (TRUE|FALSE) "FALSE" >
+
+<!ELEMENT urlModel (missingValues)* >
+<!ATTLIST urlModel ref CDATA #REQUIRED >
+<!ATTLIST urlModel delegate CDATA #IMPLIED>
+<!ATTLIST urlModel tool CDATA #IMPLIED >
+<!ATTLIST urlModel missing CDATA #IMPLIED >
+
+<!ELEMENT userInfoModel (missingValues)* >
+<!ATTLIST userInfoModel ref CDATA #REQUIRED >
+<!ATTLIST userInfoModel delegate CDATA #IMPLIED>
+<!ATTLIST userInfoModel tool CDATA #IMPLIED >
+<!ATTLIST userInfoModel missing CDATA #IMPLIED >
+<!ATTLIST userInfoModel selector (DISPLAYNAME) "DISPLAYNAME" >
+
+<!ELEMENT container (alert | alias | attachments | countdownTimer | courier | divider | entityDisplay | entityList | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | navigation | navigationBar | password | section | selection | text | textEdit)* >
+
+<!ELEMENT included (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT disabled (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT default (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT validate (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+
+<!ELEMENT decision ANY >
+<!ELEMENT hasValueDecision ANY >
+<!ELEMENT compareDecision ANY >
+<!ELEMENT andDecision ANY >
+<!ELEMENT orDecision ANY >
+<!ELEMENT pastDateDecision ANY >
+
+<!ELEMENT alert (included | message)* >
+<!ATTLIST alert id CDATA #IMPLIED >
+<!ATTLIST alert selector CDATA #IMPLIED >
+<!ATTLIST alert model CDATA #IMPLIED >
+
+<!ELEMENT alias (included)* >
+<!ATTLIST alias id CDATA #IMPLIED >
+<!ATTLIST alias to CDATA #REQUIRED >
+
+<!ELEMENT attachments (included | title | model | navigations)* >
+<!ATTLIST attachments id CDATA #IMPLIED >
+<!ATTLIST attachments title CDATA #IMPLIED>
+<!ATTLIST attachments model CDATA #IMPLIED>
+<!ATTLIST attachments name CDATA #IMPLIED>
+<!ATTLIST attachments raw (TRUE|FALSE) #IMPLIED>
+<!ATTLIST attachments size (TRUE|FALSE) #IMPLIED>
+<!ATTLIST attachments timestamp (TRUE|FALSE) #IMPLIED>
+
+<!ELEMENT navigations (navigation)* >
+
+<!ELEMENT navigation (included | confirm | title | destination | disabled | default | validate | icon)* >
+<!ATTLIST navigation id CDATA #IMPLIED >
+<!ATTLIST navigation title CDATA #IMPLIED >
+<!ATTLIST navigation style (BUTTON|LINK) #IMPLIED >
+<!ATTLIST navigation destination CDATA #IMPLIED >
+<!ATTLIST navigation submit (TRUE|FALSE) #IMPLIED >
+<!ATTLIST navigation default (TRUE|FALSE) #IMPLIED >
+<!ATTLIST navigation disabled (TRUE|FALSE) #IMPLIED >
+<!ATTLIST navigation accessKey CDATA #IMPLIED >
+<!ATTLIST navigation description CDATA #IMPLIED >
+
+<!ELEMENT confirm (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | message | cancel)* >
+<!ATTLIST confirm decision (TRUE|FALSE) #IMPLIED >
+<!ATTLIST confirm cancelSelector CDATA #IMPLIED >
+<!ATTLIST confirm cancelIcon CDATA #IMPLIED >
+<!ATTLIST confirm selector CDATA #IMPLIED >
+<!ATTLIST confirm model CDATA #IMPLIED >
+
+<!ELEMENT cancel EMPTY >
+<!ATTLIST cancel selector CDATA #IMPLIED >
+<!ATTLIST cancel icon CDATA #IMPLIED >
+
+<!ELEMENT destination (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | textModel | urlModel | userInfoModel)* >
+<!ATTLIST destination template CDATA #IMPLIED >
+<!ATTLIST destination model CDATA #IMPLIED >
+
+<!ELEMENT icon EMPTY >
+<!ATTLIST icon icon CDATA #IMPLIED >
+<!ATTLIST icon style (LEFT|RIGHT) #IMPLIED >
+
+
+
+
+
