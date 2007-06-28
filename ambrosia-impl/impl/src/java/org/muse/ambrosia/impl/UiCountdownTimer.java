@@ -139,7 +139,6 @@ public class UiCountdownTimer extends UiComponent implements CountdownTimer
 			this.disabledDecision = new UiDecision().setProperty(new UiConstantPropertyReference().setValue("TRUE"));
 		}
 
-		// short form for destination - attribute "destination" as the destination
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "disabled");
 		if (settingsXml != null)
 		{

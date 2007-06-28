@@ -74,13 +74,6 @@ public class UiCompareDecision extends UiDecision implements CompareDecision
 			values.add(value);
 		}
 
-		// shortcut for model
-		String model = StringUtil.trimToNull(xml.getAttribute("model"));
-		if (model != null)
-		{
-			this.propertyReference = new UiPropertyReference().setReference(model);
-		}
-
 		// constants
 		NodeList settings = xml.getChildNodes();
 		for (int i = 0; i < settings.getLength(); i++)
@@ -98,14 +91,6 @@ public class UiCompareDecision extends UiDecision implements CompareDecision
 					}
 				}
 			}
-		}
-
-		// model
-		Element innerXml = XmlHelper.getChildElementNamed(xml, "model");
-		if (innerXml != null)
-		{
-			PropertyReference pRef = service.parsePropertyReference(innerXml);
-			if (pRef != null) this.propertyReference = pRef;
 		}
 
 		// convert the refs into an array

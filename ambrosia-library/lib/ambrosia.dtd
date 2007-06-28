@@ -5,7 +5,8 @@
 <!ATTLIST interface title CDATA #IMPLIED >
 <!ATTLIST interface header CDATA #IMPLIED >
 
-<!ELEMENT title (message) >
+<!ELEMENT title (message | included | highlighted)* >
+<!ATTLIST title highlighted (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT header (message) >
 
@@ -84,7 +85,7 @@
 <!ATTLIST iconModel icon CDATA #IMPLIED >
 
 <!ELEMENT textModel (missingValues)* >
-<!ATTLIST textModel ref CDATA #REQUIRED >
+<!ATTLIST textModel ref  CDATA #REQUIRED >
 <!ATTLIST textModel delegate CDATA #IMPLIED>
 <!ATTLIST textModel tool CDATA #IMPLIED >
 <!ATTLIST textModel missing CDATA #IMPLIED >
@@ -110,13 +111,63 @@
 <!ELEMENT disabled (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 <!ELEMENT default (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 <!ELEMENT validate (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT entityIncluded (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT titleIncluded (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT asAlert (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT active (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT direction (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT readOnly (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT singleSelect (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT focus (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT highlighted (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 
-<!ELEMENT decision ANY >
-<!ELEMENT hasValueDecision ANY >
-<!ELEMENT compareDecision ANY >
-<!ELEMENT andDecision ANY >
-<!ELEMENT orDecision ANY >
-<!ELEMENT pastDateDecision ANY >
+<!ATTLIST entityIncluded selector CDATA #IMPLIED >
+
+<!ELEMENT decision (model)* >
+<!ATTLIST decision type (hasValue|compare|and|or|pastDate) #IMPLIED >
+<!ATTLIST decision reversed (TRUE|FALSE) #IMPLIED >
+<!ATTLIST decision model CDATA #IMPLIED >
+<!ATTLIST decision delegate CDATA #IMPLIED >
+<!ATTLIST decision tool CDATA #IMPLIED >
+
+<!ELEMENT hasValueDecision (model)* >
+<!ATTLIST hasValueDecision type (hasValue|compare|and|or|pastDate) #IMPLIED >
+<!ATTLIST hasValueDecision reversed (TRUE|FALSE) #IMPLIED >
+<!ATTLIST hasValueDecision model CDATA #IMPLIED >
+<!ATTLIST hasValueDecision delegate CDATA #IMPLIED >
+<!ATTLIST hasValueDecision tool CDATA #IMPLIED >
+
+<!ELEMENT compareDecision (model | constant)* >
+<!ATTLIST compareDecision type (hasValue|compare|and|or|pastDate) #IMPLIED >
+<!ATTLIST compareDecision reversed (TRUE|FALSE) #IMPLIED >
+<!ATTLIST compareDecision model CDATA #IMPLIED >
+<!ATTLIST compareDecision delegate CDATA #IMPLIED >
+<!ATTLIST compareDecision tool CDATA #IMPLIED >
+<!ATTLIST compareDecision constant CDATA #IMPLIED >
+
+<!ELEMENT constant EMPTY >
+<!ATTLIST constant value CDATA #IMPLIED >
+
+<!ELEMENT andDecision (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ATTLIST andDecision type (hasValue|compare|and|or|pastDate) #IMPLIED >
+<!ATTLIST andDecision reversed (TRUE|FALSE) #IMPLIED >
+<!ATTLIST andDecision model CDATA #IMPLIED >
+<!ATTLIST andDecision delegate CDATA #IMPLIED >
+<!ATTLIST andDecision tool CDATA #IMPLIED >
+
+<!ELEMENT orDecision (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ATTLIST orDecision type (hasValue|compare|and|or|pastDate) #IMPLIED >
+<!ATTLIST orDecision reversed (TRUE|FALSE) #IMPLIED >
+<!ATTLIST orDecision model CDATA #IMPLIED >
+<!ATTLIST orDecision delegate CDATA #IMPLIED >
+<!ATTLIST orDecision tool CDATA #IMPLIED >
+
+<!ELEMENT pastDateDecision (model)* >
+<!ATTLIST pastDateDecision type (hasValue|compare|and|or|pastDate) #IMPLIED >
+<!ATTLIST pastDateDecision reversed (TRUE|FALSE) #IMPLIED >
+<!ATTLIST pastDateDecision model CDATA #IMPLIED >
+<!ATTLIST pastDateDecision delegate CDATA #IMPLIED >
+<!ATTLIST pastDateDecision tool CDATA #IMPLIED >
 
 <!ELEMENT alert (included | message)* >
 <!ATTLIST alert id CDATA #IMPLIED >
@@ -164,11 +215,192 @@
 <!ATTLIST destination template CDATA #IMPLIED >
 <!ATTLIST destination model CDATA #IMPLIED >
 
-<!ELEMENT icon EMPTY >
+<!ELEMENT icon (message)* >
 <!ATTLIST icon icon CDATA #IMPLIED >
 <!ATTLIST icon style (LEFT|RIGHT) #IMPLIED >
+<!ATTLIST icon message CDATA #IMPLIED >
 
+<!ELEMENT countdownTimer (included | disabled | duration | destination | hide | remaining | show | timeTillExpire | title)* >
+<!ATTLIST countdownTimer id CDATA #IMPLIED >
+<!ATTLIST countdownTimer submit (TRUE|FALSE) #IMPLIED >
+<!ATTLIST countdownTimer tight (TRUE|FALSE) #IMPLIED >
+<!ATTLIST countdownTimer title CDATA #IMPLIED >
+<!ATTLIST countdownTimer warn CDATA #IMPLIED >
+<!ATTLIST countdownTimer pixels CDATA #IMPLIED >
+<!ATTLIST countdownTimer disabled (TRUE|FALSE) #IMPLIED >
+<!ATTLIST countdownTimer distination CDATA #IMPLIED >
 
+<!ELEMENT duration (message | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT hide (message)* >
+<!ELEMENT remaining (message)* >
+<!ELEMENT show (message)* >
+<!ELEMENT timeTillExpire (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | textModel | urlModel | userInfoModel)* >
 
+<!ELEMENT courier (included | destination)* >
+<!ATTLIST courier id CDATA #IMPLIED >
+<!ATTLIST courier frequency CDATA #IMPLIED >
+<!ATTLIST courier destination CDATA #IMPLIED >
 
+<!ELEMENT divider (included)* >
+<!ATTLIST divider id CDATA #IMPLIED >
 
+<!ELEMENT entityDisplay (included | model | title | rows)* >
+<!ATTLIST entityDisplay id CDATA #IMPLIED >
+<!ATTLIST entityDisplay model CDATA #IMPLIED >
+<!ATTLIST entityDisplay title CDATA #IMPLIED >
+
+<!ELEMENT rows (row)* >
+<!ELEMENT row (included | title | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | textModel | urlModel | userInfoModel)* >
+<!ATTLIST row title CDATA #IMPLIED >
+<!ATTLIST row model CDATA #IMPLIED >
+
+<!ELEMENT entityList (included | emptyTitle | entityIncluded | iterator | title | titleIncluded | columns | headings)* >
+<!ATTLIST entityList id CDATA #IMPLIED >
+<!ATTLIST entityList style (FLAT|FORM) #IMPLIED >
+
+<!ELEMENT emptyTitle (message) >
+
+<!ELEMENT iterator (model)* >
+<!ATTLIST iterator model CDATA #IMPLIED >
+<!ATTLIST iterator name CDATA #IMPLIED >
+
+<!ELEMENT columns (column | autoColumn | modelColumn | selectionColumn)* >
+<!ELEMENT column (asAlert | entityIncluded | included | sort | title | container | entityNavigations | footnotes | navigations)* >
+<!ATTLIST column type (auto|model|selection) #IMPLIED >
+<!ATTLIST column centered (TRUE|FALSE) #IMPLIED >
+<!ATTLIST column wrap (TRUE|FALSE) #IMPLIED >
+<!ATTLIST column title CDATA #IMPLIED >
+<!ATTLIST column pixels CDATA #IMPLIED >
+<!ATTLIST column em CDATA #IMPLIED >
+
+<!ELEMENT sort (active | direction | asc | desc)* >
+
+<!ELEMENT asc (message | destination)* >
+<!ATTLIST asc icon CDATA #IMPLIED >
+
+<!ELEMENT desc (message | destination)* >
+<!ATTLIST desc icon CDATA #IMPLIED >
+
+<!ELEMENT entityNavigations (navigation)* >
+
+<!ELEMENT footnotes (footnote)* >
+<!ELEMENT footnote EMPTY >
+
+<!ELEMENT headings (heading)* >
+<!ELEMENT heading (message | navigation | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+
+<!ELEMENT autoColumn EMPTY >
+
+<!ELEMENT modelColumn (model | message | asAlert | entityIncluded | included | sort | title | container | entityNavigations | footnotes | navigations)* >
+<!ATTLIST modelColumn centered (TRUE|FALSE) #IMPLIED >
+<!ATTLIST modelColumn wrap (TRUE|FALSE) #IMPLIED >
+<!ATTLIST modelColumn title CDATA #IMPLIED >
+<!ATTLIST modelColumn pixels CDATA #IMPLIED >
+<!ATTLIST modelColumn em CDATA #IMPLIED >
+
+<!ELEMENT selectionColumn (value | singleSelect | readOnly | model | onEmptyAlert | label | asAlert | entityIncluded | included | sort | title | container | entityNavigations | footnotes | navigations)* >
+<!ATTLIST selectionColumn centered (TRUE|FALSE) #IMPLIED >
+<!ATTLIST selectionColumn wrap (TRUE|FALSE) #IMPLIED >
+<!ATTLIST selectionColumn title CDATA #IMPLIED >
+<!ATTLIST selectionColumn pixels CDATA #IMPLIED >
+<!ATTLIST selectionColumn em CDATA #IMPLIED >
+<!ATTLIST selectionColumn multiple (TRUE|FALSE) #IMPLIED >
+<!ATTLIST selectionColumn single (TRUE|FALSE) #IMPLIED >
+<!ATTLIST selectionColumn model CDATA #IMPLIED >
+
+<!ELEMENT label (message) >
+
+<!ELEMENT onEmptyAlert (message | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+
+<!ELEMENT value (model) >
+
+<!ELEMENT text (included | message)* >
+<!ATTLIST text id CDATA #IMPLIED >
+<!ATTLIST text selector CDATA #IMPLIED >
+<!ATTLIST text model CDATA #IMPLIED >
+
+<!ELEMENT evaluation (included | message | icon)* >
+<!ATTLIST evaluation id CDATA #IMPLIED >
+<!ATTLIST evaluation selector CDATA #IMPLIED >
+<!ATTLIST evaluation model CDATA #IMPLIED >
+<!ATTLIST evaluation icon CDATA #IMPLIED >
+
+<!ELEMENT fileUpload (included | onEmptyAlert | model | readOnly | title | upload)* >
+<!ATTLIST fileUpload id CDATA #IMPLIED >
+<!ATTLIST fileUpload title CDATA #IMPLIED >
+
+<!ELEMENT upload (message) >
+
+<!ELEMENT fillIn (included | correctMarker | focus | onEmptyAlert | model | readOnly | text | title)* >
+<!ATTLIST fillIn id CDATA #IMPLIED >
+<!ATTLIST fillIn cols CDATA #IMPLIED >
+
+<!ELEMENT correctMarker (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ATTLIST correctMarker correctIcon CDATA #IMPLIED >
+<!ATTLIST correctMarker correctSelector CDATA #IMPLIED >
+<!ATTLIST correctMarker incorrectIcon CDATA #IMPLIED >
+<!ATTLIST correctMarker incorrectSelector CDATA #IMPLIED >
+
+<!ELEMENT gap (included)* >
+<!ATTLIST gap id CDATA #IMPLIED >
+
+<!ELEMENT iconKey (included | icons | descriptionModel | iconsModel | keysModel | title)* >
+<!ATTLIST iconKey id CDATA #IMPLIED >
+<!ATTLIST iconKey title CDATA #IMPLIED >
+
+<!ELEMENT descriptionModel (model) >
+<!ELEMENT iconsModel (model) >
+<!ELEMENT keysModel (model) >
+<!ELEMENT icons (icon)* >
+
+<!ELEMENT instructions (included | message)* >
+<!ATTLIST instructions id CDATA #IMPLIED >
+<!ATTLIST instructions selector CDATA #IMPLIED >
+<!ATTLIST instructions model CDATA #IMPLIED >
+
+<!ELEMENT match (included | correctMarker | choiceId | choiceLabel | choiceText | feedback | onEmptyAlert | parts | partsChoices | partsTitle | model | readOnly | select | title)* >
+<!ATTLIST match id CDATA #IMPLIED >
+
+<!ELEMENT choiceId (model) >
+<!ELEMENT choiceLabel (model) >
+<!ELEMENT choiceText (model) >
+<!ELEMENT parts (model) >
+<!ELEMENT partsChoices (model) >
+<!ELEMENT partsTitle (model) >
+<!ELEMENT select (message) >
+
+<!ELEMENT feedback (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ATTLIST feedback selector CDATA #IMPLIED >
+
+<!ELEMENT menuBar EMPTY >
+
+<!ELEMENT navigationBar (included | container)* >
+<!ATTLIST navigationBar id CDATA #IMPLIED >
+<!ATTLIST navigationBar width CDATA #IMPLIED >
+
+<!ELEMENT password (included | title | model | onEmptyAlert)* >
+<!ATTLIST password id CDATA #IMPLIED >
+<!ATTLIST password title CDATA #IMPLIED >
+<!ATTLIST password model CDATA #IMPLIED >
+
+<!ELEMENT section (included | title | anchor | entityIncluded | focusOn | iterator | container)* >
+<!ATTLIST section id CDATA #IMPLIED >
+<!ATTLIST section title CDATA #IMPLIED >
+
+<!ELEMENT anchor (message) >
+
+<!ELEMENT focusOn (model)* >
+<!ATTLIST focusOn model CDATA #IMPLIED >
+
+<!ELEMENT selection (included | title | model | readOnly)* >
+<!ATTLIST selection id CDATA #IMPLIED >
+<!ATTLIST selection title CDATA #IMPLIED >
+<!ATTLIST selection model CDATA #IMPLIED >
+<!ATTLIST selection value CDATA #IMPLIED >
+
+<!ELEMENT textEdit (included | title | model | onEmptyAlert | readOnly | focus)* >
+<!ATTLIST textEdit id CDATA #IMPLIED >
+<!ATTLIST textEdit title CDATA #IMPLIED >
+<!ATTLIST textEdit model CDATA #IMPLIED >
+<!ATTLIST textEdit rows CDATA #IMPLIED >
+<!ATTLIST textEdit cols CDATA #IMPLIED >

@@ -123,7 +123,7 @@ public class UiEntityListColumn implements EntityListColumn
 	protected UiEntityListColumn(UiServiceImpl service, Element xml)
 	{
 		// alert
-		Element settingsXml = XmlHelper.getChildElementNamed(xml, "alert");
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "asAlert");
 		if (settingsXml != null)
 		{
 			Decision decision = service.parseDecisions(settingsXml);

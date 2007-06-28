@@ -98,7 +98,6 @@ public class UiText extends UiComponent implements Text
 			String msg = this.message.getMessage(context, focus);
 			if (msg != null)
 			{
-				// TODO: need class, was "instruction"
 				response.println("<div class=\"ambrosiaText\">" + msg + "</div>");
 			}
 		}

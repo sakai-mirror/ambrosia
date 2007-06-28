@@ -132,7 +132,7 @@ public class UiSection extends UiContainer implements Section
 		}
 
 		// focus
-		settingsXml = XmlHelper.getChildElementNamed(xml, "focus");
+		settingsXml = XmlHelper.getChildElementNamed(xml, "focusOn");
 		if (settingsXml != null)
 		{
 			// short for model

@@ -129,7 +129,7 @@ public class UiIconKey extends UiComponent implements IconKey
 		}
 
 		// icon reference
-		settingsXml = XmlHelper.getChildElementNamed(xml, "iconModel");
+		settingsXml = XmlHelper.getChildElementNamed(xml, "iconsModel");
 		if (settingsXml != null)
 		{
 			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
