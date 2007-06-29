@@ -24,27 +24,27 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Component;
+import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Interface;
 import org.muse.ambrosia.api.Message;
+import org.muse.ambrosia.api.ModeBar;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.UiService;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
- * UiInterface is the top most container for each user interface.<br />
- * The interface title is rendered as the main (think window or frame) title.<br />
- * The interface has a header that is rendered in the display at the top.
+ * UiInterface implements Interface.
  */
 public class UiInterface extends UiContainer implements Interface
 {
 	/** The message selector and properties for the header. */
 	protected Message header = null;
+
+	/** The ModeBar for the view. */
+	protected ModeBar modeBar = null;
 
 	/** If we want to disable browser auto-complete. */
 	protected boolean noAutoComplete = false;
@@ -105,6 +105,13 @@ public class UiInterface extends UiContainer implements Interface
 		{
 			// let Message parse this
 			this.header = new UiMessage(service, settingsXml);
+		}
+		
+		settingsXml = XmlHelper.getChildElementNamed(xml, "modeBar");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.modeBar = new UiModeBar(service, settingsXml);
 		}
 	}
 
@@ -194,6 +201,12 @@ public class UiInterface extends UiContainer implements Interface
 		// button
 		response.println("<input type=\"hidden\" name =\"" + "destination_" + "\" value=\"\" />");
 
+		// mode bar, if defined
+		if (this.modeBar != null)
+		{
+			this.modeBar.render(context, focus);
+		}
+
 		// header, if defined
 		if (this.header != null)
 		{
@@ -274,6 +287,15 @@ public class UiInterface extends UiContainer implements Interface
 	public Interface setHeader(String selector, PropertyReference... references)
 	{
 		this.header = new UiMessage().setMessage(selector, references);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Interface setModeBar(ModeBar bar)
+	{
+		this.modeBar = bar;
 		return this;
 	}
 

@@ -40,6 +40,15 @@ public interface Interface extends Container
 	Interface setHeader(String selector, PropertyReference... references);
 
 	/**
+	 * Set the view's mode bar
+	 * 
+	 * @param bar
+	 *        The mode bar.
+	 * @return self.
+	 */
+	Interface setModeBar(ModeBar bar);
+
+	/**
 	 * Set to disable browser auto-complete for the interface.
 	 * 
 	 * @return self.

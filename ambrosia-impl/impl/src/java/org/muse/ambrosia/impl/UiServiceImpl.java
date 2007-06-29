@@ -46,11 +46,12 @@ import org.muse.ambrosia.api.AutoColumn;
 import org.muse.ambrosia.api.BarChart;
 import org.muse.ambrosia.api.BooleanPropertyReference;
 import org.muse.ambrosia.api.CompareDecision;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.ConstantPropertyReference;
 import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.ContextInfoPropertyReference;
-import org.muse.ambrosia.api.Component;
+import org.muse.ambrosia.api.Controller;
 import org.muse.ambrosia.api.CountdownTimer;
 import org.muse.ambrosia.api.Courier;
 import org.muse.ambrosia.api.DatePropertyReference;
@@ -79,6 +80,7 @@ import org.muse.ambrosia.api.Interface;
 import org.muse.ambrosia.api.Match;
 import org.muse.ambrosia.api.MenuBar;
 import org.muse.ambrosia.api.Message;
+import org.muse.ambrosia.api.ModeBar;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.NavigationBar;
 import org.muse.ambrosia.api.OrDecision;
@@ -97,7 +99,6 @@ import org.muse.ambrosia.api.UiService;
 import org.muse.ambrosia.api.UrlPropertyReference;
 import org.muse.ambrosia.api.UserInfoPropertyReference;
 import org.muse.ambrosia.api.Value;
-import org.muse.ambrosia.api.Controller;
 import org.sakaiproject.i18n.InternationalizedMessages;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.api.ActiveTool;
@@ -536,6 +537,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public ModeBar newModeBar()
+	{
+		return new UiModeBar();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Navigation newNavigation()
 	{
 		return new UiNavigation();
@@ -698,6 +707,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("interface")) return new UiInterface(this, xml);
 		if (xml.getTagName().equals("match")) return new UiMatch(this, xml);
 		if (xml.getTagName().equals("menuBar")) return new UiMenuBar();
+		if (xml.getTagName().equals("modeBar")) return new UiModeBar(this, xml);
 		if (xml.getTagName().equals("navigation")) return new UiNavigation(this, xml);
 		if (xml.getTagName().equals("navigationBar")) return new UiNavigationBar(this, xml);
 		if (xml.getTagName().equals("password")) return new UiPassword(this, xml);
@@ -705,6 +715,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("selection")) return new UiSelection(this, xml);
 		if (xml.getTagName().equals("text")) return new UiText(this, xml);
 		if (xml.getTagName().equals("textEdit")) return new UiTextEdit(this, xml);
+		if (xml.getTagName().equals("view")) return new UiInterface(this, xml);
 
 		return null;
 	}

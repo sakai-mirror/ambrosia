@@ -327,6 +327,13 @@ public interface UiService
 	Message newMessage();
 
 	/**
+	 * Construct a new ModeBar
+	 * 
+	 * @return a new ModeBar
+	 */
+	ModeBar newModeBar();
+
+	/**
 	 * Construct a new Navigation
 	 * 
 	 * @return a new Navigation
