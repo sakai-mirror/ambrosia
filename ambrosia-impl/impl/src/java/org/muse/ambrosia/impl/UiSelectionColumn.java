@@ -95,7 +95,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 
 		// single select
 		String single = StringUtil.trimToNull(xml.getAttribute("single"));
-		if ((multiple != null) && ("TRUE".equals(multiple))) setSingle();
+		if ((single != null) && ("TRUE".equals(multiple))) setSingle();
 
 		// onEmptyAlert
 		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
