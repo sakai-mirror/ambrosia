@@ -99,6 +99,7 @@ import org.muse.ambrosia.api.UiService;
 import org.muse.ambrosia.api.UrlPropertyReference;
 import org.muse.ambrosia.api.UserInfoPropertyReference;
 import org.muse.ambrosia.api.Value;
+import org.muse.ambrosia.api.Values;
 import org.sakaiproject.i18n.InternationalizedMessages;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.api.ActiveTool;
@@ -676,6 +677,14 @@ public class UiServiceImpl implements UiService
 	public Value newValue()
 	{
 		return new UiValue();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Values newValues()
+	{
+		return new UiValues();
 	}
 
 	/*************************************************************************************************************************************************

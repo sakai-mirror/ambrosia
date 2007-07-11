@@ -451,6 +451,13 @@ public interface UiService
 	 * @return a new Value
 	 */
 	Value newValue();
+	
+	/**
+	 * Construct a new Values
+	 * 
+	 * @return a new Values
+	 */
+	Values newValues();
 
 	/*************************************************************************************************************************************************
 	 * Response handling methods
