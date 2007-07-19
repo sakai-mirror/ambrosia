@@ -188,7 +188,7 @@ public class UiEntityList extends UiComponent implements EntityList
 				}
 			}
 		}
-		
+
 		// headings
 		settingsXml = XmlHelper.getChildElementNamed(xml, "headings");
 		if (settingsXml != null)
@@ -205,7 +205,7 @@ public class UiEntityList extends UiComponent implements EntityList
 						Decision d = service.parseDecisions(containedXml);
 						Message m = null;
 						Navigation n = null;
-						
+
 						Element innerXml = XmlHelper.getChildElementNamed(containedXml, "message");
 						if (innerXml != null)
 						{
@@ -386,6 +386,13 @@ public class UiEntityList extends UiComponent implements EntityList
 					response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">"
 							+ Validator.escapeHtml(title.getMessage(context, focus)) + "</th>");
 				}
+			}
+
+			// for no title defined, put out a placeholder title
+			else
+			{
+				response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">"
+						+ "" + "</th>");
 			}
 		}
 		response.println("</tr></thead>");
