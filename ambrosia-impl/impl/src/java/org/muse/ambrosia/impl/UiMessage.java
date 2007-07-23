@@ -124,7 +124,7 @@ public class UiMessage implements Message
 		{
 			if (selector != null)
 			{
-				return context.getMessages().getString(selector);
+				return StringUtil.trimToNull(context.getMessages().getString(selector));
 			}
 			return null;
 		}
@@ -134,7 +134,7 @@ public class UiMessage implements Message
 		{
 			if ((references != null) && (references.length == 1))
 			{
-				return references[0].read(context, focus);
+				return StringUtil.trimToNull(references[0].read(context, focus));
 			}
 			return null;
 		}
@@ -154,6 +154,6 @@ public class UiMessage implements Message
 			args[i++] = value;
 		}
 
-		return context.getMessages().getFormattedMessage(selector, args);
+		return StringUtil.trimToNull(context.getMessages().getFormattedMessage(selector, args));
 	}
 }
