@@ -5,6 +5,8 @@
 <!ATTLIST interface title CDATA #IMPLIED >
 <!ATTLIST interface header CDATA #IMPLIED >
 
+<!ELEMENT fragment (included | container)* >
+
 <!ELEMENT title (message | included | highlighted)* >
 <!ATTLIST title highlighted (TRUE|FALSE) #IMPLIED >
 
@@ -407,3 +409,6 @@
 <!ATTLIST textEdit model CDATA #IMPLIED >
 <!ATTLIST textEdit rows CDATA #IMPLIED >
 <!ATTLIST textEdit cols CDATA #IMPLIED >
+
+<!ELEMENT modelComponent (included | model)* >
+<!ATTLIST modelComponent model CDATA #IMPLIED >

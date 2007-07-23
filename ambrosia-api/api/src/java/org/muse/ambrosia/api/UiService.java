@@ -248,6 +248,13 @@ public interface UiService
 	Footnote newFootnote();
 
 	/**
+	 * Construct a new Fragment
+	 * 
+	 * @return a new Fragment
+	 */
+	Fragment newFragment();
+
+	/**
 	 * Construct a new Gap
 	 * 
 	 * @return a new Gap
@@ -325,6 +332,13 @@ public interface UiService
 	 * @return a new Message
 	 */
 	Message newMessage();
+
+	/**
+	 * Construct a new ModelComponent
+	 * 
+	 * @return a new ModelComponent
+	 */
+	ModelComponent newModelComponent();
 
 	/**
 	 * Construct a new ModeBar

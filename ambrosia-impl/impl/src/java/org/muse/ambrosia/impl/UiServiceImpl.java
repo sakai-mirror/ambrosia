@@ -70,6 +70,7 @@ import org.muse.ambrosia.api.FileUpload;
 import org.muse.ambrosia.api.FillIn;
 import org.muse.ambrosia.api.Footnote;
 import org.muse.ambrosia.api.FormatDelegate;
+import org.muse.ambrosia.api.Fragment;
 import org.muse.ambrosia.api.Gap;
 import org.muse.ambrosia.api.HasValueDecision;
 import org.muse.ambrosia.api.HtmlPropertyReference;
@@ -81,6 +82,7 @@ import org.muse.ambrosia.api.Match;
 import org.muse.ambrosia.api.MenuBar;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.ModeBar;
+import org.muse.ambrosia.api.ModelComponent;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.NavigationBar;
 import org.muse.ambrosia.api.OrDecision;
@@ -458,6 +460,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public Fragment newFragment()
+	{
+		return new UiFragment();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Gap newGap()
 	{
 		return new UiGap();
@@ -533,6 +543,14 @@ public class UiServiceImpl implements UiService
 	public Message newMessage()
 	{
 		return new UiMessage();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ModelComponent newModelComponent()
+	{
+		return new UiModelComponent();
 	}
 
 	/**
@@ -710,6 +728,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("evaluation")) return new UiEvaluation(this, xml);
 		if (xml.getTagName().equals("fileUpload")) return new UiFileUpload(this, xml);
 		if (xml.getTagName().equals("fillIn")) return new UiFillIn(this, xml);
+		if (xml.getTagName().equals("fragment")) return new UiFragment(this, xml);
 		if (xml.getTagName().equals("gap")) return new UiGap(this, xml);
 		if (xml.getTagName().equals("iconKey")) return new UiIconKey(this, xml);
 		if (xml.getTagName().equals("instructions")) return new UiInstructions(this, xml);
@@ -717,6 +736,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("match")) return new UiMatch(this, xml);
 		if (xml.getTagName().equals("menuBar")) return new UiMenuBar();
 		if (xml.getTagName().equals("modeBar")) return new UiModeBar(this, xml);
+		if (xml.getTagName().equals("modelComponent")) return new UiModelComponent(this, xml);
 		if (xml.getTagName().equals("navigation")) return new UiNavigation(this, xml);
 		if (xml.getTagName().equals("navigationBar")) return new UiNavigationBar(this, xml);
 		if (xml.getTagName().equals("password")) return new UiPassword(this, xml);

@@ -110,10 +110,10 @@ public class UiPropertyReference implements PropertyReference
 				M_log.warn("missing delegate: " + formatDelegate + " tool: " + tool);
 			}
 		}
-		
+
 		String missingText = StringUtil.trimToNull(xml.getAttribute("missing"));
 		if (missingText != null) setMissingText(missingText);
-		
+
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "missingValues");
 		if (settingsXml != null)
 		{
@@ -132,7 +132,7 @@ public class UiPropertyReference implements PropertyReference
 					}
 				}
 			}
-			
+
 			if (!missingValues.isEmpty())
 			{
 				this.missingValues = missingValues.toArray(new String[missingValues.size()]);
@@ -348,7 +348,7 @@ public class UiPropertyReference implements PropertyReference
 		Object entity = null;
 		if (this.entityReference != null)
 		{
-			entity = (Object) context.get(entityReference);
+			entity = (Object) context.get(this.entityReference);
 		}
 
 		if (entity == null) return;
@@ -360,7 +360,14 @@ public class UiPropertyReference implements PropertyReference
 		int pos = this.propertyReference.lastIndexOf(".");
 		String lastProperty = this.propertyReference.substring(pos + 1);
 
-		setValue(target, lastProperty, value);
+		if (target == null)
+		{
+			M_log.warn("write: null target: " + this.entityReference + " . " + this.propertyReference);
+		}
+		else
+		{
+			setValue(target, lastProperty, value);
+		}
 	}
 
 	/**
