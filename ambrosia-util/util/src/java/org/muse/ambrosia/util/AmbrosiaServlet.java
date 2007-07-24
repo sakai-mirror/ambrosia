@@ -77,6 +77,16 @@ public class AmbrosiaServlet extends HttpServlet
 	}
 
 	/**
+	 * Get the default view.
+	 * 
+	 * @return The default view.
+	 */
+	protected String getDefaultView()
+	{
+		return this.defaultView;
+	}
+
+	/**
 	 * Access the Servlet's information display.
 	 * 
 	 * @return servlet information.
@@ -137,9 +147,9 @@ public class AmbrosiaServlet extends HttpServlet
 		// }
 
 		// handle pathless requests
-		if (ui.redirectToCurrentDestination(req, res, this.defaultView)) return;
+		if (ui.redirectToCurrentDestination(req, res, getDefaultView())) return;
 
-		Context context = ui.prepareGet(req, res, null, this.defaultView);
+		Context context = ui.prepareGet(req, res, null, getDefaultView());
 
 		// get and split up the tool destination: 0 parts means must "/", otherwise parts[0] = "", parts[1] = the first part, etc.
 		String path = context.getDestination();
@@ -179,7 +189,7 @@ public class AmbrosiaServlet extends HttpServlet
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
-		Context context = ui.preparePost(req, res, null, this.defaultView);
+		Context context = ui.preparePost(req, res, null, getDefaultView());
 
 		// get and split up the tool destination: 0 parts means must "/", otherwise parts[0] = "", parts[1] = the first part, etc.
 		String path = context.getDestination();
