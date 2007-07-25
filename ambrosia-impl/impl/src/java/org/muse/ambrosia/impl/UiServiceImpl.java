@@ -52,6 +52,7 @@ import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.ContextInfoPropertyReference;
 import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.CountPropertyReference;
 import org.muse.ambrosia.api.CountdownTimer;
 import org.muse.ambrosia.api.Courier;
 import org.muse.ambrosia.api.DatePropertyReference;
@@ -88,6 +89,7 @@ import org.muse.ambrosia.api.NavigationBar;
 import org.muse.ambrosia.api.OrDecision;
 import org.muse.ambrosia.api.Password;
 import org.muse.ambrosia.api.PastDateDecision;
+import org.muse.ambrosia.api.PopulatingSet;
 import org.muse.ambrosia.api.PropertyColumn;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.PropertyRow;
@@ -102,6 +104,8 @@ import org.muse.ambrosia.api.UrlPropertyReference;
 import org.muse.ambrosia.api.UserInfoPropertyReference;
 import org.muse.ambrosia.api.Value;
 import org.muse.ambrosia.api.Values;
+import org.muse.ambrosia.api.PopulatingSet.Factory;
+import org.muse.ambrosia.api.PopulatingSet.Id;
 import org.sakaiproject.i18n.InternationalizedMessages;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.api.ActiveTool;
@@ -335,6 +339,14 @@ public class UiServiceImpl implements UiService
 	public CountdownTimer newCountdownTimer()
 	{
 		return new UiCountdownTimer();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public CountPropertyReference newCountPropertyReference()
+	{
+		return new UiCountPropertyReference();
 	}
 
 	/**
@@ -593,6 +605,11 @@ public class UiServiceImpl implements UiService
 		return new UiPastDateDecision();
 	}
 
+	public PopulatingSet newPopulatingSet(Factory factory, Id id)
+	{
+		return new UiPopulatingSet(factory, id);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -696,7 +713,7 @@ public class UiServiceImpl implements UiService
 	{
 		return new UiValue();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -856,6 +873,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("booleanModel")) return new UiBooleanPropertyReference(this, xml);
 		if (xml.getTagName().equals("constantModel")) return new UiConstantPropertyReference(this, xml);
 		if (xml.getTagName().equals("contextInfoModel")) return new UiContextInfoPropertyReference(this, xml);
+		if (xml.getTagName().equals("countModel")) return new UiCountPropertyReference(this, xml);
 		if (xml.getTagName().equals("dateModel")) return new UiDatePropertyReference(this, xml);
 		if (xml.getTagName().equals("durationModel")) return new UiDurationPropertyReference(this, xml);
 		if (xml.getTagName().equals("htmlModel")) return new UiHtmlPropertyReference(this, xml);
@@ -870,6 +888,7 @@ public class UiServiceImpl implements UiService
 		if ("boolean".equals(type)) return new UiBooleanPropertyReference(this, xml);
 		if ("constant".equals(type)) return new UiConstantPropertyReference(this, xml);
 		if ("contextInfo".equals(type)) return new UiContextInfoPropertyReference(this, xml);
+		if ("count".equals(type)) return new UiCountPropertyReference(this, xml);
 		if ("date".equals(type)) return new UiDatePropertyReference(this, xml);
 		if ("duration".equals(type)) return new UiDurationPropertyReference(this, xml);
 		if ("html".equals(type)) return new UiHtmlPropertyReference(this, xml);

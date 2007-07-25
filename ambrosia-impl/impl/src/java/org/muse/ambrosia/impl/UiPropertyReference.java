@@ -32,8 +32,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.FormatDelegate;
+import org.muse.ambrosia.api.PopulatingSet;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
@@ -60,6 +60,9 @@ public class UiPropertyReference implements PropertyReference
 
 	/** A delegate to do the formatting. */
 	protected FormatDelegate formatDelegate = null;
+
+	/** A ref for making an index in getEncoding. */
+	protected String indexRef = null;
 
 	/** The text (message selector) to use if a selector value cannot be found or is null. */
 	protected String missingText = null;
@@ -138,6 +141,12 @@ public class UiPropertyReference implements PropertyReference
 				this.missingValues = missingValues.toArray(new String[missingValues.size()]);
 			}
 		}
+
+		ref = StringUtil.trimToNull(xml.getAttribute("indexRef"));
+		if (ref != null)
+		{
+			setIndexReference(ref);
+		}
 	}
 
 	/**
@@ -161,15 +170,18 @@ public class UiPropertyReference implements PropertyReference
 		// add the special object selector
 		rv.append(".[");
 
-		// // get the object's id
-		// String id = (String) getValue(focus, "id");
-		// if (id != null)
-		// {
-		// rv.append(id);
-		// }
+		// if we have an index ref, apply it to the focus for the index value
+		if (this.indexRef != null)
+		{
+			Object o = getNestedValue(this.indexRef, focus, false);
+			if (o != null) rv.append(o.toString());
+		}
 
-		// append the index
-		rv.append(Integer.toString(index));
+		else
+		{
+			// append the index
+			rv.append(Integer.toString(index));
+		}
 
 		rv.append("]");
 
@@ -252,7 +264,7 @@ public class UiPropertyReference implements PropertyReference
 		if (entity == null) return null;
 
 		// pull out the value object
-		Object value = getNestedValue(entity, false);
+		Object value = getNestedValue(this.propertyReference, entity, false);
 
 		return value;
 	}
@@ -272,6 +284,15 @@ public class UiPropertyReference implements PropertyReference
 	public PropertyReference setFormatDelegate(FormatDelegate formatter)
 	{
 		this.formatDelegate = formatter;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public PropertyReference setIndexReference(String indexRef)
+	{
+		this.indexRef = indexRef;
 		return this;
 	}
 
@@ -330,7 +351,7 @@ public class UiPropertyReference implements PropertyReference
 		if (entity == null) return;
 
 		// read all the way to one property short of the end - that's the object we are writing to
-		Object target = getNestedValue(entity, true);
+		Object target = getNestedValue(this.propertyReference, entity, true);
 
 		// write value to the property of target that is the last dotted component of our property reference
 		int pos = this.propertyReference.lastIndexOf(".");
@@ -354,7 +375,7 @@ public class UiPropertyReference implements PropertyReference
 		if (entity == null) return;
 
 		// read all the way to one property short of the end - that's the object we are writing to
-		Object target = getNestedValue(entity, true);
+		Object target = getNestedValue(this.propertyReference, entity, true);
 
 		// write value to the property of target that is the last dotted component of our property reference
 		int pos = this.propertyReference.lastIndexOf(".");
@@ -408,26 +429,35 @@ public class UiPropertyReference implements PropertyReference
 	 *        The index.
 	 * @return The indexed item from the collection, or null if not found or not a collection
 	 */
-	protected Object getIndexValue(Object collection, int index)
+	protected Object getIndexValue(Object collection, String index)
 	{
 		if (collection == null) return null;
 
 		if (collection instanceof List)
 		{
+			int i = Integer.parseInt(index);
 			List l = (List) collection;
-			if ((index >= 0) && (index < l.size()))
+			if ((i >= 0) && (i < l.size()))
 			{
-				return l.get(index);
+				return l.get(i);
 			}
 		}
 
 		else if (collection.getClass().isArray())
 		{
+			int i = Integer.parseInt(index);
 			Object[] a = (Object[]) collection;
-			if ((index >= 0) && (index < a.length))
+			if ((i >= 0) && (i < a.length))
 			{
-				return a[index];
+				return a[i];
 			}
+		}
+
+		else if (collection instanceof PopulatingSet)
+		{
+			// treat the index as an id...
+			Object o = ((PopulatingSet) collection).assure(index);
+			return o;
 		}
 
 		return null;
@@ -440,19 +470,19 @@ public class UiPropertyReference implements PropertyReference
 	 *        The entity to read from.
 	 * @return The selector value object found, or null if not.
 	 */
-	protected Object getNestedValue(Object entity, boolean skipLast)
+	protected Object getNestedValue(String ref, Object entity, boolean skipLast)
 	{
 		// if no property defined, used the entity
-		if (this.propertyReference == null) return entity;
+		if (ref == null) return entity;
 
 		// if not nested, return a simple dereference (unless we are skiping the last, which in this is all, so return the entity)
-		if (this.propertyReference.indexOf(".") == -1)
+		if (ref.indexOf(".") == -1)
 		{
 			if (skipLast) return entity;
-			return getValue(entity, this.propertyReference);
+			return getValue(entity, ref);
 		}
 
-		String[] nesting = this.propertyReference.split("\\.");
+		String[] nesting = ref.split("\\.");
 		Object current = entity;
 		for (String s : nesting)
 		{
@@ -485,7 +515,7 @@ public class UiPropertyReference implements PropertyReference
 		// if the property is an index reference
 		if (property.startsWith("[") && property.endsWith("]"))
 		{
-			return getIndexValue(entity, Integer.parseInt(property.substring(1, property.length() - 1)));
+			return getIndexValue(entity, property.substring(1, property.length() - 1));
 		}
 
 		// form a "getFoo()" based getter method name
@@ -570,7 +600,7 @@ public class UiPropertyReference implements PropertyReference
 
 		try
 		{
-			// use this form, providing the getter name and no setter, so we can support properties that are read-only
+			// use this form, providing the setter name and no getter, so we can support properties that are write-only
 			PropertyDescriptor pd = new PropertyDescriptor(property, entity.getClass(), null, setter.toString());
 			Method write = pd.getWriteMethod();
 			Object[] params = new Object[1];
@@ -629,7 +659,7 @@ public class UiPropertyReference implements PropertyReference
 
 		try
 		{
-			// use this form, providing the getter name and no setter, so we can support properties that are read-only
+			// use this form, providing the setter name and no getter, so we can support properties that are write-only
 			PropertyDescriptor pd = new PropertyDescriptor(property, entity.getClass(), null, setter.toString());
 			Method write = pd.getWriteMethod();
 			Object[] params = new Object[1];

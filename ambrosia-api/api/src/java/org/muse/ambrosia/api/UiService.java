@@ -30,6 +30,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.muse.ambrosia.api.PopulatingSet.Factory;
+import org.muse.ambrosia.api.PopulatingSet.Id;
 import org.sakaiproject.i18n.InternationalizedMessages;
 
 /**
@@ -141,6 +143,13 @@ public interface UiService
 	 * @return a new CountdownTimer
 	 */
 	CountdownTimer newCountdownTimer();
+
+	/**
+	 * Construct a new CountPropertyReference
+	 * 
+	 * @return a new CountPropertyReference
+	 */
+	CountPropertyReference newCountPropertyReference();
 
 	/**
 	 * Construct a new Courier
@@ -376,6 +385,17 @@ public interface UiService
 	PastDateDecision newPastDateDecision();
 
 	/**
+	 * Construct a new PopulatingSet
+	 * 
+	 * @param factory
+	 *        The factory that finds objects by id.
+	 * @param id
+	 *        The object that gets ids from objects.
+	 * @return a new PopulatingSet
+	 */
+	PopulatingSet newPopulatingSet(Factory factory, Id id);
+
+	/**
 	 * Construct a new Password
 	 * 
 	 * @return a new Password
@@ -465,7 +485,7 @@ public interface UiService
 	 * @return a new Value
 	 */
 	Value newValue();
-	
+
 	/**
 	 * Construct a new Values
 	 * 

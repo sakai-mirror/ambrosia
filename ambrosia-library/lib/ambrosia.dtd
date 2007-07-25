@@ -18,6 +18,7 @@
 
 <!ELEMENT model (missingValues)* >
 <!ATTLIST model ref CDATA #IMPLIED >
+<!ATTLIST model indexRef CDATA #IMPLIED >
 <!ATTLIST model delegate CDATA #IMPLIED >
 <!ATTLIST model tool CDATA #IMPLIED >
 <!ATTLIST model missing CDATA #IMPLIED >
