@@ -22,7 +22,7 @@
 <!ATTLIST model delegate CDATA #IMPLIED >
 <!ATTLIST model tool CDATA #IMPLIED >
 <!ATTLIST model missing CDATA #IMPLIED >
-<!ATTLIST model type (boolean|constant|contextInfo|date|duration|html|icon|text|url|userInfo) #IMPLIED >
+<!ATTLIST model type (boolean|constant|contextInfo|count|date|duration|html|icon|text|url|userInfo) #IMPLIED >
 <!ATTLIST model concise (TRUE|FALSE) "FALSE" >
 <!ATTLIST model selector (DISPLAYNAME|TITLE) #IMPLIED >
 <!ATTLIST model max CDATA #IMPLIED >
@@ -72,6 +72,12 @@
 <!ATTLIST durationModel tool CDATA #IMPLIED >
 <!ATTLIST durationModel missing CDATA #IMPLIED >
 <!ATTLIST durationModel concise (TRUE|FALSE) "FALSE" >
+
+<!ELEMENT countModel (missingValues)* >
+<!ATTLIST countModel ref CDATA #REQUIRED >
+<!ATTLIST countModel delegate CDATA #IMPLIED>
+<!ATTLIST countModel tool CDATA #IMPLIED >
+<!ATTLIST countModel missing CDATA #IMPLIED >
 
 <!ELEMENT htmlModel (missingValues)* >
 <!ATTLIST htmlModel ref CDATA #REQUIRED >
