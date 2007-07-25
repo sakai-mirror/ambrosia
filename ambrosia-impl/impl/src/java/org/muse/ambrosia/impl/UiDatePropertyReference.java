@@ -64,21 +64,9 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 	/**
 	 * {@inheritDoc}
 	 */
-	protected String format(Context context, Object value)
+	public String getType()
 	{
-		if (value instanceof Time)
-		{
-			if (multiLine)
-			{
-				return "<span style=\"white-space: nowrap;\">" + Validator.escapeHtml(((Time) value).toStringLocalDate()) + "</span><br /><spanstyle=\"white-space: nowrap;\">" + Validator.escapeHtml(((Time) value).toStringLocalTime()) + "</span>";
-			}
-			else
-			{
-				return Validator.escapeHtml(((Time) value).toStringLocalFull());
-			}
-		}
-
-		return super.format(context, value);
+		return "date";
 	}
 
 	/**
@@ -88,5 +76,26 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 	{
 		this.multiLine = true;
 		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected String format(Context context, Object value)
+	{
+		if (value instanceof Time)
+		{
+			if (multiLine)
+			{
+				return "<span style=\"white-space: nowrap;\">" + Validator.escapeHtml(((Time) value).toStringLocalDate())
+						+ "</span><br /><spanstyle=\"white-space: nowrap;\">" + Validator.escapeHtml(((Time) value).toStringLocalTime()) + "</span>";
+			}
+			else
+			{
+				return Validator.escapeHtml(((Time) value).toStringLocalFull());
+			}
+		}
+
+		return super.format(context, value);
 	}
 }

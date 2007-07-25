@@ -65,6 +65,14 @@ public class UiBooleanPropertyReference extends UiPropertyReference implements B
 	/**
 	 * {@inheritDoc}
 	 */
+	public String getType()
+	{
+		return "boolean";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public BooleanPropertyReference setText(String trueText, String falseText)
 	{
 		this.trueText = trueText;

@@ -62,6 +62,14 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 	/**
 	 * {@inheritDoc}
 	 */
+	public String getType()
+	{
+		return "icon";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public String read(Context context, Object focus)
 	{
 		// alt=\"" + Validator.escapeHtml(name) + "\"

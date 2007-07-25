@@ -378,7 +378,7 @@ public class UiServiceImpl implements UiService
 	 */
 	public Decoder newDecoder()
 	{
-		return new UiDecoder();
+		return new UiDecoder(this);
 	}
 
 	/**
@@ -860,6 +860,30 @@ public class UiServiceImpl implements UiService
 	}
 
 	/**
+	 * Create the appropriate PropertyReference based on type.
+	 * 
+	 * @param xml
+	 *        The xml element.
+	 * @return a PropertyReference object.
+	 */
+	protected PropertyReference getTypedPropertyReference(String type)
+	{
+		if ("boolean".equals(type)) return new UiBooleanPropertyReference();
+		if ("constant".equals(type)) return new UiConstantPropertyReference();
+		if ("contextInfo".equals(type)) return new UiContextInfoPropertyReference();
+		if ("count".equals(type)) return new UiCountPropertyReference();
+		if ("date".equals(type)) return new UiDatePropertyReference();
+		if ("duration".equals(type)) return new UiDurationPropertyReference();
+		if ("html".equals(type)) return new UiHtmlPropertyReference();
+		if ("icon".equals(type)) return new UiIconPropertyReference();
+		if ("text".equals(type)) return new UiTextPropertyReference();
+		if ("url".equals(type)) return new UiUrlPropertyReference();
+		if ("userInfo".equals(type)) return new UiUserInfoPropertyReference();
+
+		return new UiPropertyReference();
+	}
+
+	/**
 	 * Create the appropriate PropertyReference based on the XML element.
 	 * 
 	 * @param xml
@@ -988,7 +1012,7 @@ public class UiServiceImpl implements UiService
 	 */
 	public String decode(HttpServletRequest req, Context context)
 	{
-		UiDecoder decoder = new UiDecoder();
+		Decoder decoder = newDecoder();
 		String destination = decoder.decode(req, context);
 
 		return destination;

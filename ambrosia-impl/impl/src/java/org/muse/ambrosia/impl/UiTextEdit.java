@@ -257,7 +257,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 		if ((this.propertyReference != null) && (!readOnly))
 		{
 			response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\"" + "prop_"
-					+ decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
+					+ decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />" + "<input type=\"hidden\" name=\""
+					+ "type_" + decodeId + "\" value=\"" + this.propertyReference.getType() + "\" />");
 		}
 
 		// for onEmptyAlert, add some client-side validation

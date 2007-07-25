@@ -34,6 +34,19 @@ import org.sakaiproject.util.StringUtil;
  */
 public class UiDecoder implements Decoder
 {
+	protected UiServiceImpl uiService = null;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param uiService
+	 *        The UI Service.
+	 */
+	public UiDecoder(UiServiceImpl uiService)
+	{
+		this.uiService = uiService;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -67,9 +80,13 @@ public class UiDecoder implements Decoder
 							if (ifNullValue != null) value = ifNullValue;
 						}
 
+						// see if there's a type encoded
+						String type = req.getParameter("type_" + name);
+
+						// create a property reference of the proper type
+						PropertyReference ref = this.uiService.getTypedPropertyReference(type).setReference(fullReference);
+
 						// write it to the entity / property in the context
-						// TODO: other types than string
-						PropertyReference ref = new UiPropertyReference().setReference(fullReference);
 						ref.write(context, value);
 					}
 				}

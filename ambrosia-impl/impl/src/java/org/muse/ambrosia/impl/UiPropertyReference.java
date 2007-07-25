@@ -210,6 +210,14 @@ public class UiPropertyReference implements PropertyReference
 	/**
 	 * {@inheritDoc}
 	 */
+	public String getType()
+	{
+		return "";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public String read(Context context, Object focus)
 	{
 		// read the object
@@ -651,11 +659,18 @@ public class UiPropertyReference implements PropertyReference
 	 * @param value
 	 *        The value to write.
 	 */
-	protected void setValue(Object entity, String property, String[] value)
+	protected void setValue(Object entity, String property, String[] valueSource)
 	{
 		// form a "setFoo()" based setter method name
 		StringBuffer setter = new StringBuffer("set" + property);
 		setter.setCharAt(3, setter.substring(3, 4).toUpperCase().charAt(0));
+
+		// unformat the values
+		String[] value = new String[valueSource.length];
+		for (int i = 0; i < valueSource.length; i++)
+		{
+			value[i] = StringUtil.trimToNull(unFormat(valueSource[i]));
+		}
 
 		try
 		{
@@ -670,7 +685,7 @@ public class UiPropertyReference implements PropertyReference
 				// single value boolean
 				if (paramTypes[0] == Boolean.class)
 				{
-					params[0] = (value != null) ? Boolean.valueOf(StringUtil.trimToZero(value[0])) : null;
+					params[0] = ((value != null) && (value[0] != null)) ? Boolean.valueOf(StringUtil.trimToZero(value[0])) : null;
 				}
 
 				// multiple value boolean
@@ -694,7 +709,7 @@ public class UiPropertyReference implements PropertyReference
 				// single value long
 				else if (paramTypes[0] == Long.class)
 				{
-					params[0] = (value != null) ? Long.valueOf(StringUtil.trimToZero(value[0])) : null;
+					params[0] = ((value != null) && (value[0] != null)) ? Long.valueOf(StringUtil.trimToZero(value[0])) : null;
 				}
 
 				// multiple value long
@@ -718,7 +733,7 @@ public class UiPropertyReference implements PropertyReference
 				// single value int
 				else if (paramTypes[0] == Integer.class)
 				{
-					params[0] = (value != null) ? Integer.valueOf(StringUtil.trimToZero(value[0])) : null;
+					params[0] = ((value != null) && (value[0] != null)) ? Integer.valueOf(StringUtil.trimToZero(value[0])) : null;
 				}
 
 				// multiple value int
@@ -743,7 +758,7 @@ public class UiPropertyReference implements PropertyReference
 				else if (paramTypes[0] == Time.class)
 				{
 					// TODO: what format?
-					params[0] = (value != null) ? TimeService.newTimeGmt(StringUtil.trimToZero(value[0])) : null;
+					params[0] = ((value != null) && (value[0] != null)) ? TimeService.newTimeGmt(StringUtil.trimToZero(value[0])) : null;
 				}
 
 				// multiple value Time
@@ -768,7 +783,7 @@ public class UiPropertyReference implements PropertyReference
 				// single value string
 				else if (paramTypes[0] == String.class)
 				{
-					params[0] = (value != null) ? StringUtil.trimToNull(value[0]) : null;
+					params[0] = ((value != null) && (value[0] != null)) ? StringUtil.trimToNull(value[0]) : null;
 				}
 
 				// multiple value string
@@ -816,5 +831,17 @@ public class UiPropertyReference implements PropertyReference
 		{
 			M_log.warn("setValue: method: " + property + " object: " + entity.getClass() + " :" + ie);
 		}
+	}
+
+	/**
+	 * UnFormat the value, essentially reversing the format() call.
+	 * 
+	 * @param value
+	 *        The formatted value to unformat.
+	 * @return The unformatted value.
+	 */
+	protected String unFormat(String value)
+	{
+		return value;
 	}
 }

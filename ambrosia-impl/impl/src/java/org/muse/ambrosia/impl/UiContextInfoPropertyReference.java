@@ -66,6 +66,14 @@ public class UiContextInfoPropertyReference extends UiPropertyReference implemen
 	/**
 	 * {@inheritDoc}
 	 */
+	public String getType()
+	{
+		return "contextInfo";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public ContextInfoPropertyReference setSelector(Selector property)
 	{
 		this.selector = property;

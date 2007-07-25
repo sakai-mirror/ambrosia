@@ -67,6 +67,14 @@ public class UiUserInfoPropertyReference extends UiPropertyReference implements 
 	/**
 	 * {@inheritDoc}
 	 */
+	public String getType()
+	{
+		return "userInfo";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public UserInfoPropertyReference setSelector(UserInfoPropertyReference.Selector property)
 	{
 		this.selector = property;

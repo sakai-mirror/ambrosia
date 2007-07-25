@@ -61,6 +61,14 @@ public class UiConstantPropertyReference extends UiPropertyReference implements 
 	/**
 	 * {@inheritDoc}
 	 */
+	public String getType()
+	{
+		return "constant";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public String read(Context context, Object focus)
 	{
 		return this.value;

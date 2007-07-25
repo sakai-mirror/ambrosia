@@ -61,6 +61,13 @@ public interface PropertyReference
 	String getFullReference(Context context);
 
 	/**
+	 * Access a type for the property reference.
+	 * 
+	 * @return The type.
+	 */
+	String getType();
+
+	/**
 	 * Get selector value of the entity in the context.
 	 * 
 	 * @param context

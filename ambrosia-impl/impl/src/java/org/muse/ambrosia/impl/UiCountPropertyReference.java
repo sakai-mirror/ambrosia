@@ -49,4 +49,12 @@ public class UiCountPropertyReference extends UiPropertyReference implements Cou
 		// do the property reference stuff
 		super(service, xml);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getType()
+	{
+		return "count";
+	}
 }

@@ -64,6 +64,14 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 	/**
 	 * {@inheritDoc}
 	 */
+	public String getType()
+	{
+		return "duration";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public DurationPropertyReference setConcise()
 	{
 		this.concise = true;
@@ -124,5 +132,29 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 		}
 
 		return Validator.escapeHtml(Long.toString(hours) + " hours, " + Long.toString(minutes) + " minutes, " + Long.toString(seconds) + " seconds");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected String unFormat(String value)
+	{
+		//if (this.concise)
+		{
+			String[] parts = StringUtil.split(value, ":");
+			if (parts.length == 3)
+			{
+				long duration = 0;
+				// hours
+				duration = Integer.parseInt(parts[0]) * 60l * 60l * 1000l;
+				// minutes
+				duration += Integer.parseInt(parts[1]) * 60l * 1000l;
+				// seconds
+				duration += Integer.parseInt(parts[2]) * 1000l;
+				return Long.toString(duration);
+			}
+		}
+
+		return value;
 	}
 }

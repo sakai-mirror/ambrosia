@@ -56,6 +56,14 @@ public class UiUrlPropertyReference extends UiPropertyReference implements UrlPr
 	/**
 	 * {@inheritDoc}
 	 */
+	public String getType()
+	{
+		return "url";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public String read(Context context, Object focus)
 	{
 		String value = super.read(context, focus);

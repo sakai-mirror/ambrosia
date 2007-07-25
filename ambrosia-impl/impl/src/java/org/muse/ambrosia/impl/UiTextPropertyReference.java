@@ -78,19 +78,9 @@ public class UiTextPropertyReference extends UiPropertyReference implements Text
 	/**
 	 * {@inheritDoc}
 	 */
-	public TextPropertyReference setMaxLength(int maxChars)
+	public String getType()
 	{
-		this.maxChars = maxChars;
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public TextPropertyReference setStripHtml()
-	{
-		this.stripHtml = true;
-		return this;
+		return "text";
 	}
 
 	/**
@@ -120,5 +110,23 @@ public class UiTextPropertyReference extends UiPropertyReference implements Text
 		}
 
 		return Validator.escapeHtml(value);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public TextPropertyReference setMaxLength(int maxChars)
+	{
+		this.maxChars = maxChars;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public TextPropertyReference setStripHtml()
+	{
+		this.stripHtml = true;
+		return this;
 	}
 }

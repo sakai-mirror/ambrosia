@@ -70,6 +70,14 @@ public class UiHtmlPropertyReference extends UiPropertyReference implements Html
 	/**
 	 * {@inheritDoc}
 	 */
+	public String getType()
+	{
+		return "html";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public String read(Context context, Object focus)
 	{
 		String value = super.read(context, focus);
