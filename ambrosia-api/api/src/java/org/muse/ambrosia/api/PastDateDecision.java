@@ -22,7 +22,7 @@
 package org.muse.ambrosia.api;
 
 /**
- * UiPastDateDecision is a decision that is true if the value, a Time type, is in the past.
+ * PastDateDecision is a decision that is true if the value, a Date type, is in the past.
  */
 public interface PastDateDecision extends Decision
 {

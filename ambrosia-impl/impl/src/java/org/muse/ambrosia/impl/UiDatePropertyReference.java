@@ -21,15 +21,18 @@
 
 package org.muse.ambrosia.impl;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.DatePropertyReference;
-import org.sakaiproject.time.api.Time;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
- * UiDatePropertyReference handles Time objects formatted in the standard way.
+ * UiDatePropertyReference implements DatePropertyReference.
  */
 public class UiDatePropertyReference extends UiPropertyReference implements DatePropertyReference
 {
@@ -83,19 +86,46 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 	 */
 	protected String format(Context context, Object value)
 	{
-		if (value instanceof Time)
+		if (value instanceof Date)
 		{
+			Date date = (Date) value;
+			// TODO: use the end-user's locale and time zone prefs
+
 			if (multiLine)
 			{
-				return "<span style=\"white-space: nowrap;\">" + Validator.escapeHtml(((Time) value).toStringLocalDate())
-						+ "</span><br /><spanstyle=\"white-space: nowrap;\">" + Validator.escapeHtml(((Time) value).toStringLocalTime()) + "</span>";
+				DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+				DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+
+				return "<span style=\"white-space: nowrap;\">" + Validator.escapeHtml(dateFormat.format(date))
+						+ "</span><br /><spanstyle=\"white-space: nowrap;\">" + Validator.escapeHtml(timeFormat.format(date)) + "</span>";
 			}
 			else
 			{
-				return Validator.escapeHtml(((Time) value).toStringLocalFull());
+				DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+
+				return Validator.escapeHtml(format.format(date));
 			}
 		}
 
 		return super.format(context, value);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected String unFormat(String value)
+	{
+		// assume single line, both date and time
+		// TODO: use the end-user's locale and time zone prefs
+		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+		try
+		{
+			Date date = format.parse(value);
+			return Long.toString(date.getTime());
+		}
+		catch (ParseException e)
+		{
+			return Long.toString(0l);
+		}
 	}
 }

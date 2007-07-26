@@ -21,14 +21,14 @@
 
 package org.muse.ambrosia.impl;
 
+import java.util.Date;
+
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.PastDateDecision;
-import org.sakaiproject.time.api.Time;
-import org.sakaiproject.time.cover.TimeService;
 import org.w3c.dom.Element;
 
 /**
- * UiPastDateDecision is a decision that is true if the value, a Time type, is in the past.
+ * UiPastDateDecision implements PastDateDecision.
  */
 public class UiPastDateDecision extends UiDecision implements PastDateDecision
 {
@@ -66,10 +66,11 @@ public class UiPastDateDecision extends UiDecision implements PastDateDecision
 		Object value = this.propertyReference.readObject(context, focus);
 		if (value == null) return false;
 
-		// we want a Time
-		if (!(value instanceof Time)) return false;
-		Time time = (Time) value;
+		// we want a Date
+		if (!(value instanceof Date)) return false;
+		Date date = (Date) value;
 
-		return time.before(TimeService.newTime());
+		// if before now
+		return date.before(new Date());
 	}
 }

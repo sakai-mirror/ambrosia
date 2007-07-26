@@ -26,6 +26,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.fileupload.FileItem;
@@ -35,8 +36,6 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.FormatDelegate;
 import org.muse.ambrosia.api.PopulatingSet;
 import org.muse.ambrosia.api.PropertyReference;
-import org.sakaiproject.time.api.Time;
-import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -754,23 +753,23 @@ public class UiPropertyReference implements PropertyReference
 					}
 				}
 
-				// single value Time
-				else if (paramTypes[0] == Time.class)
+				// single value Date
+				else if (paramTypes[0] == Date.class)
 				{
-					// TODO: what format?
-					params[0] = ((value != null) && (value[0] != null)) ? TimeService.newTimeGmt(StringUtil.trimToZero(value[0])) : null;
+					// assume a long ms format
+					params[0] = ((value != null) && (value[0] != null)) ? new Date(Long.parseLong(value[0])) : null;
 				}
 
-				// multiple value Time
-				else if (paramTypes[0] == Time[].class)
+				// multiple value Date
+				else if (paramTypes[0] == Date[].class)
 				{
 					if (value != null)
 					{
-						Time[] values = new Time[value.length];
+						Date[] values = new Date[value.length];
 						for (int i = 0; i < value.length; i++)
 						{
-							// TODO: what format?
-							values[i] = TimeService.newTimeGmt(StringUtil.trimToZero(value[i]));
+							// assume a long ms format
+							values[i] = new Date(Long.parseLong(value[i]));
 						}
 						params[0] = values;
 					}

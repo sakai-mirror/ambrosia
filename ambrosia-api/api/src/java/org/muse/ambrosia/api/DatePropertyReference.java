@@ -22,7 +22,7 @@
 package org.muse.ambrosia.api;
 
 /**
- * DatePropertyReference handles Time objects formatted in the standard way (non-html).
+ * DatePropertyReference handles Date objects formatted in the standard way.
  */
 public interface DatePropertyReference extends PropertyReference
 {
