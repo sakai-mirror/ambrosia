@@ -389,6 +389,11 @@
 
 <!ELEMENT modeBar (included | container)* >
 <!ATTLIST modeBar id CDATA #IMPLIED >
+<!ATTLIST modeBar width CDATA #IMPLIED >
+
+<!ELEMENT entityActionBar (included | container)* >
+<!ATTLIST entityActionBar id CDATA #IMPLIED >
+<!ATTLIST entityActionBar width CDATA #IMPLIED >
 
 <!ELEMENT password (included | title | model | onEmptyAlert)* >
 <!ATTLIST password id CDATA #IMPLIED >

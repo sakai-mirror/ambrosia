@@ -208,6 +208,13 @@ public interface UiService
 	DurationPropertyReference newDurationPropertyReference();
 
 	/**
+	 * Construct a new EntityActionBar
+	 * 
+	 * @return a new EntityActionBar
+	 */
+	EntityActionBar newEntityActionBar();
+
+	/**
 	 * Construct a new EntityDisplay
 	 * 
 	 * @return a new EntityDisplay

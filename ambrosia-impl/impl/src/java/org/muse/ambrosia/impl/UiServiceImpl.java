@@ -63,6 +63,7 @@ import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.DistributionChart;
 import org.muse.ambrosia.api.Divider;
 import org.muse.ambrosia.api.DurationPropertyReference;
+import org.muse.ambrosia.api.EntityActionBar;
 import org.muse.ambrosia.api.EntityDisplay;
 import org.muse.ambrosia.api.EntityList;
 import org.muse.ambrosia.api.EntityListColumn;
@@ -416,6 +417,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public EntityActionBar newEntityActionBar()
+	{
+		return new UiEntityActionBar();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public EntityDisplay newEntityDisplay()
 	{
 		return new UiEntityDisplay();
@@ -740,6 +749,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("countdownTimer")) return new UiCountdownTimer(this, xml);
 		if (xml.getTagName().equals("courier")) return new UiCourier(this, xml);
 		if (xml.getTagName().equals("divider")) return new UiDivider(this, xml);
+		if (xml.getTagName().equals("entityActionBar")) return new UiEntityActionBar(this, xml);
 		if (xml.getTagName().equals("entityDisplay")) return new UiEntityDisplay(this, xml);
 		if (xml.getTagName().equals("entityList")) return new UiEntityList(this, xml);
 		if (xml.getTagName().equals("evaluation")) return new UiEvaluation(this, xml);
