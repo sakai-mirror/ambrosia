@@ -259,7 +259,7 @@
 <!ATTLIST entityDisplay title CDATA #IMPLIED >
 
 <!ELEMENT rows (row)* >
-<!ELEMENT row (included | title | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT row (included | container | title | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST row title CDATA #IMPLIED >
 <!ATTLIST row model CDATA #IMPLIED >
 

@@ -94,7 +94,7 @@ import org.muse.ambrosia.api.PastDateDecision;
 import org.muse.ambrosia.api.PopulatingSet;
 import org.muse.ambrosia.api.PropertyColumn;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.PropertyRow;
+import org.muse.ambrosia.api.EntityDisplayRow;
 import org.muse.ambrosia.api.Section;
 import org.muse.ambrosia.api.Selection;
 import org.muse.ambrosia.api.SelectionColumn;
@@ -442,6 +442,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public EntityDisplayRow newEntityDisplayRow()
+	{
+		return new UiEntityDisplayRow();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public EntityList newEntityList()
 	{
 		return new UiEntityList();
@@ -650,14 +658,6 @@ public class UiServiceImpl implements UiService
 	public PropertyReference newPropertyReference()
 	{
 		return new UiPropertyReference();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public PropertyRow newPropertyRow()
-	{
-		return new UiPropertyRow();
 	}
 
 	/**
@@ -970,13 +970,13 @@ public class UiServiceImpl implements UiService
 	}
 
 	/**
-	 * Create the appropriate PropertyRow based on the XML element.
+	 * Create the appropriate EntityDisplayRow based on the XML element.
 	 * 
 	 * @param xml
 	 *        The xml element.
 	 * @return a PropertyRow object.
 	 */
-	protected PropertyRow parsePropertyRow(Element xml)
+	protected EntityDisplayRow parseEntityDisplayRow(Element xml)
 	{
 		if (xml == null) return null;
 
@@ -988,7 +988,7 @@ public class UiServiceImpl implements UiService
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
 		// if ("model".equals(type)) return new UiPropertyColumn(this, xml);
 
-		return new UiPropertyRow(this, xml);
+		return new UiEntityDisplayRow(this, xml);
 	}
 
 	/**

@@ -21,19 +21,29 @@
 
 package org.muse.ambrosia.impl;
 
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
+import org.muse.ambrosia.api.EntityDisplayRow;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.PropertyRow;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
- * UiPropertyRow describes one row of a UiEntityDisplay...
+ * UiEntityDisplayRow implements EntityDisplayRow.
  */
-public class UiPropertyRow implements PropertyRow
+public class UiEntityDisplayRow implements EntityDisplayRow
 {
+	/** Components contained in this container. */
+	protected List<Component> contained = new ArrayList<Component>();
+
 	/** The include decision. */
 	protected Decision included = null;
 
@@ -46,7 +56,7 @@ public class UiPropertyRow implements PropertyRow
 	/**
 	 * Public no-arg constructor.
 	 */
-	public UiPropertyRow()
+	public UiEntityDisplayRow()
 	{
 	}
 
@@ -58,7 +68,7 @@ public class UiPropertyRow implements PropertyRow
 	 * @param xml
 	 *        The dom element.
 	 */
-	protected UiPropertyRow(UiServiceImpl service, Element xml)
+	protected UiEntityDisplayRow(UiServiceImpl service, Element xml)
 	{
 		// included decisions
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "included");
@@ -95,6 +105,66 @@ public class UiPropertyRow implements PropertyRow
 			PropertyReference pRef = service.parsePropertyReference(settingsXml);
 			if (pRef != null) setProperty(pRef);
 		}
+
+		// components
+		settingsXml = XmlHelper.getChildElementNamed(xml, "container");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element componentXml = (Element) node;
+
+					// create a component from each node in the container
+					Component c = service.parseComponent(componentXml);
+					if (c != null)
+					{
+						this.contained.add(c);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EntityDisplayRow add(Component component)
+	{
+		this.contained.add(component);
+
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getDisplayText(Context context, Object entity)
+	{
+		// set the context to capture instead of adding to the output
+		context.setCollecting();
+
+		// start with the property
+		if (getProperty() != null)
+		{
+			PrintWriter response = context.getResponseWriter();
+			String value = getProperty().read(context, entity);
+			response.print(value);
+		}
+
+		// render the contained
+		for (Component c : this.contained)
+		{
+			c.render(context, entity);
+		}
+
+		// get the captured text, resetting to output mode
+		String rv = context.getCollected();
+
+		return rv;
 	}
 
 	/**
@@ -126,7 +196,7 @@ public class UiPropertyRow implements PropertyRow
 	/**
 	 * {@inheritDoc}
 	 */
-	public PropertyRow setIncluded(Decision decision)
+	public EntityDisplayRow setIncluded(Decision decision)
 	{
 		this.included = decision;
 		return this;
@@ -135,7 +205,7 @@ public class UiPropertyRow implements PropertyRow
 	/**
 	 * {@inheritDoc}
 	 */
-	public PropertyRow setProperty(PropertyReference propertyReference)
+	public EntityDisplayRow setProperty(PropertyReference propertyReference)
 	{
 		this.propertyReference = propertyReference;
 		return this;
@@ -144,7 +214,7 @@ public class UiPropertyRow implements PropertyRow
 	/**
 	 * {@inheritDoc}
 	 */
-	public PropertyRow setTitle(String selector, PropertyReference... references)
+	public EntityDisplayRow setTitle(String selector, PropertyReference... references)
 	{
 		this.title = new UiMessage().setMessage(selector, references);
 		return this;

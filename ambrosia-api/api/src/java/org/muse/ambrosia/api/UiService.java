@@ -229,6 +229,13 @@ public interface UiService
 	EntityDisplay newEntityDisplay();
 
 	/**
+	 * Construct a new EntityDisplayRow
+	 * 
+	 * @return a new EntityDisplayRow
+	 */
+	EntityDisplayRow newEntityDisplayRow();
+
+	/**
 	 * Construct a new EntityList
 	 * 
 	 * @return a new EntityList
@@ -429,13 +436,6 @@ public interface UiService
 	 * @return a new PropertyReference
 	 */
 	PropertyReference newPropertyReference();
-
-	/**
-	 * Construct a new PropertyRow
-	 * 
-	 * @return a new PropertyRow
-	 */
-	PropertyRow newPropertyRow();
 
 	/**
 	 * Construct a new Section

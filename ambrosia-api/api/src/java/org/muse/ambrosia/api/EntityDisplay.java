@@ -22,9 +22,7 @@
 package org.muse.ambrosia.api;
 
 /**
- * UiEntityDisplay presents a multi-row single-item display of properties of one entity from the model.<br />
- * setEntityReference() sets the reference to the entity to display.<br />
- * addRow() sets the rows, each a UiPropertyRow, that references some selector of the entity.<br />
+ * EntityDisplay presents a multi-row single-item display of properties of one entity from the model.
  */
 public interface EntityDisplay extends Component
 {
@@ -34,7 +32,7 @@ public interface EntityDisplay extends Component
 	 * @param row
 	 *        A row to display some selector of each entity.
 	 */
-	EntityDisplay addRow(PropertyRow row);
+	EntityDisplay addRow(EntityDisplayRow row);
 
 	/**
 	 * Set the reference to the entity to display.

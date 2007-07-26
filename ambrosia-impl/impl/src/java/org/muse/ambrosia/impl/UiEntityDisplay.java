@@ -29,16 +29,14 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.EntityDisplay;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.PropertyRow;
+import org.muse.ambrosia.api.EntityDisplayRow;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * UiEntityDisplay presents a multi-row single-item display of properties of one entity from the model.<br />
- * setEntityReference() sets the reference to the entity to display.<br />
- * addRow() sets the rows, each a UiPropertyRow, that references some selector of the entity.<br />
+ * UiEntityDisplay implements EntityDisplay.
  */
 public class UiEntityDisplay extends UiComponent implements EntityDisplay
 {
@@ -46,7 +44,7 @@ public class UiEntityDisplay extends UiComponent implements EntityDisplay
 	protected PropertyReference entityReference = null;
 
 	/** Rows for this list. */
-	protected List<PropertyRow> rows = new ArrayList<PropertyRow>();
+	protected List<EntityDisplayRow> rows = new ArrayList<EntityDisplayRow>();
 
 	/** The message for the title. */
 	protected Message title = null;
@@ -100,7 +98,7 @@ public class UiEntityDisplay extends UiComponent implements EntityDisplay
 		{
 			this.title = new UiMessage(service, settingsXml);
 		}
-		
+
 		// rows
 		settingsXml = XmlHelper.getChildElementNamed(xml, "rows");
 		if (settingsXml != null)
@@ -114,7 +112,7 @@ public class UiEntityDisplay extends UiComponent implements EntityDisplay
 					Element containedXml = (Element) node;
 
 					// let the service parse this as a column
-					PropertyRow row = service.parsePropertyRow(containedXml);
+					EntityDisplayRow row = service.parseEntityDisplayRow(containedXml);
 					if (row != null) this.rows.add(row);
 				}
 			}
@@ -124,7 +122,7 @@ public class UiEntityDisplay extends UiComponent implements EntityDisplay
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityDisplay addRow(PropertyRow row)
+	public EntityDisplay addRow(EntityDisplayRow row)
 	{
 		this.rows.add(row);
 		return this;
@@ -147,13 +145,17 @@ public class UiEntityDisplay extends UiComponent implements EntityDisplay
 		}
 
 		// the object
-		Object entity = this.entityReference.readObject(context, focus);
+		Object entity = null;
+		if (this.entityReference != null)
+		{
+			entity = this.entityReference.readObject(context, focus);
+		}
 
 		// start the table
 		response.println("<table class=\"ambrosiaEntityDisplay\">");
 
 		// rows
-		for (PropertyRow r : this.rows)
+		for (EntityDisplayRow r : this.rows)
 		{
 			if (!r.included(context, focus)) continue;
 
@@ -165,11 +167,10 @@ public class UiEntityDisplay extends UiComponent implements EntityDisplay
 			}
 			response.print("</th><td>");
 
-			if (r.getProperty() != null)
-			{
-				String value = r.getProperty().read(context, entity);
-				response.print(value);
-			}
+			// get the row's value for display
+			String value = r.getDisplayText(context, entity);
+			response.print(value);
+
 			response.println("</td></tr>");
 		}
 
