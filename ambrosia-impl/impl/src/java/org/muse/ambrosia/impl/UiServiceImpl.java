@@ -55,6 +55,7 @@ import org.muse.ambrosia.api.Controller;
 import org.muse.ambrosia.api.CountPropertyReference;
 import org.muse.ambrosia.api.CountdownTimer;
 import org.muse.ambrosia.api.Courier;
+import org.muse.ambrosia.api.DateEdit;
 import org.muse.ambrosia.api.DatePropertyReference;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.DecisionDelegate;
@@ -356,6 +357,14 @@ public class UiServiceImpl implements UiService
 	public Courier newCourier()
 	{
 		return new UiCourier();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public DateEdit newDateEdit()
+	{
+		return new UiDateEdit();
 	}
 
 	/**
@@ -748,6 +757,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("attachments")) return new UiAttachments(this, xml);
 		if (xml.getTagName().equals("countdownTimer")) return new UiCountdownTimer(this, xml);
 		if (xml.getTagName().equals("courier")) return new UiCourier(this, xml);
+		if (xml.getTagName().equals("dateEdit")) return new UiDateEdit(this, xml);
 		if (xml.getTagName().equals("divider")) return new UiDivider(this, xml);
 		if (xml.getTagName().equals("entityActionBar")) return new UiEntityActionBar(this, xml);
 		if (xml.getTagName().equals("entityDisplay")) return new UiEntityDisplay(this, xml);

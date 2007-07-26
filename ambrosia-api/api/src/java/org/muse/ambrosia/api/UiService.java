@@ -159,6 +159,13 @@ public interface UiService
 	Courier newCourier();
 
 	/**
+	 * Construct a new DateEdit
+	 * 
+	 * @return a new DateEdit
+	 */
+	DateEdit newDateEdit();
+
+	/**
 	 * Construct a new DatePropertyReference
 	 * 
 	 * @return a new DatePropertyReference

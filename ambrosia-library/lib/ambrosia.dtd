@@ -422,5 +422,11 @@
 <!ATTLIST textEdit rows CDATA #IMPLIED >
 <!ATTLIST textEdit cols CDATA #IMPLIED >
 
+<!ELEMENT dateEdit (included | title | model | onEmptyAlert | readOnly | focus | icon)* >
+<!ATTLIST dateEdit id CDATA #IMPLIED >
+<!ATTLIST dateEdit title CDATA #IMPLIED >
+<!ATTLIST dateEdit model CDATA #IMPLIED >
+<!ATTLIST dateEdit icon CDATA #IMPLIED >
+
 <!ELEMENT modelComponent (included | model)* >
 <!ATTLIST modelComponent model CDATA #IMPLIED >
