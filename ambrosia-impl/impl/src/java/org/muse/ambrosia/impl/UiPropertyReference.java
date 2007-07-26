@@ -665,10 +665,14 @@ public class UiPropertyReference implements PropertyReference
 		setter.setCharAt(3, setter.substring(3, 4).toUpperCase().charAt(0));
 
 		// unformat the values
-		String[] value = new String[valueSource.length];
-		for (int i = 0; i < valueSource.length; i++)
+		String[] value = null;
+		if (valueSource != null)
 		{
-			value[i] = StringUtil.trimToNull(unFormat(valueSource[i]));
+			value = new String[valueSource.length];
+			for (int i = 0; i < valueSource.length; i++)
+			{
+				value[i] = StringUtil.trimToNull(unFormat(valueSource[i]));
+			}
 		}
 
 		try
