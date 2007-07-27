@@ -293,15 +293,9 @@ public class UiEntityList extends UiComponent implements EntityList
 		}
 
 		// title, if there is one and there is data
-		if ((this.title != null) && (!empty) && (isTitleIncluded(context, focus)))
+		if ((this.title != null) && (isTitleIncluded(context, focus)))
 		{
 			response.println("<div class =\"ambrosiaInstructions\">" + Validator.escapeHtml(this.title.getMessage(context, focus)) + "</div>");
-		}
-
-		// empty title, if there is no data
-		if ((this.emptyTitle != null) && empty)
-		{
-			response.println("<div class =\"ambrosiaInstructions\">" + Validator.escapeHtml(this.emptyTitle.getMessage(context, focus)) + "</div>");
 		}
 
 		response.println("<div class=\"ambrosiaEntityList\">");
@@ -578,6 +572,12 @@ public class UiEntityList extends UiComponent implements EntityList
 			{
 				response.println(text);
 			}
+		}
+
+		// empty title, if there is no data
+		if ((this.emptyTitle != null) && empty)
+		{
+			response.println("<div class =\"ambrosiaInstructions\">" + Validator.escapeHtml(this.emptyTitle.getMessage(context, focus)) + "</div>");
 		}
 
 		// footnotes

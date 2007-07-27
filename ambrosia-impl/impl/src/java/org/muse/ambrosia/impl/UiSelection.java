@@ -22,14 +22,20 @@
 package org.muse.ambrosia.impl;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
+import org.muse.ambrosia.api.EntityListColumn;
 import org.muse.ambrosia.api.Message;
+import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Selection;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiSelection presents a selection for the user to choose or not.<br />
@@ -39,6 +45,9 @@ public class UiSelection extends UiComponent implements Selection
 {
 	/** The value we use if the user does not selecet the selection. */
 	protected String notSelectedValue = "false";
+
+	/** The orientation for multiple selection choices. */
+	protected Orientation orientation = Orientation.horizontal;
 
 	/**
 	 * The PropertyReference for encoding and decoding this selection - this is what will be updated with the end-user's selection choice, and what
@@ -51,6 +60,12 @@ public class UiSelection extends UiComponent implements Selection
 
 	/** The value we find if the user selects the selection. */
 	protected String selectedValue = "true";
+
+	/** The set of messages for multiple selection choices. */
+	protected List<Message> selectionMessages = new ArrayList<Message>();
+
+	/** The set of values for multiple selection choices. */
+	protected List<String> selectionValues = new ArrayList<String>();
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
@@ -93,6 +108,10 @@ public class UiSelection extends UiComponent implements Selection
 		// selected value
 		String value = StringUtil.trimToNull(xml.getAttribute("value"));
 		if (value != null) this.selectedValue = value;
+		
+		// orientation
+		String orientation = StringUtil.trimToNull(xml.getAttribute("orientation"));
+		if ((orientation != null) && (orientation.equals("VERTICAL"))) setOrientation(Orientation.vertical);
 
 		// title
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
@@ -110,12 +129,44 @@ public class UiSelection extends UiComponent implements Selection
 			if (pRef != null) setProperty(pRef);
 		}
 
+		// selection choices
+		settingsXml = XmlHelper.getChildElementNamed(xml, "selectionChoices");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element innerXml = (Element) node;
+					if ("selectionChoice".equals(innerXml.getTagName()))
+					{
+						String selector = StringUtil.trimToNull(innerXml.getAttribute("selector"));
+						value = StringUtil.trimToNull(innerXml.getAttribute("value"));
+						addSelection(selector, value);
+					}
+				}
+			}
+		}
+
 		// read only
 		settingsXml = XmlHelper.getChildElementNamed(xml, "readOnly");
 		if (settingsXml != null)
 		{
 			this.readOnly = service.parseDecisions(settingsXml);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Selection addSelection(String selector, String value)
+	{
+		this.selectionValues.add(value);
+		this.selectionMessages.add(new UiMessage().setMessage(selector));
+
+		return this;
 	}
 
 	/**
@@ -147,14 +198,38 @@ public class UiSelection extends UiComponent implements Selection
 			value = this.propertyReference.read(context, focus);
 		}
 
-		// convert to boolean
-		boolean checked = Boolean.parseBoolean(value);
-
 		response.println("<div class=\"ambrosiaSelection\">");
 
-		// the check box
-		response.println("<input type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + this.selectedValue + "\" "
-				+ (checked ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
+		if (this.selectionValues.isEmpty())
+		{
+			// convert to boolean
+			boolean checked = Boolean.parseBoolean(value);
+
+			// the check box
+			response.println("<input type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + this.selectedValue + "\" "
+					+ (checked ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
+		}
+
+		else
+		{
+			for (int i = 0; i < this.selectionValues.size(); i++)
+			{
+				Message msg = this.selectionMessages.get(i);
+				String message = msg.getMessage(context, focus);
+				String val = this.selectionValues.get(i);
+
+				boolean selected = value.equals(val);
+
+				// the radio button
+				response.println("<input type=\"radio\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + val + "\" " + (selected ? "CHECKED" : "")
+						+ (readOnly ? " disabled=\"disabled\"" : "") + " /> " + message);
+				
+				if (this.orientation == Orientation.vertical)
+				{
+					response.println("<br />");
+				}
+			}
+		}
 
 		// the decode directive
 		if ((this.propertyReference != null) && (!readOnly))
@@ -173,6 +248,15 @@ public class UiSelection extends UiComponent implements Selection
 		}
 
 		response.println("</div>");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Selection setOrientation(Orientation orientation)
+	{
+		this.orientation = orientation;
+		return this;
 	}
 
 	/**

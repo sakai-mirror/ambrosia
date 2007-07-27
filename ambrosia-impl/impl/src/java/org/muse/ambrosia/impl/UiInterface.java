@@ -210,7 +210,7 @@ public class UiInterface extends UiContainer implements Interface
 		// header, if defined
 		if (this.header != null)
 		{
-			response.println("<div class=\"ambrosiaInterfaceHeader\">" + Validator.escapeHtml(this.header.getMessage(context, focus)) + "</div>");
+			response.println("<div class=\"ambrosiaInterfaceHeader\">" + this.header.getMessage(context, focus) + "</div>");
 		}
 
 		// render the contained

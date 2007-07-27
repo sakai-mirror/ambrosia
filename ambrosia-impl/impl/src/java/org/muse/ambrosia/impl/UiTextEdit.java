@@ -142,6 +142,13 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			this.onEmptyAlertDecision = service.parseDecisions(settingsXml);
 		}
 
+		// read only shortcut
+		String readOnly = StringUtil.trimToNull(xml.getAttribute("readOnly"));
+		if ((readOnly != null) && ("TRUE".equals(readOnly)))
+		{
+			this.readOnly = new UiDecision().setProperty(new UiConstantPropertyReference().setValue("true"));
+		}
+
 		// read only
 		settingsXml = XmlHelper.getChildElementNamed(xml, "readOnly");
 		if (settingsXml != null)

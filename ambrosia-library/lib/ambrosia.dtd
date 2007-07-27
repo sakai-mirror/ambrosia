@@ -114,7 +114,7 @@
 <!ATTLIST userInfoModel missing CDATA #IMPLIED >
 <!ATTLIST userInfoModel selector (DISPLAYNAME) "DISPLAYNAME" >
 
-<!ELEMENT container (alert | alias | attachments | countdownTimer | courier | divider | entityDisplay | entityList | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modeBar | navigation | navigationBar | password | section | selection | text | textEdit)* >
+<!ELEMENT container (alert | alias | attachments | countdownTimer | courier | dateEdit | divider | entityActionBar | entityDisplay | entityList | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | password | section | selection | text | textEdit)* >
 
 <!ELEMENT included (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 <!ELEMENT disabled (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
@@ -409,11 +409,17 @@
 <!ELEMENT focusOn (model)* >
 <!ATTLIST focusOn model CDATA #IMPLIED >
 
-<!ELEMENT selection (included | title | model | readOnly)* >
+<!ELEMENT selection (included | title | model | readOnly | selectionChoices)* >
 <!ATTLIST selection id CDATA #IMPLIED >
 <!ATTLIST selection title CDATA #IMPLIED >
 <!ATTLIST selection model CDATA #IMPLIED >
 <!ATTLIST selection value CDATA #IMPLIED >
+<!ATTLIST selection orientation (HORIZONTAL|VERTICAL) #IMPLIED >
+
+<!ELEMENT selectionChoices (selectionChoice)* >
+<!ELEMENT selectionChoice EMPTY >
+<!ATTLIST selectionChoice value CDATA #IMPLIED >
+<!ATTLIST selectionChoice selector CDATA #IMPLIED >
 
 <!ELEMENT textEdit (included | title | model | onEmptyAlert | readOnly | focus)* >
 <!ATTLIST textEdit id CDATA #IMPLIED >
@@ -421,6 +427,7 @@
 <!ATTLIST textEdit model CDATA #IMPLIED >
 <!ATTLIST textEdit rows CDATA #IMPLIED >
 <!ATTLIST textEdit cols CDATA #IMPLIED >
+<!ATTLIST textEdit readOnly (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT dateEdit (included | title | model | onEmptyAlert | readOnly | focus | icon)* >
 <!ATTLIST dateEdit id CDATA #IMPLIED >

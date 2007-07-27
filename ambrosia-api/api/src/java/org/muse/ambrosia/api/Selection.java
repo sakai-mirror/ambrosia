@@ -22,11 +22,36 @@
 package org.muse.ambrosia.api;
 
 /**
- * UiSelection presents a selection for the user to choose or not.<br />
- * The text can be either a property reference or a message.
+ * Selection presents a selection of one or more options for the user to select.
  */
 public interface Selection extends Component
 {
+	/** orientation. */
+	enum Orientation
+	{
+		horizontal, vertical
+	};
+
+	/**
+	 * Add a selection, one more choice the user can select.
+	 * 
+	 * @param selector
+	 *        The message selector to display.
+	 * @param value
+	 *        The value to return if selected.
+	 * @return self.
+	 */
+	Selection addSelection(String selector, String value);
+
+	/**
+	 * Set the orientation of multiple selection choices.
+	 * 
+	 * @param orientation
+	 *        The orientation.
+	 * @return self.
+	 */
+	Selection setOrientation(Orientation orientation);
+
 	/**
 	 * Set the property reference for the encode / decode.
 	 * 
@@ -60,6 +85,7 @@ public interface Selection extends Component
 	 *        The message selector.
 	 * @param references
 	 *        one or more (or an array) of UiPropertyReferences to form the additional values in the formatted message.
+	 * @return self.
 	 */
 	Selection setTitle(String selector, PropertyReference... references);
 }

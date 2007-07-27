@@ -681,6 +681,7 @@ public class UiPropertyReference implements PropertyReference
 			PropertyDescriptor pd = new PropertyDescriptor(property, entity.getClass(), null, setter.toString());
 			Method write = pd.getWriteMethod();
 			Object[] params = new Object[1];
+			params[0] = null;
 
 			Class[] paramTypes = write.getParameterTypes();
 			if ((paramTypes != null) && (paramTypes.length == 1))
@@ -703,10 +704,6 @@ public class UiPropertyReference implements PropertyReference
 						}
 						params[0] = values;
 					}
-					else
-					{
-						params[0] = null;
-					}
 				}
 
 				// single value long
@@ -727,10 +724,6 @@ public class UiPropertyReference implements PropertyReference
 						}
 						params[0] = values;
 					}
-					else
-					{
-						params[0] = null;
-					}
 				}
 
 				// single value int
@@ -750,10 +743,6 @@ public class UiPropertyReference implements PropertyReference
 							values[i] = Integer.valueOf(StringUtil.trimToZero(value[i]));
 						}
 						params[0] = values;
-					}
-					else
-					{
-						params[0] = null;
 					}
 				}
 
@@ -777,10 +766,6 @@ public class UiPropertyReference implements PropertyReference
 						}
 						params[0] = values;
 					}
-					else
-					{
-						params[0] = null;
-					}
 				}
 
 				// single value string
@@ -802,6 +787,24 @@ public class UiPropertyReference implements PropertyReference
 					}
 
 					params[0] = value;
+				}
+
+				// single value enum
+				else if (paramTypes[0].isEnum())
+				{
+					Object[] constants = paramTypes[0].getEnumConstants();
+					if (constants != null)
+					{
+						// see if value matches any of these
+						for (Object o : constants)
+						{
+							if (o.toString().equals(value[0]))
+							{
+								params[0] = o;
+								break;
+							}
+						}
+					}
 				}
 
 				// TODO: other types
