@@ -167,7 +167,7 @@ public class AmbrosiaServlet extends HttpServlet
 		{
 			try
 			{
-				context.setMessages(destination.getMessages());
+				context.setMessages(destination.getMessages(), ui.getMessages());
 				destination.get(req, res, context, parts);
 			}
 			catch (IllegalArgumentException e)
@@ -206,7 +206,7 @@ public class AmbrosiaServlet extends HttpServlet
 		{
 			try
 			{
-				context.setMessages(destination.getMessages());
+				context.setMessages(destination.getMessages(), ui.getMessages());
 				destination.post(req, res, context, parts);
 			}
 			catch (IllegalArgumentException e)

@@ -114,6 +114,7 @@ import org.sakaiproject.tool.api.ActiveTool;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.Tool;
 import org.sakaiproject.tool.api.ToolSession;
+import org.sakaiproject.util.ResourceLoader;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Web;
 import org.sakaiproject.util.Xml;
@@ -131,6 +132,9 @@ public class UiServiceImpl implements UiService
 {
 	/** Our logger. */
 	private static Log M_log = LogFactory.getLog(UiServiceImpl.class);
+
+	/** Localized messages. */
+	protected InternationalizedMessages messages = null;
 
 	/*************************************************************************************************************************************************
 	 * Abstractions, etc.
@@ -220,6 +224,9 @@ public class UiServiceImpl implements UiService
 	 */
 	public void init()
 	{
+		// messages
+		this.messages = new ResourceLoader("ambrosia");
+
 		M_log.info("init()");
 	}
 
@@ -1124,7 +1131,7 @@ public class UiServiceImpl implements UiService
 		PrintWriter out = res.getWriter();
 
 		UiContext context = new UiContext();
-		context.setMessages(messages);
+		if (messages != null) context.setMessages(messages, this.messages);
 		context.setDestination(destination);
 		context.setPreviousDestination(previousDestination);
 		context.setResponseWriter(out);
@@ -1213,7 +1220,7 @@ public class UiServiceImpl implements UiService
 		String destinationUrl = Web.returnUrl(req, destination);
 
 		UiContext context = new UiContext();
-		context.setMessages(messages);
+		if (messages != null) context.setMessages(messages, this.messages);
 		context.setDestination(destination);
 		context.setPreviousDestination(previousDestination);
 		context.put("sakai.destination.url", destinationUrl);
@@ -1290,5 +1297,17 @@ public class UiServiceImpl implements UiService
 	public DecisionDelegate getDecisionDelegate(String id, String toolId)
 	{
 		return m_decisionDelegates.get(toolId + "-" + id);
+	}
+	
+	/*************************************************************************************************************************************************
+	 * View methods
+	 ************************************************************************************************************************************************/
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public InternationalizedMessages getMessages()
+	{
+		return this.messages;
 	}
 }

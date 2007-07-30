@@ -248,10 +248,12 @@ public interface Context
 	/**
 	 * Set the internationalized messages.
 	 * 
-	 * @param messages
+	 * @param primary
+	 *        The internationalized messages.
+	 * @param secondary
 	 *        The internationalized messages.
 	 */
-	void setMessages(InternationalizedMessages messages);
+	void setMessages(InternationalizedMessages primary, InternationalizedMessages secondary);
 
 	/**
 	 * Set the post expected flag.

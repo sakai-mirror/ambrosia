@@ -676,4 +676,14 @@ public interface UiService
 	 */
 	DecisionDelegate getDecisionDelegate(String id, String toolId);
 
+	/*************************************************************************************************************************************************
+	 * Etc
+	 ************************************************************************************************************************************************/
+
+	/**
+	 * Access the internationalized messages.
+	 * 
+	 * @return The internationalized messages.
+	 */
+	InternationalizedMessages getMessages();
 }

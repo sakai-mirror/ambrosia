@@ -25,9 +25,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.sakaiproject.i18n.InternationalizedMessages;
 import org.muse.ambrosia.api.Container;
@@ -35,7 +38,7 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Component;
 
 /**
- *  UiContext implements Context.
+ * UiContext implements Context.
  */
 public class UiContext implements Context
 {
@@ -61,7 +64,7 @@ public class UiContext implements Context
 	protected int id = 0;
 
 	/** Internationalized messages. */
-	protected InternationalizedMessages messages = null;
+	protected DoubleMessages messages = null;
 
 	/** named objects and values. */
 	protected Map<String, Object> objects = new HashMap<String, Object>();
@@ -372,9 +375,9 @@ public class UiContext implements Context
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setMessages(InternationalizedMessages messages)
+	public void setMessages(InternationalizedMessages primary, InternationalizedMessages secondary)
 	{
-		this.messages = messages;
+		this.messages = new DoubleMessages(primary, secondary);
 	}
 
 	/**
@@ -407,5 +410,161 @@ public class UiContext implements Context
 	public void setUi(Component ui)
 	{
 		this.ui = ui;
+	}
+
+	public class DoubleMessages implements InternationalizedMessages
+	{
+		InternationalizedMessages primary;
+
+		InternationalizedMessages secondary;
+
+		public DoubleMessages(InternationalizedMessages primary, InternationalizedMessages secondary)
+		{
+			this.primary = primary;
+			this.secondary = secondary;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public String getFormattedMessage(String key, Object[] args)
+		{
+			if (primary.getString(key, null) != null)
+			{
+				return primary.getFormattedMessage(key, args);
+			}
+
+			return secondary.getFormattedMessage(key, args);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Locale getLocale()
+		{
+			return primary.getLocale();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public String getString(String key)
+		{
+			if (primary.getString(key, null) != null)
+			{
+				return primary.getString(key);
+			}
+
+			return secondary.getString(key);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public String getString(String key, String dflt)
+		{
+			if (primary.getString(key, null) != null)
+			{
+				return primary.getString(key, dflt);
+			}
+
+			return secondary.getString(key, dflt);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void clear()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public boolean containsKey(Object arg0)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public boolean containsValue(Object arg0)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Set entrySet()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Object get(Object arg0)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public boolean isEmpty()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Set keySet()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Object put(Object arg0, Object arg1)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void putAll(Map arg0)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Object remove(Object arg0)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public int size()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Collection values()
+		{
+			throw new UnsupportedOperationException();
+		}
 	}
 }

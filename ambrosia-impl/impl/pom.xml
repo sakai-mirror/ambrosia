@@ -101,14 +101,15 @@
     </dependency>
   </dependencies>
   <build>
-    
-    
-    
-    
-    
-    
-    <resources/>
-<!-- java source -->
-    
+
+  	<resources>
+  		<resource>
+  			<directory>${basedir}/src/bundle</directory>
+  			<includes>
+  				<include>**/*.properties</include>
+  			</includes>
+  		</resource>
+  	</resources>
+
   </build>
 </project>
