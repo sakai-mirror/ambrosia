@@ -218,7 +218,7 @@ public class UiSelection extends UiComponent implements Selection
 				String message = msg.getMessage(context, focus);
 				String val = this.selectionValues.get(i);
 
-				boolean selected = value.equals(val);
+				boolean selected = (value == null) ? false : value.equals(val);
 
 				// the radio button
 				response.println("<input type=\"radio\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + val + "\" " + (selected ? "CHECKED" : "")
