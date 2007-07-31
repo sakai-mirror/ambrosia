@@ -266,8 +266,7 @@ public class UiIconKey extends UiComponent implements IconKey
 				if (icon != null)
 				{
 					// TODO: what escape for icon?
-					response.print("<img src=\"" + context.get("sakai.return.url") + icon + "\" alt=\"" + Validator.escapeHtml(descriptionText)
-							+ "\" />");
+					response.print("<img src=\"" + context.getUrl(icon) + "\" alt=\"" + Validator.escapeHtml(descriptionText) + "\" />");
 				}
 
 				response.print("</td><td>");
@@ -322,8 +321,7 @@ public class UiIconKey extends UiComponent implements IconKey
 
 				if (icon != null)
 				{
-					response
-							.print("<img src=\"" + context.get("sakai.return.url") + icon + "\" alt=\"" + Validator.escapeHtml(description) + "\" />");
+					response.print("<img src=\"" + context.getUrl(icon) + "\" alt=\"" + Validator.escapeHtml(description) + "\" />");
 				}
 
 				response.print("</td><td>");

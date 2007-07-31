@@ -399,11 +399,39 @@ public interface UiService
 	OrDecision newOrDecision();
 
 	/**
+	 * Construct a new Pager
+	 * 
+	 * @return a new Pager
+	 */
+	Pager newPager();
+
+	/**
+	 * Construct a new Paging model.
+	 * 
+	 * @return a new Paging model.
+	 */
+	Paging newPaging();
+
+	/**
+	 * Construct a new PagingPropertyReference
+	 * 
+	 * @return a new PagingPropertyReference
+	 */
+	PagingPropertyReference newPagingPropertyReference();
+
+	/**
 	 * Construct a new PastDateDecision
 	 * 
 	 * @return a new PastDateDecision
 	 */
 	PastDateDecision newPastDateDecision();
+
+	/**
+	 * Construct a new Password
+	 * 
+	 * @return a new Password
+	 */
+	Password newPassword();
 
 	/**
 	 * Construct a new PopulatingSet
@@ -415,13 +443,6 @@ public interface UiService
 	 * @return a new PopulatingSet
 	 */
 	PopulatingSet newPopulatingSet(Factory factory, Id id);
-
-	/**
-	 * Construct a new Password
-	 * 
-	 * @return a new Password
-	 */
-	Password newPassword();
 
 	/**
 	 * Construct a new PropertyColumn

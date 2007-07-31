@@ -72,8 +72,8 @@ public class UiEvaluation extends UiText implements Evaluation
 		{
 			icon = StringUtil.trimToNull(settingsXml.getAttribute("icon"));
 			if (icon != null) this.icon = icon;
-			
-			String selector =  StringUtil.trimToNull(settingsXml.getAttribute("message"));
+
+			String selector = StringUtil.trimToNull(settingsXml.getAttribute("message"));
 			if (selector != null)
 			{
 				this.iconAlt = new UiMessage().setMessage(selector);
@@ -106,8 +106,8 @@ public class UiEvaluation extends UiText implements Evaluation
 		if (this.message != null)
 		{
 			response.println("<div class =\"instruction\" style=\"color:#990033\">"
-					+ ((this.icon != null) ? "<img src=\"" + context.get("sakai.return.url") + this.icon + "\" alt=\"" + alt + "\" title=\"" + alt
-							+ "\" />" : "") + Validator.escapeHtml(this.message.getMessage(context, focus)) + "</div>");
+					+ ((this.icon != null) ? "<img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : "")
+					+ Validator.escapeHtml(this.message.getMessage(context, focus)) + "</div>");
 		}
 	}
 

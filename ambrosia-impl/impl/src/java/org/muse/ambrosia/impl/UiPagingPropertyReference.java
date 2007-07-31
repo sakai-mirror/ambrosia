@@ -22,22 +22,19 @@
 package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.IconPropertyReference;
-import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
+import org.muse.ambrosia.api.Paging;
+import org.muse.ambrosia.api.PagingPropertyReference;
 import org.w3c.dom.Element;
 
 /**
- * UiIconPropertyReference implements IconPropertyReference
+ * UiPagingPropertyReference implements PagingPropertyReference.
  */
-public class UiIconPropertyReference extends UiPropertyReference implements IconPropertyReference
+public class UiPagingPropertyReference extends UiPropertyReference implements PagingPropertyReference
 {
-	protected String name = null;
-
 	/**
 	 * No-arg constructor.
 	 */
-	public UiIconPropertyReference()
+	public UiPagingPropertyReference()
 	{
 	}
 
@@ -49,14 +46,10 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 	 * @param xml
 	 *        The dom element.
 	 */
-	protected UiIconPropertyReference(UiServiceImpl service, Element xml)
+	protected UiPagingPropertyReference(UiServiceImpl service, Element xml)
 	{
 		// do the property reference stuff
 		super(service, xml);
-
-		// icon
-		String icon = StringUtil.trimToNull(xml.getAttribute("icon"));
-		if (icon != null) setIcon(icon);
 	}
 
 	/**
@@ -64,16 +57,7 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 	 */
 	public String getType()
 	{
-		return "icon";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String read(Context context, Object focus)
-	{
-		// alt=\"" + Validator.escapeHtml(name) + "\"
-		return "<img style=\"vertical-align:middle\" src=\"" + context.getUrl(name) + "\" />";
+		return "paging";
 	}
 
 	/**
@@ -81,15 +65,45 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 	 */
 	public Object readObject(Context context, Object focus)
 	{
-		return read(context, focus);
+		Object rv = super.readObject(context, focus);
+
+		if (rv instanceof Paging)
+		{
+			Paging p = (Paging) rv;
+
+			String selector = (String) context.get(SELECTOR);
+			if (selector != null)
+			{
+				if (FIRST.equals(selector))
+				{
+					rv = p.getFirst();
+				}
+				else if (PREV.equals(selector))
+				{
+					rv = p.getPrev();
+				}
+				else if (NEXT.equals(selector))
+				{
+					rv = p.getNext();
+				}
+				else if (LAST.equals(selector))
+				{
+					rv = p.getLast();
+				}
+			}
+		}
+
+		return rv;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public IconPropertyReference setIcon(String name)
+	protected String format(Context context, Object value)
 	{
-		this.name = name;
-		return this;
+		if (!(value instanceof Paging)) return super.format(context, value);
+		Paging p = (Paging) value;
+
+		return p.getCurrent().toString() + "-" + p.getMax().toString() + "-" + p.getSize().toString();
 	}
 }

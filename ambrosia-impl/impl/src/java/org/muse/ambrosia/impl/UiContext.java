@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.sakaiproject.i18n.InternationalizedMessages;
+import org.sakaiproject.util.Web;
 import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Component;
@@ -42,6 +43,162 @@ import org.muse.ambrosia.api.Component;
  */
 public class UiContext implements Context
 {
+	public class DoubleMessages implements InternationalizedMessages
+	{
+		InternationalizedMessages primary;
+
+		InternationalizedMessages secondary;
+
+		public DoubleMessages(InternationalizedMessages primary, InternationalizedMessages secondary)
+		{
+			this.primary = primary;
+			this.secondary = secondary;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void clear()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public boolean containsKey(Object arg0)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public boolean containsValue(Object arg0)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Set entrySet()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Object get(Object arg0)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public String getFormattedMessage(String key, Object[] args)
+		{
+			if (primary.getString(key, null) != null)
+			{
+				return primary.getFormattedMessage(key, args);
+			}
+
+			return secondary.getFormattedMessage(key, args);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Locale getLocale()
+		{
+			return primary.getLocale();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public String getString(String key)
+		{
+			if (primary.getString(key, null) != null)
+			{
+				return primary.getString(key);
+			}
+
+			return secondary.getString(key);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public String getString(String key, String dflt)
+		{
+			if (primary.getString(key, null) != null)
+			{
+				return primary.getString(key, dflt);
+			}
+
+			return secondary.getString(key, dflt);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public boolean isEmpty()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Set keySet()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Object put(Object arg0, Object arg1)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void putAll(Map arg0)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Object remove(Object arg0)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public int size()
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public Collection values()
+		{
+			throw new UnsupportedOperationException();
+		}
+	}
+
 	/** A print write to use to collect output rather than send it to the real writer. */
 	protected PrintWriter collectingWriter = null;
 
@@ -284,6 +441,21 @@ public class UiContext implements Context
 	/**
 	 * {@inheritDoc}
 	 */
+	public String getUrl(String url)
+	{
+		if (url == null) return null;
+
+		if (url.startsWith("!"))
+		{
+			return get("sakai.server.url") + url.substring(1);
+		}
+
+		return get("sakai.return.url") + url;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getValidation()
 	{
 		if (this.validationCode.length() == 0) return null;
@@ -410,161 +582,5 @@ public class UiContext implements Context
 	public void setUi(Component ui)
 	{
 		this.ui = ui;
-	}
-
-	public class DoubleMessages implements InternationalizedMessages
-	{
-		InternationalizedMessages primary;
-
-		InternationalizedMessages secondary;
-
-		public DoubleMessages(InternationalizedMessages primary, InternationalizedMessages secondary)
-		{
-			this.primary = primary;
-			this.secondary = secondary;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public String getFormattedMessage(String key, Object[] args)
-		{
-			if (primary.getString(key, null) != null)
-			{
-				return primary.getFormattedMessage(key, args);
-			}
-
-			return secondary.getFormattedMessage(key, args);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public Locale getLocale()
-		{
-			return primary.getLocale();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public String getString(String key)
-		{
-			if (primary.getString(key, null) != null)
-			{
-				return primary.getString(key);
-			}
-
-			return secondary.getString(key);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public String getString(String key, String dflt)
-		{
-			if (primary.getString(key, null) != null)
-			{
-				return primary.getString(key, dflt);
-			}
-
-			return secondary.getString(key, dflt);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public void clear()
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public boolean containsKey(Object arg0)
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public boolean containsValue(Object arg0)
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public Set entrySet()
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public Object get(Object arg0)
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public boolean isEmpty()
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public Set keySet()
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public Object put(Object arg0, Object arg1)
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public void putAll(Map arg0)
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public Object remove(Object arg0)
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public int size()
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		public Collection values()
-		{
-			throw new UnsupportedOperationException();
-		}
 	}
 }

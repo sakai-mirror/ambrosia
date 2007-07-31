@@ -434,11 +434,11 @@ public class UiNavigation extends UiComponent implements Navigation
 						+ "','cancel_"
 						+ id
 						+ "()');\" "
-						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('" + context.get("sakai.return.url")
-								+ this.confirmCancelIcon + "') .2em no-repeat;\"" : "") + "/></td>");
+						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('"
+								+ context.getUrl(this.confirmCancelIcon) + "') .2em no-repeat;\"" : "") + "/></td>");
 				response.println("<td style=\"padding:1em\" align=\"right\"><input type=\"button\" value=\"" + title
 						+ "\" onclick=\"hideConfirm('confirm_" + id + "','act_" + id + "()');\" style=\"padding-left:2em; background: #eee url('"
-						+ context.get("sakai.return.url") + this.icon + "') .2em no-repeat;\"/></td>");
+						+ context.getUrl(this.icon) + "') .2em no-repeat;\"/></td>");
 				response.println("</tr></table></div>");
 			}
 		}
@@ -447,22 +447,45 @@ public class UiNavigation extends UiComponent implements Navigation
 		{
 			case link:
 			{
-				if ((this.icon != null) && (this.iconStyle == IconStyle.left))
+				// no title special case
+				if (title.length() == 0)
 				{
-					response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\"" + context.get("sakai.return.url")
-							+ this.icon + "\" />");
+					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
+
+					if (this.icon != null)
+					{
+						response.print("<img style=\"vertical-align:text-bottom;\" src=\""
+								+ context.getUrl(this.icon) + "\" "
+								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
+										+ Validator.escapeHtml(description) + "\" ") + " />");
+					}
+
+					if (!disabled) response.print("</a>");
 				}
 
-				if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
-
-				response.print(title);
-
-				if (!disabled) response.print("</a>");
-
-				if ((this.icon != null) && (this.iconStyle == IconStyle.right))
+				else
 				{
-					response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\"" + context.get("sakai.return.url")
-							+ this.icon + "\" />");
+					if ((this.icon != null) && (this.iconStyle == IconStyle.left))
+					{
+						response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\""
+								+ context.getUrl(this.icon) + "\" "
+								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
+										+ Validator.escapeHtml(description) + "\" ") + " />");
+					}
+
+					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
+
+					response.print(title);
+
+					if (!disabled) response.print("</a>");
+
+					if ((this.icon != null) && (this.iconStyle == IconStyle.right))
+					{
+						response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\""
+								+ context.getUrl(this.icon) + "\" "
+								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
+										+ Validator.escapeHtml(description) + "\" ") + " />");
+					}
 				}
 
 				response.println();
@@ -489,9 +512,9 @@ public class UiNavigation extends UiComponent implements Navigation
 								+ ((accessKey == null) ? "" : "accesskey=\"" + accessKey.charAt(0) + "\" ")
 								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" ")
 								+ (((this.icon != null) && (this.iconStyle == IconStyle.left)) ? "style=\"padding-left:2em; background: #eee url('"
-										+ context.get("sakai.return.url") + this.icon + "') .2em no-repeat;\"" : "")
+										+ context.getUrl(this.icon) + "') .2em no-repeat;\"" : "")
 								+ (((this.icon != null) && (this.iconStyle == IconStyle.right)) ? "style=\"padding-left:.4em; padding-right:2em; background: #eee url('"
-										+ context.get("sakai.return.url") + this.icon + "') right no-repeat;\""
+										+ context.getUrl(this.icon) + "') right no-repeat;\""
 										: "") + "/>");
 
 				break;
@@ -556,6 +579,15 @@ public class UiNavigation extends UiComponent implements Navigation
 	public Navigation setDescription(String selector, PropertyReference... references)
 	{
 		this.description = new UiMessage().setMessage(selector, references);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Navigation setDescription(Message message)
+	{
+		this.description = message;
 		return this;
 	}
 

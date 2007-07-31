@@ -454,7 +454,7 @@ public class UiMatch extends UiComponent implements Match
 					{
 						if (this.correctIcon != null)
 						{
-							response.print("<img src=\"" + context.get("sakai.return.url") + this.correctIcon + "\" alt=\""
+							response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
 									+ ((this.correctMessage != null) ? context.getMessages().getString(this.correctMessage) : "") + "\" />");
 						}
 					}
@@ -462,7 +462,7 @@ public class UiMatch extends UiComponent implements Match
 					{
 						if (this.incorrectIcon != null)
 						{
-							response.print("<img src=\"" + context.get("sakai.return.url") + this.incorrectIcon + "\" alt=\""
+							response.print("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\""
 									+ ((this.incorrectMessage != null) ? context.getMessages().getString(this.incorrectMessage) : "") + "\" />");
 						}
 					}

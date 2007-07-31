@@ -243,19 +243,9 @@ public class UiDateEdit extends UiComponent implements DateEdit
 
 		// TODO: make the icon link to a popup picker!
 
-		response.println("<input type=\"text\" id=\""
-				+ id
-				+ "\" name=\""
-				+ id
-				+ "\" size=\""
-				+ Integer.toString(numCols)
-				+ "\" value=\""
-				+ Validator.escapeHtml(value)
-				+ "\""
-				+ (readOnly ? " disabled=\"disabled\"" : "")
-				+ " />"
-				+ ((this.icon != null) ? " <img src=\"" + context.get("sakai.return.url") + this.icon + "\" alt=\"" + alt + "\" title=\"" + alt
-						+ "\" />" : ""));
+		response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
+				+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />"
+				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
 		response.println("</div>");
 
 		// the decode directive

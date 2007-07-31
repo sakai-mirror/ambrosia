@@ -360,7 +360,7 @@ public class UiEntityList extends UiComponent implements EntityList
 							+ href
 							+ "\">"
 							+ Validator.escapeHtml(title.getMessage(context, focus))
-							+ ((icon != null) ? ("&nbsp;<img src=\"" + context.get("sakai.return.url") + icon + "\""
+							+ ((icon != null) ? ("&nbsp;<img src=\"" + context.getUrl(icon) + "\""
 									+ ((iconAlt != null) ? (" alt=\"" + Validator.escapeHtml(iconAlt) + "\"") : "") + " />") : "") + "</a></th>");
 				}
 
@@ -385,8 +385,7 @@ public class UiEntityList extends UiComponent implements EntityList
 			// for no title defined, put out a placeholder title
 			else
 			{
-				response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">"
-						+ "" + "</th>");
+				response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">" + "" + "</th>");
 			}
 		}
 		response.println("</tr></thead>");

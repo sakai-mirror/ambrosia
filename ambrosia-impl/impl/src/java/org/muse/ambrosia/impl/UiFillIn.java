@@ -321,7 +321,7 @@ public class UiFillIn extends UiComponent implements FillIn
 					{
 						if (this.correctIcon != null)
 						{
-							response.print("<img src=\"" + context.get("sakai.return.url") + this.correctIcon + "\" alt=\""
+							response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
 									+ ((this.correctMessage != null) ? context.getMessages().getString(this.correctMessage) : "") + "\" />");
 						}
 					}
@@ -330,7 +330,7 @@ public class UiFillIn extends UiComponent implements FillIn
 					{
 						if (this.incorrectIcon != null)
 						{
-							response.print("<img src=\"" + context.get("sakai.return.url") + this.incorrectIcon + "\" alt=\""
+							response.print("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\""
 									+ ((this.incorrectMessage != null) ? context.getMessages().getString(this.incorrectMessage) : "") + "\" />");
 						}
 					}
@@ -361,7 +361,7 @@ public class UiFillIn extends UiComponent implements FillIn
 				{
 					if ((corrects[fillInParts.length - 1] != null) && (corrects[fillInParts.length - 1].booleanValue()))
 					{
-						response.print("<img src=\"" + context.get("sakai.return.url") + this.correctIcon + "\" alt=\""
+						response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
 								+ ((correctMessage != null) ? context.getMessages().getString(correctMessage) : "") + "\" />");
 					}
 				}

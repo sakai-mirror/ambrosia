@@ -178,6 +178,15 @@ public interface Context
 	int getUniqueId();
 
 	/**
+	 * Format a full url for this path. If the path begins with "!", it is server relative, else application relative.
+	 * 
+	 * @param url
+	 *        The url path.
+	 * @return The full URL.
+	 */
+	String getUrl(String url);
+
+	/**
 	 * Access the javascript code collected for on-submit validation for the interface.
 	 * 
 	 * @return The javascript code collected for on-submit validation for the interface, or null if there was none.

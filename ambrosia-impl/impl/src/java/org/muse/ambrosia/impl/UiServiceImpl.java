@@ -66,6 +66,7 @@ import org.muse.ambrosia.api.Divider;
 import org.muse.ambrosia.api.DurationPropertyReference;
 import org.muse.ambrosia.api.EntityActionBar;
 import org.muse.ambrosia.api.EntityDisplay;
+import org.muse.ambrosia.api.EntityDisplayRow;
 import org.muse.ambrosia.api.EntityList;
 import org.muse.ambrosia.api.EntityListColumn;
 import org.muse.ambrosia.api.Evaluation;
@@ -89,12 +90,14 @@ import org.muse.ambrosia.api.ModelComponent;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.NavigationBar;
 import org.muse.ambrosia.api.OrDecision;
+import org.muse.ambrosia.api.Pager;
+import org.muse.ambrosia.api.Paging;
+import org.muse.ambrosia.api.PagingPropertyReference;
 import org.muse.ambrosia.api.Password;
 import org.muse.ambrosia.api.PastDateDecision;
 import org.muse.ambrosia.api.PopulatingSet;
 import org.muse.ambrosia.api.PropertyColumn;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.EntityDisplayRow;
 import org.muse.ambrosia.api.Section;
 import org.muse.ambrosia.api.Selection;
 import org.muse.ambrosia.api.SelectionColumn;
@@ -633,14 +636,33 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public Pager newPager()
+	{
+		return new UiPager();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Paging newPaging()
+	{
+		return new UiPaging();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public PagingPropertyReference newPagingPropertyReference()
+	{
+		return new UiPagingPropertyReference();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public PastDateDecision newPastDateDecision()
 	{
 		return new UiPastDateDecision();
-	}
-
-	public PopulatingSet newPopulatingSet(Factory factory, Id id)
-	{
-		return new UiPopulatingSet(factory, id);
 	}
 
 	/**
@@ -649,6 +671,14 @@ public class UiServiceImpl implements UiService
 	public Password newPassword()
 	{
 		return new UiPassword();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public PopulatingSet newPopulatingSet(Factory factory, Id id)
+	{
+		return new UiPopulatingSet(factory, id);
 	}
 
 	/**
@@ -783,6 +813,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("modelComponent")) return new UiModelComponent(this, xml);
 		if (xml.getTagName().equals("navigation")) return new UiNavigation(this, xml);
 		if (xml.getTagName().equals("navigationBar")) return new UiNavigationBar(this, xml);
+		if (xml.getTagName().equals("pager")) return new UiPager(this, xml);
 		if (xml.getTagName().equals("password")) return new UiPassword(this, xml);
 		if (xml.getTagName().equals("section")) return new UiSection(this, xml);
 		if (xml.getTagName().equals("selection")) return new UiSelection(this, xml);
@@ -929,6 +960,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("durationModel")) return new UiDurationPropertyReference(this, xml);
 		if (xml.getTagName().equals("htmlModel")) return new UiHtmlPropertyReference(this, xml);
 		if (xml.getTagName().equals("iconModel")) return new UiIconPropertyReference(this, xml);
+		if (xml.getTagName().equals("pagingModel")) return new UiPagingPropertyReference(this, xml);
 		if (xml.getTagName().equals("textModel")) return new UiTextPropertyReference(this, xml);
 		if (xml.getTagName().equals("urlModel")) return new UiUrlPropertyReference(this, xml);
 		if (xml.getTagName().equals("userInfoModel")) return new UiUserInfoPropertyReference(this, xml);
@@ -944,6 +976,7 @@ public class UiServiceImpl implements UiService
 		if ("duration".equals(type)) return new UiDurationPropertyReference(this, xml);
 		if ("html".equals(type)) return new UiHtmlPropertyReference(this, xml);
 		if ("icon".equals(type)) return new UiIconPropertyReference(this, xml);
+		if ("paging".equals(type)) return new UiPagingPropertyReference(this, xml);
 		if ("text".equals(type)) return new UiTextPropertyReference(this, xml);
 		if ("url".equals(type)) return new UiUrlPropertyReference(this, xml);
 		if ("userInfo".equals(type)) return new UiUserInfoPropertyReference(this, xml);
@@ -1139,6 +1172,7 @@ public class UiServiceImpl implements UiService
 		context.put("sakai.html.head", req.getAttribute("sakai.html.head"));
 		context.put("sakai.html.body.onload", req.getAttribute("sakai.html.body.onload"));
 		context.put("sakai.return.url", Web.returnUrl(req, ""));
+		context.put("sakai.server.url", Web.serverUrl(req));
 
 		String destinationUrl = Web.returnUrl(req, destination);
 		context.put("sakai.destination.url", destinationUrl);
@@ -1298,7 +1332,7 @@ public class UiServiceImpl implements UiService
 	{
 		return m_decisionDelegates.get(toolId + "-" + id);
 	}
-	
+
 	/*************************************************************************************************************************************************
 	 * View methods
 	 ************************************************************************************************************************************************/

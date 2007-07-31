@@ -106,6 +106,15 @@ public interface Navigation extends Component
 	Navigation setDescription(String selector, PropertyReference... references);
 
 	/**
+	 * Set the descriptive text for the navigation.
+	 * 
+	 * @param message
+	 *        The message.
+	 * @return self.
+	 */
+	Navigation setDescription(Message message);
+
+	/**
 	 * Set the tool destination to use when clicked.
 	 * 
 	 * @param destination
