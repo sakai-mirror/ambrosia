@@ -208,6 +208,13 @@ public interface UiService
 	Divider newDivider();
 
 	/**
+	 * Construct a new DurationEdit
+	 * 
+	 * @return a new DurationEdit
+	 */
+	DurationEdit newDurationEdit();
+
+	/**
 	 * Construct a new DurationPropertyReference
 	 * 
 	 * @return a new DurationPropertyReference

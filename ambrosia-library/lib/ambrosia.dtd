@@ -120,7 +120,7 @@
 <!ATTLIST pagingModel tool CDATA #IMPLIED >
 <!ATTLIST pagingModel missing CDATA #IMPLIED >
 
-<!ELEMENT container (alert | alias | attachments | countdownTimer | courier | dateEdit | divider | entityActionBar | entityDisplay | entityList | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
+<!ELEMENT container (alert | alias | attachments | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
 
 <!ELEMENT included (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 <!ELEMENT disabled (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
@@ -440,6 +440,12 @@
 <!ATTLIST dateEdit title CDATA #IMPLIED >
 <!ATTLIST dateEdit model CDATA #IMPLIED >
 <!ATTLIST dateEdit icon CDATA #IMPLIED >
+
+<!ELEMENT durationEdit (included | title | model | onEmptyAlert | readOnly | focus | icon)* >
+<!ATTLIST durationEdit id CDATA #IMPLIED >
+<!ATTLIST durationEdit title CDATA #IMPLIED >
+<!ATTLIST durationEdit model CDATA #IMPLIED >
+<!ATTLIST durationEdit icon CDATA #IMPLIED >
 
 <!ELEMENT modelComponent (included | model)* >
 <!ATTLIST modelComponent model CDATA #IMPLIED >

@@ -63,6 +63,7 @@ import org.muse.ambrosia.api.Decoder;
 import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.DistributionChart;
 import org.muse.ambrosia.api.Divider;
+import org.muse.ambrosia.api.DurationEdit;
 import org.muse.ambrosia.api.DurationPropertyReference;
 import org.muse.ambrosia.api.EntityActionBar;
 import org.muse.ambrosia.api.EntityDisplay;
@@ -423,6 +424,14 @@ public class UiServiceImpl implements UiService
 	public Divider newDivider()
 	{
 		return new UiDivider();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public DurationEdit newDurationEdit()
+	{
+		return new UiDurationEdit();
 	}
 
 	/**
@@ -796,6 +805,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("courier")) return new UiCourier(this, xml);
 		if (xml.getTagName().equals("dateEdit")) return new UiDateEdit(this, xml);
 		if (xml.getTagName().equals("divider")) return new UiDivider(this, xml);
+		if (xml.getTagName().equals("durationEdit")) return new UiDurationEdit(this, xml);
 		if (xml.getTagName().equals("entityActionBar")) return new UiEntityActionBar(this, xml);
 		if (xml.getTagName().equals("entityDisplay")) return new UiEntityDisplay(this, xml);
 		if (xml.getTagName().equals("entityList")) return new UiEntityList(this, xml);
