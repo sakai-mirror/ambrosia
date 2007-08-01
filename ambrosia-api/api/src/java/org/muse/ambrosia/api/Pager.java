@@ -71,6 +71,17 @@ public interface Pager
 	Pager setLastIcon(String url, String selector, PropertyReference... references);
 
 	/**
+	 * Set the "viewing..." message
+	 * 
+	 * @param selector
+	 *        The message selector.
+	 * @param references
+	 *        The message model references.
+	 * @return self.
+	 */
+	Pager setMessage(String selector, PropertyReference... references);
+
+	/**
 	 * Set the "next page" icon
 	 * 
 	 * @param url
@@ -82,6 +93,17 @@ public interface Pager
 	 * @return self.
 	 */
 	Pager setNextIcon(String url, String selector, PropertyReference... references);
+
+	/**
+	 * Set the message used for page size options.
+	 * 
+	 * @param selector
+	 *        The message selector.
+	 * @param references
+	 *        The message model references.
+	 * @return self.
+	 */
+	Pager setPageSizesMessage(String selector, PropertyReference... references);
 
 	/**
 	 * Set the property reference for the paging object.

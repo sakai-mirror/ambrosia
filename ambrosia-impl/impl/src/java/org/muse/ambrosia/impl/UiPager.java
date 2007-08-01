@@ -44,7 +44,8 @@ import org.w3c.dom.NodeList;
 public class UiPager extends UiComponent implements Pager
 {
 	/** The current report message. */
-	protected Message curMessage = null;
+	protected Message curMessage = new UiMessage().setMessage("pager-message", new UiPropertyReference().setReference("paging.curFirstItem"),
+			new UiPropertyReference().setReference("paging.curLastItem"), new UiPropertyReference().setReference("paging.maxItems"));
 
 	/** The tool destination for clicks. */
 	protected Destination destination = null;
@@ -71,7 +72,6 @@ public class UiPager extends UiComponent implements Pager
 	protected List<Integer> pageSizes = new ArrayList<Integer>();
 
 	/** Message to show the page size options - the {0} field is reserved for the count. */
-	// TODO: setter etc.
 	protected Message pageSizesMessage = new UiMessage().setMessage("pager-sizes", new UiPropertyReference().setReference("ambrosia:option"));
 
 	/** The model reference for the current page. */
@@ -232,13 +232,21 @@ public class UiPager extends UiComponent implements Pager
 		settingsXml = XmlHelper.getChildElementNamed(xml, "sizeOptions");
 		if (settingsXml != null)
 		{
+			// size options message
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
+			if (innerXml != null)
+			{
+				this.pageSizesMessage = new UiMessage(service, innerXml);
+			}
+
+			// the size options
 			NodeList contained = settingsXml.getChildNodes();
 			for (int i = 0; i < contained.getLength(); i++)
 			{
 				Node node = contained.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE)
 				{
-					Element innerXml = (Element) node;
+					innerXml = (Element) node;
 					if ("sizeOption".equals(innerXml.getTagName()))
 					{
 						try
@@ -359,10 +367,28 @@ public class UiPager extends UiComponent implements Pager
 	/**
 	 * {@inheritDoc}
 	 */
+	public Pager setMessage(String selector, PropertyReference... references)
+	{
+		this.curMessage = new UiMessage().setMessage(selector, references);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Pager setNextIcon(String url, String selector, PropertyReference... references)
 	{
 		this.nextIcon = url;
 		this.nextMessage = new UiMessage().setMessage(selector, references);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Pager setPageSizesMessage(String selector, PropertyReference... references)
+	{
+		this.pageSizesMessage = new UiMessage().setMessage(selector, references);
 		return this;
 	}
 
@@ -391,15 +417,6 @@ public class UiPager extends UiComponent implements Pager
 	public Pager setSubmit()
 	{
 		this.submit = true;
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Pager setText(String selector, PropertyReference... references)
-	{
-		this.curMessage = new UiMessage().setMessage(selector, references);
 		return this;
 	}
 
