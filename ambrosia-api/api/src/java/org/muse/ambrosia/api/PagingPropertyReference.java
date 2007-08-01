@@ -26,13 +26,17 @@ package org.muse.ambrosia.api;
  */
 public interface PagingPropertyReference extends PropertyReference
 {
-	static final String SELECTOR = "ambrosia:pagingSelector";
-
 	static final String FIRST = "first";
 
-	static final String PREV = "prev";
+	static final String LAST = "last";
 
 	static final String NEXT = "next";
 
-	static final String LAST = "last";
+	static final String PREV = "prev";
+
+	static final String SELECTOR = "ambrosia:pagingSelector";
+
+	static final String SELECTOR_SIZE = "ambrosia:pagingSelectorSize";
+
+	static final String SIZE = "size";
 }

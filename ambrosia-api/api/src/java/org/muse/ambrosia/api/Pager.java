@@ -27,6 +27,15 @@ package org.muse.ambrosia.api;
 public interface Pager
 {
 	/**
+	 * Add a size option to the size dropdown.
+	 * 
+	 * @param option
+	 *        The size option.
+	 * @return self.
+	 */
+	Pager addSizeOption(Integer option);
+
+	/**
 	 * Set the tool destination to use when clicked.
 	 * 
 	 * @param destination

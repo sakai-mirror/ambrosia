@@ -22,6 +22,7 @@
 package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.Paging;
+import org.sakaiproject.util.StringUtil;
 
 /**
  * UiPaging implements Paging.
@@ -30,9 +31,6 @@ public class UiPaging implements Paging
 {
 	/** The current page number (1 based). */
 	protected Integer current = new Integer(0);
-
-	/** The max number of pages. */
-	protected Integer max = new Integer(0);
 
 	/** The max number of items. */
 	protected Integer maxItems = new Integer(0);
@@ -52,15 +50,15 @@ public class UiPaging implements Paging
 	 * 
 	 * @param current
 	 *        The current page position
-	 * @param max
-	 *        The max number of pages.
+	 * @param maxItems
+	 *        The max number of items.
 	 * @param size
 	 *        The per-page size.
 	 */
-	public UiPaging(Integer current, Integer max, Integer size)
+	public UiPaging(Integer current, Integer maxItems, Integer size)
 	{
 		this.current = current;
-		this.max = max;
+		this.maxItems = maxItems;
 		this.size = size;
 		validate();
 	}
@@ -97,7 +95,7 @@ public class UiPaging implements Paging
 	 */
 	public Paging getFirst()
 	{
-		return new UiPaging(1, this.max, this.size);
+		return new UiPaging(1, this.maxItems, this.size);
 	}
 
 	/**
@@ -113,7 +111,7 @@ public class UiPaging implements Paging
 	 */
 	public Boolean getIsLast()
 	{
-		return this.current == this.max;
+		return this.current == getMax();
 	}
 
 	/**
@@ -121,7 +119,7 @@ public class UiPaging implements Paging
 	 */
 	public Paging getLast()
 	{
-		return new UiPaging(this.max, this.max, this.size);
+		return new UiPaging(getMax(), this.maxItems, this.size);
 	}
 
 	/**
@@ -129,7 +127,8 @@ public class UiPaging implements Paging
 	 */
 	public Integer getMax()
 	{
-		return this.max;
+		if ((this.size == 0) || (this.maxItems == 0)) return 0;
+		return ((this.maxItems - 1) / this.size) + 1;
 	}
 
 	/**
@@ -145,7 +144,16 @@ public class UiPaging implements Paging
 	 */
 	public Paging getNext()
 	{
-		return new UiPaging(this.current + 1, this.max, this.size);
+		return new UiPaging(this.current + 1, this.maxItems, this.size);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Integer getPageForItem(Integer item)
+	{
+		if (this.size == 0) return 0;
+		return ((item - 1) / this.size) + 1;
 	}
 
 	/**
@@ -153,7 +161,7 @@ public class UiPaging implements Paging
 	 */
 	public Paging getPrev()
 	{
-		return new UiPaging(this.current - 1, this.max, this.size);
+		return new UiPaging(this.current - 1, this.maxItems, this.size);
 	}
 
 	/**
@@ -167,10 +175,41 @@ public class UiPaging implements Paging
 	/**
 	 * {@inheritDoc}
 	 */
+	public Paging resize(Integer size)
+	{
+		if (size == null) throw new IllegalArgumentException();
+
+		Paging rv = new UiPaging(1, this.maxItems, size);
+		rv.setCurrent(rv.getPageForItem(getCurFirstItem()));
+
+		return rv;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setCurrent(Integer current)
 	{
 		if (current == null) throw new IllegalArgumentException();
 		this.current = current;
+		validate();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setCurrentAndSize(String currentDashSize)
+	{
+		try
+		{
+			String[] parts = StringUtil.split(currentDashSize, "-");
+			this.current = Integer.parseInt(parts[0]);
+			this.size = Integer.parseInt(parts[1]);
+		}
+		catch (Throwable e)
+		{
+			throw new IllegalArgumentException();
+		}
 		validate();
 	}
 
@@ -198,8 +237,7 @@ public class UiPaging implements Paging
 	{
 		if (this.size < 0) this.size = 0;
 		if (this.maxItems < 0) this.maxItems = 0;
-		this.max = ((this.maxItems - 1) / this.size) + 1;
 		if (this.current < 1) this.current = 1;
-		if (this.current > this.max) this.current = this.max;
+		if (this.current > getMax()) this.current = getMax();
 	}
 }

@@ -90,6 +90,11 @@ public class UiPagingPropertyReference extends UiPropertyReference implements Pa
 				{
 					rv = p.getLast();
 				}
+				else if (SIZE.equals(selector))
+				{
+					Integer size = (Integer) context.get(SELECTOR_SIZE);
+					rv = p.resize(size);
+				}
 			}
 		}
 
@@ -104,6 +109,7 @@ public class UiPagingPropertyReference extends UiPropertyReference implements Pa
 		if (!(value instanceof Paging)) return super.format(context, value);
 		Paging p = (Paging) value;
 
-		return p.getCurrent().toString() + "-" + p.getMax().toString() + "-" + p.getSize().toString();
+		// encode current and size
+		return p.getCurrent().toString() + "-" + p.getSize().toString();
 	}
 }

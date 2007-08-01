@@ -97,6 +97,15 @@ public interface Paging
 	Paging getNext();
 
 	/**
+	 * Get the page number on which this item appears.
+	 * 
+	 * @param item
+	 *        The item's position (1 based).
+	 * @return The page number (1 based) on which this item appears.
+	 */
+	Integer getPageForItem(Integer item);
+
+	/**
 	 * Get a new Paging object representing the prev page.
 	 * 
 	 * @return A new Paging object representing the prev page.
@@ -111,12 +120,29 @@ public interface Paging
 	Integer getSize();
 
 	/**
+	 * Get a new Paging object representing a change to the items-per-page size preserving the current first item.
+	 * 
+	 * @param size
+	 *        The items-per-page size.
+	 * @return A new Paging object representing a change to the items-per-page size preserving the current first item.
+	 */
+	Paging resize(Integer size);
+
+	/**
 	 * Set the current page.
 	 * 
 	 * @param current
 	 *        The current page.
 	 */
 	void setCurrent(Integer current);
+
+	/**
+	 * Set the current and size from this encoded string, dash separator, current first.
+	 * 
+	 * @param currentDashSize
+	 *        The current, dash, items-per-page size encoded string.
+	 */
+	void setCurrentAndSize(String currentDashSize);
 
 	/**
 	 * Set the max number of items.

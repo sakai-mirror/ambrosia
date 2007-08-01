@@ -35,6 +35,8 @@ import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiPager implements Pager.
@@ -101,7 +103,7 @@ public class UiPager extends UiComponent implements Pager
 	 */
 	protected UiPager(UiServiceImpl service, Element xml)
 	{
-		// do the text stuff
+		// do the component stuff
 		super(service, xml);
 
 		// icons - short form
@@ -226,10 +228,40 @@ public class UiPager extends UiComponent implements Pager
 			this.curMessage = new UiMessage(service, settingsXml);
 		}
 
-		// page sizes TODO:
-		pageSizes.add(10);
-		pageSizes.add(20);
-		pageSizes.add(30);
+		// size options
+		settingsXml = XmlHelper.getChildElementNamed(xml, "sizeOptions");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element innerXml = (Element) node;
+					if ("sizeOption".equals(innerXml.getTagName()))
+					{
+						try
+						{
+							String size = StringUtil.trimToNull(innerXml.getAttribute("size"));
+							this.pageSizes.add(Integer.valueOf(size));
+						}
+						catch (Throwable e)
+						{
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Pager addSizeOption(Integer option)
+	{
+		pageSizes.add(option);
+		return this;
 	}
 
 	/**
@@ -281,8 +313,12 @@ public class UiPager extends UiComponent implements Pager
 			}
 		}
 
+		// TODO: formatting the message and the dropdown
 		// render the page size dropdown
-		renderPageSizeDropdown(context, focus, response);
+		if (!this.pageSizes.isEmpty())
+		{
+			renderPageSizeDropdown(context, focus, response);
+		}
 
 		context.put(PagingPropertyReference.SELECTOR, PagingPropertyReference.NEXT);
 		next.render(context, focus);
@@ -376,7 +412,7 @@ public class UiPager extends UiComponent implements Pager
 		String id = this.getClass().getSimpleName() + context.getUniqueId();
 
 		// the dropdown
-		response.println("<select id=\"" + id + "\" size=\"" + size + "\" name=\"" + id + "\" onchange='act_" + id + "()'>");
+		response.println("<select id=\"" + id + "\" size=\"" + size + "\" name=\"" + id + "\" onchange='act_" + id + "(this.value)'>");
 		for (Integer sizeOption : this.pageSizes)
 		{
 			// setup the option for the message
@@ -384,7 +420,9 @@ public class UiPager extends UiComponent implements Pager
 			String msg = this.pageSizesMessage.getMessage(context, focus);
 
 			// get a destination for the tool with this page size set
-			String destination = "testing";
+			context.put(PagingPropertyReference.SELECTOR, PagingPropertyReference.SIZE);
+			context.put(PagingPropertyReference.SELECTOR_SIZE, sizeOption);
+			String destination = this.destination.getDestination(context, focus);
 
 			response.println("    <option value=\"" + destination + "\">" + Validator.escapeHtml(msg) + "</option>");
 		}
@@ -398,7 +436,7 @@ public class UiPager extends UiComponent implements Pager
 		script.append("{\n");
 		script.append("    enabled_" + id + "=false;\n");
 		script.append("}\n");
-		script.append("function act_" + id + "()\n");
+		script.append("function act_" + id + "(destination)\n");
 		script.append("{\n");
 
 		// enabled check
@@ -429,9 +467,7 @@ public class UiPager extends UiComponent implements Pager
 			script.append("    submitted=true;\n");
 
 			// setup the destination
-			// TODO: get from the dropdown value
-			script.append("    document." + context.getFormName() + ".destination_.value='"
-					+ (this.destination != null ? this.destination.getDestination(context, focus) : "") + "';\n");
+			script.append("    document." + context.getFormName() + ".destination_.value=destination;\n");
 
 			// submit
 			script.append("    document." + context.getFormName() + ".submit();\n");
@@ -444,9 +480,7 @@ public class UiPager extends UiComponent implements Pager
 			script.append("  submitted=true;\n");
 
 			// perform the navigation
-			// TODO: get from the dropdown value
-			script.append("  document.location=\"" + context.get("sakai.return.url")
-					+ (this.destination != null ? this.destination.getDestination(context, focus) : "") + "\";\n");
+			script.append("  document.location=\"" + context.get("sakai.return.url") + "\"+destination;\n");
 		}
 
 		script.append("}\n");
