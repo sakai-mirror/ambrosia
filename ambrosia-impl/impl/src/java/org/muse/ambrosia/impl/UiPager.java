@@ -22,6 +22,8 @@
 package org.muse.ambrosia.impl;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Destination;
@@ -31,6 +33,7 @@ import org.muse.ambrosia.api.Pager;
 import org.muse.ambrosia.api.PagingPropertyReference;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
+import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
@@ -61,6 +64,13 @@ public class UiPager extends UiComponent implements Pager
 
 	/** The next page message. */
 	protected Message nextMessage = new UiMessage().setMessage("pager-next");
+
+	/** The list of page sizes we offer. */
+	protected List<Integer> pageSizes = new ArrayList<Integer>();
+
+	/** Message to show the page size options - the {0} field is reserved for the count. */
+	// TODO: setter etc.
+	protected Message pageSizesMessage = new UiMessage().setMessage("pager-sizes", new UiPropertyReference().setReference("ambrosia:option"));
 
 	/** The model reference for the current page. */
 	protected PropertyReference pagingModel = null;
@@ -215,6 +225,11 @@ public class UiPager extends UiComponent implements Pager
 		{
 			this.curMessage = new UiMessage(service, settingsXml);
 		}
+
+		// page sizes TODO:
+		pageSizes.add(10);
+		pageSizes.add(20);
+		pageSizes.add(30);
 	}
 
 	/**
@@ -256,6 +271,7 @@ public class UiPager extends UiComponent implements Pager
 		context.put(PagingPropertyReference.SELECTOR, PagingPropertyReference.PREV);
 		prev.render(context, focus);
 
+		// render the message
 		if (this.curMessage != null)
 		{
 			String msg = this.curMessage.getMessage(context, focus);
@@ -264,6 +280,9 @@ public class UiPager extends UiComponent implements Pager
 				response.println(msg);
 			}
 		}
+
+		// render the page size dropdown
+		renderPageSizeDropdown(context, focus, response);
 
 		context.put(PagingPropertyReference.SELECTOR, PagingPropertyReference.NEXT);
 		next.render(context, focus);
@@ -346,5 +365,92 @@ public class UiPager extends UiComponent implements Pager
 	{
 		this.curMessage = new UiMessage().setMessage(selector, references);
 		return this;
+	}
+
+	protected void renderPageSizeDropdown(Context context, Object focus, PrintWriter response)
+	{
+		// TODO: support validate setting, size
+		boolean validate = false;
+		int size = 1;
+
+		String id = this.getClass().getSimpleName() + context.getUniqueId();
+
+		// the dropdown
+		response.println("<select id=\"" + id + "\" size=\"" + size + "\" name=\"" + id + "\" onchange='act_" + id + "()'>");
+		for (Integer sizeOption : this.pageSizes)
+		{
+			// setup the option for the message
+			context.put("ambrosia:option", sizeOption.toString());
+			String msg = this.pageSizesMessage.getMessage(context, focus);
+
+			// get a destination for the tool with this page size set
+			String destination = "testing";
+
+			response.println("    <option value=\"" + destination + "\">" + Validator.escapeHtml(msg) + "</option>");
+		}
+		response.println("</select>");
+
+		// the script
+		StringBuffer script = new StringBuffer();
+
+		script.append("var enabled_" + id + "=true;\n");
+		script.append("function cancel_" + id + "()\n");
+		script.append("{\n");
+		script.append("    enabled_" + id + "=false;\n");
+		script.append("}\n");
+		script.append("function act_" + id + "()\n");
+		script.append("{\n");
+
+		// enabled check
+		script.append("  if (!enabled_" + id + ")\n");
+		script.append("  {\n");
+		script.append("    return;\n");
+		script.append("  }\n");
+
+		// submitted already check
+		script.append("  if (submitted)\n");
+		script.append("  {\n");
+		script.append("    return;\n");
+		script.append("  }\n");
+
+		if (this.submit)
+		{
+			// if we are doing validate, enable validation
+			if (validate)
+			{
+				script.append("  enableValidate=true;\n");
+			}
+
+			// if we validate, submit the form
+			script.append("  if (validate())\n");
+			script.append("  {\n");
+
+			// set that we submitted already
+			script.append("    submitted=true;\n");
+
+			// setup the destination
+			// TODO: get from the dropdown value
+			script.append("    document." + context.getFormName() + ".destination_.value='"
+					+ (this.destination != null ? this.destination.getDestination(context, focus) : "") + "';\n");
+
+			// submit
+			script.append("    document." + context.getFormName() + ".submit();\n");
+			script.append("  }\n");
+		}
+
+		else
+		{
+			// set that we submitted already
+			script.append("  submitted=true;\n");
+
+			// perform the navigation
+			// TODO: get from the dropdown value
+			script.append("  document.location=\"" + context.get("sakai.return.url")
+					+ (this.destination != null ? this.destination.getDestination(context, focus) : "") + "\";\n");
+		}
+
+		script.append("}\n");
+
+		context.addScript(script.toString());
 	}
 }
