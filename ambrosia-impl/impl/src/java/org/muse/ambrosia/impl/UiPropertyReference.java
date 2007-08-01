@@ -409,7 +409,6 @@ public class UiPropertyReference implements PropertyReference
 	 */
 	protected String format(Context context, Object value)
 	{
-		// TODO: "" instead of null?
 		String rv = null;
 
 		if (this.formatDelegate != null)
@@ -424,7 +423,7 @@ public class UiPropertyReference implements PropertyReference
 			}
 		}
 
-		return rv;
+		return StringUtil.trimToNull(rv);
 	}
 
 	/**
@@ -570,7 +569,10 @@ public class UiPropertyReference implements PropertyReference
 	{
 		if (value == null) return true;
 
-		if ((this.missingValues != null) && (StringUtil.contains(this.missingValues, value.toString()))) return true;
+		String val = StringUtil.trimToNull(value.toString());
+		if (val == null) return true;
+
+		if ((this.missingValues != null) && (StringUtil.contains(this.missingValues, val))) return true;
 
 		return false;
 	}
