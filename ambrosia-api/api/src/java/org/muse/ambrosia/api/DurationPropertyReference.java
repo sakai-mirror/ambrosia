@@ -22,12 +22,15 @@
 package org.muse.ambrosia.api;
 
 /**
- * DurationPropertyReference handles time duration displays. The value is an Integer or Long or String number of seconds (non-html).
+ * DurationPropertyReference handles time duration displays. The value is an Integer or Long or String number of milliseconds (non-html).
  */
 public interface DurationPropertyReference extends PropertyReference
 {
 	/**
 	 * Set the display to be concise (hh:mm:ss)
+	 * 
+	 * @param setting
+	 *        The concise setting.
 	 */
-	DurationPropertyReference setConcise();
+	DurationPropertyReference setConcise(Boolean setting);
 }

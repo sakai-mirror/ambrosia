@@ -32,9 +32,7 @@ import org.w3c.dom.Element;
  */
 public class UiDurationPropertyReference extends UiPropertyReference implements DurationPropertyReference
 {
-	// TODO: support various display options
-
-	protected boolean concise = false;
+	protected boolean concise = true;
 
 	/**
 	 * No-arg constructor.
@@ -58,7 +56,7 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 
 		// concise
 		String concise = StringUtil.trimToNull(xml.getAttribute("concise"));
-		if ((concise != null) && (concise.equals("TRUE"))) setConcise();
+		if ((concise != null) && (concise.equals("FALSE"))) setConcise(Boolean.FALSE);
 	}
 
 	/**
@@ -72,9 +70,10 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 	/**
 	 * {@inheritDoc}
 	 */
-	public DurationPropertyReference setConcise()
+	public DurationPropertyReference setConcise(Boolean setting)
 	{
-		this.concise = true;
+		if (setting == null) throw new IllegalArgumentException();
+		this.concise = setting;
 		return this;
 	}
 
@@ -139,7 +138,7 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 	 */
 	protected String unFormat(String value)
 	{
-		//if (this.concise)
+		// if (this.concise)
 		{
 			String[] parts = StringUtil.split(value, ":");
 			if (parts.length == 3)
