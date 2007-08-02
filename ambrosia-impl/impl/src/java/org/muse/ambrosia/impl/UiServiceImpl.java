@@ -42,6 +42,7 @@ import org.muse.ambrosia.api.Alert;
 import org.muse.ambrosia.api.Alias;
 import org.muse.ambrosia.api.AndDecision;
 import org.muse.ambrosia.api.Attachments;
+import org.muse.ambrosia.api.AttachmentsEdit;
 import org.muse.ambrosia.api.AutoColumn;
 import org.muse.ambrosia.api.BarChart;
 import org.muse.ambrosia.api.BooleanPropertyReference;
@@ -79,6 +80,7 @@ import org.muse.ambrosia.api.Fragment;
 import org.muse.ambrosia.api.FragmentDelegate;
 import org.muse.ambrosia.api.Gap;
 import org.muse.ambrosia.api.HasValueDecision;
+import org.muse.ambrosia.api.HtmlEdit;
 import org.muse.ambrosia.api.HtmlPropertyReference;
 import org.muse.ambrosia.api.IconKey;
 import org.muse.ambrosia.api.IconPropertyReference;
@@ -273,6 +275,14 @@ public class UiServiceImpl implements UiService
 	public Attachments newAttachments()
 	{
 		return new UiAttachments();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public AttachmentsEdit newAttachmentsEdit()
+	{
+		return new UiAttachmentsEdit();
 	}
 
 	/**
@@ -542,6 +552,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public HtmlEdit newHtmlEdit()
+	{
+		return new UiHtmlEdit();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public HtmlPropertyReference newHtmlPropertyReference()
 	{
 		return new UiHtmlPropertyReference();
@@ -802,6 +820,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("alert")) return new UiAlert(this, xml);
 		if (xml.getTagName().equals("alias")) return new UiAlias(this, xml);
 		if (xml.getTagName().equals("attachments")) return new UiAttachments(this, xml);
+		if (xml.getTagName().equals("attachmentsEdit")) return new UiAttachmentsEdit(this, xml);
 		if (xml.getTagName().equals("countdownTimer")) return new UiCountdownTimer(this, xml);
 		if (xml.getTagName().equals("courier")) return new UiCourier(this, xml);
 		if (xml.getTagName().equals("dateEdit")) return new UiDateEdit(this, xml);
@@ -815,6 +834,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("fillIn")) return new UiFillIn(this, xml);
 		if (xml.getTagName().equals("fragment")) return new UiFragment(this, xml);
 		if (xml.getTagName().equals("gap")) return new UiGap(this, xml);
+		if (xml.getTagName().equals("htmlEdit")) return new UiHtmlEdit(this, xml);
 		if (xml.getTagName().equals("iconKey")) return new UiIconKey(this, xml);
 		if (xml.getTagName().equals("instructions")) return new UiInstructions(this, xml);
 		if (xml.getTagName().equals("interface")) return new UiInterface(this, xml);

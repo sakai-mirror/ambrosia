@@ -120,8 +120,8 @@
 <!ATTLIST pagingModel tool CDATA #IMPLIED >
 <!ATTLIST pagingModel missing CDATA #IMPLIED >
 
-<!ELEMENT container (alert | alias | attachments | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
-<!ELEMENT modeContainer (alert | alias | attachments | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
+<!ELEMENT container (alert | alias | attachments | attachmentsEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | htmlEdit | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
+<!ELEMENT modeContainer (alert | alias | attachments | attachmentsEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | htmlEdit | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
 
 <!ELEMENT included (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 <!ELEMENT disabled (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
@@ -216,6 +216,15 @@
 <!ATTLIST navigation disabled (TRUE|FALSE) #IMPLIED >
 <!ATTLIST navigation accessKey CDATA #IMPLIED >
 <!ATTLIST navigation description CDATA #IMPLIED >
+
+<!ELEMENT attachmentsEdit (included | title | model | navigations)* >
+<!ATTLIST attachmentsEdit id CDATA #IMPLIED >
+<!ATTLIST attachmentsEdit title CDATA #IMPLIED>
+<!ATTLIST attachmentsEdit model CDATA #IMPLIED>
+<!ATTLIST attachmentsEdit name CDATA #IMPLIED>
+<!ATTLIST attachmentsEdit raw (TRUE|FALSE) #IMPLIED>
+<!ATTLIST attachmentsEdit size (TRUE|FALSE) #IMPLIED>
+<!ATTLIST attachmentsEdit timestamp (TRUE|FALSE) #IMPLIED>
 
 <!ELEMENT confirm (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | message | cancel)* >
 <!ATTLIST confirm decision (TRUE|FALSE) #IMPLIED >
@@ -436,6 +445,14 @@
 <!ATTLIST textEdit rows CDATA #IMPLIED >
 <!ATTLIST textEdit cols CDATA #IMPLIED >
 <!ATTLIST textEdit readOnly (TRUE|FALSE) #IMPLIED >
+
+<!ELEMENT htmlEdit (included | title | model | onEmptyAlert | readOnly | focus)* >
+<!ATTLIST htmlEdit id CDATA #IMPLIED >
+<!ATTLIST htmlEdit title CDATA #IMPLIED >
+<!ATTLIST htmlEdit model CDATA #IMPLIED >
+<!ATTLIST htmlEdit rows CDATA #IMPLIED >
+<!ATTLIST htmlEdit cols CDATA #IMPLIED >
+<!ATTLIST htmlEdit readOnly (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT dateEdit (included | title | model | onEmptyAlert | readOnly | focus | icon)* >
 <!ATTLIST dateEdit id CDATA #IMPLIED >

@@ -75,6 +75,13 @@ public interface UiService
 	Attachments newAttachments();
 
 	/**
+	 * Construct a new AttachmentsEdit
+	 * 
+	 * @return a new AttachmentsEdit
+	 */
+	AttachmentsEdit newAttachmentsEdit();
+
+	/**
 	 * Construct a new AutoColumn
 	 * 
 	 * @return a new AutoColumn
@@ -304,6 +311,13 @@ public interface UiService
 	 * @return a new HasValueDecision
 	 */
 	HasValueDecision newHasValueDecision();
+
+	/**
+	 * Construct a new HtmlEdit
+	 * 
+	 * @return a new HtmlEdit
+	 */
+	HtmlEdit newHtmlEdit();
 
 	/**
 	 * Construct a new HtmlPropertyReference
