@@ -32,27 +32,27 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.sakaiproject.i18n.InternationalizedMessages;
-import org.sakaiproject.util.Web;
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Component;
+import org.muse.ambrosia.api.Fragment;
+import org.muse.ambrosia.api.FragmentDelegate;
+import org.muse.ambrosia.api.UiService;
+import org.sakaiproject.i18n.InternationalizedMessages;
 
 /**
  * UiContext implements Context.
  */
 public class UiContext implements Context
 {
-	public class DoubleMessages implements InternationalizedMessages
+	public class MultiMessages implements InternationalizedMessages
 	{
-		InternationalizedMessages primary;
+		List<InternationalizedMessages> messages = new ArrayList<InternationalizedMessages>();
 
-		InternationalizedMessages secondary;
-
-		public DoubleMessages(InternationalizedMessages primary, InternationalizedMessages secondary)
+		public MultiMessages(InternationalizedMessages primary, InternationalizedMessages secondary)
 		{
-			this.primary = primary;
-			this.secondary = secondary;
+			messages.add(primary);
+			messages.add(secondary);
 		}
 
 		/**
@@ -100,12 +100,15 @@ public class UiContext implements Context
 		 */
 		public String getFormattedMessage(String key, Object[] args)
 		{
-			if (primary.getString(key, null) != null)
+			for (InternationalizedMessages msgs : this.messages)
 			{
-				return primary.getFormattedMessage(key, args);
+				if (msgs.getString(key, null) != null)
+				{
+					return msgs.getFormattedMessage(key, args);
+				}
 			}
 
-			return secondary.getFormattedMessage(key, args);
+			return this.messages.get(this.messages.size() - 1).getFormattedMessage(key, args);
 		}
 
 		/**
@@ -113,7 +116,7 @@ public class UiContext implements Context
 		 */
 		public Locale getLocale()
 		{
-			return primary.getLocale();
+			return this.messages.get(this.messages.size() - 1).getLocale();
 		}
 
 		/**
@@ -121,12 +124,15 @@ public class UiContext implements Context
 		 */
 		public String getString(String key)
 		{
-			if (primary.getString(key, null) != null)
+			for (InternationalizedMessages msgs : this.messages)
 			{
-				return primary.getString(key);
+				if (msgs.getString(key, null) != null)
+				{
+					return msgs.getString(key);
+				}
 			}
 
-			return secondary.getString(key);
+			return this.messages.get(this.messages.size() - 1).getString(key);
 		}
 
 		/**
@@ -134,12 +140,15 @@ public class UiContext implements Context
 		 */
 		public String getString(String key, String dflt)
 		{
-			if (primary.getString(key, null) != null)
+			for (InternationalizedMessages msgs : this.messages)
 			{
-				return primary.getString(key, dflt);
+				if (msgs.getString(key, null) != null)
+				{
+					return msgs.getString(key, dflt);
+				}
 			}
 
-			return secondary.getString(key, dflt);
+			return this.messages.get(this.messages.size() - 1).getString(key, dflt);
 		}
 
 		/**
@@ -156,6 +165,25 @@ public class UiContext implements Context
 		public Set keySet()
 		{
 			throw new UnsupportedOperationException();
+		}
+
+		/**
+		 * Pop off a set of messages from the front of the list.
+		 */
+		public void pop()
+		{
+			this.messages.remove(0);
+		}
+
+		/**
+		 * Push a new set of messages onto the front of the list.
+		 * 
+		 * @param msgs
+		 *        The messages.
+		 */
+		public void push(InternationalizedMessages msgs)
+		{
+			this.messages.add(0, msgs);
 		}
 
 		/**
@@ -221,7 +249,7 @@ public class UiContext implements Context
 	protected int id = 0;
 
 	/** Internationalized messages. */
-	protected DoubleMessages messages = null;
+	protected MultiMessages messages = null;
 
 	/** named objects and values. */
 	protected Map<String, Object> objects = new HashMap<String, Object>();
@@ -238,6 +266,9 @@ public class UiContext implements Context
 	/** Collect various javascript. */
 	protected StringBuffer scriptCode = new StringBuffer();
 
+	/** The UiService. */
+	protected UiService service = null;
+
 	/** The top component in the interface being rendered. */
 	protected Component ui = null;
 
@@ -246,6 +277,17 @@ public class UiContext implements Context
 
 	/** The writer on the response output stream. */
 	protected PrintWriter writer = null;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param service
+	 *        The UiService.
+	 */
+	public UiContext(UiService service)
+	{
+		this.service = service;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -277,6 +319,19 @@ public class UiContext implements Context
 	public void clear()
 	{
 		objects.clear();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void clearGlobalFragment(String id, String toolId)
+	{
+		FragmentDelegate delegate = this.service.getFragmentDelegate(id, toolId);
+		if (delegate == null) return;
+
+		// pop the fragment's messages onto the stack
+		InternationalizedMessages msgs = delegate.getMessages();
+		if (msgs != null) this.messages.pop();
 	}
 
 	/**
@@ -368,6 +423,21 @@ public class UiContext implements Context
 	public String getFormName()
 	{
 		return this.formName;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Fragment getGlobalFragment(String id, String toolId, Object focus)
+	{
+		FragmentDelegate delegate = this.service.getFragmentDelegate(id, toolId);
+		if (delegate == null) return null;
+
+		// push the fragment's messages onto the stack
+		InternationalizedMessages msgs = delegate.getMessages();
+		if (msgs != null) this.messages.push(msgs);
+
+		return delegate.getFragment(this, focus);
 	}
 
 	/**
@@ -549,7 +619,7 @@ public class UiContext implements Context
 	 */
 	public void setMessages(InternationalizedMessages primary, InternationalizedMessages secondary)
 	{
-		this.messages = new DoubleMessages(primary, secondary);
+		this.messages = new MultiMessages(primary, secondary);
 	}
 
 	/**

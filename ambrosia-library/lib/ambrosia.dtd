@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!ELEMENT interface (included | header | title | container | modeBar)* >
+<!ELEMENT interface (included | header | title | container | modeContainer)* >
 <!ATTLIST interface id CDATA #IMPLIED >
 <!ATTLIST interface autoComplete (TRUE|FALSE) #IMPLIED >
 <!ATTLIST interface title CDATA #IMPLIED >
@@ -121,6 +121,7 @@
 <!ATTLIST pagingModel missing CDATA #IMPLIED >
 
 <!ELEMENT container (alert | alias | attachments | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
+<!ELEMENT modeContainer (alert | alias | attachments | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
 
 <!ELEMENT included (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 <!ELEMENT disabled (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
@@ -192,6 +193,7 @@
 <!ELEMENT alias (included)* >
 <!ATTLIST alias id CDATA #IMPLIED >
 <!ATTLIST alias to CDATA #REQUIRED >
+<!ATTLIST alias toolId CDATA #IMPLIED >
 
 <!ELEMENT attachments (included | title | model | navigations)* >
 <!ATTLIST attachments id CDATA #IMPLIED >

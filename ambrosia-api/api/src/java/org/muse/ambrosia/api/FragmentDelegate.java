@@ -21,26 +21,28 @@
 
 package org.muse.ambrosia.api;
 
+import org.sakaiproject.i18n.InternationalizedMessages;
+
 /**
- * Alias calls for some other, sibling or global component to be rendered here.
+ * FragmentDelegate provides a fragment.
  */
-public interface Alias extends Component
+public interface FragmentDelegate
 {
 	/**
-	 * Set the id of the other component to use here.
+	 * Get the fragment.
 	 * 
-	 * @param id
-	 *        The id of the other component to use here.
-	 * @return self.
+	 * @param context
+	 *        The Context.
+	 * @param focus
+	 *        The focus.
+	 * @return The Fragment.
 	 */
-	Alias setTo(String id);
+	Fragment getFragment(Context context, Object focus);
 
 	/**
-	 * Set the tool id, making this a global reference.
+	 * Access the fragment's messages.
 	 * 
-	 * @param toolId
-	 *        The tool id.
-	 * @return self.
+	 * @return The fragment's messages.
 	 */
-	Alias setToolId(String toolId);
+	InternationalizedMessages getMessages();
 }

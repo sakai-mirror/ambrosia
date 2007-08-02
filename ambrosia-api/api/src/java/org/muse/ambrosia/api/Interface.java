@@ -46,7 +46,7 @@ public interface Interface extends Container
 	 *        The mode bar.
 	 * @return self.
 	 */
-	Interface setModeBar(ModeBar bar);
+	Interface setModeBar(Component bar);
 
 	/**
 	 * Set to disable browser auto-complete for the interface.

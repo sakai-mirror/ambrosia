@@ -76,6 +76,7 @@ import org.muse.ambrosia.api.FillIn;
 import org.muse.ambrosia.api.Footnote;
 import org.muse.ambrosia.api.FormatDelegate;
 import org.muse.ambrosia.api.Fragment;
+import org.muse.ambrosia.api.FragmentDelegate;
 import org.muse.ambrosia.api.Gap;
 import org.muse.ambrosia.api.HasValueDecision;
 import org.muse.ambrosia.api.HtmlPropertyReference;
@@ -327,7 +328,7 @@ public class UiServiceImpl implements UiService
 	 */
 	public Context newContext()
 	{
-		return new UiContext();
+		return new UiContext(this);
 	}
 
 	/**
@@ -1073,6 +1074,38 @@ public class UiServiceImpl implements UiService
 		return iface;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public Fragment newFragment(InputStream in)
+	{
+		UiFragment frag = null;
+		Document doc = Xml.readDocumentFromStream(in);
+		if ((doc == null) || (!doc.hasChildNodes())) return frag;
+
+		// allowing for comments, use the first element node that is our fragment
+		NodeList nodes = doc.getChildNodes();
+		for (int i = 0; i < nodes.getLength(); i++)
+		{
+			Node node = nodes.item(i);
+			if (node.getNodeType() != Node.ELEMENT_NODE) continue;
+			if (!(((Element) node).getTagName().equals("fragment"))) continue;
+
+			// build the fragment from this element
+			frag = new UiFragment(this, (Element) node);
+			break;
+		}
+
+		// else we have an invalid
+		if (frag == null)
+		{
+			M_log.warn("newFragment: element \"fragment\" not found in stream xml");
+			frag = new UiFragment();
+		}
+
+		return frag;
+	}
+
 	/*************************************************************************************************************************************************
 	 * Response handling methods
 	 ************************************************************************************************************************************************/
@@ -1173,7 +1206,7 @@ public class UiServiceImpl implements UiService
 		// our response writer
 		PrintWriter out = res.getWriter();
 
-		UiContext context = new UiContext();
+		UiContext context = new UiContext(this);
 		if (messages != null) context.setMessages(messages, this.messages);
 		context.setDestination(destination);
 		context.setPreviousDestination(previousDestination);
@@ -1263,7 +1296,7 @@ public class UiServiceImpl implements UiService
 
 		String destinationUrl = Web.returnUrl(req, destination);
 
-		UiContext context = new UiContext();
+		UiContext context = new UiContext(this);
 		if (messages != null) context.setMessages(messages, this.messages);
 		context.setDestination(destination);
 		context.setPreviousDestination(previousDestination);
@@ -1295,6 +1328,9 @@ public class UiServiceImpl implements UiService
 	/** Registered decision delegates - keyed by toolId-id. */
 	protected Map<String, DecisionDelegate> m_decisionDelegates = new HashMap<String, DecisionDelegate>();
 
+	/** Registered fragment delegates - keyed by toolId-id. */
+	protected Map<String, FragmentDelegate> m_fragmentDelegates = new HashMap<String, FragmentDelegate>();
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -1322,14 +1358,6 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
-	public void registerDecisionDelegate(DecisionDelegate delegate, String id, String toolId)
-	{
-		m_decisionDelegates.put(toolId + "-" + id, delegate);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public FormatDelegate getFormatDelegate(String id, String toolId)
 	{
 		return m_formatDelegates.get(toolId + "-" + id);
@@ -1338,9 +1366,33 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public void registerDecisionDelegate(DecisionDelegate delegate, String id, String toolId)
+	{
+		m_decisionDelegates.put(toolId + "-" + id, delegate);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public DecisionDelegate getDecisionDelegate(String id, String toolId)
 	{
 		return m_decisionDelegates.get(toolId + "-" + id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void registerFragmentDelegate(FragmentDelegate delegate, String id, String toolId)
+	{
+		m_fragmentDelegates.put(toolId + "-" + id, delegate);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FragmentDelegate getFragmentDelegate(String id, String toolId)
+	{
+		return m_fragmentDelegates.get(toolId + "-" + id);
 	}
 
 	/*************************************************************************************************************************************************

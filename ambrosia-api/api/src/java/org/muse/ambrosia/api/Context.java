@@ -65,6 +65,16 @@ public interface Context
 	void clear();
 
 	/**
+	 * Clear the messges that were pushed when getGlobalFragment was called.
+	 * 
+	 * @param id
+	 *        The fragment delegate id.
+	 * @param toolId
+	 *        The tool id.
+	 */
+	void clearGlobalFragment(String id, String toolId);
+
+	/**
 	 * Find the components in the interface being rendered with this id.
 	 * 
 	 * @param id
@@ -118,6 +128,19 @@ public interface Context
 	 * @return The interface's form name.
 	 */
 	String getFormName();
+
+	/**
+	 * Find a global fragment with these ids.
+	 * 
+	 * @param id
+	 *        The fragment delegate id.
+	 * @param toolId
+	 *        The tool id.
+	 * @param focus
+	 *        The current focus object.
+	 * @return The global fragment with these ids, or null if not found.
+	 */
+	Fragment getGlobalFragment(String id, String toolId, Object focus);
 
 	/**
 	 * Access the internationalized messages.

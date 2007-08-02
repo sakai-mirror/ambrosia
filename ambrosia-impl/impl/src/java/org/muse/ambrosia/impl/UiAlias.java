@@ -21,11 +21,13 @@
 
 package org.muse.ambrosia.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.muse.ambrosia.api.Alias;
-import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Component;
+import org.muse.ambrosia.api.Context;
+import org.muse.ambrosia.api.Fragment;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 
@@ -36,6 +38,9 @@ public class UiAlias extends UiComponent implements Alias
 {
 	/** The id of the component to render. */
 	protected String to = null;
+
+	/** The tool id of the component to render. If set, this is global alias. */
+	protected String toolId = null;
 
 	/**
 	 * Public no-arg constructor.
@@ -59,6 +64,10 @@ public class UiAlias extends UiComponent implements Alias
 		// to
 		String to = StringUtil.trimToNull(xml.getAttribute("to"));
 		if (to != null) setTo(to);
+
+		// toolId
+		String toolId = StringUtil.trimToNull(xml.getAttribute("toolId"));
+		if (toolId != null) setToolId(toolId);
 	}
 
 	/**
@@ -71,16 +80,35 @@ public class UiAlias extends UiComponent implements Alias
 		// included?
 		if (!isIncluded(context, focus)) return;
 
-		// find the other guys
-		List<Component> components = context.findComponents(this.to);
-
-		// and render them
-		for (Component c : components)
+		// for local access, look at siblings
+		if (toolId == null)
 		{
-			// block the infinite loop of rendering me!
-			if (c != this)
+			// find the component(s)
+			List<Component> components = context.findComponents(this.to);
+
+			// render
+			for (Component c : components)
 			{
-				c.render(context, focus);
+				// block the infinite loop of rendering me!
+				if (c != this)
+				{
+					c.render(context, focus);
+				}
+			}
+		}
+
+		// for global access
+		else
+		{
+			// get the fragment
+			Fragment fragment = context.getGlobalFragment(this.to, this.toolId, focus);
+			if (fragment != null)
+			{
+				// render
+				fragment.render(context, focus);
+
+				// clear global fragment messages
+				context.clearGlobalFragment(this.to, this.toolId);
 			}
 		}
 	}
@@ -91,6 +119,15 @@ public class UiAlias extends UiComponent implements Alias
 	public Alias setTo(String to)
 	{
 		this.to = to;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Alias setToolId(String toolId)
+	{
+		this.toolId = toolId;
 		return this;
 	}
 }

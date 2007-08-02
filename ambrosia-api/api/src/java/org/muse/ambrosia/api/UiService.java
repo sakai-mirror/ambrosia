@@ -350,6 +350,15 @@ public interface UiService
 	Interface newInterface(InputStream in);
 
 	/**
+	 * Construct a new Fragment from XML in this stream.
+	 * 
+	 * @param in
+	 *        The XML input stream.
+	 * @return a new Interface
+	 */
+	Fragment newFragment(InputStream in);
+
+	/**
 	 * Construct a new Match
 	 * 
 	 * @return a new Match
@@ -703,6 +712,29 @@ public interface UiService
 	 * @return The DecisionDelegate, or null if none found.
 	 */
 	DecisionDelegate getDecisionDelegate(String id, String toolId);
+
+	/**
+	 * Register a fragment delegate in a tool.
+	 * 
+	 * @param delegate
+	 *        The FragmentDelegate.
+	 * @param id
+	 *        The id of the delegate.
+	 * @param toolId
+	 *        The tool id.
+	 */
+	void registerFragmentDelegate(FragmentDelegate delegate, String id, String toolId);
+
+	/**
+	 * Find the fragment delegate with this id in this tool.
+	 * 
+	 * @param id
+	 *        The id.
+	 * @param toolId
+	 *        The tool id.
+	 * @return The FragmentDelegate, or null if none found.
+	 */
+	FragmentDelegate getFragmentDelegate(String id, String toolId);
 
 	/*************************************************************************************************************************************************
 	 * Etc

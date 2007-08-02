@@ -22,6 +22,7 @@
 package org.muse.ambrosia.impl;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.muse.ambrosia.api.Component;
@@ -34,6 +35,8 @@ import org.muse.ambrosia.api.UiService;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiInterface implements Interface.
@@ -43,8 +46,8 @@ public class UiInterface extends UiContainer implements Interface
 	/** The message selector and properties for the header. */
 	protected Message header = null;
 
-	/** The ModeBar for the view. */
-	protected ModeBar modeBar = null;
+	/** Components contained in the mode container. */
+	protected List<Component> modeContainer = new ArrayList<Component>();
 
 	/** If we want to disable browser auto-complete. */
 	protected boolean noAutoComplete = false;
@@ -106,12 +109,26 @@ public class UiInterface extends UiContainer implements Interface
 			// let Message parse this
 			this.header = new UiMessage(service, settingsXml);
 		}
-		
-		settingsXml = XmlHelper.getChildElementNamed(xml, "modeBar");
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "modeContainer");
 		if (settingsXml != null)
 		{
-			// let Message parse this
-			this.modeBar = new UiModeBar(service, settingsXml);
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element componentXml = (Element) node;
+
+					// create a component from each node in the container
+					Component c = service.parseComponent(componentXml);
+					if (c != null)
+					{
+						this.modeContainer.add(c);
+					}
+				}
+			}
 		}
 	}
 
@@ -201,10 +218,10 @@ public class UiInterface extends UiContainer implements Interface
 		// button
 		response.println("<input type=\"hidden\" name =\"" + "destination_" + "\" value=\"\" />");
 
-		// mode bar, if defined
-		if (this.modeBar != null)
+		// mode bar components, if defined
+		for (Component component : this.modeContainer)
 		{
-			this.modeBar.render(context, focus);
+			component.render(context, focus);
 		}
 
 		// header, if defined
@@ -293,9 +310,9 @@ public class UiInterface extends UiContainer implements Interface
 	/**
 	 * {@inheritDoc}
 	 */
-	public Interface setModeBar(ModeBar bar)
+	public Interface setModeBar(Component bar)
 	{
-		this.modeBar = bar;
+		this.modeContainer.add(bar);
 		return this;
 	}
 
