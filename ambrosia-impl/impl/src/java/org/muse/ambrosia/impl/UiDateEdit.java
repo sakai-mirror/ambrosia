@@ -43,10 +43,10 @@ public class UiDateEdit extends UiComponent implements DateEdit
 	protected Decision focusDecision = null;
 
 	/** an icon for the display. */
-	protected String icon = null;
+	protected String icon = "!/ambrosia_library/icons/date.png";
 
 	/** The alt text for the icon. */
-	protected Message iconAlt = null;
+	protected Message iconAlt = new UiMessage().setMessage("date-alt");
 
 	/** The number of columns per row for the box. */
 	protected int numCols = 16;
