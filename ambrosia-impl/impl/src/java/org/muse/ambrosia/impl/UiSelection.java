@@ -47,7 +47,7 @@ public class UiSelection extends UiComponent implements Selection
 	protected String notSelectedValue = "false";
 
 	/** The orientation for multiple selection choices. */
-	protected Orientation orientation = Orientation.horizontal;
+	protected Orientation orientation = Orientation.vertical;
 
 	/**
 	 * The PropertyReference for encoding and decoding this selection - this is what will be updated with the end-user's selection choice, and what
@@ -111,7 +111,7 @@ public class UiSelection extends UiComponent implements Selection
 		
 		// orientation
 		String orientation = StringUtil.trimToNull(xml.getAttribute("orientation"));
-		if ((orientation != null) && (orientation.equals("VERTICAL"))) setOrientation(Orientation.vertical);
+		if ((orientation != null) && (orientation.equals("HORIZONTAL"))) setOrientation(Orientation.horizontal);
 
 		// title
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");

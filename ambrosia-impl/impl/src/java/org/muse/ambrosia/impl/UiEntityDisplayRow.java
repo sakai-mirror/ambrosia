@@ -39,14 +39,8 @@ import org.w3c.dom.NodeList;
 /**
  * UiEntityDisplayRow implements EntityDisplayRow.
  */
-public class UiEntityDisplayRow implements EntityDisplayRow
+public class UiEntityDisplayRow extends UiContainer implements EntityDisplayRow
 {
-	/** Components contained in this container. */
-	protected List<Component> contained = new ArrayList<Component>();
-
-	/** The include decision. */
-	protected Decision included = null;
-
 	/** The PropertyReference for this row. */
 	protected PropertyReference propertyReference = null;
 
@@ -70,12 +64,8 @@ public class UiEntityDisplayRow implements EntityDisplayRow
 	 */
 	protected UiEntityDisplayRow(UiServiceImpl service, Element xml)
 	{
-		// included decisions
-		Element settingsXml = XmlHelper.getChildElementNamed(xml, "included");
-		if (settingsXml != null)
-		{
-			this.included = service.parseDecisions(settingsXml);
-		}
+		// do the container stuff
+		super(service, xml);
 
 		// short form for title - attribute "title" as the selector
 		String title = StringUtil.trimToNull(xml.getAttribute("title"));
@@ -92,7 +82,7 @@ public class UiEntityDisplayRow implements EntityDisplayRow
 			setProperty(pRef);
 		}
 
-		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
 		if (settingsXml != null)
 		{
 			// let Message parse this
@@ -105,48 +95,13 @@ public class UiEntityDisplayRow implements EntityDisplayRow
 			PropertyReference pRef = service.parsePropertyReference(settingsXml);
 			if (pRef != null) setProperty(pRef);
 		}
-
-		// components
-		settingsXml = XmlHelper.getChildElementNamed(xml, "container");
-		if (settingsXml != null)
-		{
-			NodeList contained = settingsXml.getChildNodes();
-			for (int i = 0; i < contained.getLength(); i++)
-			{
-				Node node = contained.item(i);
-				if (node.getNodeType() == Node.ELEMENT_NODE)
-				{
-					Element componentXml = (Element) node;
-
-					// create a component from each node in the container
-					Component c = service.parseComponent(componentXml);
-					if (c != null)
-					{
-						this.contained.add(c);
-					}
-				}
-			}
-		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityDisplayRow add(Component component)
+	public void render(Context context, Object entity)
 	{
-		this.contained.add(component);
-
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getDisplayText(Context context, Object entity)
-	{
-		// set the context to capture instead of adding to the output
-		context.setCollecting();
-
 		// start with the property
 		if (getProperty() != null)
 		{
@@ -160,11 +115,6 @@ public class UiEntityDisplayRow implements EntityDisplayRow
 		{
 			c.render(context, entity);
 		}
-
-		// get the captured text, resetting to output mode
-		String rv = context.getCollected();
-
-		return rv;
 	}
 
 	/**
@@ -181,25 +131,6 @@ public class UiEntityDisplayRow implements EntityDisplayRow
 	public Message getTitle()
 	{
 		return this.title;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean included(Context context, Object focus)
-	{
-		if ((this.included != null) && (!this.included.decide(context, focus))) return false;
-
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public EntityDisplayRow setIncluded(Decision decision)
-	{
-		this.included = decision;
-		return this;
 	}
 
 	/**

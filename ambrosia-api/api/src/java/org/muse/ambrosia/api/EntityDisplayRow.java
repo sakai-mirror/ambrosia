@@ -24,27 +24,8 @@ package org.muse.ambrosia.api;
 /**
  * EntityDisplayRow describes one row of an EntityDisplay.
  */
-public interface EntityDisplayRow
+public interface EntityDisplayRow extends Container
 {
-	/**
-	 * Add a component to the row.
-	 * 
-	 * @param component
-	 *        the component to add.
-	 */
-	EntityDisplayRow add(Component component);
-
-	/**
-	 * Get the text that will be used to display the contents of this row, in the final display technology format.
-	 * 
-	 * @param context
-	 *        The UiContext.
-	 * @param entity
-	 *        The entity to read.
-	 * @return The the text for display.
-	 */
-	String getDisplayText(Context context, Object entity);
-
 	/**
 	 * Get the selector reference for the column. This will provide the value to display for each entity in this column.
 	 * 
@@ -58,26 +39,6 @@ public interface EntityDisplayRow
 	 * @return The row title message.
 	 */
 	Message getTitle();
-
-	/**
-	 * Check if the row is included.
-	 * 
-	 * @param context
-	 *        The UiContext
-	 * @param focus
-	 *        the entity.
-	 * @return true if the row is included, false if not.
-	 */
-	boolean included(Context context, Object focus);
-
-	/**
-	 * Set the decision to include the row.
-	 * 
-	 * @param decision
-	 *        The decision to include the row.
-	 * @return self.
-	 */
-	EntityDisplayRow setIncluded(Decision decision);
 
 	/**
 	 * Set the selector reference for the column. This will provide the value to display for each entity in this column.

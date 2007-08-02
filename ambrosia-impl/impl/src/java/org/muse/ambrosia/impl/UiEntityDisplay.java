@@ -157,7 +157,7 @@ public class UiEntityDisplay extends UiComponent implements EntityDisplay
 		// rows
 		for (EntityDisplayRow r : this.rows)
 		{
-			if (!r.included(context, focus)) continue;
+			if (!r.isIncluded(context, focus)) continue;
 
 			// row header
 			response.print("<tr><th>");
@@ -168,8 +168,7 @@ public class UiEntityDisplay extends UiComponent implements EntityDisplay
 			response.print("</th><td>");
 
 			// get the row's value for display
-			String value = r.getDisplayText(context, entity);
-			response.print(value);
+			r.render(context, entity);
 
 			response.println("</td></tr>");
 		}
