@@ -22,7 +22,7 @@
 package org.muse.ambrosia.api;
 
 /**
- * UiTextEdit presents a text input for the user to edit.
+ * TextEdit presents a text input for the user to edit.
  */
 public interface TextEdit extends Component
 {
