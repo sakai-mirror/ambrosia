@@ -44,14 +44,11 @@ public interface Controller
 	void get(HttpServletRequest req, HttpServletResponse res, Context context, String[] params) throws IOException;
 
 	/**
-	 * Handle POST
+	 * Get the messages.
 	 * 
-	 * @param req
-	 * @param res
-	 * @param context
-	 * @param params
+	 * @return The messages.
 	 */
-	void post(HttpServletRequest req, HttpServletResponse res, Context context, String[] params) throws IOException;
+	InternationalizedMessages getMessages();
 
 	/**
 	 * Access the URL path that addresses this view.
@@ -61,9 +58,19 @@ public interface Controller
 	String getPath();
 
 	/**
-	 * Get the messages.
+	 * Get the shared messages used by this controller.
 	 * 
-	 * @return The messages.
+	 * @return The shared messages used by this controller.
 	 */
-	InternationalizedMessages getMessages();
+	InternationalizedMessages getSharedMessages();
+
+	/**
+	 * Handle POST
+	 * 
+	 * @param req
+	 * @param res
+	 * @param context
+	 * @param params
+	 */
+	void post(HttpServletRequest req, HttpServletResponse res, Context context, String[] params) throws IOException;
 }

@@ -1196,7 +1196,7 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
-	public Context prepareGet(HttpServletRequest req, HttpServletResponse res, InternationalizedMessages messages, String home) throws IOException
+	public Context prepareGet(HttpServletRequest req, HttpServletResponse res, String home) throws IOException
 	{
 		// get the Tool session
 		ToolSession toolSession = m_sessionManager.getCurrentToolSession();
@@ -1227,7 +1227,6 @@ public class UiServiceImpl implements UiService
 		PrintWriter out = res.getWriter();
 
 		UiContext context = new UiContext(this);
-		if (messages != null) context.setMessages(messages, this.messages);
 		context.setDestination(destination);
 		context.setPreviousDestination(previousDestination);
 		context.setResponseWriter(out);
@@ -1279,7 +1278,7 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
-	public Context preparePost(HttpServletRequest req, HttpServletResponse res, InternationalizedMessages messages, String home)
+	public Context preparePost(HttpServletRequest req, HttpServletResponse res, String home)
 	{
 		// get the Tool session
 		ToolSession toolSession = m_sessionManager.getCurrentToolSession();
@@ -1317,7 +1316,6 @@ public class UiServiceImpl implements UiService
 		String destinationUrl = Web.returnUrl(req, destination);
 
 		UiContext context = new UiContext(this);
-		if (messages != null) context.setMessages(messages, this.messages);
 		context.setDestination(destination);
 		context.setPreviousDestination(previousDestination);
 		context.put("sakai.destination.url", destinationUrl);

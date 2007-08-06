@@ -44,6 +44,12 @@ public abstract class ControllerImpl implements Controller
 	/** The URL path that addresses the view. */
 	protected String path = null;
 
+	/** Sharted messages bundle name. */
+	protected String sharedBundle = null;
+
+	/** Shared messages. */
+	protected InternationalizedMessages sharedMessages = null;
+
 	/** The tool id. */
 	protected String toolId = null;
 
@@ -73,6 +79,14 @@ public abstract class ControllerImpl implements Controller
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public InternationalizedMessages getSharedMessages()
+	{
+		return this.sharedMessages;
+	}
+
+	/**
 	 * Final initialization, once all dependencies are set.
 	 */
 	public void init()
@@ -81,7 +95,10 @@ public abstract class ControllerImpl implements Controller
 		this.uiService.registerController(this, this.toolId);
 
 		// messages
-		this.messages = new ResourceLoader(this.bundle);
+		if (this.bundle != null) this.messages = new ResourceLoader(this.bundle);
+
+		// shared messages
+		if (this.sharedBundle != null) this.sharedMessages = new ResourceLoader(this.sharedBundle);
 
 		// interface from XML in the class path
 		if (viewPath != null)
@@ -128,6 +145,17 @@ public abstract class ControllerImpl implements Controller
 	public void setPath(String path)
 	{
 		this.path = path;
+	}
+
+	/**
+	 * Set the shared message bundle.
+	 * 
+	 * @param bundle
+	 *        The message bundle.
+	 */
+	public void setShared(String name)
+	{
+		this.sharedBundle = name;
 	}
 
 	/**

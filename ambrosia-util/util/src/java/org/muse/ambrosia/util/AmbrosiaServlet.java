@@ -149,7 +149,7 @@ public class AmbrosiaServlet extends HttpServlet
 		// handle pathless requests
 		if (ui.redirectToCurrentDestination(req, res, getDefaultView())) return;
 
-		Context context = ui.prepareGet(req, res, null, getDefaultView());
+		Context context = ui.prepareGet(req, res, getDefaultView());
 
 		// get and split up the tool destination: 0 parts means must "/", otherwise parts[0] = "", parts[1] = the first part, etc.
 		String path = context.getDestination();
@@ -167,7 +167,10 @@ public class AmbrosiaServlet extends HttpServlet
 		{
 			try
 			{
-				context.setMessages(destination.getMessages(), ui.getMessages());
+				context.addMessages(ui.getMessages());
+				context.addMessages(destination.getSharedMessages());
+				context.addMessages(destination.getMessages());				
+
 				destination.get(req, res, context, parts);
 			}
 			catch (IllegalArgumentException e)
@@ -189,7 +192,7 @@ public class AmbrosiaServlet extends HttpServlet
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException
 	{
-		Context context = ui.preparePost(req, res, null, getDefaultView());
+		Context context = ui.preparePost(req, res, getDefaultView());
 
 		// get and split up the tool destination: 0 parts means must "/", otherwise parts[0] = "", parts[1] = the first part, etc.
 		String path = context.getDestination();
@@ -206,7 +209,10 @@ public class AmbrosiaServlet extends HttpServlet
 		{
 			try
 			{
-				context.setMessages(destination.getMessages(), ui.getMessages());
+				context.addMessages(ui.getMessages());
+				context.addMessages(destination.getSharedMessages());
+				context.addMessages(destination.getMessages());				
+
 				destination.post(req, res, context, parts);
 			}
 			catch (IllegalArgumentException e)

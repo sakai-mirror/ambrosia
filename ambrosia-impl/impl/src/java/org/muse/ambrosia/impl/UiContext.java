@@ -49,10 +49,8 @@ public class UiContext implements Context
 	{
 		List<InternationalizedMessages> messages = new ArrayList<InternationalizedMessages>();
 
-		public MultiMessages(InternationalizedMessages primary, InternationalizedMessages secondary)
+		public MultiMessages()
 		{
-			messages.add(primary);
-			messages.add(secondary);
 		}
 
 		/**
@@ -249,7 +247,7 @@ public class UiContext implements Context
 	protected int id = 0;
 
 	/** Internationalized messages. */
-	protected MultiMessages messages = null;
+	protected MultiMessages messages = new MultiMessages();
 
 	/** named objects and values. */
 	protected Map<String, Object> objects = new HashMap<String, Object>();
@@ -295,6 +293,15 @@ public class UiContext implements Context
 	public void addFocusId(String id)
 	{
 		this.focusIds.add(id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addMessages(InternationalizedMessages msgs)
+	{
+		if (msgs == null) return;
+		this.messages.push(msgs);
 	}
 
 	/**
@@ -612,14 +619,6 @@ public class UiContext implements Context
 	public void setFormName(String name)
 	{
 		this.formName = name;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMessages(InternationalizedMessages primary, InternationalizedMessages secondary)
-	{
-		this.messages = new MultiMessages(primary, secondary);
 	}
 
 	/**

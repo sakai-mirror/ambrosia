@@ -44,6 +44,14 @@ public interface Context
 	void addFocusId(String id);
 
 	/**
+	 * Add another internationalized messages (this goes in front of any already defined).
+	 * 
+	 * @param msgs
+	 *        The internationalized messages.
+	 */
+	void addMessages(InternationalizedMessages msgs);
+
+	/**
 	 * Add some javascript code.
 	 * 
 	 * @param validation
@@ -276,16 +284,6 @@ public interface Context
 	 *        The form name.
 	 */
 	void setFormName(String name);
-
-	/**
-	 * Set the internationalized messages.
-	 * 
-	 * @param primary
-	 *        The internationalized messages.
-	 * @param secondary
-	 *        The internationalized messages.
-	 */
-	void setMessages(InternationalizedMessages primary, InternationalizedMessages secondary);
 
 	/**
 	 * Set the post expected flag.

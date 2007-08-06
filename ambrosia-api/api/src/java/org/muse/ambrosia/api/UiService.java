@@ -597,13 +597,11 @@ public interface UiService
 	 *        The servlet request.
 	 * @param res
 	 *        The servlet response.
-	 * @param messages
-	 *        The message bundle.
 	 * @param home
 	 *        the home destination for the tool (if the destination is not specified in the request).
 	 * @return The Context to use for further response processing.
 	 */
-	Context prepareGet(HttpServletRequest req, HttpServletResponse res, InternationalizedMessages messages, String home) throws IOException;
+	Context prepareGet(HttpServletRequest req, HttpServletResponse res, String home) throws IOException;
 
 	/**
 	 * Undo state changes from a prepareGet previously called in this thread.
@@ -623,13 +621,11 @@ public interface UiService
 	 *        The servlet request.
 	 * @param res
 	 *        The servlet response.
-	 * @param messages
-	 *        The message bundle.
 	 * @param home
 	 *        the home destination for the tool (if the destination is not specified in the request).
 	 * @return The Context to use for further response processing.
 	 */
-	Context preparePost(HttpServletRequest req, HttpServletResponse res, InternationalizedMessages messages, String home);
+	Context preparePost(HttpServletRequest req, HttpServletResponse res, String home);
 
 	/**
 	 * If the path is missing, redirect the request to either the current destination or the supplied home destination
