@@ -115,6 +115,8 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 	 */
 	protected String unFormat(String value)
 	{
+		if (value == null) return null;
+
 		// assume single line, both date and time
 		// TODO: use the end-user's locale and time zone prefs
 		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
@@ -125,7 +127,7 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 		}
 		catch (ParseException e)
 		{
-			return Long.toString(0l);
+			return null;
 		}
 	}
 }
