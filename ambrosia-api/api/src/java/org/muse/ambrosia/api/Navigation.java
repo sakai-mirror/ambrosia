@@ -97,6 +97,15 @@ public interface Navigation extends Component
 	/**
 	 * Set the descriptive text for the navigation.
 	 * 
+	 * @param message
+	 *        The message.
+	 * @return self.
+	 */
+	Navigation setDescription(Message message);
+
+	/**
+	 * Set the descriptive text for the navigation.
+	 * 
 	 * @param selector
 	 *        The message selector.
 	 * @param references
@@ -104,15 +113,6 @@ public interface Navigation extends Component
 	 * @return self.
 	 */
 	Navigation setDescription(String selector, PropertyReference... references);
-
-	/**
-	 * Set the descriptive text for the navigation.
-	 * 
-	 * @param message
-	 *        The message.
-	 * @return self.
-	 */
-	Navigation setDescription(Message message);
 
 	/**
 	 * Set the tool destination to use when clicked.
@@ -133,6 +133,15 @@ public interface Navigation extends Component
 	Navigation setDisabled(Decision... decision);
 
 	/**
+	 * Set the decision to include each entity (if the EntityReference is set to a Collection)
+	 * 
+	 * @param inclusionDecision
+	 *        The decision for inclusion of each entity.
+	 * @return self.
+	 */
+	Navigation setEntityIncluded(Decision inclusionDecision);
+
+	/**
 	 * Set the icon for the navigation
 	 * 
 	 * @param url
@@ -151,6 +160,18 @@ public interface Navigation extends Component
 	 * @return self.
 	 */
 	Navigation setIncluded(Decision... decision);
+
+	/**
+	 * Set a reference to an array of Collection of entities to iterate over.<br />
+	 * The section will be repeated for each entity. Each repeat will set additional entries in the context.
+	 * 
+	 * @param reference
+	 *        The reference to an array or collection to iterate over.
+	 * @param name
+	 *        The context name for the current iteration item.
+	 * @return self.
+	 */
+	Navigation setIterator(PropertyReference reference, String name);
 
 	/**
 	 * Set the format style.

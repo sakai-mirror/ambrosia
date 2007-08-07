@@ -22,6 +22,7 @@
 package org.muse.ambrosia.impl;
 
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import org.muse.ambrosia.api.AndDecision;
 import org.muse.ambrosia.api.Context;
@@ -30,6 +31,7 @@ import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
+import org.muse.ambrosia.api.Section;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
@@ -247,6 +249,35 @@ public class UiNavigation extends UiComponent implements Navigation
 			IconStyle is = "LEFT".equals(iStyle) ? IconStyle.left : IconStyle.right;
 			setIcon(icon, is);
 		}
+
+		// entity included
+		settingsXml = XmlHelper.getChildElementNamed(xml, "entityIncluded");
+		if (settingsXml != null)
+		{
+			Decision decision = service.parseDecisions(settingsXml);
+			this.included = decision;
+		}
+
+		// iterator
+		settingsXml = XmlHelper.getChildElementNamed(xml, "iterator");
+		if (settingsXml != null)
+		{
+			String name = StringUtil.trimToNull(settingsXml.getAttribute("name"));
+			if (name != null) this.iteratorName = name;
+
+			// short for model
+			String model = StringUtil.trimToNull(settingsXml.getAttribute("model"));
+			if (model != null)
+			{
+				this.iteratorReference = service.newPropertyReference().setReference(model);
+			}
+
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.iteratorReference = service.parsePropertyReference(innerXml);
+			}
+		}
 	}
 
 	/**
@@ -265,13 +296,124 @@ public class UiNavigation extends UiComponent implements Navigation
 		return this.destination.getDestination(context, focus);
 	}
 
+	/** The context name for the current iteration object. */
+	protected String iteratorName = null;
+
+	/** The reference to an entity to iterate over. */
+	protected PropertyReference iteratorReference = null;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Navigation setIterator(PropertyReference reference, String name)
+	{
+		this.iteratorReference = reference;
+		this.iteratorName = name;
+		return this;
+	}
+
+	/** The inclusion decision for each entity. */
+	protected Decision entityIncluded = null;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Navigation setEntityIncluded(Decision inclusionDecision)
+	{
+		this.entityIncluded = inclusionDecision;
+		return this;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void render(Context context, Object focus)
 	{
+		PrintWriter response = context.getResponseWriter();
+
 		// included?
 		if (!isIncluded(context, focus)) return;
+
+		// the iterator
+		Object iterator = null;
+		if (this.iteratorReference != null)
+		{
+			iterator = this.iteratorReference.readObject(context, focus);
+		}
+
+		// if iterating over a Collection, we will repeat our contents once for each one
+		if ((iterator != null) && (iterator instanceof Collection))
+		{
+			Collection c = (Collection) iterator;
+			int index = -1;
+			for (Object o : c)
+			{
+				index++;
+
+				// place the context item
+				if (this.iteratorName != null)
+				{
+					context.put(this.iteratorName, o, this.iteratorReference.getEncoding(context, o, index));
+				}
+
+				// check if this entity is to be included
+				if ((this.entityIncluded == null) || (this.entityIncluded.decide(context, o)))
+				{
+					renderContents(context, o);
+				}
+
+				// remove the context item
+				if (this.iteratorName != null)
+				{
+					context.remove(this.iteratorName);
+				}
+			}
+
+			return;
+		}
+
+		// if iterating over an array, we will repeat our contents once for each one
+		if ((iterator != null) && (iterator.getClass().isArray()))
+		{
+			Object[] c = (Object[]) iterator;
+			int index = -1;
+			for (Object o : c)
+			{
+				index++;
+
+				// place the context item
+				if (this.iteratorName != null)
+				{
+					context.put(this.iteratorName, o, this.iteratorReference.getEncoding(context, o, index));
+				}
+
+				// check if this entity is to be included
+				if ((this.entityIncluded == null) || (this.entityIncluded.decide(context, o)))
+				{
+					renderContents(context, o);
+				}
+
+				// remove the context item
+				if (this.iteratorName != null)
+				{
+					context.remove(this.iteratorName);
+				}
+			}
+
+			return;
+		}
+
+		// if no repeating entity, just render once
+		renderContents(context, focus);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void renderContents(Context context, Object focus)
+	{
+		// included?
+		// if (!isIncluded(context, focus)) return;
 
 		// disabled?
 		boolean disabled = isDisabled(context, focus);
@@ -455,7 +597,8 @@ public class UiNavigation extends UiComponent implements Navigation
 					if (this.icon != null)
 					{
 						response.print("<img style=\"vertical-align:text-bottom;\" src=\""
-								+ context.getUrl(this.icon) + "\" "
+								+ context.getUrl(this.icon)
+								+ "\" "
 								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
 										+ Validator.escapeHtml(description) + "\" ") + " />");
 					}
@@ -468,7 +611,8 @@ public class UiNavigation extends UiComponent implements Navigation
 					if ((this.icon != null) && (this.iconStyle == IconStyle.left))
 					{
 						response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\""
-								+ context.getUrl(this.icon) + "\" "
+								+ context.getUrl(this.icon)
+								+ "\" "
 								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
 										+ Validator.escapeHtml(description) + "\" ") + " />");
 					}
@@ -482,7 +626,8 @@ public class UiNavigation extends UiComponent implements Navigation
 					if ((this.icon != null) && (this.iconStyle == IconStyle.right))
 					{
 						response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\""
-								+ context.getUrl(this.icon) + "\" "
+								+ context.getUrl(this.icon)
+								+ "\" "
 								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
 										+ Validator.escapeHtml(description) + "\" ") + " />");
 					}
