@@ -847,8 +847,8 @@ public class UiNavigation extends UiComponent implements Navigation
 	 */
 	protected boolean isDisabled(Context context, Object focus)
 	{
-		// if no destination, we are disabled
-		if (this.destination == null) return true;
+		// if no destination, we are disabled (unless submitting)
+		if ((this.destination == null) && (!this.submit)) return true;
 
 		if (this.disabledDecision == null) return false;
 		return this.disabledDecision.decide(context, focus);
