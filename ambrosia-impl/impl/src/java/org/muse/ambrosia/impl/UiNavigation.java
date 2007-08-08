@@ -455,6 +455,7 @@ public class UiNavigation extends UiComponent implements Navigation
 		if (this.title != null)
 		{
 			title = this.title.getMessage(context, focus);
+			if (title == null) title = "";
 		}
 
 		// access key
