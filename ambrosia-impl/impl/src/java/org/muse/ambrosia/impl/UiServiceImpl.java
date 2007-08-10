@@ -53,6 +53,7 @@ import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.ContextInfoPropertyReference;
 import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.CountEdit;
 import org.muse.ambrosia.api.CountPropertyReference;
 import org.muse.ambrosia.api.CountdownTimer;
 import org.muse.ambrosia.api.Courier;
@@ -74,6 +75,8 @@ import org.muse.ambrosia.api.EntityListColumn;
 import org.muse.ambrosia.api.Evaluation;
 import org.muse.ambrosia.api.FileUpload;
 import org.muse.ambrosia.api.FillIn;
+import org.muse.ambrosia.api.FloatEdit;
+import org.muse.ambrosia.api.FloatPropertyReference;
 import org.muse.ambrosia.api.Footnote;
 import org.muse.ambrosia.api.FormatDelegate;
 import org.muse.ambrosia.api.Fragment;
@@ -368,6 +371,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public CountEdit newCountEdit()
+	{
+		return new UiCountEdit();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public CountPropertyReference newCountPropertyReference()
 	{
 		return new UiCountPropertyReference();
@@ -515,6 +526,22 @@ public class UiServiceImpl implements UiService
 	public FillIn newFillIn()
 	{
 		return new UiFillIn();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FloatEdit newFloatEdit()
+	{
+		return new UiFloatEdit();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FloatPropertyReference newFloatPropertyReference()
+	{
+		return new UiFloatPropertyReference();
 	}
 
 	/**
@@ -822,6 +849,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("attachments")) return new UiAttachments(this, xml);
 		if (xml.getTagName().equals("attachmentsEdit")) return new UiAttachmentsEdit(this, xml);
 		if (xml.getTagName().equals("countdownTimer")) return new UiCountdownTimer(this, xml);
+		if (xml.getTagName().equals("countEdit")) return new UiCountEdit(this, xml);
 		if (xml.getTagName().equals("courier")) return new UiCourier(this, xml);
 		if (xml.getTagName().equals("dateEdit")) return new UiDateEdit(this, xml);
 		if (xml.getTagName().equals("divider")) return new UiDivider(this, xml);
@@ -830,6 +858,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("entityDisplay")) return new UiEntityDisplay(this, xml);
 		if (xml.getTagName().equals("entityList")) return new UiEntityList(this, xml);
 		if (xml.getTagName().equals("evaluation")) return new UiEvaluation(this, xml);
+		if (xml.getTagName().equals("floatEdit")) return new UiFloatEdit(this, xml);
 		if (xml.getTagName().equals("fileUpload")) return new UiFileUpload(this, xml);
 		if (xml.getTagName().equals("fillIn")) return new UiFillIn(this, xml);
 		if (xml.getTagName().equals("fragment")) return new UiFragment(this, xml);
@@ -989,6 +1018,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("countModel")) return new UiCountPropertyReference(this, xml);
 		if (xml.getTagName().equals("dateModel")) return new UiDatePropertyReference(this, xml);
 		if (xml.getTagName().equals("durationModel")) return new UiDurationPropertyReference(this, xml);
+		if (xml.getTagName().equals("floatModel")) return new UiFloatPropertyReference(this, xml);
 		if (xml.getTagName().equals("htmlModel")) return new UiHtmlPropertyReference(this, xml);
 		if (xml.getTagName().equals("iconModel")) return new UiIconPropertyReference(this, xml);
 		if (xml.getTagName().equals("pagingModel")) return new UiPagingPropertyReference(this, xml);
@@ -1005,6 +1035,7 @@ public class UiServiceImpl implements UiService
 		if ("count".equals(type)) return new UiCountPropertyReference(this, xml);
 		if ("date".equals(type)) return new UiDatePropertyReference(this, xml);
 		if ("duration".equals(type)) return new UiDurationPropertyReference(this, xml);
+		if ("float".equals(type)) return new UiFloatPropertyReference(this, xml);
 		if ("html".equals(type)) return new UiHtmlPropertyReference(this, xml);
 		if ("icon".equals(type)) return new UiIconPropertyReference(this, xml);
 		if ("paging".equals(type)) return new UiPagingPropertyReference(this, xml);

@@ -152,6 +152,13 @@ public interface UiService
 	CountdownTimer newCountdownTimer();
 
 	/**
+	 * Construct a new CountEdit
+	 * 
+	 * @return a new CountEdit
+	 */
+	CountEdit newCountEdit();
+
+	/**
 	 * Construct a new CountPropertyReference
 	 * 
 	 * @return a new CountPropertyReference
@@ -283,6 +290,20 @@ public interface UiService
 	 * @return a new FillIn
 	 */
 	FillIn newFillIn();
+
+	/**
+	 * Construct a new FloatEdit
+	 * 
+	 * @return a new FloatEdit
+	 */
+	FloatEdit newFloatEdit();
+
+	/**
+	 * Construct a new FloatPropertyReference
+	 * 
+	 * @return a new FloatPropertyReference
+	 */
+	FloatPropertyReference newFloatPropertyReference();
 
 	/**
 	 * Construct a new Footnote
