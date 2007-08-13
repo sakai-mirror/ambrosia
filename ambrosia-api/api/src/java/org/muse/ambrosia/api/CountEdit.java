@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * CountEdit presents a count input for the user to edit a count.
  */
-public interface CountEdit extends Component
+public interface CountEdit extends SummarizingComponent
 {
 	/**
 	 * Set a decision to enable on-load cursor focus on this field.
@@ -36,19 +36,6 @@ public interface CountEdit extends Component
 	CountEdit setFocus(Decision decision);
 
 	/**
-	 * Set an icon
-	 * 
-	 * @param url
-	 *        The full URL to the icon
-	 * @param selector
-	 *        The message selector (for the alt text for the icon).
-	 * @param references
-	 *        one or more (or an array) of UiPropertyReferences to form the additional values in the formatted message.
-	 * @return self.
-	 */
-	//CountEdit setIcon(String url, String selector, PropertyReference... references);
-
-	/**
 	 * Set an alert that will triger once on submit if the field is empty.
 	 * 
 	 * @param decision
@@ -57,6 +44,7 @@ public interface CountEdit extends Component
 	 *        The message selector.
 	 * @param references
 	 *        one or more (or an array) of PropertyReferences to form the additional values in the formatted message.
+	 * @return self.
 	 */
 	CountEdit setOnEmptyAlert(Decision decision, String selector, PropertyReference... references);
 
@@ -65,6 +53,7 @@ public interface CountEdit extends Component
 	 * 
 	 * @param propertyReference
 	 *        The property reference for encode / decode.
+	 * @return self.
 	 */
 	CountEdit setProperty(PropertyReference propertyReference);
 
@@ -78,12 +67,40 @@ public interface CountEdit extends Component
 	CountEdit setReadOnly(Decision decision);
 
 	/**
+	 * Set the field to have a summary if it is used in an iteration.
+	 * 
+	 * @return self.
+	 */
+	CountEdit setSummary();
+
+	/**
+	 * Set the property reference for the initial value for the summary field.
+	 * 
+	 * @param propertyReference
+	 *        The property reference for the initial value for the summary field.
+	 * @return self.
+	 */
+	CountEdit setSummaryInitialValueProperty(PropertyReference propertyReference);
+
+	/**
+	 * Set the summary field text.
+	 * 
+	 * @param selector
+	 *        The message selector.
+	 * @param references
+	 *        one or more (or an array) of PropertyReferences to form the additional values in the formatted message.
+	 * @return self.
+	 */
+	CountEdit setSummaryTitle(String selector, PropertyReference... references);
+
+	/**
 	 * Set the title text.
 	 * 
 	 * @param selector
 	 *        The message selector.
 	 * @param references
-	 *        one or more (or an array) of UiPropertyReferences to form the additional values in the formatted message.
+	 *        one or more (or an array) of PropertyReferences to form the additional values in the formatted message.
+	 * @return self.
 	 */
 	CountEdit setTitle(String selector, PropertyReference... references);
 }

@@ -73,11 +73,20 @@ public class UiNavigation extends UiComponent implements Navigation
 	/** The disabled decision. */
 	protected Decision disabledDecision = null;
 
+	/** The inclusion decision for each entity. */
+	protected Decision entityIncluded = null;
+
 	/** Full URL to the icon. */
 	protected String icon = null;
 
 	/** Icon placement: left or right. */
 	protected IconStyle iconStyle = IconStyle.left;
+
+	/** The context name for the current iteration object. */
+	protected String iteratorName = null;
+
+	/** The reference to an entity to iterate over. */
+	protected PropertyReference iteratorReference = null;
 
 	/** The display style. */
 	protected Style style = Style.link;
@@ -296,34 +305,6 @@ public class UiNavigation extends UiComponent implements Navigation
 		return this.destination.getDestination(context, focus);
 	}
 
-	/** The context name for the current iteration object. */
-	protected String iteratorName = null;
-
-	/** The reference to an entity to iterate over. */
-	protected PropertyReference iteratorReference = null;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Navigation setIterator(PropertyReference reference, String name)
-	{
-		this.iteratorReference = reference;
-		this.iteratorName = name;
-		return this;
-	}
-
-	/** The inclusion decision for each entity. */
-	protected Decision entityIncluded = null;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Navigation setEntityIncluded(Decision inclusionDecision)
-	{
-		this.entityIncluded = inclusionDecision;
-		return this;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -431,7 +412,7 @@ public class UiNavigation extends UiComponent implements Navigation
 
 		if (id == null)
 		{
-			id = this.getClass().getSimpleName() + context.getUniqueId();
+			id = this.getClass().getSimpleName() + "_" + context.getUniqueId();
 
 			// register if we have a name so any alias can use this same id
 			if (getId() != null)
@@ -722,18 +703,18 @@ public class UiNavigation extends UiComponent implements Navigation
 	/**
 	 * {@inheritDoc}
 	 */
-	public Navigation setDescription(String selector, PropertyReference... references)
+	public Navigation setDescription(Message message)
 	{
-		this.description = new UiMessage().setMessage(selector, references);
+		this.description = message;
 		return this;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Navigation setDescription(Message message)
+	public Navigation setDescription(String selector, PropertyReference... references)
 	{
-		this.description = message;
+		this.description = new UiMessage().setMessage(selector, references);
 		return this;
 	}
 
@@ -769,6 +750,15 @@ public class UiNavigation extends UiComponent implements Navigation
 	/**
 	 * {@inheritDoc}
 	 */
+	public Navigation setEntityIncluded(Decision inclusionDecision)
+	{
+		this.entityIncluded = inclusionDecision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Navigation setIcon(String icon, IconStyle style)
 	{
 		this.icon = icon;
@@ -782,6 +772,16 @@ public class UiNavigation extends UiComponent implements Navigation
 	public Navigation setIncluded(Decision... decision)
 	{
 		super.setIncluded(decision);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Navigation setIterator(PropertyReference reference, String name)
+	{
+		this.iteratorReference = reference;
+		this.iteratorName = name;
 		return this;
 	}
 

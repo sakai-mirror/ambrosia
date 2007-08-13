@@ -36,6 +36,7 @@ import org.muse.ambrosia.api.Footnote;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
+import org.muse.ambrosia.api.SummarizingComponent;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
@@ -275,6 +276,9 @@ public class UiEntityList extends UiComponent implements EntityList
 		// get an id
 		int idRoot = context.getUniqueId();
 
+		// check if the summary row is needed
+		boolean summaryNeeded = false;
+
 		// the data
 		Collection data = (Collection) this.iteratorReference.readObject(context, focus);
 		boolean empty = ((data == null) || (data.isEmpty()));
@@ -327,6 +331,9 @@ public class UiEntityList extends UiComponent implements EntityList
 						asc = false;
 					}
 
+					// submit?
+					boolean submit = c.getSortSubmit();
+
 					String icon = null;
 					String iconAlt = null;
 					if (asc)
@@ -351,6 +358,8 @@ public class UiEntityList extends UiComponent implements EntityList
 						// we are already descending, so encode the ascending destination
 						if (c.getSortDestinationAsc() != null) destination = c.getSortDestinationAsc().getDestination(context, focus);
 					}
+
+					// TODO: do submit!
 
 					// link to the dest, with the title and the icon
 					String href = context.get("sakai.return.url") + destination;
@@ -455,6 +464,12 @@ public class UiEntityList extends UiComponent implements EntityList
 					// included?
 					if (!c.included(context)) continue;
 
+					// will we need a summary row?
+					if ((!summaryNeeded) && (c.isSummaryRequired()))
+					{
+						summaryNeeded = true;
+					}
+
 					response.print("<td style=\"");
 					if (c.getWidth() != null)
 					{
@@ -556,6 +571,44 @@ public class UiEntityList extends UiComponent implements EntityList
 					context.remove(this.iteratorName);
 				}
 			}
+		}
+
+		// summary row
+		if (summaryNeeded)
+		{
+			response.println("<tr>");
+			for (EntityListColumn c : this.columns)
+			{
+				// included?
+				if (!c.included(context)) continue;
+
+				response.print("<td style=\"");
+				if (c.getWidth() != null)
+				{
+					response.print("width:" + c.getWidth().toString() + "px;");
+				}
+				else if (c.getWidthEm() != null)
+				{
+					response.print("width:" + c.getWidthEm().toString() + "em;");
+				}
+				if (c.getIsNoWrap())
+				{
+					response.print("white-space:nowrap;");
+				}
+				if (c.getCentered())
+				{
+					response.print("text-align:center;");
+				}
+				response.print("vertical-align:middle;\">");
+
+				if (c.isSummaryRequired())
+				{
+					c.renderSummary(context, focus);
+				}
+
+				response.println("</td>");
+			}
+			response.println("</tr>");
 		}
 
 		response.println("</table>");

@@ -69,3 +69,36 @@ function hideConfirm(name, action)
 		confirmedAction="";
 	}
 }
+
+function getInt(str)
+{
+	// assume radix 10
+	var rv = parseInt(str, 10);
+	
+	// return 0 if its not a parsable int
+	if (isNaN(rv)) rv = 0;
+	return rv;
+}
+
+function ambrosiaCountSummary(source, shadowId, summaryId)
+{
+	// get the objects
+	var summary = document.getElementById(summaryId);
+	var shadow = document.getElementById(shadowId);
+	
+	var oldValue = 0;
+	var newValue = source.value;
+
+	// read the old value and store the new value if we have a shadow
+	if (shadow != null)
+	{
+		oldValue = shadow.value;
+		shadow.value = newValue;
+	}
+	
+	// update the summary
+	if (summary != null)
+	{
+		summary.value = getInt(summary.value) - getInt(oldValue) + getInt(newValue);
+	}
+}

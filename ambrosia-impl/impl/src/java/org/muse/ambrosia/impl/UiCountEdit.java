@@ -26,7 +26,6 @@ import java.io.PrintWriter;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.CountEdit;
 import org.muse.ambrosia.api.Decision;
-import org.muse.ambrosia.api.DurationEdit;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
@@ -48,7 +47,7 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	protected Message iconAlt = null; // new UiMessage().setMessage("duration-alt");
 
 	/** The number of columns per row for the box. */
-	protected int numCols = 16;
+	protected int numCols = 6;
 
 	/** The number of rows for the text box. */
 	protected int numRows = 1;
@@ -67,6 +66,13 @@ public class UiCountEdit extends UiComponent implements CountEdit
 
 	/** The read-only decision. */
 	protected Decision readOnly = null;
+
+	/** Set if a summary of this field when rendered iterated (section or entityList) is requested. */
+	protected boolean summary = false;
+
+	protected PropertyReference summaryInitialValue = null;
+
+	protected Message summaryTitle = null;
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
@@ -149,6 +155,49 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			this.focusDecision = service.parseDecisions(settingsXml);
 		}
 
+		// summary
+		settingsXml = XmlHelper.getChildElementNamed(xml, "summary");
+		if (settingsXml != null)
+		{
+			this.summary = true;
+
+			String initialValue = StringUtil.trimToNull(settingsXml.getAttribute("initialValue"));
+			if (initialValue != null)
+			{
+				this.summaryInitialValue = service.newPropertyReference().setReference(initialValue);
+			}
+
+			title = StringUtil.trimToNull(settingsXml.getAttribute("title"));
+			if (title != null)
+			{
+				this.summaryTitle = new UiMessage().setMessage(title);
+			}
+
+			// initial value (a model ref)
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "initialValue");
+			if (innerXml != null)
+			{
+				Element wayInThere = XmlHelper.getChildElementNamed(settingsXml, "model");
+				if (wayInThere != null)
+				{
+					this.summaryInitialValue = service.parsePropertyReference(wayInThere);
+				}
+			}
+
+			// title
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "title");
+			if (innerXml != null)
+			{
+				this.summaryTitle = new UiMessage(service, settingsXml);
+			}
+			
+			// we need an id for summary...
+			if (this.id == null)
+			{
+				this.id = this.getClass().getSimpleName() + "_" + this.hashCode();
+			}
+		}
+		
 		// icon
 		// String icon = StringUtil.trimToNull(xml.getAttribute("icon"));
 		// if (icon != null) this.icon = icon;
@@ -172,6 +221,14 @@ public class UiCountEdit extends UiComponent implements CountEdit
 		// this.iconAlt = new UiMessage(service, innerXml);
 		// }
 		// }
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSummaryRequired()
+	{
+		return this.summary;
 	}
 
 	/**
@@ -202,10 +259,25 @@ public class UiCountEdit extends UiComponent implements CountEdit
 
 		PrintWriter response = context.getResponseWriter();
 
-		// set some ids
+		// if summarizing, make sure we have a single render id for all of the instances of this field, and for the summary
+		String summaryId = null;
+		if (this.summary)
+		{
+			// already registered?
+			summaryId = context.getRegistration(getId());
+			if (summaryId == null)
+			{
+				// no, do it now
+				summaryId = this.getClass().getSimpleName() + "_" + context.getUniqueId();
+				context.register(getId(), summaryId);
+			}
+		}
+
+		// set some uniqe ids for this field (among our brethren iterations)
 		int idRoot = context.getUniqueId();
 		String id = this.getClass().getSimpleName() + "_" + idRoot;
 		String decodeId = "decode_" + idRoot;
+		String shadowId = "shadow_" + idRoot;
 
 		// read the current value
 		String value = "";
@@ -243,9 +315,17 @@ public class UiCountEdit extends UiComponent implements CountEdit
 		// TODO: make the icon link to a popup picker!
 
 		response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
-				+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />"
+				+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
+				+ (this.summary ? " onchange=\"ambrosiaCountSummary(this, '" + shadowId + "', '" + summaryId + "');\"" : "") + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
 		response.println("</div>");
+
+		// the shadow value field (holding the last known value)
+		if (this.summary)
+		{
+			response.println("<input type=\"hidden\" name=\"" + shadowId + "\" id=\"" + shadowId + "\"value =\"" + Validator.escapeHtml(value)
+					+ "\" />");
+		}
 
 		// the decode directive
 		if ((this.propertyReference != null) && (!readOnly))
@@ -269,6 +349,51 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			// add the field name / id to the focus path
 			context.addFocusId(id);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void renderSummary(Context context, Object focus)
+	{
+		// included?
+		if (!isIncluded(context, focus)) return;
+
+		// summarizing?
+		if (!this.summary) return;
+
+		PrintWriter response = context.getResponseWriter();
+
+		// get the summaryId
+		String summaryId = context.getRegistration(getId());
+		if (summaryId == null) return;
+
+		// set some uniqe ids for this field (among our brethren iterations)
+		int idRoot = context.getUniqueId();
+		// String id = this.getClass().getSimpleName() + "_" + idRoot;
+		String decodeId = "decode_" + idRoot;
+		String shadowId = "shadow_" + idRoot;
+
+		// read the initial value
+		String value = "";
+		if (this.summaryInitialValue != null)
+		{
+			value = this.summaryInitialValue.read(context, focus);
+		}
+
+		// title
+		if (this.summaryTitle != null)
+		{
+			response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
+			response.println("<label for=\"" + summaryId + "\">");
+			response.println(Validator.escapeHtml(this.summaryTitle.getMessage(context, focus)));
+			response.println("</label><br />");
+		}
+
+		response.println("<input type=\"text\" id=\"" + summaryId + "\" name=\"" + summaryId + "\" size=\"" + Integer.toString(numCols)
+				+ "\" value=\"" + Validator.escapeHtml(value) + "\" disabled=\"disabled\" />");
+		response.println("</div>");
+
 	}
 
 	/**
@@ -317,6 +442,33 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	public CountEdit setReadOnly(Decision decision)
 	{
 		this.readOnly = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public CountEdit setSummary()
+	{
+		this.summary = true;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public CountEdit setSummaryInitialValueProperty(PropertyReference propertyReference)
+	{
+		this.summaryInitialValue = propertyReference;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public CountEdit setSummaryTitle(String selector, PropertyReference... references)
+	{
+		this.summaryTitle = new UiMessage().setMessage(selector, references);
 		return this;
 	}
 

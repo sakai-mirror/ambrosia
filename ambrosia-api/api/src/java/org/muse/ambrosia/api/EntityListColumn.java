@@ -230,6 +230,13 @@ public interface EntityListColumn
 	Decision getSortingDecision();
 
 	/**
+	 * Access the sort is submitting flag.
+	 * 
+	 * @return the sort is submitting flag.
+	 */
+	boolean getSortSubmit();
+
+	/**
 	 * Access the column title message.
 	 * 
 	 * @return The column title message.
@@ -258,6 +265,23 @@ public interface EntityListColumn
 	 * @return true if the column is to be included, false if not.
 	 */
 	boolean included(Context context);
+
+	/**
+	 * Check if a summary is required
+	 * 
+	 * @return true if a summary is required, false if not.
+	 */
+	boolean isSummaryRequired();
+
+	/**
+	 * Render the component.
+	 * 
+	 * @param context
+	 *        The UI context.
+	 * @param focus
+	 *        An optional entity that is the focus of the rendering.
+	 */
+	void renderSummary(Context context, Object focus);
 
 	/**
 	 * Set the decision to display the column entry for an entity as an alert.
@@ -338,6 +362,13 @@ public interface EntityListColumn
 	 * @return self.
 	 */
 	EntityListColumn setSorting(Decision sorting, Decision aNotD);
+
+	/**
+	 * Set the sort to be submitting.
+	 * 
+	 * @return self.
+	 */
+	EntityListColumn setSortSubmit();
 
 	/**
 	 * Set the column title message.

@@ -12,7 +12,7 @@
 
 <!ELEMENT header (message) >
 
-<!ELEMENT message (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT message (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | floatModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST message selector CDATA #IMPLIED >
 <!ATTLIST message model CDATA #IMPLIED >
 
@@ -22,7 +22,7 @@
 <!ATTLIST model delegate CDATA #IMPLIED >
 <!ATTLIST model tool CDATA #IMPLIED >
 <!ATTLIST model missing CDATA #IMPLIED >
-<!ATTLIST model type (boolean|constant|contextInfo|count|date|duration|html|icon|paging|text|url|userInfo) #IMPLIED >
+<!ATTLIST model type (boolean|constant|contextInfo|count|date|duration|float|html|icon|paging|text|url|userInfo) #IMPLIED >
 <!ATTLIST model concise (TRUE|FALSE) #IMPLIED >
 <!ATTLIST model selector (DISPLAYNAME|TITLE) #IMPLIED >
 <!ATTLIST model max CDATA #IMPLIED >
@@ -79,6 +79,12 @@
 <!ATTLIST countModel tool CDATA #IMPLIED >
 <!ATTLIST countModel missing CDATA #IMPLIED >
 
+<!ELEMENT floatModel (missingValues)* >
+<!ATTLIST floatModel ref CDATA #REQUIRED >
+<!ATTLIST floatModel delegate CDATA #IMPLIED>
+<!ATTLIST floatModel tool CDATA #IMPLIED >
+<!ATTLIST floatModel missing CDATA #IMPLIED >
+
 <!ELEMENT htmlModel (missingValues)* >
 <!ATTLIST htmlModel ref CDATA #REQUIRED >
 <!ATTLIST htmlModel delegate CDATA #IMPLIED>
@@ -120,8 +126,8 @@
 <!ATTLIST pagingModel tool CDATA #IMPLIED >
 <!ATTLIST pagingModel missing CDATA #IMPLIED >
 
-<!ELEMENT container (alert | alias | attachments | attachmentsEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | htmlEdit | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
-<!ELEMENT modeContainer (alert | alias | attachments | attachmentsEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | htmlEdit | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
+<!ELEMENT container (alert | alias | attachments | attachmentsEdit | countEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | floatEdit | htmlEdit | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
+<!ELEMENT modeContainer (alert | alias | attachments | attachmentsEdit | countEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | floatEdit | htmlEdit | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | pager | password | section | selection | text | textEdit)* >
 
 <!ELEMENT included (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 <!ELEMENT disabled (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
@@ -237,7 +243,7 @@
 <!ATTLIST cancel selector CDATA #IMPLIED >
 <!ATTLIST cancel icon CDATA #IMPLIED >
 
-<!ELEMENT destination (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT destination (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | floatModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST destination template CDATA #IMPLIED >
 <!ATTLIST destination model CDATA #IMPLIED >
 
@@ -256,11 +262,11 @@
 <!ATTLIST countdownTimer disabled (TRUE|FALSE) #IMPLIED >
 <!ATTLIST countdownTimer distination CDATA #IMPLIED >
 
-<!ELEMENT duration (message | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT duration (message | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | floatModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ELEMENT hide (message)* >
 <!ELEMENT remaining (message)* >
 <!ELEMENT show (message)* >
-<!ELEMENT timeTillExpire (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT timeTillExpire (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | floatModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 
 <!ELEMENT courier (included | destination)* >
 <!ATTLIST courier id CDATA #IMPLIED >
@@ -276,7 +282,7 @@
 <!ATTLIST entityDisplay title CDATA #IMPLIED >
 
 <!ELEMENT rows (row)* >
-<!ELEMENT row (included | container | title | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT row (included | container | title | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | floatModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST row title CDATA #IMPLIED >
 <!ATTLIST row model CDATA #IMPLIED >
 
@@ -300,6 +306,7 @@
 <!ATTLIST column em CDATA #IMPLIED >
 
 <!ELEMENT sort (active | direction | asc | desc)* >
+<!ATTLIST sort submit (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT asc (message | destination)* >
 <!ATTLIST asc icon CDATA #IMPLIED >
@@ -446,6 +453,28 @@
 <!ATTLIST textEdit cols CDATA #IMPLIED >
 <!ATTLIST textEdit readOnly (TRUE|FALSE) #IMPLIED >
 
+<!ELEMENT countEdit (included | title | model | onEmptyAlert | readOnly | focus | summary)* >
+<!ATTLIST countEdit id CDATA #IMPLIED >
+<!ATTLIST countEdit title CDATA #IMPLIED >
+<!ATTLIST countEdit model CDATA #IMPLIED >
+<!ATTLIST countEdit rows CDATA #IMPLIED >
+<!ATTLIST countEdit cols CDATA #IMPLIED >
+<!ATTLIST countEdit readOnly (TRUE|FALSE) #IMPLIED >
+
+<!ELEMENT floatEdit (included | title | model | onEmptyAlert | readOnly | focus | summary)* >
+<!ATTLIST floatEdit id CDATA #IMPLIED >
+<!ATTLIST floatEdit title CDATA #IMPLIED >
+<!ATTLIST floatEdit model CDATA #IMPLIED >
+<!ATTLIST floatEdit rows CDATA #IMPLIED >
+<!ATTLIST floatEdit cols CDATA #IMPLIED >
+<!ATTLIST floatEdit readOnly (TRUE|FALSE) #IMPLIED >
+
+<!ELEMENT summary (initialValue | title)*>
+<!ATTLIST summary initialValue CDATA #IMPLIED >
+<!ATTLIST summary title CDATA #IMPLIED >
+
+<!ELEMENT initialValue (model)* >
+
 <!ELEMENT htmlEdit (included | title | model | onEmptyAlert | readOnly | focus)* >
 <!ATTLIST htmlEdit id CDATA #IMPLIED >
 <!ATTLIST htmlEdit title CDATA #IMPLIED >
@@ -476,6 +505,7 @@
 <!ATTLIST pager last CDATA #IMPLIED >
 <!ATTLIST pager destination CDATA #IMPLIED >
 <!ATTLIST pager paging CDATA #IMPLIED >
+<!ATTLIST pager submit (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT first (icon) >
 <!ELEMENT prev (icon) >

@@ -24,8 +24,8 @@ package org.muse.ambrosia.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Component;
+import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.EntityListColumn;
@@ -33,6 +33,7 @@ import org.muse.ambrosia.api.Footnote;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
+import org.muse.ambrosia.api.SummarizingComponent;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -95,6 +96,9 @@ public class UiEntityListColumn implements EntityListColumn
 
 	/** The decision that tells if this column is doing asc, not desc sort (if false, it is doing desc, not asc) */
 	protected Decision sortingAsc = null;
+
+	/** If set, make the sort links submit. */
+	protected boolean sortSubmit = false;
 
 	/** The message for the column title. */
 	protected Message title = null;
@@ -160,6 +164,9 @@ public class UiEntityListColumn implements EntityListColumn
 		settingsXml = XmlHelper.getChildElementNamed(xml, "sort");
 		if (settingsXml != null)
 		{
+			String submit = StringUtil.trimToNull(xml.getAttribute("submit"));
+			if ((noWrap != null) && ("TRUE".equals(noWrap))) setSortSubmit();
+
 			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "active");
 			if (innerXml != null)
 			{
@@ -548,6 +555,14 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
+	public boolean getSortSubmit()
+	{
+		return this.sortSubmit;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Message getTitle()
 	{
 		return this.title;
@@ -577,6 +592,42 @@ public class UiEntityListColumn implements EntityListColumn
 		if ((this.included != null) && (!this.included.decide(context, null))) return false;
 
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSummaryRequired()
+	{
+		for (Component c : this.contained)
+		{
+			if (c instanceof SummarizingComponent)
+			{
+				if (((SummarizingComponent) c).isSummaryRequired())
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void renderSummary(Context context, Object entity)
+	{
+		for (Component c : this.contained)
+		{
+			if (c instanceof SummarizingComponent)
+			{
+				if (((SummarizingComponent) c).isSummaryRequired())
+				{
+					((SummarizingComponent) c).renderSummary(context, entity);
+				}
+			}
+		}
 	}
 
 	/**
@@ -654,6 +705,15 @@ public class UiEntityListColumn implements EntityListColumn
 	{
 		this.sorting = sorting;
 		this.sortingAsc = ascNotDesc;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EntityListColumn setSortSubmit()
+	{
+		this.sortSubmit = true;
 		return this;
 	}
 

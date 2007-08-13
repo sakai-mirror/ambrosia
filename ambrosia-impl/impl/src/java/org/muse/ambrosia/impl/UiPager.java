@@ -106,6 +106,13 @@ public class UiPager extends UiComponent implements Pager
 		// do the component stuff
 		super(service, xml);
 
+		// short form for submit
+		String submit = StringUtil.trimToNull(xml.getAttribute("submit"));
+		if ((submit != null) && ("TRUE".equals(submit)))
+		{
+			setSubmit();
+		}
+
 		// icons - short form
 		String icon = StringUtil.trimToNull(xml.getAttribute("first"));
 		if (icon != null) this.firstIcon = icon;
