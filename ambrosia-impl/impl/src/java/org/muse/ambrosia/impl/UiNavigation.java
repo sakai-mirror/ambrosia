@@ -43,6 +43,42 @@ import org.w3c.dom.NodeList;
  */
 public class UiNavigation extends UiComponent implements Navigation
 {
+	/**
+	 * Generate the link script for a navigation
+	 * 
+	 * @param context
+	 *        The context.
+	 * @param id
+	 *        The render id.
+	 * @param confirm
+	 *        true if we are doing confirm for this nav.
+	 * @param validate
+	 *        true if we need to validate before linking.
+	 * @param submit
+	 *        true if we generate a submit, false for a link.
+	 * @param destination
+	 *        the link destination.
+	 * @param root
+	 *        The root of the destination URL.
+	 */
+	protected static void generateLinkScript(Context context, String id, boolean confirm, boolean validate, boolean submit, String destination,
+			String root)
+	{
+		// the act method call
+		String action = "ambrosiaNavigate(enabled_" + id + ", 'enable_" + id + "()', " + Boolean.toString(confirm) + ", 'confirm_" + id + "', "
+				+ Boolean.toString(validate) + ", " + Boolean.toString(submit) + ", '" + destination + "','" + root + "');";
+
+		// the script
+		StringBuffer script = new StringBuffer();
+
+		script.append("var enabled_" + id + "=" + (confirm ? "false" : "true") + ";\n");
+		script.append("function cancel_" + id + "()\n{\n\tenabled_" + id + "=false;\n}\n");
+		script.append("function enable_" + id + "()\n{\n\tenabled_" + id + "=true;\n}\n");
+		script.append("function act_" + id + "()\n{\n\t" + action + "\n}\n");
+		context.addScript(script.toString());
+
+	}
+
 	/** Message to form the access key. */
 	protected Message accessKey = null;
 
@@ -308,6 +344,14 @@ public class UiNavigation extends UiComponent implements Navigation
 	/**
 	 * {@inheritDoc}
 	 */
+	public boolean getSubmit()
+	{
+		return this.submit;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void render(Context context, Object focus)
 	{
 		PrintWriter response = context.getResponseWriter();
@@ -468,78 +512,8 @@ public class UiNavigation extends UiComponent implements Navigation
 			// our action javascript
 			if (!disabled)
 			{
-				StringBuffer script = new StringBuffer();
-
-				script.append("var enabled_" + id + "=" + (confirm ? "false" : "true") + ";\n");
-				script.append("function cancel_" + id + "()\n");
-				script.append("{\n");
-				script.append("    enabled_" + id + "=false;\n");
-				script.append("}\n");
-				script.append("function act_" + id + "()\n");
-				script.append("{\n");
-
-				// enabled check
-				script.append("  if (!enabled_" + id + ")\n");
-				script.append("  {\n");
-
-				if (confirm)
-				{
-					script.append("    enabled_" + id + "=true;\n");
-					// script.append(" document.getElementById(\"confirm_" + id + "\").style.display=\"\";\n");
-					script.append("    showConfirm('confirm_" + id + "');\n");
-				}
-				script.append("    return;\n");
-				script.append("  }\n");
-
-				// submitted already check
-				script.append("  if (submitted)\n");
-				script.append("  {\n");
-				script.append("    return;\n");
-				script.append("  }\n");
-
-				if (this.submit)
-				{
-					// if we are doing validate, enable validation
-					if (validate)
-					{
-						script.append("  enableValidate=true;\n");
-					}
-
-					// if we validate, put up the blocker and submit the form
-					script.append("  if (validate())\n");
-					script.append("  {\n");
-
-					// the blocker
-					// script.append(" document.getElementById('blocker').style.display=\"\";\n");
-
-					// set that we submitted already
-					script.append("    submitted=true;\n");
-
-					// setup the destination
-					script.append("    document." + context.getFormName() + ".destination_.value='"
-							+ (this.destination != null ? this.destination.getDestination(context, focus) : "") + "';\n");
-
-					// submit
-					script.append("    document." + context.getFormName() + ".submit();\n");
-					script.append("  }\n");
-				}
-
-				else
-				{
-					// the blocker
-					// script.append(" document.getElementById('blocker').style.display=\"\";\n");
-
-					// set that we submitted already
-					script.append("  submitted=true;\n");
-
-					// perform the navigation
-					script.append("  document.location=\"" + context.get("sakai.return.url")
-							+ (this.destination != null ? this.destination.getDestination(context, focus) : "") + "\";\n");
-				}
-
-				script.append("}\n");
-
-				context.addScript(script.toString());
+				generateLinkScript(context, id, confirm, validate, this.submit, (this.destination != null ? this.destination.getDestination(context,
+						focus) : ""), (String) context.get("sakai.return.url"));
 			}
 
 			if (confirm)
@@ -561,7 +535,7 @@ public class UiNavigation extends UiComponent implements Navigation
 						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('"
 								+ context.getUrl(this.confirmCancelIcon) + "') .2em no-repeat;\"" : "") + "/></td>");
 				response.println("<td style=\"padding:1em\" align=\"right\"><input type=\"button\" value=\"" + title
-						+ "\" onclick=\"hideConfirm('confirm_" + id + "','act_" + id + "()');\" style=\"padding-left:2em; background: #eee url('"
+						+ "\" onclick=\"hideConfirm('confirm_" + id + "','act_" + id + "();');\" style=\"padding-left:2em; background: #eee url('"
 						+ context.getUrl(this.icon) + "') .2em no-repeat;\"/></td>");
 				response.println("</tr></table></div>");
 			}

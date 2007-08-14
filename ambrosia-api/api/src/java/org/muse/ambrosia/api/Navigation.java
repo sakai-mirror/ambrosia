@@ -51,6 +51,13 @@ public interface Navigation extends Component
 	String getDestination(Context context, Object focus);
 
 	/**
+	 * Access the submit setting.
+	 * 
+	 * @return The submit setting.
+	 */
+	boolean getSubmit();
+
+	/**
 	 * Set the access key for the navigation to the character produced by this message.
 	 * 
 	 * @param selector

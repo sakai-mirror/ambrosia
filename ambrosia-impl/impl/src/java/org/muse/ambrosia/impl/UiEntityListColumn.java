@@ -164,8 +164,8 @@ public class UiEntityListColumn implements EntityListColumn
 		settingsXml = XmlHelper.getChildElementNamed(xml, "sort");
 		if (settingsXml != null)
 		{
-			String submit = StringUtil.trimToNull(xml.getAttribute("submit"));
-			if ((noWrap != null) && ("TRUE".equals(noWrap))) setSortSubmit();
+			String submit = StringUtil.trimToNull(settingsXml.getAttribute("submit"));
+			if ((submit != null) && ("TRUE".equals(submit))) setSortSubmit();
 
 			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "active");
 			if (innerXml != null)
@@ -428,6 +428,15 @@ public class UiEntityListColumn implements EntityListColumn
 		}
 
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean getEntityNavigationSubmit()
+	{
+		if (this.entityNavigations == null) return false;
+		return this.entityNavigations.get(0).getSubmit();
 	}
 
 	/**

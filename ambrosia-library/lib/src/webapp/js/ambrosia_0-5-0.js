@@ -102,3 +102,37 @@ function ambrosiaCountSummary(source, shadowId, summaryId)
 		summary.value = getInt(summary.value) - getInt(oldValue) + getInt(newValue);
 	}
 }
+
+function ambrosiaNavigate(enabled, enableFunction, confirm, confirmDivId, validateFlag, submit, destination, root)
+{
+	if (!enabled)
+	{
+		if (confirm)
+		{
+			eval(enableFunction);
+			showConfirm(confirmDivId);
+ 			return;
+ 		}
+ 		else
+ 		{
+ 			return;
+ 		}
+	}
+	if (submitted)
+	{
+		return;
+	}
+	if ((!validateFlag) || validate())
+	{
+		submitted=true;
+		if (submit)
+		{
+			document.form0.destination_.value=destination;
+			document.form0.submit();
+		}
+		else
+		{
+			document.location=root + destination;
+		}
+	}
+}

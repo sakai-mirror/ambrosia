@@ -36,7 +36,6 @@ import org.muse.ambrosia.api.Footnote;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.SummarizingComponent;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
@@ -275,6 +274,7 @@ public class UiEntityList extends UiComponent implements EntityList
 
 		// get an id
 		int idRoot = context.getUniqueId();
+		String id = this.getClass().getSimpleName() + "_" + idRoot;
 
 		// check if the summary row is needed
 		boolean summaryNeeded = false;
@@ -321,6 +321,12 @@ public class UiEntityList extends UiComponent implements EntityList
 			Message title = c.getTitle();
 			if (title != null)
 			{
+				// submit?
+				boolean submit = c.getSortSubmit();
+
+				// navigation render id for sort
+				String sortId = id + "_s" + (cols - 1);
+
 				// if this is the sort column
 				if ((c.getSortingDecision() != null) && (c.getSortingDecision().decide(context, focus)))
 				{
@@ -330,9 +336,6 @@ public class UiEntityList extends UiComponent implements EntityList
 					{
 						asc = false;
 					}
-
-					// submit?
-					boolean submit = c.getSortSubmit();
 
 					String icon = null;
 					String iconAlt = null;
@@ -360,14 +363,12 @@ public class UiEntityList extends UiComponent implements EntityList
 					}
 
 					// TODO: do submit!
-
-					// link to the dest, with the title and the icon
-					String href = context.get("sakai.return.url") + destination;
+					UiNavigation.generateLinkScript(context, sortId, false, false, submit, destination, (String) context.get("sakai.return.url"));
 					response.println("<th scope=\"col\""
 							+ (c.getCentered() ? " style=\"text-align:center\"" : "")
-							+ "><a href=\""
-							+ href
-							+ "\">"
+							+ "><a href=\"#\" onclick=\"act_"
+							+ sortId
+							+ "();\">"
 							+ Validator.escapeHtml(title.getMessage(context, focus))
 							+ ((icon != null) ? ("&nbsp;<img src=\"" + context.getUrl(icon) + "\""
 									+ ((iconAlt != null) ? (" alt=\"" + Validator.escapeHtml(iconAlt) + "\"") : "") + " />") : "") + "</a></th>");
@@ -377,10 +378,10 @@ public class UiEntityList extends UiComponent implements EntityList
 				else if ((c.getSortingDecision() != null) && (c.getSortingAscDecision() != null) && (c.getSortDestinationAsc() != null)
 						&& (c.getSortDestinationDesc() != null))
 				{
-					// link to asc dest
-					String href = context.get("sakai.return.url") + c.getSortDestinationAsc().getDestination(context, focus);
-					response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + "><a href=\"" + href + "\">"
-							+ Validator.escapeHtml(title.getMessage(context, focus)) + "</a></th>");
+					UiNavigation.generateLinkScript(context, sortId, false, false, submit, c.getSortDestinationAsc().getDestination(context, focus),
+							(String) context.get("sakai.return.url"));
+					response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + "><a href=\"#\" onclick=\"act_"
+							+ sortId + "();\">" + Validator.escapeHtml(title.getMessage(context, focus)) + "</a></th>");
 				}
 
 				// no sort
@@ -459,10 +460,13 @@ public class UiEntityList extends UiComponent implements EntityList
 				}
 
 				response.println("<tr>");
+				int col = 0;
 				for (EntityListColumn c : this.columns)
 				{
 					// included?
 					if (!c.included(context)) continue;
+					
+					col++;
 
 					// will we need a summary row?
 					if ((!summaryNeeded) && (c.isSummaryRequired()))
@@ -496,14 +500,9 @@ public class UiEntityList extends UiComponent implements EntityList
 						String href = c.getEntityNavigationDestination(context, entity);
 						if (href != null)
 						{
-							// add in the return URL root
-							href = context.get("sakai.return.url") + href;
-						}
-
-						// if we are linking
-						if (href != null)
-						{
-							response.print("<a style=\"text-decoration:none !important\" href=\"" + href + "\">");
+							String navId = id + "_r" + row + "_c_" + col;
+							UiNavigation.generateLinkScript(context, navId, false, false, c.getEntityNavigationSubmit(), href, (String) context.get("sakai.return.url"));
+							response.print("<a style=\"text-decoration:none !important\" href=\"#\" onclick=\"act_" + navId + "();\">");
 						}
 
 						// get the column's value for display

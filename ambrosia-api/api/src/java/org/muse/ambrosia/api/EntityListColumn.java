@@ -107,6 +107,13 @@ public interface EntityListColumn
 	String getEntityNavigationDestination(Context context, Object focus);
 
 	/**
+	 * Access the submit setting on the entity navigation.
+	 * 
+	 * @return The submit setting on the entity navigation.
+	 */
+	boolean getEntityNavigationSubmit();
+
+	/**
 	 * Access the list of footnotes.
 	 * 
 	 * @return The list of footnotes.
