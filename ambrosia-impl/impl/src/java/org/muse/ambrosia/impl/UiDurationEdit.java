@@ -223,10 +223,11 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
+		response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
+
 		// title
 		if (this.titleMessage != null)
 		{
-			response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
 			response.println("<label for=\"" + id + "\">");
 			response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
 			response.println("</label>");
@@ -244,6 +245,7 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 		response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
 				+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
+
 		response.println("</div>");
 
 		// the decode directive

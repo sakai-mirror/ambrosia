@@ -441,7 +441,7 @@
 <!ATTLIST selection orientation (HORIZONTAL|VERTICAL) #IMPLIED >
 
 <!ELEMENT selectionChoices (selectionChoice)* >
-<!ELEMENT selectionChoice EMPTY >
+<!ELEMENT selectionChoice (container)* >
 <!ATTLIST selectionChoice value CDATA #IMPLIED >
 <!ATTLIST selectionChoice selector CDATA #IMPLIED >
 

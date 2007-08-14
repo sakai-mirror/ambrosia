@@ -217,10 +217,11 @@ public class UiTextEdit extends UiComponent implements TextEdit
 				// response.println("<span class=\"reqStarInline\">*</span>");
 			}
 
+			response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
+
 			// title
 			if (this.titleMessage != null)
 			{
-				response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
 				response.println("<label for=\"" + id + "\">");
 				response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
 				response.println("</label>");
@@ -228,6 +229,7 @@ public class UiTextEdit extends UiComponent implements TextEdit
 
 			response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
 					+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
+
 			response.println("</div>");
 		}
 
@@ -244,9 +246,10 @@ public class UiTextEdit extends UiComponent implements TextEdit
 				// response.println("<span class=\"reqStarInline\">*</span>");
 			}
 
+			response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditMultiple\">");
+
 			if (this.titleMessage != null)
 			{
-				response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditMultiple\">");
 				response.println("<label class=\"block\" for=\"" + id + "\">");
 				response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
 				response.println("</label>");
@@ -256,8 +259,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 					+ Integer.toString(numCols) + " rows=" + Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
-			response.println("</div>");
 
+			response.println("</div>");
 		}
 
 		// the decode directive

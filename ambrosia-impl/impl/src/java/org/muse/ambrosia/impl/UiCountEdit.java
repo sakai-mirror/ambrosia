@@ -190,14 +190,14 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			{
 				this.summaryTitle = new UiMessage(service, settingsXml);
 			}
-			
+
 			// we need an id for summary...
 			if (this.id == null)
 			{
 				this.id = this.getClass().getSimpleName() + "_" + this.hashCode();
 			}
 		}
-		
+
 		// icon
 		// String icon = StringUtil.trimToNull(xml.getAttribute("icon"));
 		// if (icon != null) this.icon = icon;
@@ -296,10 +296,11 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
+		response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
+
 		// title
 		if (this.titleMessage != null)
 		{
-			response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
 			response.println("<label for=\"" + id + "\">");
 			response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
 			response.println("</label>");
@@ -318,6 +319,7 @@ public class UiCountEdit extends UiComponent implements CountEdit
 				+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
 				+ (this.summary ? " onchange=\"ambrosiaCountSummary(this, '" + shadowId + "', '" + summaryId + "');\"" : "") + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
+
 		response.println("</div>");
 
 		// the shadow value field (holding the last known value)
@@ -392,8 +394,6 @@ public class UiCountEdit extends UiComponent implements CountEdit
 
 		response.println("<input type=\"text\" id=\"" + summaryId + "\" name=\"" + summaryId + "\" size=\"" + Integer.toString(numCols)
 				+ "\" value=\"" + Validator.escapeHtml(value) + "\" disabled=\"disabled\" />");
-		response.println("</div>");
-
 	}
 
 	/**

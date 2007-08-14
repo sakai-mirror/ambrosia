@@ -161,17 +161,19 @@ public class UiPassword extends UiComponent implements Password
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
+		// class=\"shorttext\"
+		response.println("<p>");
+
 		// title
 		if (this.titleMessage != null)
 		{
-			// class=\"shorttext\"
-			response.println("<p>");
 			response.println("<label for=\"" + id + "\">");
 			response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
 			response.println("</label>");
 		}
 
 		response.println("<input type=\"password\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" />");
+
 		response.println("</p>");
 
 		// the decode directive

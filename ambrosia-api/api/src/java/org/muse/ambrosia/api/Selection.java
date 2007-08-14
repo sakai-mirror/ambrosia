@@ -33,6 +33,16 @@ public interface Selection extends Component
 	};
 
 	/**
+	 * Add a component to the container for a particular selection, identified by the value.
+	 * 
+	 * @param value
+	 *        The selection's value.
+	 * @param component
+	 *        the component to add.
+	 */
+	Selection addComponentToSelection(String value, Component component);
+
+	/**
 	 * Add a selection, one more choice the user can select.
 	 * 
 	 * @param selector

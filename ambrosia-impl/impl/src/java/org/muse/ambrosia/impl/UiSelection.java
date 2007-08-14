@@ -23,13 +23,15 @@ package org.muse.ambrosia.impl;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.muse.ambrosia.api.Component;
+import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
-import org.muse.ambrosia.api.EntityListColumn;
 import org.muse.ambrosia.api.Message;
-import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Selection;
 import org.sakaiproject.util.StringUtil;
@@ -60,6 +62,9 @@ public class UiSelection extends UiComponent implements Selection
 
 	/** The value we find if the user selects the selection. */
 	protected String selectedValue = "true";
+
+	/** Containers holding dependent components to a selection, keyed by the selection value. */
+	protected Map<String, Container> selectionContainers = new HashMap<String, Container>();
 
 	/** The set of messages for multiple selection choices. */
 	protected List<Message> selectionMessages = new ArrayList<Message>();
@@ -108,7 +113,7 @@ public class UiSelection extends UiComponent implements Selection
 		// selected value
 		String value = StringUtil.trimToNull(xml.getAttribute("value"));
 		if (value != null) this.selectedValue = value;
-		
+
 		// orientation
 		String orientation = StringUtil.trimToNull(xml.getAttribute("orientation"));
 		if ((orientation != null) && (orientation.equals("HORIZONTAL"))) setOrientation(Orientation.horizontal);
@@ -145,6 +150,14 @@ public class UiSelection extends UiComponent implements Selection
 						String selector = StringUtil.trimToNull(innerXml.getAttribute("selector"));
 						value = StringUtil.trimToNull(innerXml.getAttribute("value"));
 						addSelection(selector, value);
+
+						// TODO: container
+						// is there a container?
+						if (XmlHelper.getChildElementNamed(innerXml, "container") != null)
+						{
+							Container container = new UiContainer(service, innerXml);
+							this.selectionContainers.put(value, container);
+						}
 					}
 				}
 			}
@@ -156,6 +169,23 @@ public class UiSelection extends UiComponent implements Selection
 		{
 			this.readOnly = service.parseDecisions(settingsXml);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Selection addComponentToSelection(String value, Component component)
+	{
+		Container container = this.selectionContainers.get(value);
+		if (container == null)
+		{
+			container = new UiContainer();
+			this.selectionContainers.put(value, container);
+		}
+
+		container.add(component);
+
+		return this;
 	}
 
 	/**
@@ -223,8 +253,17 @@ public class UiSelection extends UiComponent implements Selection
 				// the radio button
 				response.println("<input type=\"radio\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + val + "\" " + (selected ? "CHECKED" : "")
 						+ (readOnly ? " disabled=\"disabled\"" : "") + " /> " + message);
-				
-				if (this.orientation == Orientation.vertical)
+
+				// TODO: container
+				Container container = this.selectionContainers.get(val);
+				if (container != null)
+				{
+					container.render(context, focus);
+					// TODO: collect the render ids, setup the enable / disable-clear methods ...
+				}
+
+				// contained stuff will most likely include a break...
+				if ((this.orientation == Orientation.vertical) && (container == null))
 				{
 					response.println("<br />");
 				}
