@@ -36,6 +36,14 @@ public interface Context
 	static final String FRAGMENT = "sakai:fragment";
 
 	/**
+	 * Add another listener for edit component rendering.
+	 * 
+	 * @param listener
+	 *        The listener.
+	 */
+	void addEditComponentRenderListener(RenderListener listener);
+
+	/**
 	 * Add a form element id to the focus path (for on-load focus)
 	 * 
 	 * @param id
@@ -81,6 +89,14 @@ public interface Context
 	 *        The tool id.
 	 */
 	void clearGlobalFragment(String id, String toolId);
+
+	/**
+	 * Register that an edit component with this id has just been rendered.
+	 * 
+	 * @param id
+	 *        The edit component's render id.
+	 */
+	void editComponentRendered(String id);
 
 	/**
 	 * Find the components in the interface being rendered with this id.
@@ -263,6 +279,14 @@ public interface Context
 	 *        The name of the object to remove.
 	 */
 	void remove(String name);
+
+	/**
+	 * Remove thislistener for edit component rendering.
+	 * 
+	 * @param listener
+	 *        The listener.
+	 */
+	void removeEditComponentRenderListener(RenderListener listener);
 
 	/**
 	 * Go into collecting mode : any text that would be sent out is instead collected.

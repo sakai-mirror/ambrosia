@@ -320,6 +320,8 @@ public class UiCountEdit extends UiComponent implements CountEdit
 				+ (this.summary ? " onchange=\"ambrosiaCountSummary(this, '" + shadowId + "', '" + summaryId + "');\"" : "") + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
 
+		context.editComponentRendered(id);
+
 		response.println("</div>");
 
 		// the shadow value field (holding the last known value)

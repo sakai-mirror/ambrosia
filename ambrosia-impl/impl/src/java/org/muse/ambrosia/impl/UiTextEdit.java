@@ -230,6 +230,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
 					+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 
+			context.editComponentRendered(id);
+
 			response.println("</div>");
 		}
 
@@ -259,6 +261,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 					+ Integer.toString(numCols) + " rows=" + Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
+
+			context.editComponentRendered(id);
 
 			response.println("</div>");
 		}

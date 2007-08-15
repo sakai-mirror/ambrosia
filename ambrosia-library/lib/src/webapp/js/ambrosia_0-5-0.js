@@ -136,3 +136,35 @@ function ambrosiaNavigate(enabled, enableFunction, confirm, confirmDivId, valida
 		}
 	}
 }
+
+// dependencies is an array of arrays, the inner array[0] is the selection value, the rest are field ids
+function ambrosiaSelectDependencies(selected, dependencies)
+{
+	for (d in dependencies)
+	{
+		var list = dependencies[d];
+		var value = list[0];
+		if (selected == value)
+		{
+			for (i in list)
+			{
+				if (i == 0) continue;
+				var target = document.getElementById(list[i]);
+				if (target == null) continue;
+				target.disabled = false;
+			}
+		}
+		
+		else
+		{
+			for (i in list)
+			{
+				if (i == 0) continue;
+				var target = document.getElementById(list[i]);
+				if (target == null) continue;
+				target.disabled = true;
+				target.value = "";
+			}
+		}
+	}
+}

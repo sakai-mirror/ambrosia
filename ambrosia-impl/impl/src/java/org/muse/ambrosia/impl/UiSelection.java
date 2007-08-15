@@ -33,6 +33,7 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.muse.ambrosia.api.RenderListener;
 import org.muse.ambrosia.api.Selection;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
@@ -151,7 +152,6 @@ public class UiSelection extends UiComponent implements Selection
 						value = StringUtil.trimToNull(innerXml.getAttribute("value"));
 						addSelection(selector, value);
 
-						// TODO: container
 						// is there a container?
 						if (XmlHelper.getChildElementNamed(innerXml, "container") != null)
 						{
@@ -218,6 +218,7 @@ public class UiSelection extends UiComponent implements Selection
 		int idRoot = context.getUniqueId();
 		String id = this.getClass().getSimpleName() + "_" + idRoot;
 		String decodeId = "decode_" + idRoot;
+		String dependencyId = id + "_dependencies";
 
 		PrintWriter response = context.getResponseWriter();
 
@@ -242,6 +243,16 @@ public class UiSelection extends UiComponent implements Selection
 
 		else
 		{
+			final StringBuffer dependency = new StringBuffer();
+			dependency.append("var " + dependencyId + "=[");
+			String startingValue = null;
+			boolean needDependencies = false;
+			String onclick = "";
+			if (!this.selectionContainers.isEmpty())
+			{
+				onclick = "onclick=\"ambrosiaSelectDependencies(this.value, " + dependencyId + ")\" ";
+			}
+
 			for (int i = 0; i < this.selectionValues.size(); i++)
 			{
 				Message msg = this.selectionMessages.get(i);
@@ -249,17 +260,41 @@ public class UiSelection extends UiComponent implements Selection
 				String val = this.selectionValues.get(i);
 
 				boolean selected = (value == null) ? false : value.equals(val);
+				if (selected)
+				{
+					startingValue = val;
+				}
 
 				// the radio button
-				response.println("<input type=\"radio\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + val + "\" " + (selected ? "CHECKED" : "")
-						+ (readOnly ? " disabled=\"disabled\"" : "") + " /> " + message);
+				response.println("<input " + onclick + "type=\"radio\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + val + "\" "
+						+ (selected ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " /> " + message);
 
-				// TODO: container
+				// container of dependent components
 				Container container = this.selectionContainers.get(val);
 				if (container != null)
 				{
+					needDependencies = true;
+
+					dependency.append("[\"" + val + "\",");
+					RenderListener listener = new RenderListener()
+					{
+						public void componentRendered(String id)
+						{
+							dependency.append("\"" + id + "\",");
+						}
+					};
+
+					// listen for any dependent edit components being rendered
+					context.addEditComponentRenderListener(listener);
+
+					// render the dependent components
 					container.render(context, focus);
-					// TODO: collect the render ids, setup the enable / disable-clear methods ...
+
+					// stop listening
+					context.removeEditComponentRenderListener(listener);
+
+					dependency.setLength(dependency.length() - 1);
+					dependency.append("],");
 				}
 
 				// contained stuff will most likely include a break...
@@ -267,6 +302,14 @@ public class UiSelection extends UiComponent implements Selection
 				{
 					response.println("<br />");
 				}
+			}
+
+			if (needDependencies)
+			{
+				dependency.setLength(dependency.length() - 1);
+				dependency.append("];\n");
+				context.addScript(dependency.toString());
+				context.addScript("ambrosiaSelectDependencies(\"" + startingValue + "\", " + dependencyId + ");\n");
 			}
 		}
 

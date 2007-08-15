@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -37,6 +38,7 @@ import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Fragment;
 import org.muse.ambrosia.api.FragmentDelegate;
+import org.muse.ambrosia.api.RenderListener;
 import org.muse.ambrosia.api.UiService;
 import org.sakaiproject.i18n.InternationalizedMessages;
 
@@ -234,6 +236,9 @@ public class UiContext implements Context
 	/** The tool destination of the request. */
 	protected String destination = null;
 
+	/** Set of listeners for edit component render notices. */
+	protected Set<RenderListener> editRenderListeners = new HashSet<RenderListener>();
+
 	/** named objects and encoding references. */
 	protected Map<String, String> encodings = new HashMap<String, String>();
 
@@ -290,6 +295,14 @@ public class UiContext implements Context
 	/**
 	 * {@inheritDoc}
 	 */
+	public void addEditComponentRenderListener(RenderListener listener)
+	{
+		this.editRenderListeners.add(listener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addFocusId(String id)
 	{
 		this.focusIds.add(id);
@@ -339,6 +352,17 @@ public class UiContext implements Context
 		// pop the fragment's messages onto the stack
 		InternationalizedMessages msgs = delegate.getMessages();
 		if (msgs != null) this.messages.pop();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void editComponentRendered(String id)
+	{
+		for (RenderListener listener : this.editRenderListeners)
+		{
+			listener.componentRendered(id);
+		}
 	}
 
 	/**
@@ -592,6 +616,14 @@ public class UiContext implements Context
 	{
 		objects.remove(name);
 		encodings.remove(name);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void removeEditComponentRenderListener(RenderListener listener)
+	{
+		this.editRenderListeners.remove(listener);
 	}
 
 	/**

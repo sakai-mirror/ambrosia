@@ -228,6 +228,8 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
 					+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 
+			context.editComponentRendered(id);
+
 			response.println("</div>");
 		}
 

@@ -248,6 +248,8 @@ public class UiDateEdit extends UiComponent implements DateEdit
 				+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
 
+		context.editComponentRendered(id);
+
 		response.println("</div>");
 
 		// the decode directive
