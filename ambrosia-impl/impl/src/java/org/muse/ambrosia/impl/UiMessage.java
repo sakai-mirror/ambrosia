@@ -124,9 +124,9 @@ public class UiMessage implements Message
 		{
 			if (selector != null)
 			{
-				return StringUtil.trimToNull(context.getMessages().getString(selector));
+				return StringUtil.trimToZero(context.getMessages().getString(selector));
 			}
-			return null;
+			return "";
 		}
 
 		// if there is no selector, just read the first reference as the value
@@ -134,9 +134,9 @@ public class UiMessage implements Message
 		{
 			if ((references != null) && (references.length == 1))
 			{
-				return StringUtil.trimToNull(references[0].read(context, focus));
+				return StringUtil.trimToZero(references[0].read(context, focus));
 			}
-			return null;
+			return "";
 		}
 
 		// put the property reference into args for the message
@@ -146,14 +146,12 @@ public class UiMessage implements Message
 		{
 			String value = reference.read(context, focus);
 
-			// if any are null, null the entire message
-			// TODO: make this an option rather than default behavior? -ggolden
-			// if (value == null) value = "";
-			if (value == null) return null;
+			// null becomes ""
+			if (value == null) value = "";
 
 			args[i++] = value;
 		}
 
-		return StringUtil.trimToNull(context.getMessages().getFormattedMessage(selector, args));
+		return StringUtil.trimToZero(context.getMessages().getFormattedMessage(selector, args));
 	}
 }

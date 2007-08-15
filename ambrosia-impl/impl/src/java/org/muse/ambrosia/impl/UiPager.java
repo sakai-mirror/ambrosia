@@ -321,11 +321,7 @@ public class UiPager extends UiComponent implements Pager
 		// render the message
 		if (this.curMessage != null)
 		{
-			String msg = this.curMessage.getMessage(context, focus);
-			if (msg != null)
-			{
-				response.println(msg);
-			}
+			response.println(this.curMessage.getMessage(context, focus));
 		}
 
 		// TODO: formatting the message and the dropdown

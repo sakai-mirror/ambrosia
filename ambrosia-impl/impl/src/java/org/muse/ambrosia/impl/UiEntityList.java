@@ -438,11 +438,8 @@ public class UiEntityList extends UiComponent implements EntityList
 						Message headingMessage = this.headingMessages.get(h);
 						if (headingMessage != null)
 						{
-							String heading = headingMessage.getMessage(context, entity);
-							if (heading != null)
-							{
-								response.println("<tr><td style=\"padding:1em;\" colspan=\"" + cols + "\">" + heading + "</td></tr>");
-							}
+							response.println("<tr><td style=\"padding:1em;\" colspan=\"" + cols + "\">" + headingMessage.getMessage(context, entity)
+									+ "</td></tr>");
 						}
 
 						else
@@ -465,7 +462,7 @@ public class UiEntityList extends UiComponent implements EntityList
 				{
 					// included?
 					if (!c.included(context)) continue;
-					
+
 					col++;
 
 					// will we need a summary row?
@@ -501,7 +498,8 @@ public class UiEntityList extends UiComponent implements EntityList
 						if (href != null)
 						{
 							String navId = id + "_r" + row + "_c_" + col;
-							UiNavigation.generateLinkScript(context, navId, false, false, c.getEntityNavigationSubmit(), href, (String) context.get("sakai.return.url"));
+							UiNavigation.generateLinkScript(context, navId, false, false, c.getEntityNavigationSubmit(), href, (String) context
+									.get("sakai.return.url"));
 							response.print("<a style=\"text-decoration:none !important\" href=\"#\" onclick=\"act_" + navId + "();\">");
 						}
 
