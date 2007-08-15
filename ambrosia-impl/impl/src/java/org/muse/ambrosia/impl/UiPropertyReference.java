@@ -809,6 +809,26 @@ public class UiPropertyReference implements PropertyReference
 					}
 				}
 
+				// single value float
+				else if (paramTypes[0] == Float.class)
+				{
+					params[0] = ((value != null) && (value[0] != null)) ? Float.valueOf(StringUtil.trimToZero(value[0])) : null;
+				}
+
+				// multiple value float
+				else if (paramTypes[0] == Float[].class)
+				{
+					if (value != null)
+					{
+						Float[] values = new Float[value.length];
+						for (int i = 0; i < value.length; i++)
+						{
+							values[i] = Float.valueOf(StringUtil.trimToZero(value[i]));
+						}
+						params[0] = values;
+					}
+				}
+
 				// TODO: other types
 				else
 				{
