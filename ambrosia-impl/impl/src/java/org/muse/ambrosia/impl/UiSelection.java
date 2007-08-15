@@ -239,6 +239,14 @@ public class UiSelection extends UiComponent implements Selection
 			// the check box
 			response.println("<input type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + this.selectedValue + "\" "
 					+ (checked ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
+
+			// the decode directive
+			if ((this.propertyReference != null) && (!readOnly))
+			{
+				response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\"" + "prop_"
+						+ decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />" + "<input type=\"hidden\" name=\""
+						+ "null_" + decodeId + "\" value=\"" + this.notSelectedValue + "\" />");
+			}
 		}
 
 		else
@@ -311,14 +319,14 @@ public class UiSelection extends UiComponent implements Selection
 				context.addScript(dependency.toString());
 				context.addScript("ambrosiaSelectDependencies(\"" + startingValue + "\", " + dependencyId + ");\n");
 			}
-		}
 
-		// the decode directive
-		if ((this.propertyReference != null) && (!readOnly))
-		{
-			response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\"" + "prop_"
-					+ decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />" + "<input type=\"hidden\" name=\""
-					+ "null_" + decodeId + "\" value=\"" + this.notSelectedValue + "\" />");
+			// the decode directive
+			if ((this.propertyReference != null) && (!readOnly))
+			{
+				response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\""
+						+ "prop_" + decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
+			}
+
 		}
 
 		// title after
