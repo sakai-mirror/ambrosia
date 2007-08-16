@@ -22,9 +22,9 @@
 package org.muse.ambrosia.impl;
 
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
@@ -32,8 +32,6 @@ import org.muse.ambrosia.api.TextEdit;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * UiTextEdit presents a text input for the user to edit.
@@ -54,6 +52,9 @@ public class UiTextEdit extends UiComponent implements TextEdit
 
 	/** The message for the onEmptyAlert. */
 	protected Message onEmptyAlertMsg = null;
+
+	/** Property reference to get a set of pre-defined answers for the text. */
+	protected PropertyReference optionsReference = null;
 
 	/**
 	 * The PropertyReference for encoding and decoding this selection - this is what will be updated with the end-user's text edit, and what value
@@ -102,6 +103,14 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			setProperty(pRef);
 		}
 
+		// short for options
+		String options = StringUtil.trimToNull(xml.getAttribute("options"));
+		if (options != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(options);
+			if (pRef != null) setOptions(pRef);
+		}
+
 		// size
 		try
 		{
@@ -127,6 +136,18 @@ public class UiTextEdit extends UiComponent implements TextEdit
 		{
 			PropertyReference pRef = service.parsePropertyReference(settingsXml);
 			if (pRef != null) setProperty(pRef);
+		}
+
+		// options
+		settingsXml = XmlHelper.getChildElementNamed(xml, "options");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setOptions(pRef);
+			}
 		}
 
 		// onEmptyAlert
@@ -232,6 +253,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 
 			context.editComponentRendered(id);
 
+			renderOptions(context, focus, id);
+
 			response.println("</div>");
 		}
 
@@ -315,6 +338,15 @@ public class UiTextEdit extends UiComponent implements TextEdit
 	/**
 	 * {@inheritDoc}
 	 */
+	public TextEdit setOptions(PropertyReference propertyReference)
+	{
+		this.optionsReference = propertyReference;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public TextEdit setProperty(PropertyReference propertyReference)
 	{
 		this.propertyReference = propertyReference;
@@ -348,5 +380,37 @@ public class UiTextEdit extends UiComponent implements TextEdit
 	{
 		this.titleMessage = new UiMessage().setMessage(selector, references);
 		return this;
+	}
+
+	/**
+	 * Render the options html, if defined.
+	 * 
+	 * @param context
+	 *        The context.
+	 * @param focus
+	 *        The focus.
+	 * @param textId
+	 *        the render id of the main text field.
+	 */
+	protected void renderOptions(Context context, Object focus, String textId)
+	{
+		if (this.optionsReference == null) return;
+		Object options = this.optionsReference.readObject(context, focus);
+		if (options == null) return;
+
+		PrintWriter response = context.getResponseWriter();
+
+		response.println("<select size=\"1\" onchange=\"ambrosiaTextOptions(this,'" + textId + "')\">");
+		response.println("<option value=\"\"></option>");
+		if (options instanceof Collection)
+		{
+			for (Object option : (Collection) options)
+			{
+				String str = option.toString();
+				response.println("<option value=\"" + str + "\">" + Validator.escapeHtml(str) + "</option>");
+			}
+		}
+
+		response.println("</select>");
 	}
 }

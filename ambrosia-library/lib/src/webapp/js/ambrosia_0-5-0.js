@@ -168,3 +168,17 @@ function ambrosiaSelectDependencies(selected, dependencies)
 		}
 	}
 }
+
+function ambrosiaTextOptions(obj, textId)
+{
+	if (obj == null) return;
+	var txt = document.getElementById(textId);
+	if (txt == null) return;
+
+	if (obj.value != "")
+	{
+		txt.value = obj.value;
+	}
+	
+	obj.value = "";
+}

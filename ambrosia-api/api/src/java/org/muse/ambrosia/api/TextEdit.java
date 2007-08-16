@@ -48,6 +48,14 @@ public interface TextEdit extends Component
 	TextEdit setOnEmptyAlert(Decision decision, String selector, PropertyReference... references);
 
 	/**
+	 * Set the property reference for the options.
+	 * 
+	 * @param propertyReference
+	 *        The property reference for options.
+	 */
+	TextEdit setOptions(PropertyReference propertyReference);
+
+	/**
 	 * Set the property reference for the encode / decode.
 	 * 
 	 * @param propertyReference

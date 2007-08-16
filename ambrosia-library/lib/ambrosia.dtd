@@ -445,13 +445,16 @@
 <!ATTLIST selectionChoice value CDATA #IMPLIED >
 <!ATTLIST selectionChoice selector CDATA #IMPLIED >
 
-<!ELEMENT textEdit (included | title | model | onEmptyAlert | readOnly | focus)* >
+<!ELEMENT textEdit (included | title | model | options | onEmptyAlert | readOnly | focus)* >
 <!ATTLIST textEdit id CDATA #IMPLIED >
 <!ATTLIST textEdit title CDATA #IMPLIED >
 <!ATTLIST textEdit model CDATA #IMPLIED >
 <!ATTLIST textEdit rows CDATA #IMPLIED >
 <!ATTLIST textEdit cols CDATA #IMPLIED >
 <!ATTLIST textEdit readOnly (TRUE|FALSE) #IMPLIED >
+<!ATTLIST textEdit options CDATA #IMPLIED >
+
+<!ELEMENT options (model)* >
 
 <!ELEMENT countEdit (included | title | model | onEmptyAlert | readOnly | focus | summary)* >
 <!ATTLIST countEdit id CDATA #IMPLIED >

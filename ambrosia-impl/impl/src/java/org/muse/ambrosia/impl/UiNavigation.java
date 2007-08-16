@@ -486,14 +486,14 @@ public class UiNavigation extends UiComponent implements Navigation
 		String accessKey = null;
 		if (this.accessKey != null)
 		{
-			accessKey = this.accessKey.getMessage(context, focus);
+			accessKey = StringUtil.trimToNull(this.accessKey.getMessage(context, focus));
 		}
 
 		// description
 		String description = null;
 		if (this.description != null)
 		{
-			description = this.description.getMessage(context, focus);
+			description = StringUtil.trimToNull(this.description.getMessage(context, focus));
 		}
 
 		// make it a two step / confirm?
@@ -609,8 +609,8 @@ public class UiNavigation extends UiComponent implements Navigation
 								+ " onclick=\"act_"
 								+ id
 								+ "();\" "
-								+ ((accessKey.length() == 0) ? "" : "accesskey=\"" + accessKey.charAt(0) + "\" ")
-								+ ((description.length() == 0) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" ")
+								+ ((accessKey == null) ? "" : "accesskey=\"" + accessKey.charAt(0) + "\" ")
+								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" ")
 								+ (((this.icon != null) && (this.iconStyle == IconStyle.left)) ? "style=\"padding-left:2em; background: #eee url('"
 										+ context.getUrl(this.icon) + "') .2em no-repeat;\"" : "")
 								+ (((this.icon != null) && (this.iconStyle == IconStyle.right)) ? "style=\"padding-left:.4em; padding-right:2em; background: #eee url('"
