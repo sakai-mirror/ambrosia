@@ -97,6 +97,7 @@ import org.muse.ambrosia.api.ModelComponent;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.NavigationBar;
 import org.muse.ambrosia.api.OrDecision;
+import org.muse.ambrosia.api.OrderColumn;
 import org.muse.ambrosia.api.Pager;
 import org.muse.ambrosia.api.Paging;
 import org.muse.ambrosia.api.PagingPropertyReference;
@@ -691,6 +692,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public OrderColumn newOrderColumn()
+	{
+		return new UiOrderColumn();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Pager newPager()
 	{
 		return new UiPager();
@@ -1059,6 +1068,7 @@ public class UiServiceImpl implements UiService
 
 		if (xml.getTagName().equals("autoColumn")) return new UiAutoColumn();
 		if (xml.getTagName().equals("modelColumn")) return new UiPropertyColumn(this, xml);
+		if (xml.getTagName().equals("orderColumn")) return new UiOrderColumn(this, xml);
 		if (xml.getTagName().equals("selectionColumn")) return new UiSelectionColumn(this, xml);
 
 		if (!xml.getTagName().equals("column")) return null;
@@ -1066,6 +1076,7 @@ public class UiServiceImpl implements UiService
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
 		if ("auto".equals(type)) return new UiAutoColumn();
 		if ("model".equals(type)) return new UiPropertyColumn(this, xml);
+		if ("order".equals(type)) return new UiOrderColumn(this, xml);
 		if ("selection".equals(type)) return new UiSelectionColumn(this, xml);
 
 		return new UiEntityListColumn(this, xml);

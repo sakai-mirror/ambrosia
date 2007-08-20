@@ -296,7 +296,7 @@
 <!ATTLIST iterator model CDATA #IMPLIED >
 <!ATTLIST iterator name CDATA #IMPLIED >
 
-<!ELEMENT columns (column | autoColumn | modelColumn | selectionColumn)* >
+<!ELEMENT columns (column | autoColumn | modelColumn | orderColumn | selectionColumn)* >
 <!ELEMENT column (asAlert | entityIncluded | included | sort | title | container | entityNavigations | footnotes | navigations)* >
 <!ATTLIST column type (auto|model|selection) #IMPLIED >
 <!ATTLIST column centered (TRUE|FALSE) #IMPLIED >
@@ -340,6 +340,9 @@
 <!ATTLIST selectionColumn multiple (TRUE|FALSE) #IMPLIED >
 <!ATTLIST selectionColumn single (TRUE|FALSE) #IMPLIED >
 <!ATTLIST selectionColumn model CDATA #IMPLIED >
+
+<!ELEMENT orderColumn (value | model | asAlert | entityIncluded | included | sort | title | container | entityNavigations | footnotes | navigations)* >
+<!ATTLIST orderColumn model CDATA #IMPLIED >
 
 <!ELEMENT label (message) >
 

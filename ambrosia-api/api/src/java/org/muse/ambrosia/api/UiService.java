@@ -450,6 +450,13 @@ public interface UiService
 	OrDecision newOrDecision();
 
 	/**
+	 * Construct a new OrderColumn
+	 * 
+	 * @return a new OrderColumn
+	 */
+	OrderColumn newOrderColumn();
+
+	/**
 	 * Construct a new Pager
 	 * 
 	 * @return a new Pager

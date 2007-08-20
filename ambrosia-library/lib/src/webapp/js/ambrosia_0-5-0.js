@@ -182,3 +182,80 @@ function ambrosiaTextOptions(obj, textId)
 	
 	obj.value = "";
 }
+
+function ambrosiaNextSibling(obj, tag)
+{
+	var next = obj.nextSibling;
+	while(next && next.nodeName != tag)
+	{
+		next = next.nextSibling;
+	}
+	return next;
+}
+
+function ambrosiaPrevSibling(obj, tag)
+{
+	var prev = obj.previousSibling;
+	while(prev && prev.nodeName != tag)
+	{
+		prev = prev.previousSibling;
+	}
+	return prev;
+}
+
+function ambrosiaParent(obj, tag)
+{
+	if (obj == null) return null;
+
+	var up = obj.parentNode;
+	if (up == null) return null;
+	if (up.nodeName == tag)
+	{
+		return up;
+	}
+	return ambrosiaParent(up, tag);
+}
+
+function ambrosiaTableReorder(event, innerObj)
+{
+// window.event || event for ie?
+	if ((event == null) || (innerObj == null)) return true;
+	if ((event.keyCode != 38) && (event.keyCode != 40)) return true;
+
+	var obj = innerObj;
+	if (obj.nodeName != "TR")
+	{
+		obj = ambrosiaParent(obj, "TR");
+	}
+	if (obj == null) return true;
+
+	if (event.keyCode == 38)
+	{
+		var prev = ambrosiaPrevSibling(obj, "TR");
+		if (prev)
+		{
+			obj.parentNode.insertBefore(obj, prev);
+			innerObj.focus();
+		}
+		return false;
+	}
+
+	if (event.keyCode == 40)
+	{
+		var next = ambrosiaNextSibling(obj, "TR");
+		if (next) next = ambrosiaNextSibling(next, "TR");
+		if (next)
+		{
+			obj.parentNode.insertBefore(obj, next);
+			innerObj.focus();
+		}
+		else
+		{
+			obj.parentNode.appendChild(obj);
+			innerObj.focus();
+		}
+		return false;
+	}
+	
+	return true;
+}
