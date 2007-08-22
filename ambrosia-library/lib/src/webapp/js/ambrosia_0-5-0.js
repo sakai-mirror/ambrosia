@@ -220,7 +220,13 @@ function ambrosiaTableReorder(event, innerObj)
 {
 // window.event || event for ie?
 	if ((event == null) || (innerObj == null)) return true;
-	if ((event.keyCode != 38) && (event.keyCode != 40)) return true;
+	var code = event.keyCode;
+
+	// safari translation
+	if (code == 63232) code = 38;
+	if (code == 63233) code = 40;
+
+	if ((code != 38) && (code != 40)) return true;
 
 	var obj = innerObj;
 	if (obj.nodeName != "TR")
@@ -229,7 +235,7 @@ function ambrosiaTableReorder(event, innerObj)
 	}
 	if (obj == null) return true;
 
-	if (event.keyCode == 38)
+	if (code == 38)
 	{
 		var prev = ambrosiaPrevSibling(obj, "TR");
 		if (prev)
@@ -240,7 +246,7 @@ function ambrosiaTableReorder(event, innerObj)
 		return false;
 	}
 
-	if (event.keyCode == 40)
+	if (code == 40)
 	{
 		var next = ambrosiaNextSibling(obj, "TR");
 		if (next) next = ambrosiaNextSibling(next, "TR");
