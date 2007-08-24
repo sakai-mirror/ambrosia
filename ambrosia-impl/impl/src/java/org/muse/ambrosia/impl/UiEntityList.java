@@ -284,12 +284,13 @@ public class UiEntityList extends UiComponent implements EntityList
 		boolean empty = ((data == null) || (data.isEmpty()));
 
 		// columns one time text
+		int colNum = 0;
 		for (EntityListColumn c : this.columns)
 		{
 			// included?
 			if (!c.included(context)) continue;
 
-			String text = c.getPrefixText(context, focus, idRoot);
+			String text = c.getPrefixText(context, focus, idRoot, colNum++);
 			if (text != null)
 			{
 				response.println(text);
@@ -457,13 +458,11 @@ public class UiEntityList extends UiComponent implements EntityList
 				}
 
 				response.println("<tr>");
-				int col = 0;
+				colNum = 0;
 				for (EntityListColumn c : this.columns)
 				{
 					// included?
 					if (!c.included(context)) continue;
-
-					col++;
 
 					// will we need a summary row?
 					if ((!summaryNeeded) && (c.isSummaryRequired()))
@@ -497,14 +496,14 @@ public class UiEntityList extends UiComponent implements EntityList
 						String href = c.getEntityNavigationDestination(context, entity);
 						if (href != null)
 						{
-							String navId = id + "_r" + row + "_c_" + col;
+							String navId = id + "_r" + row + "_c_" + colNum;
 							UiNavigation.generateLinkScript(context, navId, false, false, c.getEntityNavigationSubmit(), href, (String) context
 									.get("sakai.return.url"));
 							response.print("<a style=\"text-decoration:none !important\" href=\"#\" onclick=\"act_" + navId + "();\">");
 						}
 
 						// get the column's value for display
-						String value = c.getDisplayText(context, entity, row, idRoot);
+						String value = c.getDisplayText(context, entity, row, idRoot, colNum);
 
 						// alert?
 						boolean alert = c.alert(context, entity);
@@ -559,6 +558,8 @@ public class UiEntityList extends UiComponent implements EntityList
 					}
 
 					response.println("</td>");
+
+					colNum++;
 				}
 				response.println("</tr>");
 
@@ -611,12 +612,13 @@ public class UiEntityList extends UiComponent implements EntityList
 		response.println("</table>");
 
 		// columns one time text
+		colNum = 0;
 		for (EntityListColumn c : this.columns)
 		{
 			// included?
 			if (!c.included(context)) continue;
 
-			String text = c.getOneTimeText(context, focus, idRoot, row + 1);
+			String text = c.getOneTimeText(context, focus, idRoot, colNum++, row + 1);
 			if (text != null)
 			{
 				response.println(text);

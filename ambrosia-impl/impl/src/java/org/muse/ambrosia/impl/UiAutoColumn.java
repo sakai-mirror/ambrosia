@@ -40,7 +40,7 @@ public class UiAutoColumn extends UiEntityListColumn implements AutoColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, int idRoot)
+	public String getDisplayText(Context context, Object entity, int row, int idRoot, int colNum)
 	{
 		// TODO: watch out for overflow...
 

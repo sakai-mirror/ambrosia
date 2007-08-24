@@ -397,7 +397,7 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, int idRoot)
+	public String getDisplayText(Context context, Object entity, int row, int idRoot, int colNum)
 	{
 		// set the context to capture instead of adding to the output
 		context.setCollecting();
@@ -484,7 +484,7 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getOneTimeText(Context context, Object focus, int idRoot, int numRows)
+	public String getOneTimeText(Context context, Object focus, int idRoot, int colNum, int numRows)
 	{
 		return null;
 	}
@@ -492,7 +492,7 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getPrefixText(Context context, Object focus, int idRoot)
+	public String getPrefixText(Context context, Object focus, int idRoot, int colNum)
 	{
 		return null;
 	}

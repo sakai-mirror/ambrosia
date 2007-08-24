@@ -91,9 +91,11 @@ public interface EntityListColumn
 	 *        The current row number of the list.
 	 * @param idRoot
 	 *        An ID value that can be used, unique to the entity list.
+	 * @param colNum
+	 *        The 0 based column number.
 	 * @return The the text for display.
 	 */
-	String getDisplayText(Context context, Object entity, int row, int idRoot);
+	String getDisplayText(Context context, Object entity, int row, int idRoot, int colNum);
 
 	/**
 	 * Find the first defined navigation to be included, enabled, and with a non-null destination; return the destination.
@@ -159,11 +161,13 @@ public interface EntityListColumn
 	 *        The entity focus of the list (not a row entity).
 	 * @param idRoot
 	 *        An ID that can be used, unique to the entity list.
+	 * @param colNum
+	 *        The 0 based column number.
 	 * @param numRows
 	 *        The number of rows that were generated.
 	 * @return The additional encoding text only once, not per entity / per row.
 	 */
-	String getOneTimeText(Context context, Object focus, int idRoot, int numRows);
+	String getOneTimeText(Context context, Object focus, int idRoot, int colNum, int numRows);
 
 	/**
 	 * Get additional prefix text only once, not per entity / per row.
@@ -174,11 +178,11 @@ public interface EntityListColumn
 	 *        The entity focus of the list (not a row entity).
 	 * @param idRoot
 	 *        An ID that can be used, unique to the entity list.
-	 * @param numRows
-	 *        The number of rows that were generated.
+	 * @param colNum
+	 *        The 0 based column number.
 	 * @return The additional encoding text only once, not per entity / per row.
 	 */
-	String getPrefixText(Context context, Object focus, int idRoot);
+	String getPrefixText(Context context, Object focus, int idRoot, int colNum);
 
 	/**
 	 * Access the sort asc icon path.

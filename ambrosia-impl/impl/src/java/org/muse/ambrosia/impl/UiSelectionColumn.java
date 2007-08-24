@@ -156,10 +156,10 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, int idRoot)
+	public String getDisplayText(Context context, Object entity, int row, int idRoot, int colNum)
 	{
 		// generate some ids
-		String id = this.getClass().getSimpleName() + "_" + idRoot;
+		String id = this.getClass().getSimpleName() + "_" + idRoot + "_" + colNum;
 
 		// read only?
 		boolean readOnly = false;
@@ -246,7 +246,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		}
 
 		// form a row-unique id, using the overall id and the row
-		String uid = id + row;
+		String uid = id + "_" + row;
 
 		// for single selection, use a radio set
 		if (single)
@@ -279,7 +279,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getOneTimeText(Context context, Object focus, int idRoot, int numRows)
+	public String getOneTimeText(Context context, Object focus, int idRoot, int colNum, int numRows)
 	{
 		// read only?
 		boolean readOnly = false;
@@ -302,8 +302,8 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		}
 
 		// generate some ids
-		String id = this.getClass().getSimpleName() + "_" + idRoot;
-		String decodeId = "decode_" + idRoot;
+		String id = this.getClass().getSimpleName() + "_" + idRoot + "_" + colNum;
+		String decodeId = "decode_" + idRoot + "_" + colNum;
 
 		StringBuffer rv = new StringBuffer();
 
@@ -319,7 +319,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 				StringBuffer buf = new StringBuffer();
 				for (int i = 0; i < numRows; i++)
 				{
-					buf.append("!document.getElementById('" + id + Integer.toString(i) + "').checked &&");
+					buf.append("!document.getElementById('" + id + "_" + Integer.toString(i) + "').checked &&");
 				}
 				buf.setLength(buf.length() - 3);
 

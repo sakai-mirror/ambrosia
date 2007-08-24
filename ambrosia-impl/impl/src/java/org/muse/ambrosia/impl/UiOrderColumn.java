@@ -92,10 +92,10 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, int idRoot)
+	public String getDisplayText(Context context, Object entity, int row, int idRoot, int colNum)
 	{
 		// generate some ids
-		String id = this.getClass().getSimpleName() + "_" + idRoot;
+		String id = this.getClass().getSimpleName() + "_" + idRoot + "_" + colNum;
 
 		// read only?
 		boolean readOnly = false;
@@ -121,9 +121,6 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 
 		StringBuffer rv = new StringBuffer();
 
-		// form a row-unique id, using the overall id and the row
-		String uid = id + row;
-
 		rv.append("<input type=\"hidden\" name=\"" + id + "\" value=\"" + value + "\" />");
 
 		// TODO: icon
@@ -135,11 +132,11 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getOneTimeText(Context context, Object focus, int idRoot, int numRows)
+	public String getOneTimeText(Context context, Object focus, int idRoot, int colNum, int numRows)
 	{
 		// generate some ids
-		String id = this.getClass().getSimpleName() + "_" + idRoot;
-		String decodeId = "decode_" + idRoot;
+		String id = this.getClass().getSimpleName() + "_" + idRoot + "_" + colNum;
+		String decodeId = "decode_" + idRoot + "_" + colNum;
 
 		StringBuffer rv = new StringBuffer();
 
