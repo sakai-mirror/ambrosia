@@ -124,7 +124,7 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 		rv.append("<input type=\"hidden\" name=\"" + id + "\" value=\"" + value + "\" />");
 
 		// TODO: icon
-		rv.append("<a href=\"#\" onclick=\"this.focus(); return false;\" onkeypress=\"return ambrosiaTableReorder(event, this);\">link</a>");
+		rv.append("<a href=\"#\" onclick=\"this.focus(); return false;\" onkeyup=\"return false;\" onkeypress=\"return false;\" onkeydown=\"return ambrosiaTableReorder(event, this);\">link</a>");
 
 		return rv.toString();
 	}

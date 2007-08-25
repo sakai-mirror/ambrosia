@@ -222,10 +222,6 @@ function ambrosiaTableReorder(event, innerObj)
 	if ((event == null) || (innerObj == null)) return true;
 	var code = event.keyCode;
 
-	// safari translation
-	if (code == 63232) code = 38;
-	if (code == 63233) code = 40;
-
 	if ((code != 38) && (code != 40)) return true;
 
 	var obj = innerObj;
