@@ -212,7 +212,7 @@
 
 <!ELEMENT navigations (navigation)* >
 
-<!ELEMENT navigation (included | confirm | title | destination | disabled | default | validate | icon)* >
+<!ELEMENT navigation (included | confirm | title | destination | disabled | default | validate | icon | iterator)* >
 <!ATTLIST navigation id CDATA #IMPLIED >
 <!ATTLIST navigation title CDATA #IMPLIED >
 <!ATTLIST navigation style (BUTTON|LINK) #IMPLIED >
