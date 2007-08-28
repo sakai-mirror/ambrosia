@@ -1281,6 +1281,8 @@ public class UiServiceImpl implements UiService
 		String destinationUrl = Web.returnUrl(req, destination);
 		context.put("sakai.destination.url", destinationUrl);
 		context.put("sakai_destination", destination);
+		
+		context.put("sakai_prev_destination", (previousDestination == null ? "/" : previousDestination));
 
 		// setup that a POST to this destination will be expected
 		String previousExpected = (String) toolSession.getAttribute(ActiveTool.TOOL_ATTR_CURRENT_DESTINATION + ".expected");
