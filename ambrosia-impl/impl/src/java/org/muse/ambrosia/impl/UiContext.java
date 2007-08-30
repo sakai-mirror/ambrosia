@@ -567,6 +567,14 @@ public class UiContext implements Context
 	/**
 	 * {@inheritDoc}
 	 */
+	public void popMessages()
+	{
+		this.messages.pop();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void put(String name, Object value)
 	{
 		if (name == null) return;

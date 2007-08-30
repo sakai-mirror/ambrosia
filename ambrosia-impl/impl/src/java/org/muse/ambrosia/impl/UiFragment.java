@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Fragment;
+import org.sakaiproject.i18n.InternationalizedMessages;
 import org.w3c.dom.Element;
 
 /**
@@ -33,6 +34,9 @@ import org.w3c.dom.Element;
  */
 public class UiFragment extends UiContainer implements Fragment
 {
+	/** The message bundle to use while rendering this fragment. */
+	protected InternationalizedMessages messages = null;
+
 	/**
 	 * Public no-arg constructor.
 	 */
@@ -71,10 +75,31 @@ public class UiFragment extends UiContainer implements Fragment
 		// included?
 		if (!isIncluded(context, focus)) return;
 
+		// setup the custom messages
+		if (this.messages != null)
+		{
+			context.addMessages(this.messages);
+		}
+
 		// render the contained
 		for (Component c : this.contained)
 		{
 			c.render(context, focus);
 		}
+		
+		// remove the custom messages
+		if (this.messages != null)
+		{
+			context.popMessages();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Fragment setMessages(InternationalizedMessages messages)
+	{
+		this.messages = messages;
+		return this;
 	}
 }

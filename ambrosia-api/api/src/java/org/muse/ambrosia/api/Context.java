@@ -241,6 +241,11 @@ public interface Context
 	String getValidation();
 
 	/**
+	 * Remove the most recently added messages from the stack.
+	 */
+	void popMessages();
+
+	/**
 	 * Add an object to context.
 	 * 
 	 * @param name

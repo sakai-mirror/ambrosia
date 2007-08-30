@@ -21,9 +21,19 @@
 
 package org.muse.ambrosia.api;
 
+import org.sakaiproject.i18n.InternationalizedMessages;
+
 /**
  * Fragment is a top most container holding a collection of components that make up a fragment of a user interface.
  */
 public interface Fragment extends Container
 {
+	/**
+	 * Set a message bundle to use while rendering the fragment.
+	 * 
+	 * @param messages
+	 *        The message bundle.
+	 * @return self.
+	 */
+	Fragment setMessages(InternationalizedMessages messages);
 }
