@@ -56,13 +56,16 @@ public class UiNavigation extends UiComponent implements Navigation
 	 *        the link destination.
 	 * @param root
 	 *        The root of the destination URL.
+	 * @param requirements
+	 *        true if we need to check requirements before allowing the nav to be processed.
 	 */
 	protected static void generateLinkScript(Context context, String id, boolean confirm, boolean validate, boolean submit, String destination,
-			String root)
+			String root, boolean requirements)
 	{
 		// the act method call
 		String action = "ambrosiaNavigate(enabled_" + id + ", 'enable_" + id + "()', " + Boolean.toString(confirm) + ", 'confirm_" + id + "', "
-				+ Boolean.toString(validate) + ", " + Boolean.toString(submit) + ", '" + destination + "','" + root + "');";
+				+ Boolean.toString(validate) + ", " + Boolean.toString(submit) + ", '" + destination + "','" + root + "', "
+				+ (requirements ? "'requirements_" + id + "()','failure_" + id + "'" : "null, null") + ");";
 
 		// the script
 		StringBuffer script = new StringBuffer();
@@ -72,7 +75,6 @@ public class UiNavigation extends UiComponent implements Navigation
 		script.append("function enable_" + id + "()\n{\n\tenabled_" + id + "=true;\n}\n");
 		script.append("function act_" + id + "()\n{\n\t" + action + "\n}\n");
 		context.addScript(script.toString());
-
 	}
 
 	/** Message to form the access key. */
@@ -441,196 +443,6 @@ public class UiNavigation extends UiComponent implements Navigation
 	/**
 	 * {@inheritDoc}
 	 */
-	public void renderContents(Context context, Object focus)
-	{
-		// included?
-		// if (!isIncluded(context, focus)) return;
-
-		// disabled?
-		boolean disabled = isDisabled(context, focus);
-
-		// generate id
-		// if this component has a name-id, and it has already been registered in the context, we are an alias:
-		// use the registered value as id and skip our script / confirm generation.
-		String id = null;
-		boolean isAliasRendering = false;
-		if (getId() != null)
-		{
-			id = context.getRegistration(getId());
-			if (id != null) isAliasRendering = true;
-		}
-
-		if (id == null)
-		{
-			id = this.getClass().getSimpleName() + "_" + context.getUniqueId();
-
-			// register if we have a name so any alias can use this same id
-			if (getId() != null)
-			{
-				context.register(getId(), id);
-			}
-		}
-
-		// is this a default choice?
-		boolean dflt = isDefault(context, focus);
-
-		// validate?
-		boolean validate = false;
-		if (this.validationDecision != null)
-		{
-			validate = this.validationDecision.decide(context, focus);
-		}
-
-		// title
-		String title = "";
-		if (this.title != null)
-		{
-			title = this.title.getMessage(context, focus);
-		}
-
-		// access key
-		String accessKey = null;
-		if (this.accessKey != null)
-		{
-			accessKey = StringUtil.trimToNull(this.accessKey.getMessage(context, focus));
-		}
-
-		// description
-		String description = null;
-		if (this.description != null)
-		{
-			description = StringUtil.trimToNull(this.description.getMessage(context, focus));
-		}
-
-		// make it a two step / confirm?
-		boolean confirm = false;
-		if (this.confirmDecision != null)
-		{
-			confirm = this.confirmDecision.decide(context, focus);
-		}
-
-		PrintWriter response = context.getResponseWriter();
-
-		// generate the script and confirm stuff only if not an alias
-		if (!isAliasRendering)
-		{
-			// our action javascript
-			if (!disabled)
-			{
-				generateLinkScript(context, id, confirm, validate, this.submit, (this.destination != null ? this.destination.getDestination(context,
-						focus) : ""), (String) context.get("sakai.return.url"));
-			}
-
-			if (confirm)
-			{
-				response
-						.println("<div class=\"ambrosiaConfirmPanel\" style=\"display:none; left:0px; top:0px; width:340px; height:120px\" id=\"confirm_"
-								+ id + "\">");
-				response.println("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>");
-				response.println("<td colspan=\"2\" style=\"padding:1em; white-space:normal; line-height:1em; \" align=\"left\">"
-						+ this.confirmMsg.getMessage(context, focus) + "</td>");
-				response.println("</tr><tr>");
-				response.println("<td style=\"padding:1em\" align=\"left\"><input type=\"button\" value=\""
-						+ this.confirmCancelMsg.getMessage(context, focus)
-						+ "\" onclick=\"hideConfirm('confirm_"
-						+ id
-						+ "','cancel_"
-						+ id
-						+ "()');\" "
-						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('"
-								+ context.getUrl(this.confirmCancelIcon) + "') .2em no-repeat;\"" : "") + "/></td>");
-				response.println("<td style=\"padding:1em\" align=\"right\"><input type=\"button\" value=\"" + title
-						+ "\" onclick=\"hideConfirm('confirm_" + id + "','act_" + id + "();');\" style=\"padding-left:2em; background: #eee url('"
-						+ context.getUrl(this.icon) + "') .2em no-repeat;\"/></td>");
-				response.println("</tr></table></div>");
-			}
-		}
-
-		switch (this.style)
-		{
-			case link:
-			{
-				// no title special case
-				if (title.length() == 0)
-				{
-					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
-
-					if (this.icon != null)
-					{
-						response.print("<img style=\"vertical-align:text-bottom;\" src=\""
-								+ context.getUrl(this.icon)
-								+ "\" "
-								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
-										+ Validator.escapeHtml(description) + "\" ") + " />");
-					}
-
-					if (!disabled) response.print("</a>");
-				}
-
-				else
-				{
-					if ((this.icon != null) && (this.iconStyle == IconStyle.left))
-					{
-						response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\""
-								+ context.getUrl(this.icon)
-								+ "\" "
-								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
-										+ Validator.escapeHtml(description) + "\" ") + " />");
-					}
-
-					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
-
-					response.print(title);
-
-					if (!disabled) response.print("</a>");
-
-					if ((this.icon != null) && (this.iconStyle == IconStyle.right))
-					{
-						response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\""
-								+ context.getUrl(this.icon)
-								+ "\" "
-								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
-										+ Validator.escapeHtml(description) + "\" ") + " />");
-					}
-				}
-
-				response.println();
-
-				break;
-			}
-
-			case button:
-			{
-				response
-						.println("<input type=\"button\" "
-								+ (dflt ? "class=\"active\"" : "")
-								+ " name=\""
-								+ id
-								+ "\" id=\""
-								+ id
-								+ "\" value=\""
-								+ title
-								+ "\""
-								+ (disabled ? " disabled=\"disabled\"" : "")
-								+ " onclick=\"act_"
-								+ id
-								+ "();\" "
-								+ ((accessKey == null) ? "" : "accesskey=\"" + accessKey.charAt(0) + "\" ")
-								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" ")
-								+ (((this.icon != null) && (this.iconStyle == IconStyle.left)) ? "style=\"padding-left:2em; background: #eee url('"
-										+ context.getUrl(this.icon) + "') .2em no-repeat;\"" : "")
-								+ (((this.icon != null) && (this.iconStyle == IconStyle.right)) ? "style=\"padding-left:.4em; padding-right:2em; background: #eee url('"
-										+ context.getUrl(this.icon) + "') right no-repeat;\""
-										: "") + "/>");
-
-				break;
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public Navigation setAccessKey(String selector, PropertyReference... references)
 	{
 		this.accessKey = new UiMessage().setMessage(selector, references);
@@ -841,5 +653,258 @@ public class UiNavigation extends UiComponent implements Navigation
 
 		if (this.disabledDecision == null) return false;
 		return this.disabledDecision.decide(context, focus);
+	}
+
+	/**
+	 * Render one iteration.
+	 * 
+	 * @param context
+	 *        The context.
+	 * @param focus
+	 *        The focus.
+	 */
+	protected void renderContents(Context context, Object focus)
+	{
+		// included?
+		// if (!isIncluded(context, focus)) return;
+
+		// disabled?
+		boolean disabled = isDisabled(context, focus);
+
+		// generate id
+		// if this component has a name-id, and it has already been registered in the context, we are an alias:
+		// use the registered value as id and skip our script / confirm generation.
+		String id = null;
+		boolean isAliasRendering = false;
+		if (getId() != null)
+		{
+			id = context.getRegistration(getId());
+			if (id != null) isAliasRendering = true;
+		}
+
+		if (id == null)
+		{
+			id = this.getClass().getSimpleName() + "_" + context.getUniqueId();
+
+			// register if we have a name so any alias can use this same id
+			if (getId() != null)
+			{
+				context.register(getId(), id);
+			}
+		}
+
+		// is this a default choice?
+		boolean dflt = isDefault(context, focus);
+
+		// validate?
+		boolean validate = false;
+		if (this.validationDecision != null)
+		{
+			validate = this.validationDecision.decide(context, focus);
+		}
+
+		// title
+		String title = "";
+		if (this.title != null)
+		{
+			title = this.title.getMessage(context, focus);
+		}
+
+		// access key
+		String accessKey = null;
+		if (this.accessKey != null)
+		{
+			accessKey = StringUtil.trimToNull(this.accessKey.getMessage(context, focus));
+		}
+
+		// description
+		String description = null;
+		if (this.description != null)
+		{
+			description = StringUtil.trimToNull(this.description.getMessage(context, focus));
+		}
+
+		// make it a two step / confirm?
+		boolean confirm = false;
+		if (this.confirmDecision != null)
+		{
+			confirm = this.confirmDecision.decide(context, focus);
+		}
+
+		// are there requirements?
+		boolean requirements = (this.selectRequirement != SelectRequirement.none);
+		String relatedId = null;
+		if (requirements)
+		{
+			relatedId = (String) context.get("ambrosia.navigation.related.id");
+			if (relatedId == null) requirements = false;
+		}
+
+		PrintWriter response = context.getResponseWriter();
+
+		// generate the script and confirm stuff only if not an alias
+		if (!isAliasRendering)
+		{
+			// our action javascript
+			if (!disabled)
+			{
+				generateLinkScript(context, id, confirm, validate, this.submit, (this.destination != null ? this.destination.getDestination(context,
+						focus) : ""), (String) context.get("sakai.return.url"), requirements);
+			}
+
+			if (confirm)
+			{
+				response
+						.println("<div class=\"ambrosiaConfirmPanel\" style=\"display:none; left:0px; top:0px; width:340px; height:120px\" id=\"confirm_"
+								+ id + "\">");
+				response.println("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>");
+				response.println("<td colspan=\"2\" style=\"padding:1em; white-space:normal; line-height:1em; \" align=\"left\">"
+						+ this.confirmMsg.getMessage(context, focus) + "</td>");
+				response.println("</tr><tr>");
+				response.println("<td style=\"padding:1em\" align=\"left\"><input type=\"button\" value=\""
+						+ this.confirmCancelMsg.getMessage(context, focus)
+						+ "\" onclick=\"hideConfirm('confirm_"
+						+ id
+						+ "','cancel_"
+						+ id
+						+ "()');\" "
+						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('"
+								+ context.getUrl(this.confirmCancelIcon) + "') .2em no-repeat;\"" : "") + "/></td>");
+				response.println("<td style=\"padding:1em\" align=\"right\"><input type=\"button\" value=\"" + title
+						+ "\" onclick=\"hideConfirm('confirm_" + id + "','act_" + id + "();');\" style=\"padding-left:2em; background: #eee url('"
+						+ context.getUrl(this.icon) + "') .2em no-repeat;\"/></td>");
+				response.println("</tr></table></div>");
+			}
+
+			if (requirements)
+			{
+				// the "failure" panel shown if requirements are not met
+				response
+						.println("<div class=\"ambrosiaConfirmPanel\" style=\"display:none; left:0px; top:0px; width:340px; height:120px\" id=\"failure_"
+								+ id + "\">");
+				response.println("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>");
+				response.println("<td colspan=\"2\" style=\"padding:1em; white-space:normal; line-height:1em; \" align=\"left\">"
+						+ /* this.confirmMsg.getMessage(context, focus) */"failed" + "</td>");
+				// TODO: message
+				response.println("</tr><tr>");
+				response.println("<td style=\"padding:1em\" align=\"left\"><input type=\"button\" value=\""
+						+ /* this.confirmCancelMsg.getMessage(context, focus) */"ok" // TODO:
+						+ "\" onclick=\"hideConfirm('failure_"
+						+ id
+						+ "','cancel_"
+						+ id
+						+ "()');\" "
+						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('"
+								+ context.getUrl(this.confirmCancelIcon) + "') .2em no-repeat;\"" : "") + "/></td>");
+				response.println("</tr></table></div>");
+
+				//
+				// TODO: validation function
+				StringBuffer script = new StringBuffer();
+				script.append("function requirements_" + id + "()\n{\n" + "");
+				script.append("\tcount = ambrosiaCountChecked('" + relatedId + "');\n");
+				switch (this.selectRequirement)
+				{
+					case multiple:
+					{
+						script.append("\treturn count > 1;\n");
+						break;
+					}
+					case single:
+					{
+						script.append("\treturn count == 1;\n");
+						break;
+					}
+					case some:
+					{
+						script.append("\treturn count > 0;\n");
+						break;
+					}
+				}
+				script.append("}\n");
+				context.addScript(script.toString());
+			}
+		}
+
+		switch (this.style)
+		{
+			case link:
+			{
+				// no title special case
+				if (title.length() == 0)
+				{
+					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
+
+					if (this.icon != null)
+					{
+						response.print("<img style=\"vertical-align:text-bottom;\" src=\""
+								+ context.getUrl(this.icon)
+								+ "\" "
+								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
+										+ Validator.escapeHtml(description) + "\" ") + " />");
+					}
+
+					if (!disabled) response.print("</a>");
+				}
+
+				else
+				{
+					if ((this.icon != null) && (this.iconStyle == IconStyle.left))
+					{
+						response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\""
+								+ context.getUrl(this.icon)
+								+ "\" "
+								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
+										+ Validator.escapeHtml(description) + "\" ") + " />");
+					}
+
+					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
+
+					response.print(title);
+
+					if (!disabled) response.print("</a>");
+
+					if ((this.icon != null) && (this.iconStyle == IconStyle.right))
+					{
+						response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\""
+								+ context.getUrl(this.icon)
+								+ "\" "
+								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
+										+ Validator.escapeHtml(description) + "\" ") + " />");
+					}
+				}
+
+				response.println();
+
+				break;
+			}
+
+			case button:
+			{
+				response
+						.println("<input type=\"button\" "
+								+ (dflt ? "class=\"active\"" : "")
+								+ " name=\""
+								+ id
+								+ "\" id=\""
+								+ id
+								+ "\" value=\""
+								+ title
+								+ "\""
+								+ (disabled ? " disabled=\"disabled\"" : "")
+								+ " onclick=\"act_"
+								+ id
+								+ "();\" "
+								+ ((accessKey == null) ? "" : "accesskey=\"" + accessKey.charAt(0) + "\" ")
+								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" ")
+								+ (((this.icon != null) && (this.iconStyle == IconStyle.left)) ? "style=\"padding-left:2em; background: #eee url('"
+										+ context.getUrl(this.icon) + "') .2em no-repeat;\"" : "")
+								+ (((this.icon != null) && (this.iconStyle == IconStyle.right)) ? "style=\"padding-left:.4em; padding-right:2em; background: #eee url('"
+										+ context.getUrl(this.icon) + "') right no-repeat;\""
+										: "") + "/>");
+
+				break;
+			}
+		}
 	}
 }

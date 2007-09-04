@@ -103,8 +103,16 @@ function ambrosiaCountSummary(source, shadowId, summaryId)
 	}
 }
 
-function ambrosiaNavigate(enabled, enableFunction, confirm, confirmDivId, validateFlag, submit, destination, root)
+function ambrosiaNavigate(enabled, enableFunction, confirm, confirmDivId, validateFlag, submit, destination, root, requirementsFunction, requirementsDivId)
 {
+	if (requirementsFunction != null)
+	{
+		if (!eval(requirementsFunction))
+		{
+			showConfirm(requirementsDivId);
+			return;
+		}
+	}
 	if (!enabled)
 	{
 		if (confirm)
@@ -260,4 +268,18 @@ function ambrosiaTableReorder(event, innerObj)
 	}
 	
 	return true;
+}
+
+function ambrosiaCountChecked(name)
+{
+	objs = document.getElementsByName(name);
+	count = 0;
+	for (i in objs)
+	{
+		if (objs[i].name == name)
+		{
+			if (objs[i].checked) count++;
+		}
+	}
+	return count;
 }

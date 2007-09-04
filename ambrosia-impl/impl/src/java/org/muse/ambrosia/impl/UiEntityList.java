@@ -409,7 +409,7 @@ public class UiEntityList extends UiComponent implements EntityList
 					}
 
 					// TODO: do submit!
-					UiNavigation.generateLinkScript(context, sortId, false, false, submit, destination, (String) context.get("sakai.return.url"));
+					UiNavigation.generateLinkScript(context, sortId, false, false, submit, destination, (String) context.get("sakai.return.url"), false);
 					response.println("<th scope=\"col\""
 							+ (c.getCentered() ? " style=\"text-align:center\"" : "")
 							+ "><a href=\"#\" onclick=\"act_"
@@ -425,7 +425,7 @@ public class UiEntityList extends UiComponent implements EntityList
 						&& (c.getSortDestinationDesc() != null))
 				{
 					UiNavigation.generateLinkScript(context, sortId, false, false, submit, c.getSortDestinationAsc().getDestination(context, focus),
-							(String) context.get("sakai.return.url"));
+							(String) context.get("sakai.return.url"), false);
 					response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + "><a href=\"#\" onclick=\"act_"
 							+ sortId + "();\">" + Validator.escapeHtml(title.getMessage(context, focus)) + "</a></th>");
 				}
@@ -543,7 +543,7 @@ public class UiEntityList extends UiComponent implements EntityList
 						{
 							String navId = id + "_r" + row + "_c_" + colNum;
 							UiNavigation.generateLinkScript(context, navId, false, false, c.getEntityNavigationSubmit(), href, (String) context
-									.get("sakai.return.url"));
+									.get("sakai.return.url"), false);
 							response.print("<a style=\"text-decoration:none !important\" href=\"#\" onclick=\"act_" + navId + "();\">");
 						}
 
@@ -817,6 +817,7 @@ public class UiEntityList extends UiComponent implements EntityList
 		for (Component c : actions)
 		{
 			// TODO: special setup in context for ...
+			//"ambrosia.navigation.related.id"
 			c.render(context, focus);
 		}
 
