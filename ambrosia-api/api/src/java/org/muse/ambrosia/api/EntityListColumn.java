@@ -37,6 +37,15 @@ public interface EntityListColumn
 	EntityListColumn add(Component component);
 
 	/**
+	 * Add an entity action related to the column.
+	 * 
+	 * @param action
+	 *        The entity action (navigation) to add.
+	 * @return self.
+	 */
+	EntityListColumn addEntityAction(Navigation action);
+
+	/**
 	 * Add a navigation to use for the main text of the column. If multiple defined, the first enabled included non-null one wins.
 	 * 
 	 * @param navigation
@@ -54,7 +63,7 @@ public interface EntityListColumn
 	EntityListColumn addFootnote(Footnote footnote);
 
 	/**
-	 * Add a navigation to include in the column
+	 * Add a navigation to include in the column.
 	 * 
 	 * @param navigation
 	 *        The navigation to add.
@@ -96,6 +105,13 @@ public interface EntityListColumn
 	 * @return The the text for display.
 	 */
 	String getDisplayText(Context context, Object entity, int row, int idRoot, int colNum);
+
+	/**
+	 * Access the entity actions list.
+	 * 
+	 * @return The entity actions defined related to this column.
+	 */
+	List<Navigation> getEntityActions();
 
 	/**
 	 * Find the first defined navigation to be included, enabled, and with a non-null destination; return the destination.

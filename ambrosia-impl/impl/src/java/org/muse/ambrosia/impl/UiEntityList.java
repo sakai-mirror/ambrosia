@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.EntityList;
@@ -35,6 +36,7 @@ import org.muse.ambrosia.api.EntityListColumn;
 import org.muse.ambrosia.api.Footnote;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
+import org.muse.ambrosia.api.Pager;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
@@ -53,6 +55,9 @@ public class UiEntityList extends UiComponent implements EntityList
 	/** Text message to use if there are no items to show in the list. */
 	protected Message emptyTitle = null;
 
+	/** The enitity actions defined related to this column. */
+	protected List<Navigation> entityActions = new ArrayList<Navigation>();
+
 	/** A single decision for each possible heading - order matches that in headingMessages. */
 	protected List<Decision> headingDecisions = new ArrayList<Decision>();
 
@@ -70,6 +75,9 @@ public class UiEntityList extends UiComponent implements EntityList
 
 	/** The reference to an entity to iterate over. */
 	protected PropertyReference iteratorReference = null;
+
+	/** The pager for the list. */
+	protected Pager pager = null;
 
 	/** Rendering style. */
 	protected Style style = Style.flat;
@@ -226,6 +234,32 @@ public class UiEntityList extends UiComponent implements EntityList
 			}
 		}
 
+		// entityActions
+		settingsXml = XmlHelper.getChildElementNamed(xml, "entityActions");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element innerXml = (Element) node;
+					if ("navigation".equals(innerXml.getTagName()))
+					{
+						Navigation n = new UiNavigation(service, innerXml);
+						this.entityActions.add(n);
+					}
+				}
+			}
+		}
+
+		// pager
+		settingsXml = XmlHelper.getChildElementNamed(xml, "pager");
+		if (settingsXml != null)
+		{
+			this.pager = new UiPager(service, settingsXml);
+		}
 	}
 
 	/**
@@ -235,6 +269,15 @@ public class UiEntityList extends UiComponent implements EntityList
 	{
 		this.columns.add(column);
 
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EntityList addEntityAction(Navigation action)
+	{
+		this.entityActions.add(action);
 		return this;
 	}
 
@@ -282,6 +325,8 @@ public class UiEntityList extends UiComponent implements EntityList
 		// the data
 		Collection data = (Collection) this.iteratorReference.readObject(context, focus);
 		boolean empty = ((data == null) || (data.isEmpty()));
+
+		renderEntityActions(context, focus);
 
 		// columns one time text
 		int colNum = 0;
@@ -675,6 +720,15 @@ public class UiEntityList extends UiComponent implements EntityList
 	/**
 	 * {@inheritDoc}
 	 */
+	public EntityList setPager(Pager pager)
+	{
+		this.pager = pager;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public EntityList setStyle(Style style)
 	{
 		this.style = style;
@@ -723,5 +777,70 @@ public class UiEntityList extends UiComponent implements EntityList
 	{
 		if (this.titleIncluded == null) return true;
 		return this.titleIncluded.decide(context, focus);
+	}
+
+	/**
+	 * Render an entity action bar if any actions are defined for the list or its columns
+	 * 
+	 * @param context
+	 *        The context.
+	 * @param focus
+	 *        The focus.
+	 */
+	protected void renderEntityActions(Context context, Object focus)
+	{
+		// collect the actions from the columns
+		List<Component> actions = new ArrayList<Component>();
+		for (EntityListColumn c : this.columns)
+		{
+			// included?
+			if (!c.included(context)) continue;
+
+			actions.addAll(c.getEntityActions());
+		}
+
+		// if we have none, do nothing
+		if (actions.isEmpty() && this.entityActions.isEmpty() && (this.pager == null)) return;
+
+		// render the bar
+		// TODO: uniquely as an entity action bar, not a nav bar!
+		PrintWriter response = context.getResponseWriter();
+
+		// the bar
+		// TODO: width?
+		response.println("<div class=\"ambrosiaNavigationBar\">");
+
+		// wrap the items
+		response.println("<div class=\"ambrosiaNavigationItems\">");
+
+		// render any column-related ones
+		for (Component c : actions)
+		{
+			// TODO: special setup in context for ...
+			c.render(context, focus);
+		}
+
+		// divide the column ones from the general ones
+		if (!actions.isEmpty() && !this.entityActions.isEmpty())
+		{
+			response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+		}
+
+		// render any general ones
+		for (Component c : this.entityActions)
+		{
+			c.render(context, focus);
+		}
+
+		// divide again if we have a pager
+		if ((!this.entityActions.isEmpty()) || (!actions.isEmpty()))
+		{
+			response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+		}
+
+		// render the pager
+		if (this.pager != null) this.pager.render(context, focus);
+
+		response.println("</div></div>");
 	}
 }

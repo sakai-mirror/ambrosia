@@ -53,6 +53,9 @@ public class UiEntityListColumn implements EntityListColumn
 	/** Components contained in this container. */
 	protected List<Component> contained = new ArrayList<Component>();
 
+	/** The enitity actions defined related to this column. */
+	protected List<Navigation> entityActions = new ArrayList<Navigation>();
+
 	/** The inclusion decision for each entity. */
 	protected Decision entityIncluded = null;
 
@@ -65,6 +68,7 @@ public class UiEntityListColumn implements EntityListColumn
 	/** The include decision. */
 	protected Decision included = null;
 
+	/** The navigations defined for display in this column. */
 	protected List<Navigation> navigations = new ArrayList<Navigation>();
 
 	/** The message selector for text to show if an entity is not included in this column. */
@@ -337,6 +341,26 @@ public class UiEntityListColumn implements EntityListColumn
 				}
 			}
 		}
+
+		// entityActions
+		settingsXml = XmlHelper.getChildElementNamed(xml, "entityActions");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element innerXml = (Element) node;
+					if ("navigation".equals(innerXml.getTagName()))
+					{
+						Navigation n = new UiNavigation(service, innerXml);
+						this.entityActions.add(n);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -346,6 +370,15 @@ public class UiEntityListColumn implements EntityListColumn
 	{
 		this.contained.add(component);
 
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EntityListColumn addEntityAction(Navigation action)
+	{
+		this.entityActions.add(action);
 		return this;
 	}
 
@@ -412,6 +445,14 @@ public class UiEntityListColumn implements EntityListColumn
 		String rv = context.getCollected();
 
 		return rv;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<Navigation> getEntityActions()
+	{
+		return entityActions;
 	}
 
 	/**

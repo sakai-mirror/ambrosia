@@ -33,6 +33,12 @@ public interface Navigation extends Component
 		left, right
 	};
 
+	/** selection requirements. */
+	enum SelectRequirement
+	{
+		multiple, none, single, some
+	};
+
 	/** rendering styles. */
 	enum Style
 	{
@@ -179,6 +185,15 @@ public interface Navigation extends Component
 	 * @return self.
 	 */
 	Navigation setIterator(PropertyReference reference, String name);
+
+	/**
+	 * Set the select requirement, used if the navigation is linked to a select column to declare what is valid.
+	 * 
+	 * @param requirement
+	 *        The select requirement that makes this select valid.
+	 * @return self.
+	 */
+	Navigation setSelectRequirement(SelectRequirement requirement);
 
 	/**
 	 * Set the format style.

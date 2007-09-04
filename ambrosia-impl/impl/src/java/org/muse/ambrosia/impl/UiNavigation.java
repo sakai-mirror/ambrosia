@@ -24,19 +24,15 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 import java.util.Collection;
 
-import org.muse.ambrosia.api.AndDecision;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.Section;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * UiNavigation presents a navigation control (button or text link) to the user. The result of the press is a navigation to some tool destination.
@@ -124,6 +120,9 @@ public class UiNavigation extends UiComponent implements Navigation
 	/** The reference to an entity to iterate over. */
 	protected PropertyReference iteratorReference = null;
 
+	/** The requirement of the related select to make this valid. */
+	protected SelectRequirement selectRequirement = SelectRequirement.none;
+
 	/** The display style. */
 	protected Style style = Style.link;
 
@@ -205,6 +204,13 @@ public class UiNavigation extends UiComponent implements Navigation
 		// short for description
 		String description = StringUtil.trimToNull(xml.getAttribute("description"));
 		if (description != null) setDescription(description);
+
+		// selectRequirement
+		String selectRequirement = StringUtil.trimToNull(xml.getAttribute("selectRequirement"));
+		if (selectRequirement != null)
+		{
+			setSelectRequirement(SelectRequirement.valueOf(selectRequirement.toLowerCase()));
+		}
 
 		// confirm
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "confirm");
@@ -755,6 +761,15 @@ public class UiNavigation extends UiComponent implements Navigation
 	{
 		this.iteratorReference = reference;
 		this.iteratorName = name;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Navigation setSelectRequirement(SelectRequirement requirement)
+	{
+		this.selectRequirement = requirement;
 		return this;
 	}
 

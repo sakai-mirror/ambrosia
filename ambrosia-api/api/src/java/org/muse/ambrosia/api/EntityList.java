@@ -41,6 +41,15 @@ public interface EntityList extends Component
 	EntityList addColumn(EntityListColumn column);
 
 	/**
+	 * Add an entity action related to the list.
+	 * 
+	 * @param action
+	 *        The entity action (navigation) to add.
+	 * @return self.
+	 */
+	EntityList addEntityAction(Navigation action);
+
+	/**
 	 * Add a heading, based on this decision, and showing navigation.
 	 * 
 	 * @param decision
@@ -93,6 +102,14 @@ public interface EntityList extends Component
 	 * @return self.
 	 */
 	EntityList setIterator(PropertyReference reference, String name);
+
+	/**
+	 * Set the pager for the list.
+	 * 
+	 * @param pager
+	 *        The pager for the list.
+	 */
+	EntityList setPager(Pager pager);
 
 	/**
 	 * Set the style.

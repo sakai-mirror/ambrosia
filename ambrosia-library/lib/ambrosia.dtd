@@ -222,6 +222,7 @@
 <!ATTLIST navigation disabled (TRUE|FALSE) #IMPLIED >
 <!ATTLIST navigation accessKey CDATA #IMPLIED >
 <!ATTLIST navigation description CDATA #IMPLIED >
+<!ATTLIST navigation selectRequirement (SINGLE|SOME|MULTIPLE) #IMPLIED>
 
 <!ELEMENT attachmentsEdit (included | title | model | navigations)* >
 <!ATTLIST attachmentsEdit id CDATA #IMPLIED >
@@ -286,7 +287,7 @@
 <!ATTLIST row title CDATA #IMPLIED >
 <!ATTLIST row model CDATA #IMPLIED >
 
-<!ELEMENT entityList (included | emptyTitle | entityIncluded | iterator | title | titleIncluded | columns | headings)* >
+<!ELEMENT entityList (included | emptyTitle | entityActions | entityIncluded | iterator | title | titleIncluded | columns | headings | pager)* >
 <!ATTLIST entityList id CDATA #IMPLIED >
 <!ATTLIST entityList style (FLAT|FORM) #IMPLIED >
 
@@ -316,6 +317,8 @@
 
 <!ELEMENT entityNavigations (navigation)* >
 
+<!ELEMENT entityActions (navigation)* >
+
 <!ELEMENT footnotes (footnote)* >
 <!ELEMENT footnote EMPTY >
 
@@ -331,7 +334,7 @@
 <!ATTLIST modelColumn pixels CDATA #IMPLIED >
 <!ATTLIST modelColumn em CDATA #IMPLIED >
 
-<!ELEMENT selectionColumn (value | singleSelect | readOnly | model | onEmptyAlert | label | asAlert | entityIncluded | included | sort | title | container | entityNavigations | footnotes | navigations)* >
+<!ELEMENT selectionColumn (value | singleSelect | readOnly | model | onEmptyAlert | label | asAlert | entityIncluded | included | sort | title | container | entityActions | entityNavigations | footnotes | navigations)* >
 <!ATTLIST selectionColumn centered (TRUE|FALSE) #IMPLIED >
 <!ATTLIST selectionColumn wrap (TRUE|FALSE) #IMPLIED >
 <!ATTLIST selectionColumn title CDATA #IMPLIED >

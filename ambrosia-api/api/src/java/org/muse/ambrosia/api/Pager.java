@@ -24,7 +24,7 @@ package org.muse.ambrosia.api;
 /**
  * Pager presents paging controls.
  */
-public interface Pager
+public interface Pager extends Component
 {
 	/**
 	 * Add a size option to the size dropdown.
