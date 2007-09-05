@@ -791,15 +791,12 @@ public class UiNavigation extends UiComponent implements Navigation
 						+ /* this.confirmCancelMsg.getMessage(context, focus) */"ok" // TODO:
 						+ "\" onclick=\"hideConfirm('failure_"
 						+ id
-						+ "','cancel_"
-						+ id
-						+ "()');\" "
+						+ "','');\" "
 						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('"
 								+ context.getUrl(this.confirmCancelIcon) + "') .2em no-repeat;\"" : "") + "/></td>");
 				response.println("</tr></table></div>");
 
-				//
-				// TODO: validation function
+				// validation function
 				StringBuffer script = new StringBuffer();
 				script.append("function requirements_" + id + "()\n{\n" + "");
 				script.append("\tcount = ambrosiaCountChecked('" + relatedId + "');\n");

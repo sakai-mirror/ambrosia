@@ -92,11 +92,8 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, int idRoot, int colNum)
+	public String getDisplayText(Context context, Object entity, int row, String id)
 	{
-		// generate some ids
-		String id = this.getClass().getSimpleName() + "_" + idRoot + "_" + colNum;
-
 		// read only?
 		boolean readOnly = false;
 
@@ -132,11 +129,10 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getOneTimeText(Context context, Object focus, int idRoot, int colNum, int numRows)
+	public String getOneTimeText(Context context, Object focus, String id, int numRows)
 	{
 		// generate some ids
-		String id = this.getClass().getSimpleName() + "_" + idRoot + "_" + colNum;
-		String decodeId = "decode_" + idRoot + "_" + colNum;
+		String decodeId = "decode_" + id;
 
 		StringBuffer rv = new StringBuffer();
 

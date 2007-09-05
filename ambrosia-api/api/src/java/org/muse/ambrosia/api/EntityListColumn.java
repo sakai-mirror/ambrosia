@@ -98,13 +98,11 @@ public interface EntityListColumn
 	 *        The entity to read.
 	 * @param row
 	 *        The current row number of the list.
-	 * @param idRoot
-	 *        An ID value that can be used, unique to the entity list.
-	 * @param colNum
-	 *        The 0 based column number.
+	 * @param id
+	 *        An ID value that can be used, unique to the entity list / column.
 	 * @return The the text for display.
 	 */
-	String getDisplayText(Context context, Object entity, int row, int idRoot, int colNum);
+	String getDisplayText(Context context, Object entity, int row, String id);
 
 	/**
 	 * Access the entity actions list.
@@ -175,15 +173,13 @@ public interface EntityListColumn
 	 *        The UiContext.
 	 * @param focus
 	 *        The entity focus of the list (not a row entity).
-	 * @param idRoot
-	 *        An ID that can be used, unique to the entity list.
-	 * @param colNum
-	 *        The 0 based column number.
+	 * @param id
+	 *        An ID value that can be used, unique to the entity list / column.
 	 * @param numRows
 	 *        The number of rows that were generated.
 	 * @return The additional encoding text only once, not per entity / per row.
 	 */
-	String getOneTimeText(Context context, Object focus, int idRoot, int colNum, int numRows);
+	String getOneTimeText(Context context, Object focus, String id, int numRows);
 
 	/**
 	 * Get additional prefix text only once, not per entity / per row.
@@ -192,13 +188,11 @@ public interface EntityListColumn
 	 *        The UiContext.
 	 * @param focus
 	 *        The entity focus of the list (not a row entity).
-	 * @param idRoot
-	 *        An ID that can be used, unique to the entity list.
-	 * @param colNum
-	 *        The 0 based column number.
+	 * @param id
+	 *        An ID value that can be used, unique to the entity list / column.
 	 * @return The additional encoding text only once, not per entity / per row.
 	 */
-	String getPrefixText(Context context, Object focus, int idRoot, int colNum);
+	String getPrefixText(Context context, Object focus, String id);
 
 	/**
 	 * Access the sort asc icon path.

@@ -65,7 +65,7 @@ function hideConfirm(name, action)
 	{
 		el.style.top = (-1 * (parseInt(el.style.height) + 10)) + "px"
 		el.style.display = "none";
-		eval(confirmedAction);
+		if (confirmedAction != "") eval(confirmedAction);
 		confirmedAction="";
 	}
 }

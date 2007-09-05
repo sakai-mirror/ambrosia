@@ -32,6 +32,12 @@ import org.w3c.dom.Element;
  */
 public class UiComponent implements Component
 {
+	/** Sync. object for id generation. */
+	static Object idSync = new Object();
+
+	/** next automatic id to generate. */
+	static long nextId = 0;
+
 	/** The id of this element - can be referenced by an alias, for instance. */
 	protected String id = null;
 
@@ -62,7 +68,7 @@ public class UiComponent implements Component
 			this.included = service.parseDecisions(settingsXml);
 		}
 
-		// id
+		// id - may override the auto-generated one
 		String id = StringUtil.trimToNull(xml.getAttribute("id"));
 		if (id != null) setId(id);
 	}
@@ -96,6 +102,7 @@ public class UiComponent implements Component
 	 */
 	public Component setId(String id)
 	{
+		// may override the auto-generated id
 		this.id = id;
 		return this;
 	}
@@ -119,5 +126,17 @@ public class UiComponent implements Component
 		}
 
 		return this;
+	}
+
+	/**
+	 * Auto-generate an id.
+	 */
+	protected void autoId()
+	{
+		// allocate an id
+		synchronized (idSync)
+		{
+			this.id = "a" + nextId++;
+		}
 	}
 }

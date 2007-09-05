@@ -260,6 +260,9 @@ public class UiEntityList extends UiComponent implements EntityList
 		{
 			this.pager = new UiPager(service, settingsXml);
 		}
+
+		// we need an id
+		if (this.id == null) autoId();
 	}
 
 	/**
@@ -326,7 +329,7 @@ public class UiEntityList extends UiComponent implements EntityList
 		Collection data = (Collection) this.iteratorReference.readObject(context, focus);
 		boolean empty = ((data == null) || (data.isEmpty()));
 
-		renderEntityActions(context, focus);
+		renderEntityActions(context, focus, idRoot);
 
 		// columns one time text
 		int colNum = 0;
@@ -335,11 +338,13 @@ public class UiEntityList extends UiComponent implements EntityList
 			// included?
 			if (!c.included(context)) continue;
 
-			String text = c.getPrefixText(context, focus, idRoot, colNum++);
+			String text = c.getPrefixText(context, focus, getId() + "_" + idRoot + "_" + colNum);
 			if (text != null)
 			{
 				response.println(text);
 			}
+
+			colNum++;
 		}
 
 		// title, if there is one and there is data
@@ -409,7 +414,8 @@ public class UiEntityList extends UiComponent implements EntityList
 					}
 
 					// TODO: do submit!
-					UiNavigation.generateLinkScript(context, sortId, false, false, submit, destination, (String) context.get("sakai.return.url"), false);
+					UiNavigation.generateLinkScript(context, sortId, false, false, submit, destination, (String) context.get("sakai.return.url"),
+							false);
 					response.println("<th scope=\"col\""
 							+ (c.getCentered() ? " style=\"text-align:center\"" : "")
 							+ "><a href=\"#\" onclick=\"act_"
@@ -548,7 +554,7 @@ public class UiEntityList extends UiComponent implements EntityList
 						}
 
 						// get the column's value for display
-						String value = c.getDisplayText(context, entity, row, idRoot, colNum);
+						String value = c.getDisplayText(context, entity, row, getId() + "_" + idRoot + "_" + colNum);
 
 						// alert?
 						boolean alert = c.alert(context, entity);
@@ -663,11 +669,13 @@ public class UiEntityList extends UiComponent implements EntityList
 			// included?
 			if (!c.included(context)) continue;
 
-			String text = c.getOneTimeText(context, focus, idRoot, colNum++, row + 1);
+			String text = c.getOneTimeText(context, focus, getId() + "_" + idRoot + "_" + colNum, row + 1);
 			if (text != null)
 			{
 				response.println(text);
 			}
+
+			colNum++;
 		}
 
 		// empty title, if there is no data
@@ -787,7 +795,7 @@ public class UiEntityList extends UiComponent implements EntityList
 	 * @param focus
 	 *        The focus.
 	 */
-	protected void renderEntityActions(Context context, Object focus)
+	protected void renderEntityActions(Context context, Object focus, int idRoot)
 	{
 		// collect the actions from the columns
 		List<Component> actions = new ArrayList<Component>();
@@ -814,11 +822,27 @@ public class UiEntityList extends UiComponent implements EntityList
 		response.println("<div class=\"ambrosiaNavigationItems\">");
 
 		// render any column-related ones
-		for (Component c : actions)
+		int colNum = 0;
+		for (EntityListColumn col : this.columns)
 		{
-			// TODO: special setup in context for ...
-			//"ambrosia.navigation.related.id"
-			c.render(context, focus);
+			// included?
+			if (!col.included(context)) continue;
+
+			// get the name to be used for this column
+			String name = getId() + "_" + idRoot + "_" + colNum;
+
+			// special setup in context for the related field
+			context.put("ambrosia.navigation.related.id", name);
+
+			for (Component c : col.getEntityActions())
+			{
+				c.render(context, focus);
+			}
+
+			// clear the related field in the context
+			context.put("ambrosia.navigation.related.id", null);
+
+			colNum++;
 		}
 
 		// divide the column ones from the general ones

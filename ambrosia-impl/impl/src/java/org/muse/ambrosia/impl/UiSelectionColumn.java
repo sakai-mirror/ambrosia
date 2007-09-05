@@ -156,11 +156,8 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, int idRoot, int colNum)
+	public String getDisplayText(Context context, Object entity, int row, String id)
 	{
-		// generate some ids
-		String id = this.getClass().getSimpleName() + "_" + idRoot + "_" + colNum;
-
 		// read only?
 		boolean readOnly = false;
 		if (this.readOnly != null)
@@ -279,7 +276,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getOneTimeText(Context context, Object focus, int idRoot, int colNum, int numRows)
+	public String getOneTimeText(Context context, Object focus, String id, int numRows)
 	{
 		// read only?
 		boolean readOnly = false;
@@ -302,8 +299,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		}
 
 		// generate some ids
-		String id = this.getClass().getSimpleName() + "_" + idRoot + "_" + colNum;
-		String decodeId = "decode_" + idRoot + "_" + colNum;
+		String decodeId = "decode_" + id;
 
 		StringBuffer rv = new StringBuffer();
 
@@ -335,7 +331,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getPrefixText(Context context, Object focus, int idRoot)
+	public String getPrefixText(Context context, Object focus, String id)
 	{
 		// read only?
 		boolean readOnly = false;
@@ -358,9 +354,6 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		}
 
 		if (!onEmptyAlert) return null;
-
-		// generate some ids
-		String id = this.getClass().getSimpleName() + "_" + idRoot;
 
 		// this will become visible if a submit happens and the validation fails
 		return "<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
