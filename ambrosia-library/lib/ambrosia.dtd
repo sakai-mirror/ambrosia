@@ -223,6 +223,7 @@
 <!ATTLIST navigation accessKey CDATA #IMPLIED >
 <!ATTLIST navigation description CDATA #IMPLIED >
 <!ATTLIST navigation selectRequirement (SINGLE|SOME|MULTIPLE) #IMPLIED>
+<!ATTLIST navigation selectRequirementMessage CDATA #IMPLIED >
 
 <!ELEMENT attachmentsEdit (included | title | model | navigations)* >
 <!ATTLIST attachmentsEdit id CDATA #IMPLIED >

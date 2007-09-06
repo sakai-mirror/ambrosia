@@ -155,6 +155,17 @@ public interface Navigation extends Component
 	Navigation setEntityIncluded(Decision inclusionDecision);
 
 	/**
+	 * Set the message to show when the requirements are not met.
+	 * 
+	 * @param selector
+	 *        The message selector.
+	 * @param references
+	 *        one or more PropertyReferences to form the additional values in the formatted message.
+	 * @return self.
+	 */
+	Navigation setFailedRequirmentsMessage(String selector, PropertyReference... references);
+
+	/**
 	 * Set the icon for the navigation
 	 * 
 	 * @param url
@@ -212,7 +223,7 @@ public interface Navigation extends Component
 	Navigation setSubmit();
 
 	/**
-	 * Set the mavigation title message.
+	 * Set the navigation title message.
 	 * 
 	 * @param selector
 	 *        The message selector.

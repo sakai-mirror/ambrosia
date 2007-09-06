@@ -110,6 +110,12 @@ public class UiNavigation extends UiComponent implements Navigation
 	/** The inclusion decision for each entity. */
 	protected Decision entityIncluded = null;
 
+	/** The message selector for the failed requirements message. */
+	protected Message failedRequirements = null;
+
+	/** The message selector for the failed requirements dismiss message. */
+	protected Message failedRequirementsOk = new UiMessage().setMessage("ok");
+
 	/** Full URL to the icon. */
 	protected String icon = null;
 
@@ -212,6 +218,13 @@ public class UiNavigation extends UiComponent implements Navigation
 		if (selectRequirement != null)
 		{
 			setSelectRequirement(SelectRequirement.valueOf(selectRequirement.toLowerCase()));
+		}
+
+		// short form for select requirement message
+		String selectRequirementMessage = StringUtil.trimToNull(xml.getAttribute("selectRequirementMessage"));
+		if (selectRequirementMessage != null)
+		{
+			this.setFailedRequirmentsMessage(selectRequirementMessage);
 		}
 
 		// confirm
@@ -550,6 +563,15 @@ public class UiNavigation extends UiComponent implements Navigation
 	/**
 	 * {@inheritDoc}
 	 */
+	public Navigation setFailedRequirmentsMessage(String selector, PropertyReference... references)
+	{
+		this.failedRequirements = new UiMessage().setMessage(selector, references);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Navigation setIcon(String icon, IconStyle style)
 	{
 		this.icon = icon;
@@ -732,7 +754,7 @@ public class UiNavigation extends UiComponent implements Navigation
 		}
 
 		// are there requirements?
-		boolean requirements = (this.selectRequirement != SelectRequirement.none);
+		boolean requirements = (this.selectRequirement != SelectRequirement.none) && (this.failedRequirements != null);
 		String relatedId = null;
 		if (requirements)
 		{
@@ -784,11 +806,10 @@ public class UiNavigation extends UiComponent implements Navigation
 								+ id + "\">");
 				response.println("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>");
 				response.println("<td colspan=\"2\" style=\"padding:1em; white-space:normal; line-height:1em; \" align=\"left\">"
-						+ /* this.confirmMsg.getMessage(context, focus) */"failed" + "</td>");
-				// TODO: message
+						+ this.failedRequirements.getMessage(context, focus) + "</td>");
 				response.println("</tr><tr>");
 				response.println("<td style=\"padding:1em\" align=\"left\"><input type=\"button\" value=\""
-						+ /* this.confirmCancelMsg.getMessage(context, focus) */"ok" // TODO:
+						+ this.failedRequirementsOk.getMessage(context, focus)
 						+ "\" onclick=\"hideConfirm('failure_"
 						+ id
 						+ "','');\" "
