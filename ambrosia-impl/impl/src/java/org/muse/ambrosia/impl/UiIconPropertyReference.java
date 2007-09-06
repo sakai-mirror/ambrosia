@@ -72,8 +72,16 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 	 */
 	public String read(Context context, Object focus)
 	{
+		String iconName = this.name;
+
+		// if the name is not set, see if we can get a value from the ref
+		if (iconName == null)
+		{
+			iconName = super.read(context, focus);
+		}
+
 		// alt=\"" + Validator.escapeHtml(name) + "\"
-		return "<img style=\"vertical-align:middle\" src=\"" + context.getUrl(name) + "\" />";
+		return "<img style=\"vertical-align:middle\" src=\"" + context.getUrl(iconName) + "\" />";
 	}
 
 	/**
@@ -81,6 +89,12 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 	 */
 	public Object readObject(Context context, Object focus)
 	{
+		// if the name is not set, see if we can get a value from the ref
+		if (this.name == null)
+		{
+			return super.readObject(context, focus);
+		}
+
 		return read(context, focus);
 	}
 
