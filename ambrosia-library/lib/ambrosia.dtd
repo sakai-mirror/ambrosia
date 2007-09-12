@@ -118,7 +118,7 @@
 <!ATTLIST userInfoModel delegate CDATA #IMPLIED>
 <!ATTLIST userInfoModel tool CDATA #IMPLIED >
 <!ATTLIST userInfoModel missing CDATA #IMPLIED >
-<!ATTLIST userInfoModel selector (DISPLAYNAME) #IMPLIED >
+<!ATTLIST userInfoModel selector (DISPLAYNAME|SORTNAME) #IMPLIED >
 
 <!ELEMENT pagingModel (missingValues)* >
 <!ATTLIST pagingModel ref CDATA #REQUIRED >

@@ -62,6 +62,7 @@ public class UiUserInfoPropertyReference extends UiPropertyReference implements 
 		// selector
 		String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
 		if ("DISPLAYNAME".equals(selector)) setSelector(Selector.displayName);
+		if ("SORTNAME".equals(selector)) setSelector(Selector.sortName);
 	}
 
 	/**
@@ -89,13 +90,26 @@ public class UiUserInfoPropertyReference extends UiPropertyReference implements 
 		if (value == null) return super.format(context, value);
 		if (!(value instanceof String)) return super.format(context, value);
 
-		// TODO: assuming displayName for now...
-
-		// context for now is site, so get the site title
 		try
 		{
 			User user = UserDirectoryService.getUser((String) value);
-			return Validator.escapeHtml(user.getDisplayName());
+
+			String selected = null;
+
+			switch (this.selector)
+			{
+				case displayName:
+				{
+					selected = user.getDisplayName();
+					break;
+				}
+				case sortName:
+				{
+					selected = user.getSortName();
+					break;
+				}
+			}
+			return Validator.escapeHtml(selected);
 		}
 		catch (UserNotDefinedException e)
 		{

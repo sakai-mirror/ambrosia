@@ -29,7 +29,7 @@ public interface UserInfoPropertyReference extends PropertyReference
 	/** The various sorts of user information that can be requested. */
 	enum Selector
 	{
-		displayName
+		displayName, sortName
 	}
 
 	/**
