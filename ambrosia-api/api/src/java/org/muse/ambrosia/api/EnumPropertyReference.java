@@ -22,22 +22,16 @@
 package org.muse.ambrosia.api;
 
 /**
- * UserInfoPropertyReference handles user id values by providing some user information for the display (non-html).
+ * EnumPropertyReference displays localized enumerations. The string keys are the prefix plus the enum value.
  */
-public interface UserInfoPropertyReference extends PropertyReference
+public interface EnumPropertyReference extends PropertyReference
 {
-	/** The various sorts of user information that can be requested. */
-	enum Selector
-	{
-		displayName, sortName
-	}
-
 	/**
-	 * Set the User property to display.
+	 * Set the message selector to use.
 	 * 
-	 * @param selector
-	 *        The User property to display.
+	 * @param root
+	 *        The root of the message selector; the actual selector is the root plus the enum value.
 	 * @return self.
 	 */
-	UserInfoPropertyReference setSelector(Selector property);
+	EnumPropertyReference setSelector(String root);
 }

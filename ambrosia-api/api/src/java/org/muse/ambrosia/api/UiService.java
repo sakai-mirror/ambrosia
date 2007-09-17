@@ -271,6 +271,13 @@ public interface UiService
 	EntityListColumn newEntityListColumn();
 
 	/**
+	 * Construct a new EnumPropertyReference
+	 * 
+	 * @return a new EnumPropertyReference
+	 */
+	EnumPropertyReference newEnumPropertyReference();
+
+	/**
 	 * Construct a new Evaluation
 	 * 
 	 * @return a new Evaluation

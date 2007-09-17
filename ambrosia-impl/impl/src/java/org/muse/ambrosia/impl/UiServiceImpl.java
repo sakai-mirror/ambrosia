@@ -72,6 +72,7 @@ import org.muse.ambrosia.api.EntityDisplay;
 import org.muse.ambrosia.api.EntityDisplayRow;
 import org.muse.ambrosia.api.EntityList;
 import org.muse.ambrosia.api.EntityListColumn;
+import org.muse.ambrosia.api.EnumPropertyReference;
 import org.muse.ambrosia.api.Evaluation;
 import org.muse.ambrosia.api.FileUpload;
 import org.muse.ambrosia.api.FillIn;
@@ -503,6 +504,14 @@ public class UiServiceImpl implements UiService
 	public EntityListColumn newEntityListColumn()
 	{
 		return new UiEntityListColumn();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EnumPropertyReference newEnumPropertyReference()
+	{
+		return new UiEnumPropertyReference();
 	}
 
 	/**
@@ -1006,6 +1015,7 @@ public class UiServiceImpl implements UiService
 		if ("text".equals(type)) return new UiTextPropertyReference();
 		if ("url".equals(type)) return new UiUrlPropertyReference();
 		if ("userInfo".equals(type)) return new UiUserInfoPropertyReference();
+		if ("enum".equals(type)) return new UiEnumPropertyReference();
 
 		return new UiPropertyReference();
 	}
@@ -1034,6 +1044,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("textModel")) return new UiTextPropertyReference(this, xml);
 		if (xml.getTagName().equals("urlModel")) return new UiUrlPropertyReference(this, xml);
 		if (xml.getTagName().equals("userInfoModel")) return new UiUserInfoPropertyReference(this, xml);
+		if (xml.getTagName().equals("enumModel")) return new UiEnumPropertyReference(this, xml);
 
 		if (!xml.getTagName().equals("model")) return null;
 
@@ -1051,6 +1062,7 @@ public class UiServiceImpl implements UiService
 		if ("text".equals(type)) return new UiTextPropertyReference(this, xml);
 		if ("url".equals(type)) return new UiUrlPropertyReference(this, xml);
 		if ("userInfo".equals(type)) return new UiUserInfoPropertyReference(this, xml);
+		if ("enum".equals(type)) return new UiEnumPropertyReference(this, xml);
 
 		return new UiPropertyReference(this, xml);
 	}
@@ -1281,7 +1293,7 @@ public class UiServiceImpl implements UiService
 		String destinationUrl = Web.returnUrl(req, destination);
 		context.put("sakai.destination.url", destinationUrl);
 		context.put("sakai_destination", destination);
-		
+
 		context.put("sakai_prev_destination", (previousDestination == null ? "/" : previousDestination));
 
 		// setup that a POST to this destination will be expected
