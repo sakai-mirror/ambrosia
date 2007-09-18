@@ -566,6 +566,13 @@ public interface UiService
 	TextPropertyReference newTextPropertyReference();
 
 	/**
+	 * Construct a new TrueDecision
+	 * 
+	 * @return a new TrueDecision
+	 */
+	TrueDecision newTrueDecision();
+
+	/**
 	 * Construct a new UrlPropertyReference
 	 * 
 	 * @return a new UrlPropertyReference

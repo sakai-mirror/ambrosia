@@ -113,6 +113,7 @@ import org.muse.ambrosia.api.SelectionColumn;
 import org.muse.ambrosia.api.Text;
 import org.muse.ambrosia.api.TextEdit;
 import org.muse.ambrosia.api.TextPropertyReference;
+import org.muse.ambrosia.api.TrueDecision;
 import org.muse.ambrosia.api.UiService;
 import org.muse.ambrosia.api.UrlPropertyReference;
 import org.muse.ambrosia.api.UserInfoPropertyReference;
@@ -821,6 +822,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public TrueDecision newTrueDecision()
+	{
+		return new UiTrueDecision();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public UserInfoPropertyReference newUserInfoPropertyReference()
 	{
 		return new UiUserInfoPropertyReference();
@@ -918,6 +927,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("andDecision")) return new UiAndDecision(this, xml);
 		if (xml.getTagName().equals("orDecision")) return new UiOrDecision(this, xml);
 		if (xml.getTagName().equals("pastDateDecision")) return new UiPastDateDecision(this, xml);
+		if (xml.getTagName().equals("trueDecision")) return new UiTrueDecision(this, xml);
 
 		if (!xml.getTagName().equals("decision")) return null;
 
@@ -927,6 +937,7 @@ public class UiServiceImpl implements UiService
 		if ("and".equals(type)) return new UiAndDecision(this, xml);
 		if ("or".equals(type)) return new UiOrDecision(this, xml);
 		if ("pastDate".equals(type)) return new UiPastDateDecision(this, xml);
+		if ("true".equals(type)) return new UiTrueDecision(this, xml);
 
 		return new UiDecision(this, xml);
 	}
