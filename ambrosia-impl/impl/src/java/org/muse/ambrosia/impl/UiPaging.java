@@ -68,7 +68,10 @@ public class UiPaging implements Paging
 	 */
 	public Integer getCurFirstItem()
 	{
-		return ((this.current - 1) * this.size) + 1;
+		int rv = ((this.current - 1) * this.size) + 1;
+		if (rv < 0) rv = 0;
+
+		return rv;
 	}
 
 	/**
@@ -103,7 +106,7 @@ public class UiPaging implements Paging
 	 */
 	public Boolean getIsFirst()
 	{
-		return this.current == 1;
+		return ((this.current == 1) || (this.current == 0));
 	}
 
 	/**
