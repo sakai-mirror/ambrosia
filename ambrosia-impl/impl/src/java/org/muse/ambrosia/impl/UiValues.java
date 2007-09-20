@@ -24,11 +24,11 @@ package org.muse.ambrosia.impl;
 import org.muse.ambrosia.api.Values;
 
 /**
- * 
+ * UiValues implements Values
  */
 public class UiValues implements Values
 {
-	protected String[] values;
+	protected String[] values = new String[0];
 
 	/**
 	 * {@inheritDoc}
@@ -43,7 +43,13 @@ public class UiValues implements Values
 	 */
 	public void setValues(String[] values)
 	{
-		this.values = values;
+		if (values == null)
+		{
+			this.values = new String[0];
+		}
+		else
+		{
+			this.values = values;
+		}
 	}
-
 }
