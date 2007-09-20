@@ -471,13 +471,16 @@
 
 <!ELEMENT options (model)* >
 
-<!ELEMENT countEdit (included | title | model | onEmptyAlert | readOnly | focus | summary)* >
+<!ELEMENT countEdit (included | title | model | onEmptyAlert | readOnly | focus | summary | minValue | maxValue)* >
 <!ATTLIST countEdit id CDATA #IMPLIED >
 <!ATTLIST countEdit title CDATA #IMPLIED >
 <!ATTLIST countEdit model CDATA #IMPLIED >
 <!ATTLIST countEdit rows CDATA #IMPLIED >
 <!ATTLIST countEdit cols CDATA #IMPLIED >
 <!ATTLIST countEdit readOnly (TRUE|FALSE) #IMPLIED >
+
+<!ELEMENT minValue (model)* >
+<!ELEMENT maxValue (model)* >
 
 <!ELEMENT floatEdit (included | title | model | onEmptyAlert | readOnly | focus | summary)* >
 <!ATTLIST floatEdit id CDATA #IMPLIED >

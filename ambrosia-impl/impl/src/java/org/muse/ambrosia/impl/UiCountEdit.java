@@ -58,6 +58,12 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	/** The message for the onEmptyAlert. */
 	protected Message onEmptyAlertMsg = null;
 
+	/** A minimum acceptable value for the edit. Default is 0. */
+	protected PropertyReference min = null;
+
+	/** A maximum acceptable value for the edit. */
+	protected PropertyReference max = null;
+
 	/**
 	 * The PropertyReference for encoding and decoding this selection - this is what will be updated with the end-user's text edit, and what value
 	 * seeds the display.
@@ -118,6 +124,30 @@ public class UiCountEdit extends UiComponent implements CountEdit
 		{
 			// let Message parse this
 			this.titleMessage = new UiMessage(service, settingsXml);
+		}
+
+		// min
+		settingsXml = XmlHelper.getChildElementNamed(xml, "minValue");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setMin(pRef);
+			}
+		}
+
+		// max
+		settingsXml = XmlHelper.getChildElementNamed(xml, "maxValue");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setMax(pRef);
+			}
 		}
 
 		// model
@@ -273,6 +303,40 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			}
 		}
 
+		// min
+		String minValue = null;
+		if (this.min != null)
+		{
+			minValue = this.min.read(context, focus);
+		}
+		else
+		{
+			minValue = "0";
+		}
+		try
+		{
+			Integer.parseInt(minValue);
+		}
+		catch (NumberFormatException e)
+		{
+			minValue = "0";
+		}
+
+		// max
+		String maxValue = null;
+		if (this.max != null)
+		{
+			maxValue = this.max.read(context, focus);
+		}
+		try
+		{
+			Integer.parseInt(maxValue);
+		}
+		catch (NumberFormatException e)
+		{
+			maxValue = null;
+		}
+
 		// set some uniqe ids for this field (among our brethren iterations)
 		int idRoot = context.getUniqueId();
 		String id = this.getClass().getSimpleName() + "_" + idRoot;
@@ -305,6 +369,15 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
 			response.println("</label>");
 		}
+
+		// TODO: temp
+		else
+		{
+			response.println("<label for=\"" + id + "\">");
+			response.println(minValue + " - " + maxValue);
+			response.println("</label>");
+		}
+		//
 
 		// icon text
 		String alt = "";
@@ -480,6 +553,24 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	public CountEdit setTitle(String selector, PropertyReference... references)
 	{
 		this.titleMessage = new UiMessage().setMessage(selector, references);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public CountEdit setMax(PropertyReference max)
+	{
+		this.max = max;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public CountEdit setMin(PropertyReference min)
+	{
+		this.min = min;
 		return this;
 	}
 }

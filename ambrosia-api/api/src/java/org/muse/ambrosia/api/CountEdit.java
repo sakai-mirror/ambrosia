@@ -36,6 +36,24 @@ public interface CountEdit extends SummarizingComponent
 	CountEdit setFocus(Decision decision);
 
 	/**
+	 * Set a maximum acceptable value for the edit.
+	 * 
+	 * @param min
+	 *        The model reference to compute the maximum acceptable value for the edit.
+	 * @return self.
+	 */
+	CountEdit setMax(PropertyReference max);
+
+	/**
+	 * Set a minimum acceptable value for the edit.
+	 * 
+	 * @param minimum
+	 *        The model reference to compute the minimum acceptable value for the edit.
+	 * @return self.
+	 */
+	CountEdit setMin(PropertyReference min);
+
+	/**
 	 * Set an alert that will triger once on submit if the field is empty.
 	 * 
 	 * @param decision
