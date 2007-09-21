@@ -56,7 +56,7 @@ public class UiEntityList extends UiComponent implements EntityList
 	protected Message emptyTitle = null;
 
 	/** The enitity actions defined related to this column. */
-	protected List<Navigation> entityActions = new ArrayList<Navigation>();
+	protected List<Component> entityActions = new ArrayList<Component>();
 
 	/** A single decision for each possible heading - order matches that in headingMessages. */
 	protected List<Decision> headingDecisions = new ArrayList<Decision>();
@@ -244,11 +244,13 @@ public class UiEntityList extends UiComponent implements EntityList
 				Node node = contained.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE)
 				{
-					Element innerXml = (Element) node;
-					if ("navigation".equals(innerXml.getTagName()))
+					Element componentXml = (Element) node;
+
+					// create a component from each node in the container
+					Component c = service.parseComponent(componentXml);
+					if (c != null)
 					{
-						Navigation n = new UiNavigation(service, innerXml);
-						this.entityActions.add(n);
+						this.entityActions.add(c);
 					}
 				}
 			}
@@ -278,7 +280,7 @@ public class UiEntityList extends UiComponent implements EntityList
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityList addEntityAction(Navigation action)
+	public EntityList addEntityAction(Component action)
 	{
 		this.entityActions.add(action);
 		return this;
@@ -594,7 +596,7 @@ public class UiEntityList extends UiComponent implements EntityList
 						if (!c.getNavigations().isEmpty())
 						{
 							response.print("<div class=\"ambrosiaUnderNav\" style=\"line-height: 1em;\">");
-							for (Navigation navigation : c.getNavigations())
+							for (Component navigation : c.getNavigations())
 							{
 								navigation.render(context, entity);
 							}
@@ -837,6 +839,9 @@ public class UiEntityList extends UiComponent implements EntityList
 			for (Component c : col.getEntityActions())
 			{
 				c.render(context, focus);
+				
+				// add a divider
+				response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
 			}
 
 			// clear the related field in the context
@@ -855,6 +860,9 @@ public class UiEntityList extends UiComponent implements EntityList
 		for (Component c : this.entityActions)
 		{
 			c.render(context, focus);
+
+			// add a divider
+			response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
 		}
 
 		// divide again if we have a pager

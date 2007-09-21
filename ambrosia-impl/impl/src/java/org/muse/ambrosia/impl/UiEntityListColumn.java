@@ -54,7 +54,7 @@ public class UiEntityListColumn implements EntityListColumn
 	protected List<Component> contained = new ArrayList<Component>();
 
 	/** The enitity actions defined related to this column. */
-	protected List<Navigation> entityActions = new ArrayList<Navigation>();
+	protected List<Component> entityActions = new ArrayList<Component>();
 
 	/** The inclusion decision for each entity. */
 	protected Decision entityIncluded = null;
@@ -69,7 +69,7 @@ public class UiEntityListColumn implements EntityListColumn
 	protected Decision included = null;
 
 	/** The navigations defined for display in this column. */
-	protected List<Navigation> navigations = new ArrayList<Navigation>();
+	protected List<Component> navigations = new ArrayList<Component>();
 
 	/** The message selector for text to show if an entity is not included in this column. */
 	protected String notIncludedText = null;
@@ -332,11 +332,13 @@ public class UiEntityListColumn implements EntityListColumn
 				Node node = contained.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE)
 				{
-					Element innerXml = (Element) node;
-					if ("navigation".equals(innerXml.getTagName()))
+					Element componentXml = (Element) node;
+
+					// create a component from each node in the container
+					Component c = service.parseComponent(componentXml);
+					if (c != null)
 					{
-						Navigation n = new UiNavigation(service, innerXml);
-						this.navigations.add(n);
+						this.navigations.add(c);
 					}
 				}
 			}
@@ -352,11 +354,13 @@ public class UiEntityListColumn implements EntityListColumn
 				Node node = contained.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE)
 				{
-					Element innerXml = (Element) node;
-					if ("navigation".equals(innerXml.getTagName()))
+					Element componentXml = (Element) node;
+
+					// create a component from each node in the container
+					Component c = service.parseComponent(componentXml);
+					if (c != null)
 					{
-						Navigation n = new UiNavigation(service, innerXml);
-						this.entityActions.add(n);
+						this.entityActions.add(c);
 					}
 				}
 			}
@@ -376,7 +380,7 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityListColumn addEntityAction(Navigation action)
+	public EntityListColumn addEntityAction(Component action)
 	{
 		this.entityActions.add(action);
 		return this;
@@ -403,7 +407,7 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityListColumn addNavigation(Navigation navigation)
+	public EntityListColumn addNavigation(Component navigation)
 	{
 		this.navigations.add(navigation);
 		return this;
@@ -450,7 +454,7 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<Navigation> getEntityActions()
+	public List<Component> getEntityActions()
 	{
 		return entityActions;
 	}
@@ -509,7 +513,7 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<Navigation> getNavigations()
+	public List<Component> getNavigations()
 	{
 		return navigations;
 	}

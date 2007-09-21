@@ -43,7 +43,7 @@ public interface EntityListColumn
 	 *        The entity action (navigation) to add.
 	 * @return self.
 	 */
-	EntityListColumn addEntityAction(Navigation action);
+	EntityListColumn addEntityAction(Component action);
 
 	/**
 	 * Add a navigation to use for the main text of the column. If multiple defined, the first enabled included non-null one wins.
@@ -69,7 +69,7 @@ public interface EntityListColumn
 	 *        The navigation to add.
 	 * @return self.
 	 */
-	EntityListColumn addNavigation(Navigation navigation);
+	EntityListColumn addNavigation(Component navigation);
 
 	/**
 	 * Check if the column entry for this entity is to be shown as an alert.
@@ -109,7 +109,7 @@ public interface EntityListColumn
 	 * 
 	 * @return The entity actions defined related to this column.
 	 */
-	List<Navigation> getEntityActions();
+	List<Component> getEntityActions();
 
 	/**
 	 * Find the first defined navigation to be included, enabled, and with a non-null destination; return the destination.
@@ -157,7 +157,7 @@ public interface EntityListColumn
 	 * 
 	 * @return The navigations defined for this column.
 	 */
-	List<Navigation> getNavigations();
+	List<Component> getNavigations();
 
 	/**
 	 * Access the text message to show if an entity is not included in the column.

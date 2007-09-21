@@ -47,7 +47,7 @@ public interface EntityList extends Component
 	 *        The entity action (navigation) to add.
 	 * @return self.
 	 */
-	EntityList addEntityAction(Navigation action);
+	EntityList addEntityAction(Component action);
 
 	/**
 	 * Add a heading, based on this decision, and showing navigation.

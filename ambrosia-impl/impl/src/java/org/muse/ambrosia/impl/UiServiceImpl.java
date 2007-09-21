@@ -878,6 +878,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("countdownTimer")) return new UiCountdownTimer(this, xml);
 		if (xml.getTagName().equals("countEdit")) return new UiCountEdit(this, xml);
 		if (xml.getTagName().equals("courier")) return new UiCourier(this, xml);
+		if (xml.getTagName().equals("container")) return new UiContainer(this, xml);
 		if (xml.getTagName().equals("dateEdit")) return new UiDateEdit(this, xml);
 		if (xml.getTagName().equals("divider")) return new UiDivider(this, xml);
 		if (xml.getTagName().equals("durationEdit")) return new UiDurationEdit(this, xml);
