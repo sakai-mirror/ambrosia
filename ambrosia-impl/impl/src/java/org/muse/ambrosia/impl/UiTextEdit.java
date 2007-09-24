@@ -244,7 +244,7 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			if (this.titleMessage != null)
 			{
 				response.println("<label for=\"" + id + "\">");
-				response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
+				response.println(this.titleMessage.getMessage(context, focus));
 				response.println("</label>");
 			}
 
@@ -276,7 +276,7 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			if (this.titleMessage != null)
 			{
 				response.println("<label class=\"block\" for=\"" + id + "\">");
-				response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
+				response.println(this.titleMessage.getMessage(context, focus));
 				response.println("</label>");
 			}
 

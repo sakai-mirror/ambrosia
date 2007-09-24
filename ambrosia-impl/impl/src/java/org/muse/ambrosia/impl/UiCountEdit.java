@@ -366,7 +366,7 @@ public class UiCountEdit extends UiComponent implements CountEdit
 		if (this.titleMessage != null)
 		{
 			response.println("<label for=\"" + id + "\">");
-			response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
+			response.println(this.titleMessage.getMessage(context, focus));
 			response.println("</label>");
 		}
 

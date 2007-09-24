@@ -24,7 +24,6 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.CountEdit;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.FloatEdit;
 import org.muse.ambrosia.api.Message;
@@ -230,7 +229,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		if (this.titleMessage != null)
 		{
 			response.println("<label for=\"" + id + "\">");
-			response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
+			response.println(this.titleMessage.getMessage(context, focus));
 			response.println("</label>");
 		}
 

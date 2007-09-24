@@ -26,10 +26,8 @@ import java.io.PrintWriter;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.DateEdit;
 import org.muse.ambrosia.api.Decision;
-import org.muse.ambrosia.api.Evaluation;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.TextEdit;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
@@ -231,7 +229,7 @@ public class UiDateEdit extends UiComponent implements DateEdit
 		if (this.titleMessage != null)
 		{
 			response.println("<label for=\"" + id + "\">");
-			response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)));
+			response.println(this.titleMessage.getMessage(context, focus));
 			response.println("</label>");
 		}
 
