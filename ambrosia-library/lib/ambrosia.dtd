@@ -460,12 +460,15 @@
 <!ELEMENT focusOn (model)* >
 <!ATTLIST focusOn model CDATA #IMPLIED >
 
-<!ELEMENT selection (included | title | model | readOnly | selectionChoices)* >
+<!ELEMENT selection (included | title | model | readOnly | selectionChoices | correct)* >
 <!ATTLIST selection id CDATA #IMPLIED >
 <!ATTLIST selection title CDATA #IMPLIED >
 <!ATTLIST selection model CDATA #IMPLIED >
+<!ATTLIST selection correct CDATA #IMPLIED >
 <!ATTLIST selection value CDATA #IMPLIED >
 <!ATTLIST selection orientation (HORIZONTAL|VERTICAL) #IMPLIED >
+
+<!ELEMENT correct (model) >
 
 <!ELEMENT selectionChoices (selectionChoice)* >
 <!ELEMENT selectionChoice (container)* >

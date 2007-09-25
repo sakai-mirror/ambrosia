@@ -224,8 +224,12 @@ public class UiPager extends UiComponent implements Pager
 		settingsXml = XmlHelper.getChildElementNamed(xml, "paging");
 		if (settingsXml != null)
 		{
-			PropertyReference pRef = service.parsePropertyReference(settingsXml);
-			if (pRef != null) setPagingProperty(pRef);
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setPagingProperty(pRef);
+			}
 		}
 
 		// text

@@ -36,6 +36,7 @@ import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.RenderListener;
 import org.muse.ambrosia.api.Selection;
 import org.sakaiproject.util.StringUtil;
+import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -46,6 +47,15 @@ import org.w3c.dom.NodeList;
  */
 public class UiSelection extends UiComponent implements Selection
 {
+	/** A model reference to a value that is considered "correct" for correct/incorrect marking. */
+	protected PropertyReference correctReference = null;
+
+	/** Icon to use to show correct. */
+	protected String correctIcon = "!/ambrosia_library/icons/correct.png";
+
+	/** Icon to use to show incorrect. */
+	protected String incorrectIcon = "!/ambrosia_library/icons/incorrect.png";
+
 	/** The value we use if the user does not selecet the selection. */
 	protected String notSelectedValue = "false";
 
@@ -75,6 +85,12 @@ public class UiSelection extends UiComponent implements Selection
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
+
+	/** The correct message. */
+	protected Message correctMessage = new UiMessage().setMessage("correct");
+
+	/** The incorrect message. */
+	protected Message incorrectMessage = new UiMessage().setMessage("incorrect");
 
 	/**
 	 * No-arg constructor.
@@ -111,6 +127,14 @@ public class UiSelection extends UiComponent implements Selection
 			setProperty(pRef);
 		}
 
+		// short for correct
+		String correct = StringUtil.trimToNull(xml.getAttribute("correct"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(correct);
+			setCorrect(pRef);
+		}
+
 		// selected value
 		String value = StringUtil.trimToNull(xml.getAttribute("value"));
 		if (value != null) this.selectedValue = value;
@@ -133,6 +157,18 @@ public class UiSelection extends UiComponent implements Selection
 		{
 			PropertyReference pRef = service.parsePropertyReference(settingsXml);
 			if (pRef != null) setProperty(pRef);
+		}
+
+		// correct
+		settingsXml = XmlHelper.getChildElementNamed(xml, "correct");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setCorrect(pRef);
+			}
 		}
 
 		// selection choices
@@ -229,12 +265,46 @@ public class UiSelection extends UiComponent implements Selection
 			value = this.propertyReference.read(context, focus);
 		}
 
+		// read the "correct" value
+		String correctValue = null;
+		if (this.correctReference != null)
+		{
+			correctValue = this.correctReference.read(context, focus);
+		}
+
 		response.println("<div class=\"ambrosiaSelection\">");
 
 		if (this.selectionValues.isEmpty())
 		{
 			// convert to boolean
 			boolean checked = Boolean.parseBoolean(value);
+
+			if (this.correctReference != null)
+			{
+				// is the value correct?
+				boolean correct = (correctValue != null) ? (Boolean.parseBoolean(correctValue) == checked) : false;
+
+				// if checked, mark as correct or not
+				if (checked)
+				{
+					if (correct)
+					{
+						response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
+								+ Validator.escapeHtml(this.correctMessage.getMessage(context, focus)) + "\" />");
+					}
+					else
+					{
+						response.print("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\""
+								+ Validator.escapeHtml(this.incorrectMessage.getMessage(context, focus)) + "\" />");
+					}
+				}
+
+				// else leave a placeholder
+				else
+				{
+					response.println("<div style=\"float:left;width:16px\">&nbsp;</div>");
+				}
+			}
 
 			// the check box
 			response.println("<input type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + this.selectedValue + "\" "
@@ -243,9 +313,9 @@ public class UiSelection extends UiComponent implements Selection
 			// the decode directive
 			if ((this.propertyReference != null) && (!readOnly))
 			{
-				response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\"" + "prop_"
-						+ decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />" + "<input type=\"hidden\" name=\""
-						+ "null_" + decodeId + "\" value=\"" + this.notSelectedValue + "\" />");
+				response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\""
+						+ "prop_" + decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />"
+						+ "<input type=\"hidden\" name=\"" + "null_" + decodeId + "\" value=\"" + this.notSelectedValue + "\" />");
 			}
 		}
 
@@ -271,6 +341,33 @@ public class UiSelection extends UiComponent implements Selection
 				if (selected)
 				{
 					startingValue = val;
+				}
+
+				if (this.correctReference != null)
+				{
+					// is this one the correct one?
+					boolean correct = (correctValue != null) ? correctValue.equals(val) : false;
+
+					// if checked, mark as correct or not
+					if (selected)
+					{
+						if (correct)
+						{
+							response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
+									+ Validator.escapeHtml(this.correctMessage.getMessage(context, focus)) + "\" />");
+						}
+						else
+						{
+							response.print("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\""
+									+ Validator.escapeHtml(this.incorrectMessage.getMessage(context, focus)) + "\" />");
+						}
+					}
+
+					// else leave a placeholder
+					else
+					{
+						response.println("<div style=\"float:left;width:16px\">&nbsp;</div>");
+					}
 				}
 
 				// the radio button
@@ -338,6 +435,15 @@ public class UiSelection extends UiComponent implements Selection
 		}
 
 		response.println("</div>");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Selection setCorrect(PropertyReference correctReference)
+	{
+		this.correctReference = correctReference;
+		return this;
 	}
 
 	/**

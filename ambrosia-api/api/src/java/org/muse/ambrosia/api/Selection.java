@@ -54,6 +54,14 @@ public interface Selection extends Component
 	Selection addSelection(String selector, String value);
 
 	/**
+	 * Set the property reference for the correct value.
+	 * 
+	 * @param propertyReference
+	 *        The property reference for the correct value.
+	 */
+	Selection setCorrect(PropertyReference correctReference);
+
+	/**
 	 * Set the orientation of multiple selection choices.
 	 * 
 	 * @param orientation
