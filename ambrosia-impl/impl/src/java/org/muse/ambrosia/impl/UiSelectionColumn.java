@@ -37,6 +37,21 @@ import org.w3c.dom.Element;
  */
 public class UiSelectionColumn extends UiEntityListColumn implements SelectionColumn
 {
+	/** Icon to use to show correct. */
+	protected String correctIcon = "!/ambrosia_library/icons/correct.png";
+
+	/** The correct message. */
+	protected Message correctMessage = new UiMessage().setMessage("correct");
+
+	/** A model reference to a value that is considered "correct" for correct/incorrect marking. */
+	protected PropertyReference correctReference = null;
+
+	/** Icon to use to show incorrect. */
+	protected String incorrectIcon = "!/ambrosia_library/icons/incorrect.png";
+
+	/** The incorrect message. */
+	protected Message incorrectMessage = new UiMessage().setMessage("incorrect");
+
 	/** The Message for the label text. */
 	protected Message label = null;
 
@@ -118,12 +133,32 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 			setProperty(pRef);
 		}
 
+		// short for correct
+		String correct = StringUtil.trimToNull(xml.getAttribute("correct"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(correct);
+			setCorrect(pRef);
+		}
+
 		// model
 		settingsXml = XmlHelper.getChildElementNamed(xml, "model");
 		if (settingsXml != null)
 		{
 			PropertyReference pRef = service.parsePropertyReference(settingsXml);
 			if (pRef != null) setProperty(pRef);
+		}
+
+		// correct
+		settingsXml = XmlHelper.getChildElementNamed(xml, "correct");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setCorrect(pRef);
+			}
 		}
 
 		// read only
@@ -189,6 +224,13 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 			value = Integer.toString(row);
 		}
 
+		// read the "correct" values
+		Object correctValues = null;
+		if (this.correctReference != null)
+		{
+			correctValues = this.correctReference.readObject(context, entity);
+		}
+
 		// read the encode / decode property, and see if this should be seeded as selected
 		boolean checked = false;
 		if (this.propertyReference != null)
@@ -245,9 +287,70 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		// form a row-unique id, using the overall id and the row
 		String uid = id + "_" + row;
 
+		// if we are doing correct marking
+		if ((this.correctReference != null) && (correctValues != null))
+		{
+			// is this one selected?
+			if (checked)
+			{
+				// is this id in or equal to correct?
+				boolean correct = false;
+				if (correctValues.getClass().isArray())
+				{
+					// checked if value is in there
+					for (Object o : (Object[]) correctValues)
+					{
+						if (o != null)
+						{
+							correct = value.equals(o.toString());
+							if (correct) break;
+						}
+					}
+				}
+
+				// or a multi value collection
+				else if (correctValues instanceof Collection)
+				{
+					// checked if value is in there
+					for (Object o : (Collection) correctValues)
+					{
+						if (o != null)
+						{
+							correct = value.equals(o.toString());
+							if (correct) break;
+						}
+					}
+				}
+
+				// deal with single value
+				else
+				{
+					correct = value.equals(correctValues.toString());
+				}
+
+				if (correct)
+				{
+					rv.append("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
+							+ Validator.escapeHtml(this.correctMessage.getMessage(context, entity)) + "\" />");
+				}
+				else
+				{
+					rv.append("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\""
+							+ Validator.escapeHtml(this.incorrectMessage.getMessage(context, entity)) + "\" />");
+				}
+			}
+
+			// else leave a placeholder
+			else
+			{
+				rv.append("<div style=\"float:left;width:16px\">&nbsp;</div>");
+			}
+		}
+
 		// for single selection, use a radio set
 		if (single)
 		{
+
 			rv.append("<input type=\"radio\" id=\"" + uid + "\" name=\"" + id + "\" value=\"" + value + "\" " + (checked ? "CHECKED" : "")
 					+ (readOnly ? " disabled=\"disabled\"" : "") + " />");
 		}
@@ -358,6 +461,15 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		// this will become visible if a submit happens and the validation fails
 		return "<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
 				+ Validator.escapeHtml(this.onEmptyAlertMsg.getMessage(context, focus)) + "</div>";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public SelectionColumn setCorrect(PropertyReference correctReference)
+	{
+		this.correctReference = correctReference;
+		return this;
 	}
 
 	/**

@@ -47,14 +47,20 @@ import org.w3c.dom.NodeList;
  */
 public class UiSelection extends UiComponent implements Selection
 {
-	/** A model reference to a value that is considered "correct" for correct/incorrect marking. */
-	protected PropertyReference correctReference = null;
-
 	/** Icon to use to show correct. */
 	protected String correctIcon = "!/ambrosia_library/icons/correct.png";
 
+	/** The correct message. */
+	protected Message correctMessage = new UiMessage().setMessage("correct");
+
+	/** A model reference to a value that is considered "correct" for correct/incorrect marking. */
+	protected PropertyReference correctReference = null;
+
 	/** Icon to use to show incorrect. */
 	protected String incorrectIcon = "!/ambrosia_library/icons/incorrect.png";
+
+	/** The incorrect message. */
+	protected Message incorrectMessage = new UiMessage().setMessage("incorrect");
 
 	/** The value we use if the user does not selecet the selection. */
 	protected String notSelectedValue = "false";
@@ -85,12 +91,6 @@ public class UiSelection extends UiComponent implements Selection
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
-
-	/** The correct message. */
-	protected Message correctMessage = new UiMessage().setMessage("correct");
-
-	/** The incorrect message. */
-	protected Message incorrectMessage = new UiMessage().setMessage("incorrect");
 
 	/**
 	 * No-arg constructor.
@@ -279,14 +279,15 @@ public class UiSelection extends UiComponent implements Selection
 			// convert to boolean
 			boolean checked = Boolean.parseBoolean(value);
 
+			// if we are doing correct marking
 			if (this.correctReference != null)
 			{
-				// is the value correct?
-				boolean correct = (correctValue != null) ? (Boolean.parseBoolean(correctValue) == checked) : false;
-
 				// if checked, mark as correct or not
 				if (checked)
 				{
+					// is the value correct?
+					boolean correct = (correctValue != null) ? (Boolean.parseBoolean(correctValue) == checked) : false;
+
 					if (correct)
 					{
 						response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
@@ -343,14 +344,15 @@ public class UiSelection extends UiComponent implements Selection
 					startingValue = val;
 				}
 
+				// if we are doing correct marking
 				if (this.correctReference != null)
 				{
-					// is this one the correct one?
-					boolean correct = (correctValue != null) ? correctValue.equals(val) : false;
-
 					// if checked, mark as correct or not
 					if (selected)
 					{
+						// is this one the correct one?
+						boolean correct = (correctValue != null) ? correctValue.equals(val) : false;
+
 						if (correct)
 						{
 							response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""

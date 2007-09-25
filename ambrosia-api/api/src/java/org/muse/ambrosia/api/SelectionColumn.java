@@ -27,6 +27,14 @@ package org.muse.ambrosia.api;
 public interface SelectionColumn extends EntityListColumn
 {
 	/**
+	 * Set the property reference for the correct value.
+	 * 
+	 * @param propertyReference
+	 *        The property reference for the correct value.
+	 */
+	SelectionColumn setCorrect(PropertyReference correctReference);
+
+	/**
 	 * Set the format and properties to form the label.
 	 * 
 	 * @param selector
