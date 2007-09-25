@@ -29,6 +29,7 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.FillIn;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.muse.ambrosia.api.Selection;
 import org.muse.ambrosia.api.TextEdit;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
@@ -45,22 +46,22 @@ public class UiFillIn extends UiComponent implements FillIn
 	protected Decision correctDecision = null;
 
 	/** The icon to use to mark correct parts. */
-	protected String correctIcon = null;
+	protected String correctIcon = "!/ambrosia_library/icons/correct.png";
 
-	/** The message key for the alt-text for correct icon. */
-	protected String correctMessage = null;
+	/** The correct message. */
+	protected Message correctMessage = new UiMessage().setMessage("correct");
 
 	/** The PropertyReference for getting a correctness flag for each part. */
-	protected PropertyReference correctsReference = null;
+	protected PropertyReference correctReference = null;
 
 	/** The decision that controls if the field should get on-load focus. */
 	protected Decision focusDecision = null;
 
-	/** The icon to use to mark incorrect parts. */
-	protected String incorrectIcon = null;
+	/** Icon to use to show incorrect. */
+	protected String incorrectIcon = "!/ambrosia_library/icons/incorrect.png";
 
-	/** The message key for the alt-text for incorrect icon. */
-	protected String incorrectMessage = null;
+	/** The incorrect message. */
+	protected Message incorrectMessage = new UiMessage().setMessage("incorrect");
 
 	/** The number of columns per row for each text input. */
 	protected int numCols = 50;
@@ -113,22 +114,49 @@ public class UiFillIn extends UiComponent implements FillIn
 			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
 			if (innerXml != null)
 			{
-				this.correctsReference = service.parsePropertyReference(innerXml);
+				this.correctReference = service.parsePropertyReference(innerXml);
 			}
 
 			String correctIcon = StringUtil.trimToNull(settingsXml.getAttribute("correctIcon"));
 			if (correctIcon != null) this.correctIcon = correctIcon;
 
 			String correctSelector = StringUtil.trimToNull(settingsXml.getAttribute("correctSelector"));
-			if (correctSelector != null) this.correctMessage = correctSelector;
+			if (correctSelector != null) this.correctMessage = new UiMessage().setMessage(correctSelector);
 
 			String incorrectIcon = StringUtil.trimToNull(settingsXml.getAttribute("incorrectIcon"));
 			if (incorrectIcon != null) this.incorrectIcon = incorrectIcon;
 
 			String incorrectSelector = StringUtil.trimToNull(settingsXml.getAttribute("incorrectSelector"));
-			if (incorrectSelector != null) this.incorrectMessage = incorrectSelector;
+			if (incorrectSelector != null) this.incorrectMessage = new UiMessage().setMessage(incorrectSelector);
 
 			this.correctDecision = service.parseDecisions(settingsXml);
+		}
+
+		// short for correct
+		String correct = StringUtil.trimToNull(xml.getAttribute("correct"));
+		if (correct != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(correct);
+			setCorrect(pRef);
+		}
+
+		// correct
+		settingsXml = XmlHelper.getChildElementNamed(xml, "correct");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setCorrect(pRef);
+			}
+		}
+
+		// correct decision
+		settingsXml = XmlHelper.getChildElementNamed(xml, "correctDecision");
+		if (settingsXml != null)
+		{
+			setCorrectDecision(service.parseDecisions(settingsXml));
 		}
 
 		// focus
@@ -281,9 +309,9 @@ public class UiFillIn extends UiComponent implements FillIn
 
 		// read the correct flags - we want a Boolean[]
 		Boolean[] corrects = null;
-		if (correctMarkingIncluded && (this.correctsReference != null))
+		if (correctMarkingIncluded && (this.correctReference != null))
 		{
-			Object o = this.correctsReference.readObject(context, focus);
+			Object o = this.correctReference.readObject(context, focus);
 			if (o != null)
 			{
 				if (o.getClass().isArray())
@@ -322,7 +350,7 @@ public class UiFillIn extends UiComponent implements FillIn
 						if (this.correctIcon != null)
 						{
 							response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
-									+ ((this.correctMessage != null) ? context.getMessages().getString(this.correctMessage) : "") + "\" />");
+									+ ((this.correctMessage != null) ? this.correctMessage.getMessage(context, focus) : "") + "\" />");
 						}
 					}
 
@@ -331,7 +359,7 @@ public class UiFillIn extends UiComponent implements FillIn
 						if (this.incorrectIcon != null)
 						{
 							response.print("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\""
-									+ ((this.incorrectMessage != null) ? context.getMessages().getString(this.incorrectMessage) : "") + "\" />");
+									+ ((this.incorrectMessage != null) ? this.incorrectMessage.getMessage(context, focus) : "") + "\" />");
 						}
 					}
 				}
@@ -362,7 +390,7 @@ public class UiFillIn extends UiComponent implements FillIn
 					if ((corrects[fillInParts.length - 1] != null) && (corrects[fillInParts.length - 1].booleanValue()))
 					{
 						response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
-								+ ((correctMessage != null) ? context.getMessages().getString(correctMessage) : "") + "\" />");
+								+ ((this.correctMessage != null) ? this.correctMessage.getMessage(context, focus) : "") + "\" />");
 					}
 				}
 
@@ -413,14 +441,32 @@ public class UiFillIn extends UiComponent implements FillIn
 	/**
 	 * {@inheritDoc}
 	 */
+	public FillIn setCorrect(PropertyReference correctReference)
+	{
+		this.correctReference = correctReference;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FillIn setCorrectDecision(Decision decision)
+	{
+		this.correctDecision = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public FillIn setCorrectMarker(PropertyReference propertyReference, String correctIcon, String correctMessage, String incorrectIcon,
 			String incorrectMessage, Decision... decision)
 	{
-		this.correctsReference = propertyReference;
+		this.correctReference = propertyReference;
 		this.correctIcon = correctIcon;
-		this.correctMessage = correctMessage;
+		this.correctMessage = new UiMessage().setMessage(correctMessage);
 		this.incorrectIcon = incorrectIcon;
-		this.incorrectMessage = incorrectMessage;
+		this.incorrectMessage = new UiMessage().setMessage(incorrectMessage);
 
 		if (decision != null)
 		{

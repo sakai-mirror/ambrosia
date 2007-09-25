@@ -58,8 +58,18 @@ public interface Selection extends Component
 	 * 
 	 * @param propertyReference
 	 *        The property reference for the correct value.
+	 * @return self.
 	 */
 	Selection setCorrect(PropertyReference correctReference);
+
+	/**
+	 * Set the decision for including the correct markers.
+	 * 
+	 * @param decision
+	 *        The decision for including the correct markers.
+	 * @return self.
+	 */
+	Selection setCorrectDecision(Decision decision);
 
 	/**
 	 * Set the orientation of multiple selection choices.

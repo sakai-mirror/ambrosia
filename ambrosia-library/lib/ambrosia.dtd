@@ -150,6 +150,7 @@
 <!ELEMENT singleSelect (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 <!ELEMENT focus (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 <!ELEMENT highlighted (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT correctDecision (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 
 <!ATTLIST entityIncluded selector CDATA #IMPLIED >
 
@@ -352,7 +353,7 @@
 <!ATTLIST modelColumn pixels CDATA #IMPLIED >
 <!ATTLIST modelColumn em CDATA #IMPLIED >
 
-<!ELEMENT selectionColumn (value | singleSelect | readOnly | model | onEmptyAlert | label | asAlert | entityIncluded | included | sort | title | container | entityActions | entityNavigations | footnotes | navigations)* >
+<!ELEMENT selectionColumn (value | singleSelect | readOnly | model | onEmptyAlert | label | asAlert | entityIncluded | included | sort | title | container | entityActions | entityNavigations | footnotes | navigations | correct | correctDecision)* >
 <!ATTLIST selectionColumn centered (TRUE|FALSE) #IMPLIED >
 <!ATTLIST selectionColumn wrap (TRUE|FALSE) #IMPLIED >
 <!ATTLIST selectionColumn title CDATA #IMPLIED >
@@ -361,6 +362,7 @@
 <!ATTLIST selectionColumn multiple (TRUE|FALSE) #IMPLIED >
 <!ATTLIST selectionColumn single (TRUE|FALSE) #IMPLIED >
 <!ATTLIST selectionColumn model CDATA #IMPLIED >
+<!ATTLIST selectionColumn correct CDATA #IMPLIED >
 
 <!ELEMENT orderColumn (value | model | asAlert | entityIncluded | included | sort | title | container | entityNavigations | footnotes | navigations)* >
 <!ATTLIST orderColumn model CDATA #IMPLIED >
@@ -388,9 +390,10 @@
 
 <!ELEMENT upload (message) >
 
-<!ELEMENT fillIn (included | correctMarker | focus | onEmptyAlert | model | readOnly | text | title)* >
+<!ELEMENT fillIn (included | correct | correctDecision | correctMarker | focus | onEmptyAlert | model | readOnly | text | title)* >
 <!ATTLIST fillIn id CDATA #IMPLIED >
 <!ATTLIST fillIn cols CDATA #IMPLIED >
+<!ATTLIST fillIn correct CDATA #IMPLIED >
 
 <!ELEMENT correctMarker (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 <!ATTLIST correctMarker correctIcon CDATA #IMPLIED >
@@ -460,7 +463,7 @@
 <!ELEMENT focusOn (model)* >
 <!ATTLIST focusOn model CDATA #IMPLIED >
 
-<!ELEMENT selection (included | title | model | readOnly | selectionChoices | correct)* >
+<!ELEMENT selection (included | title | model | readOnly | selectionChoices | correct | correctDecision)* >
 <!ATTLIST selection id CDATA #IMPLIED >
 <!ATTLIST selection title CDATA #IMPLIED >
 <!ATTLIST selection model CDATA #IMPLIED >

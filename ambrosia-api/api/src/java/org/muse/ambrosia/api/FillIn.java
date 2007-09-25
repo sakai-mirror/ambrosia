@@ -29,6 +29,24 @@ package org.muse.ambrosia.api;
 public interface FillIn extends Component
 {
 	/**
+	 * Set the property reference for the correct value Booleans marking each existing entry as correct or not.
+	 * 
+	 * @param propertyReference
+	 *        The property reference for the correct value Booleans marking each existing entry as correct or not.
+	 * @return self.
+	 */
+	FillIn setCorrect(PropertyReference correctReference);
+
+	/**
+	 * Set the decision for including the correct markers.
+	 * 
+	 * @param decision
+	 *        The decision for including the correct markers.
+	 * @return self.
+	 */
+	FillIn setCorrectDecision(Decision decision);
+
+	/**
 	 * Set the relative icon path to the icon to use to mark already correct entries.
 	 * 
 	 * @param propertyReference

@@ -35,6 +35,15 @@ public interface SelectionColumn extends EntityListColumn
 	SelectionColumn setCorrect(PropertyReference correctReference);
 
 	/**
+	 * Set the decision for including the correct markers.
+	 * 
+	 * @param decision
+	 *        The decision for including the correct markers.
+	 * @return self.
+	 */
+	SelectionColumn setCorrectDecision(Decision decision);
+
+	/**
 	 * Set the format and properties to form the label.
 	 * 
 	 * @param selector

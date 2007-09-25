@@ -47,6 +47,9 @@ import org.w3c.dom.NodeList;
  */
 public class UiSelection extends UiComponent implements Selection
 {
+	/** Decision for including the correct markers. */
+	protected Decision correctDecision = null;
+
 	/** Icon to use to show correct. */
 	protected String correctIcon = "!/ambrosia_library/icons/correct.png";
 
@@ -171,6 +174,13 @@ public class UiSelection extends UiComponent implements Selection
 			}
 		}
 
+		// correct decision
+		settingsXml = XmlHelper.getChildElementNamed(xml, "correctDecision");
+		if (settingsXml != null)
+		{
+			setCorrectDecision(service.parseDecisions(settingsXml));
+		}
+
 		// selection choices
 		settingsXml = XmlHelper.getChildElementNamed(xml, "selectionChoices");
 		if (settingsXml != null)
@@ -267,9 +277,14 @@ public class UiSelection extends UiComponent implements Selection
 
 		// read the "correct" value
 		String correctValue = null;
-		if (this.correctReference != null)
+		boolean includeCorrectMarkers = false;
+		if ((this.correctReference != null) && ((this.correctDecision == null) || (this.correctDecision.decide(context, focus))))
 		{
 			correctValue = this.correctReference.read(context, focus);
+			if (correctValue != null)
+			{
+				includeCorrectMarkers = true;
+			}
 		}
 
 		response.println("<div class=\"ambrosiaSelection\">");
@@ -280,13 +295,13 @@ public class UiSelection extends UiComponent implements Selection
 			boolean checked = Boolean.parseBoolean(value);
 
 			// if we are doing correct marking
-			if (this.correctReference != null)
+			if (includeCorrectMarkers)
 			{
 				// if checked, mark as correct or not
 				if (checked)
 				{
 					// is the value correct?
-					boolean correct = (correctValue != null) ? (Boolean.parseBoolean(correctValue) == checked) : false;
+					boolean correct = Boolean.parseBoolean(correctValue) == checked;
 
 					if (correct)
 					{
@@ -345,13 +360,13 @@ public class UiSelection extends UiComponent implements Selection
 				}
 
 				// if we are doing correct marking
-				if (this.correctReference != null)
+				if (includeCorrectMarkers)
 				{
 					// if checked, mark as correct or not
 					if (selected)
 					{
 						// is this one the correct one?
-						boolean correct = (correctValue != null) ? correctValue.equals(val) : false;
+						boolean correct = correctValue.equals(val);
 
 						if (correct)
 						{
@@ -445,6 +460,15 @@ public class UiSelection extends UiComponent implements Selection
 	public Selection setCorrect(PropertyReference correctReference)
 	{
 		this.correctReference = correctReference;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Selection setCorrectDecision(Decision decision)
+	{
+		this.correctDecision = decision;
 		return this;
 	}
 

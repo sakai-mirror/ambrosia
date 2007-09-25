@@ -37,6 +37,9 @@ import org.w3c.dom.Element;
  */
 public class UiSelectionColumn extends UiEntityListColumn implements SelectionColumn
 {
+	/** Decision for including the correct markers. */
+	protected Decision correctDecision = null;
+
 	/** Icon to use to show correct. */
 	protected String correctIcon = "!/ambrosia_library/icons/correct.png";
 
@@ -135,7 +138,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 
 		// short for correct
 		String correct = StringUtil.trimToNull(xml.getAttribute("correct"));
-		if (model != null)
+		if (correct != null)
 		{
 			PropertyReference pRef = service.newPropertyReference().setReference(correct);
 			setCorrect(pRef);
@@ -226,9 +229,14 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 
 		// read the "correct" values
 		Object correctValues = null;
-		if (this.correctReference != null)
+		boolean includeCorrectMarkers = false;
+		if ((this.correctReference != null) && ((this.correctDecision == null) || (this.correctDecision.decide(context, entity))))
 		{
 			correctValues = this.correctReference.readObject(context, entity);
+			if (correctValues != null)
+			{
+				includeCorrectMarkers = true;
+			}
 		}
 
 		// read the encode / decode property, and see if this should be seeded as selected
@@ -288,7 +296,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		String uid = id + "_" + row;
 
 		// if we are doing correct marking
-		if ((this.correctReference != null) && (correctValues != null))
+		if (includeCorrectMarkers)
 		{
 			// is this one selected?
 			if (checked)
@@ -469,6 +477,15 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	public SelectionColumn setCorrect(PropertyReference correctReference)
 	{
 		this.correctReference = correctReference;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public SelectionColumn setCorrectDecision(Decision decision)
+	{
+		this.correctDecision = decision;
 		return this;
 	}
 
