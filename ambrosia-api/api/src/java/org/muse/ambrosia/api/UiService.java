@@ -464,6 +464,13 @@ public interface UiService
 	OrderColumn newOrderColumn();
 
 	/**
+	 * Construct a new Overlay
+	 * 
+	 * @return a new Overlay
+	 */
+	Overlay newOverlay();
+
+	/**
 	 * Construct a new Pager
 	 * 
 	 * @return a new Pager
@@ -564,6 +571,13 @@ public interface UiService
 	 * @return a new TextPropertyReference
 	 */
 	TextPropertyReference newTextPropertyReference();
+
+	/**
+	 * Construct a new Toggle
+	 * 
+	 * @return a new Toggle
+	 */
+	Toggle newToggle();
 
 	/**
 	 * Construct a new TrueDecision

@@ -99,6 +99,7 @@ import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.NavigationBar;
 import org.muse.ambrosia.api.OrDecision;
 import org.muse.ambrosia.api.OrderColumn;
+import org.muse.ambrosia.api.Overlay;
 import org.muse.ambrosia.api.Pager;
 import org.muse.ambrosia.api.Paging;
 import org.muse.ambrosia.api.PagingPropertyReference;
@@ -113,6 +114,7 @@ import org.muse.ambrosia.api.SelectionColumn;
 import org.muse.ambrosia.api.Text;
 import org.muse.ambrosia.api.TextEdit;
 import org.muse.ambrosia.api.TextPropertyReference;
+import org.muse.ambrosia.api.Toggle;
 import org.muse.ambrosia.api.TrueDecision;
 import org.muse.ambrosia.api.UiService;
 import org.muse.ambrosia.api.UrlPropertyReference;
@@ -710,6 +712,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public Overlay newOverlay()
+	{
+		return new UiOverlay();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Pager newPager()
 	{
 		return new UiPager();
@@ -822,6 +832,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public Toggle newToggle()
+	{
+		return new UiToggle();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public TrueDecision newTrueDecision()
 	{
 		return new UiTrueDecision();
@@ -901,12 +919,14 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("modelComponent")) return new UiModelComponent(this, xml);
 		if (xml.getTagName().equals("navigation")) return new UiNavigation(this, xml);
 		if (xml.getTagName().equals("navigationBar")) return new UiNavigationBar(this, xml);
+		if (xml.getTagName().equals("overlay")) return new UiOverlay(this, xml);
 		if (xml.getTagName().equals("pager")) return new UiPager(this, xml);
 		if (xml.getTagName().equals("password")) return new UiPassword(this, xml);
 		if (xml.getTagName().equals("section")) return new UiSection(this, xml);
 		if (xml.getTagName().equals("selection")) return new UiSelection(this, xml);
 		if (xml.getTagName().equals("text")) return new UiText(this, xml);
 		if (xml.getTagName().equals("textEdit")) return new UiTextEdit(this, xml);
+		if (xml.getTagName().equals("toggle")) return new UiToggle(this, xml);
 		if (xml.getTagName().equals("view")) return new UiInterface(this, xml);
 
 		return null;

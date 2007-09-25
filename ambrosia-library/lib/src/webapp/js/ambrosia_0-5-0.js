@@ -283,3 +283,12 @@ function ambrosiaCountChecked(name)
 	}
 	return count;
 }
+
+function ambrosiaToggleVisibility(name)
+{
+	el = document.getElementById(name);
+	if (el.style.display == "")
+		el.style.display = "none";
+	else
+		el.style.display = "";
+}

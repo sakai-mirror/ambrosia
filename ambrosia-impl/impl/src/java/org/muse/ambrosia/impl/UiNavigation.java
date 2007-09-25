@@ -321,7 +321,7 @@ public class UiNavigation extends UiComponent implements Navigation
 		if (settingsXml != null)
 		{
 			Decision decision = service.parseDecisions(settingsXml);
-			this.included = decision;
+			this.entityIncluded = decision;
 		}
 
 		// iterator

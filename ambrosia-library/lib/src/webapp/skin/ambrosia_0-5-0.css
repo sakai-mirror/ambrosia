@@ -139,6 +139,16 @@ Confirm for Navigation
 	position:absolute;
 }
 
+.ambrosiaOverlay
+{
+	border-left:medium double black;
+	border-right:medium double black;
+	border-bottom:medium double black;
+	border-top:medium double black;
+	background:#F8F8F8;
+	position:absolute;
+}
+
 /*
 Alert message. (Alert)
 Sakai ~ alertMessage
