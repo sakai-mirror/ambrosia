@@ -108,6 +108,15 @@ public interface PropertyReference
 	PropertyReference setFormatDelegate(FormatDelegate formatter);
 
 	/**
+	 * Set the reference for encoding the index.
+	 * 
+	 * @param indexRef
+	 *        The reference for encoding the index.
+	 * @return self.
+	 */
+	PropertyReference setIndexReference(String indexRef);
+
+	/**
 	 * Set the message selector for the text to use if the selector value cannot be found, or is null.
 	 * 
 	 * @param text

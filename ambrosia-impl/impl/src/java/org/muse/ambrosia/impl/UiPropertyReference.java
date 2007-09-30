@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
@@ -463,6 +464,13 @@ public class UiPropertyReference implements PropertyReference
 		{
 			// treat the index as an id...
 			Object o = ((PopulatingSet) collection).assure(index);
+			return o;
+		}
+		
+		else if (collection instanceof Map)
+		{
+			// treat as a key
+			Object o = ((Map) collection).get(index);
 			return o;
 		}
 
