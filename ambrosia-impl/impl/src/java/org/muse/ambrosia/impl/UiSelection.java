@@ -253,6 +253,12 @@ public class UiSelection extends UiComponent implements Selection
 		// included?
 		if (!isIncluded(context, focus)) return;
 
+		if (this.orientation == Orientation.dropdown)
+		{
+			renderDropdown(context, focus);
+			return;
+		}
+
 		// read only?
 		boolean readOnly = false;
 		if (this.readOnly != null)
@@ -515,5 +521,81 @@ public class UiSelection extends UiComponent implements Selection
 	{
 		this.titleMessage = new UiMessage().setMessage(selector, references);
 		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void renderDropdown(Context context, Object focus)
+	{
+		// read only?
+		boolean readOnly = false;
+		if (this.readOnly != null)
+		{
+			readOnly = this.readOnly.decide(context, focus);
+		}
+
+		// generate some ids
+		int idRoot = context.getUniqueId();
+		String id = this.getClass().getSimpleName() + "_" + idRoot;
+		String decodeId = "decode_" + idRoot;
+
+		PrintWriter response = context.getResponseWriter();
+
+		// read the current value
+		String value = "false";
+		if (this.propertyReference != null)
+		{
+			value = this.propertyReference.read(context, focus);
+		}
+
+		// Note: correct / incorrect markings not supported for dropdown
+
+		// TODO:
+		response.println("<div class=\"ambrosiaSelection\">");
+
+		// TODO: configure dropdown size
+		Integer dropdownSize = Integer.valueOf(1);
+
+		// title
+		if (this.titleMessage != null)
+		{
+			response.println("<label for=\"" + id + "\">");
+			response.println(this.titleMessage.getMessage(context, focus));
+			response.println("</label>");
+		}
+
+		response.println("<select size=\"" + dropdownSize.toString() + "\" name=\"" + id + "\" id=\"" + id + "\""
+				+ (readOnly ? " disabled=\"disabled\"" : "") + ">");
+
+		// TODO: must have selection values
+
+		// TODO: on change?
+		String onclick = "";
+
+		// TODO: selectionContainers not supported
+
+		for (int i = 0; i < this.selectionValues.size(); i++)
+		{
+			Message msg = this.selectionMessages.get(i);
+			String message = msg.getMessage(context, focus);
+			String val = this.selectionValues.get(i);
+
+			boolean selected = (value == null) ? false : value.equals(val);
+
+			// the option
+			response.println("<option " + onclick + " value=\"" + val + "\" " + (selected ? "SELECTED" : "") + ">" + message + "</option>");
+		}
+
+		response.println("</select>");
+
+		// the decode directive
+		if ((this.propertyReference != null) && (!readOnly))
+		{
+			response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\"" + "prop_"
+					+ decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
+		}
+
+		response.println("</div>");
 	}
 }

@@ -29,7 +29,7 @@ public interface Selection extends Component
 	/** orientation. */
 	enum Orientation
 	{
-		horizontal, vertical
+		dropdown, horizontal, vertical
 	};
 
 	/**
