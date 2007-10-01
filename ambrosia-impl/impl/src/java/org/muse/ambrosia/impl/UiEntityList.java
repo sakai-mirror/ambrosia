@@ -68,7 +68,7 @@ public class UiEntityList extends UiComponent implements EntityList
 	protected List<Navigation> headingNavigations = new ArrayList<Navigation>();
 
 	/** The inclusion decision for each entity. */
-	protected Decision included = null;
+	protected Decision entityIncluded = null;
 
 	/** The context name for the current iteration object. */
 	protected String iteratorName = null;
@@ -120,7 +120,7 @@ public class UiEntityList extends UiComponent implements EntityList
 		if (settingsXml != null)
 		{
 			Decision decision = service.parseDecisions(settingsXml);
-			this.included = decision;
+			this.entityIncluded = decision;
 		}
 
 		// iterator
@@ -361,9 +361,10 @@ public class UiEntityList extends UiComponent implements EntityList
 		response.println("<table class=\"ambrosiaEntityListTable "
 				+ ((this.style == Style.flat) ? "ambrosiaEntityListFlat" : "ambrosiaEntityListForm") + "\" cellpadding=\"0\" cellspacing=\"0\" >");
 
-		// columns headers
+		// do we need headers? not if we have no headers defined
+		// also, count the cols
 		int cols = 0;
-		response.println("<thead><tr>");
+		boolean needHeaders = false;
 		for (EntityListColumn c : this.columns)
 		{
 			// included?
@@ -371,88 +372,105 @@ public class UiEntityList extends UiComponent implements EntityList
 
 			cols++;
 
-			Message title = c.getTitle();
-			if (title != null)
+			if (c.getTitle() != null)
 			{
-				// submit?
-				boolean submit = c.getSortSubmit();
-
-				// navigation render id for sort
-				String sortId = id + "_s" + (cols - 1);
-
-				// if this is the sort column
-				if ((c.getSortingDecision() != null) && (c.getSortingDecision().decide(context, focus)))
-				{
-					// show the asc or desc... each a nav to the sort asc or desc
-					boolean asc = true;
-					if ((c.getSortingAscDecision() != null) && (!c.getSortingAscDecision().decide(context, focus)))
-					{
-						asc = false;
-					}
-
-					String icon = null;
-					String iconAlt = null;
-					if (asc)
-					{
-						icon = c.getSortAscIcon();
-						if (c.getSortAscMsg() != null) iconAlt = c.getSortAscMsg().getMessage(context, focus);
-					}
-					else
-					{
-						icon = c.getSortDescIcon();
-						if (c.getSortDescMsg() != null) iconAlt = c.getSortDescMsg().getMessage(context, focus);
-					}
-
-					String destination = null;
-					if (asc)
-					{
-						// we are already ascending, so encode the descending destination
-						if (c.getSortDestinationDesc() != null) destination = c.getSortDestinationDesc().getDestination(context, focus);
-					}
-					else
-					{
-						// we are already descending, so encode the ascending destination
-						if (c.getSortDestinationAsc() != null) destination = c.getSortDestinationAsc().getDestination(context, focus);
-					}
-
-					// TODO: do submit!
-					UiNavigation.generateLinkScript(context, sortId, false, false, submit, destination, (String) context.get("sakai.return.url"),
-							false);
-					response.println("<th scope=\"col\""
-							+ (c.getCentered() ? " style=\"text-align:center\"" : "")
-							+ "><a href=\"#\" onclick=\"act_"
-							+ sortId
-							+ "();\">"
-							+ Validator.escapeHtml(title.getMessage(context, focus))
-							+ ((icon != null) ? ("&nbsp;<img src=\"" + context.getUrl(icon) + "\""
-									+ ((iconAlt != null) ? (" alt=\"" + Validator.escapeHtml(iconAlt) + "\"") : "") + " />") : "") + "</a></th>");
-				}
-
-				// not currently sorting... can we sort?
-				else if ((c.getSortingDecision() != null) && (c.getSortingAscDecision() != null) && (c.getSortDestinationAsc() != null)
-						&& (c.getSortDestinationDesc() != null))
-				{
-					UiNavigation.generateLinkScript(context, sortId, false, false, submit, c.getSortDestinationAsc().getDestination(context, focus),
-							(String) context.get("sakai.return.url"), false);
-					response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + "><a href=\"#\" onclick=\"act_"
-							+ sortId + "();\">" + Validator.escapeHtml(title.getMessage(context, focus)) + "</a></th>");
-				}
-
-				// no sort
-				else
-				{
-					response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">"
-							+ Validator.escapeHtml(title.getMessage(context, focus)) + "</th>");
-				}
-			}
-
-			// for no title defined, put out a placeholder title
-			else
-			{
-				response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">" + "" + "</th>");
+				needHeaders = true;
 			}
 		}
-		response.println("</tr></thead>");
+
+		if (needHeaders)
+		{
+			// columns headers
+			response.println("<thead><tr>");
+			for (EntityListColumn c : this.columns)
+			{
+				// included?
+				if (!c.included(context)) continue;
+
+				Message title = c.getTitle();
+				if (title != null)
+				{
+					// submit?
+					boolean submit = c.getSortSubmit();
+
+					// navigation render id for sort
+					String sortId = id + "_s" + (cols - 1);
+
+					// if this is the sort column
+					if ((c.getSortingDecision() != null) && (c.getSortingDecision().decide(context, focus)))
+					{
+						// show the asc or desc... each a nav to the sort asc or desc
+						boolean asc = true;
+						if ((c.getSortingAscDecision() != null) && (!c.getSortingAscDecision().decide(context, focus)))
+						{
+							asc = false;
+						}
+
+						String icon = null;
+						String iconAlt = null;
+						if (asc)
+						{
+							icon = c.getSortAscIcon();
+							if (c.getSortAscMsg() != null) iconAlt = c.getSortAscMsg().getMessage(context, focus);
+						}
+						else
+						{
+							icon = c.getSortDescIcon();
+							if (c.getSortDescMsg() != null) iconAlt = c.getSortDescMsg().getMessage(context, focus);
+						}
+
+						String destination = null;
+						if (asc)
+						{
+							// we are already ascending, so encode the descending destination
+							if (c.getSortDestinationDesc() != null) destination = c.getSortDestinationDesc().getDestination(context, focus);
+						}
+						else
+						{
+							// we are already descending, so encode the ascending destination
+							if (c.getSortDestinationAsc() != null) destination = c.getSortDestinationAsc().getDestination(context, focus);
+						}
+
+						// TODO: do submit!
+						UiNavigation.generateLinkScript(context, sortId, false, false, submit, destination, (String) context.get("sakai.return.url"),
+								false);
+						response.println("<th scope=\"col\""
+								+ (c.getCentered() ? " style=\"text-align:center\"" : "")
+								+ "><a href=\"#\" onclick=\"act_"
+								+ sortId
+								+ "();\">"
+								+ Validator.escapeHtml(title.getMessage(context, focus))
+								+ ((icon != null) ? ("&nbsp;<img src=\"" + context.getUrl(icon) + "\""
+										+ ((iconAlt != null) ? (" alt=\"" + Validator.escapeHtml(iconAlt) + "\"") : "") + " />") : "") + "</a></th>");
+					}
+
+					// not currently sorting... can we sort?
+					else if ((c.getSortingDecision() != null) && (c.getSortingAscDecision() != null) && (c.getSortDestinationAsc() != null)
+							&& (c.getSortDestinationDesc() != null))
+					{
+						UiNavigation.generateLinkScript(context, sortId, false, false, submit, c.getSortDestinationAsc().getDestination(context,
+								focus), (String) context.get("sakai.return.url"), false);
+						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
+								+ "><a href=\"#\" onclick=\"act_" + sortId + "();\">" + Validator.escapeHtml(title.getMessage(context, focus))
+								+ "</a></th>");
+					}
+
+					// no sort
+					else
+					{
+						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">"
+								+ Validator.escapeHtml(title.getMessage(context, focus)) + "</th>");
+					}
+				}
+
+				// for no title defined, put out a placeholder title
+				else
+				{
+					response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">" + "" + "</th>");
+				}
+			}
+			response.println("</tr></thead>");
+		}
 
 		// keep track of footnotes we need to display after the list, mapped to the footmark used in the columns
 		Map<Footnote, String> footnotes = new HashMap<Footnote, String>();
@@ -478,7 +496,7 @@ public class UiEntityList extends UiComponent implements EntityList
 				}
 
 				// check if this entity is to be included
-				if ((this.included != null) && (!this.included.decide(context, entity))) continue;
+				if ((this.entityIncluded != null) && (!this.entityIncluded.decide(context, entity))) continue;
 
 				// track the row number
 				row++;
@@ -680,8 +698,8 @@ public class UiEntityList extends UiComponent implements EntityList
 			colNum++;
 		}
 
-		// empty title, if there is no data
-		if ((this.emptyTitle != null) && empty)
+		// empty title, if there is no data (or no entities passed the entityIncluded test so no rows were generated)
+		if ((this.emptyTitle != null) && (empty || (row == -1)))
 		{
 			response.println("<div class =\"ambrosiaInstructions\">" + Validator.escapeHtml(this.emptyTitle.getMessage(context, focus)) + "</div>");
 		}
@@ -713,7 +731,7 @@ public class UiEntityList extends UiComponent implements EntityList
 	 */
 	public EntityList setEntityIncluded(Decision inclusionDecision)
 	{
-		this.included = inclusionDecision;
+		this.entityIncluded = inclusionDecision;
 		return this;
 	}
 
@@ -839,7 +857,7 @@ public class UiEntityList extends UiComponent implements EntityList
 			for (Component c : col.getEntityActions())
 			{
 				c.render(context, focus);
-				
+
 				// add a divider
 				response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
 			}
