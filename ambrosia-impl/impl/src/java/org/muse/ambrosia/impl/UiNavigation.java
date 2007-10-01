@@ -131,6 +131,9 @@ public class UiNavigation extends UiComponent implements Navigation
 	/** The requirement of the related select to make this valid. */
 	protected SelectRequirement selectRequirement = SelectRequirement.none;
 
+	/** The component id the select requirement is against. */
+	protected String selectRequirementId = null;
+
 	/** The display style. */
 	protected Style style = Style.link;
 
@@ -218,6 +221,13 @@ public class UiNavigation extends UiComponent implements Navigation
 		if (selectRequirement != null)
 		{
 			setSelectRequirement(SelectRequirement.valueOf(selectRequirement.toLowerCase()));
+		}
+
+		// selectRequirementId
+		String selectRequirementId = StringUtil.trimToNull(xml.getAttribute("selectRequirementId"));
+		if (selectRequirementId != null)
+		{
+			setSelectRequirementId(selectRequirementId);
 		}
 
 		// short form for select requirement message
@@ -610,6 +620,15 @@ public class UiNavigation extends UiComponent implements Navigation
 	/**
 	 * {@inheritDoc}
 	 */
+	public Navigation setSelectRequirementId(String id)
+	{
+		this.selectRequirementId = id;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Navigation setStyle(Navigation.Style style)
 	{
 		this.style = style;
@@ -758,7 +777,16 @@ public class UiNavigation extends UiComponent implements Navigation
 		String relatedId = null;
 		if (requirements)
 		{
-			relatedId = (String) context.get("ambrosia.navigation.related.id");
+			// use our configured target
+			relatedId = this.selectRequirementId;
+
+			// if none, try the context
+			if (relatedId == null)
+			{
+				relatedId = (String) context.get("ambrosia.navigation.related.id");
+			}
+
+			// if still none, we have no requirements
 			if (relatedId == null) requirements = false;
 		}
 

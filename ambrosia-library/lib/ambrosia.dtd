@@ -232,6 +232,7 @@
 <!ATTLIST navigation accessKey CDATA #IMPLIED >
 <!ATTLIST navigation description CDATA #IMPLIED >
 <!ATTLIST navigation selectRequirement (SINGLE|SOME|MULTIPLE) #IMPLIED>
+<!ATTLIST navigation selectRequirementId CDATA #IMPLIED>
 <!ATTLIST navigation selectRequirementMessage CDATA #IMPLIED >
 
 <!ELEMENT toggle (included | title | disabled | icon)* >
@@ -364,6 +365,7 @@
 <!ATTLIST selectionColumn single (TRUE|FALSE) #IMPLIED >
 <!ATTLIST selectionColumn model CDATA #IMPLIED >
 <!ATTLIST selectionColumn correct CDATA #IMPLIED >
+<!ATTLIST selectionColumn id CDATA #IMPLIED >
 
 <!ELEMENT orderColumn (value | model | asAlert | entityIncluded | included | sort | title | container | entityNavigations | footnotes | navigations)* >
 <!ATTLIST orderColumn model CDATA #IMPLIED >

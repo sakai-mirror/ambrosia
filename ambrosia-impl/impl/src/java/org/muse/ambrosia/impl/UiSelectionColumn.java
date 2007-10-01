@@ -49,6 +49,9 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/** A model reference to a value that is considered "correct" for correct/incorrect marking. */
 	protected PropertyReference correctReference = null;
 
+	/** The id of this element - can be referenced as a dependency, for example. */
+	protected String id = null;
+
 	/** Icon to use to show incorrect. */
 	protected String incorrectIcon = "!/ambrosia_library/icons/incorrect.png";
 
@@ -98,6 +101,10 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	{
 		// entity list column stuff
 		super(service, xml);
+
+		// id
+		String id = StringUtil.trimToNull(xml.getAttribute("id"));
+		if (id != null) setId(id);
 
 		// label
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "label");
@@ -194,8 +201,11 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, String id)
+	public String getDisplayText(Context context, Object entity, int row, String effectiveId)
 	{
+		// use our id if set
+		if (this.id != null) effectiveId = this.id;
+
 		// read only?
 		boolean readOnly = false;
 		if (this.readOnly != null)
@@ -293,7 +303,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		}
 
 		// form a row-unique id, using the overall id and the row
-		String uid = id + "_" + row;
+		String uid = effectiveId + "_" + row;
 
 		// if we are doing correct marking
 		if (includeCorrectMarkers)
@@ -359,15 +369,15 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		if (single)
 		{
 
-			rv.append("<input type=\"radio\" id=\"" + uid + "\" name=\"" + id + "\" value=\"" + value + "\" " + (checked ? "CHECKED" : "")
+			rv.append("<input type=\"radio\" id=\"" + uid + "\" name=\"" + effectiveId + "\" value=\"" + value + "\" " + (checked ? "CHECKED" : "")
 					+ (readOnly ? " disabled=\"disabled\"" : "") + " />");
 		}
 
 		// for multiple selection, use a checkbox set
 		else
 		{
-			rv.append("<input type=\"checkbox\" id=\"" + uid + "\" name=\"" + id + "\" value=\"" + value + "\" " + (checked ? "CHECKED" : "")
-					+ (readOnly ? " disabled=\"disabled\"" : "") + " />");
+			rv.append("<input type=\"checkbox\" id=\"" + uid + "\" name=\"" + effectiveId + "\" value=\"" + value + "\" "
+					+ (checked ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 		}
 
 		// the label
@@ -387,8 +397,11 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getOneTimeText(Context context, Object focus, String id, int numRows)
+	public String getOneTimeText(Context context, Object focus, String effectiveId, int numRows)
 	{
+		// use our id if set
+		if (this.id != null) effectiveId = this.id;
+
 		// read only?
 		boolean readOnly = false;
 		if (this.readOnly != null)
@@ -410,13 +423,13 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		}
 
 		// generate some ids
-		String decodeId = "decode_" + id;
+		String decodeId = "decode_" + effectiveId;
 
 		StringBuffer rv = new StringBuffer();
 
 		// we need one hidden field to direct the decoding of all the columns
-		rv.append("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\"" + "prop_" + decodeId
-				+ "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
+		rv.append("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + effectiveId + "\" />" + "<input type=\"hidden\" name=\"" + "prop_"
+				+ decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
 
 		// for onEmptyAlert, add some client-side validation
 		if (onEmptyAlert)
@@ -426,13 +439,13 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 				StringBuffer buf = new StringBuffer();
 				for (int i = 0; i < numRows; i++)
 				{
-					buf.append("!document.getElementById('" + id + "_" + Integer.toString(i) + "').checked &&");
+					buf.append("!document.getElementById('" + effectiveId + "_" + Integer.toString(i) + "').checked &&");
 				}
 				buf.setLength(buf.length() - 3);
 
-				context.addValidation("	if (" + buf.toString() + ")\n" + "	{\n" + "		if (document.getElementById('alert_" + id
-						+ "').style.display == \"none\")\n" + "		{\n" + "			document.getElementById('alert_" + id + "').style.display = \"\";\n"
-						+ "			rv=false;\n" + "		}\n" + "	}\n");
+				context.addValidation("	if (" + buf.toString() + ")\n" + "	{\n" + "		if (document.getElementById('alert_" + effectiveId
+						+ "').style.display == \"none\")\n" + "		{\n" + "			document.getElementById('alert_" + effectiveId
+						+ "').style.display = \"\";\n" + "			rv=false;\n" + "		}\n" + "	}\n");
 			}
 		}
 
@@ -442,8 +455,11 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getPrefixText(Context context, Object focus, String id)
+	public String getPrefixText(Context context, Object focus, String effectiveId)
 	{
+		// use our id if set
+		if (this.id != null) effectiveId = this.id;
+
 		// read only?
 		boolean readOnly = false;
 		if (this.readOnly != null)
@@ -467,7 +483,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		if (!onEmptyAlert) return null;
 
 		// this will become visible if a submit happens and the validation fails
-		return "<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
+		return "<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + effectiveId + "\">"
 				+ Validator.escapeHtml(this.onEmptyAlertMsg.getMessage(context, focus)) + "</div>";
 	}
 
@@ -486,6 +502,15 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	public SelectionColumn setCorrectDecision(Decision decision)
 	{
 		this.correctDecision = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public SelectionColumn setId(String id)
+	{
+		this.id = id;
 		return this;
 	}
 

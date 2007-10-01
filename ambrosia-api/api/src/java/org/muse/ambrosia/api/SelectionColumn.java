@@ -44,6 +44,15 @@ public interface SelectionColumn extends EntityListColumn
 	SelectionColumn setCorrectDecision(Decision decision);
 
 	/**
+	 * Set the id of this component, which can be referenced by an dependency, for example.
+	 * 
+	 * @param id
+	 *        The component's id.
+	 * @return self.
+	 */
+	SelectionColumn setId(String id);
+
+	/**
 	 * Set the format and properties to form the label.
 	 * 
 	 * @param selector

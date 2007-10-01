@@ -207,6 +207,15 @@ public interface Navigation extends Component
 	Navigation setSelectRequirement(SelectRequirement requirement);
 
 	/**
+	 * Set the component id that the select requirement is against.
+	 * 
+	 * @param id
+	 *        The component is that the select requirement is against.
+	 * @return self.
+	 */
+	Navigation setSelectRequirementId(String id);
+
+	/**
 	 * Set the format style.
 	 * 
 	 * @param style
