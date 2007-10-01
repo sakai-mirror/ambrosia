@@ -1110,7 +1110,7 @@ public class UiServiceImpl implements UiService
 	{
 		if (xml == null) return null;
 
-		if (xml.getTagName().equals("autoColumn")) return new UiAutoColumn();
+		if (xml.getTagName().equals("autoColumn")) return new UiAutoColumn(this, xml);
 		if (xml.getTagName().equals("modelColumn")) return new UiPropertyColumn(this, xml);
 		if (xml.getTagName().equals("orderColumn")) return new UiOrderColumn(this, xml);
 		if (xml.getTagName().equals("selectionColumn")) return new UiSelectionColumn(this, xml);
@@ -1118,7 +1118,7 @@ public class UiServiceImpl implements UiService
 		if (!xml.getTagName().equals("column")) return null;
 
 		String type = StringUtil.trimToNull(xml.getAttribute("type"));
-		if ("auto".equals(type)) return new UiAutoColumn();
+		if ("auto".equals(type)) return new UiAutoColumn(this, xml);
 		if ("model".equals(type)) return new UiPropertyColumn(this, xml);
 		if ("order".equals(type)) return new UiOrderColumn(this, xml);
 		if ("selection".equals(type)) return new UiSelectionColumn(this, xml);

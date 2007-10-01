@@ -344,7 +344,8 @@
 <!ELEMENT headings (heading)* >
 <!ELEMENT heading (message | navigation | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
 
-<!ELEMENT autoColumn EMPTY >
+<!ELEMENT autoColumn (model)* >
+<!ATTLIST autoColumn model CDATA #IMPLIED >
 
 <!ELEMENT modelColumn (model | message | asAlert | entityIncluded | included | sort | title | container | entityNavigations | footnotes | navigations)* >
 <!ATTLIST modelColumn centered (TRUE|FALSE) #IMPLIED >

@@ -26,4 +26,11 @@ package org.muse.ambrosia.api;
  */
 public interface AutoColumn extends EntityListColumn
 {
+	/**
+	 * Set the property reference for an index to use for the display value.
+	 * 
+	 * @param propertyReference
+	 *        The property reference for an index to use for the display value.
+	 */
+	AutoColumn setProperty(PropertyReference propertyReference);
 }

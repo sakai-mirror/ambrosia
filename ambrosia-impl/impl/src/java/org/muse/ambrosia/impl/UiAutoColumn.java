@@ -23,7 +23,9 @@ package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.AutoColumn;
 import org.muse.ambrosia.api.Context;
-import org.sakaiproject.util.Validator;
+import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
+import org.w3c.dom.Element;
 
 /**
  * AutoColumn provides automatic numbering for columns in an entity list.
@@ -31,11 +33,48 @@ import org.sakaiproject.util.Validator;
 public class UiAutoColumn extends UiEntityListColumn implements AutoColumn
 {
 	/** The auto values. */
-	protected String[] autoValues =
+	protected String[] autoValues = {"A.", "B.", "C.", "D.", "E.", "F.", "G.", "H.", "I.", "J.", "K.", "L.", "M.", "N.", "O.", "P.", "Q.", "R.",
+			"S.", "T.", "U.", "V.", "W.", "X.", "Y.", "Z."};
+
+	/** Optional reference to the model - if set, attempt to get an index value for the display from here. */
+	protected PropertyReference propertyReference = null;
+
+	/**
+	 * Public no-arg constructor.
+	 */
+	public UiAutoColumn()
 	{
-			"A.", "B.", "C.", "D.", "E.", "F.", "G.", "H.", "I.", "J.", "K.", "L.", "M.", "N.", "O.", "P.", "Q.", "R.", "S.", "T.",
-			"U.", "V.", "W.", "X.", "Y.", "Z."
-	};
+	}
+
+	/**
+	 * Construct from a dom element.
+	 * 
+	 * @param service
+	 *        the UiService.
+	 * @param xml
+	 *        The dom element.
+	 */
+	protected UiAutoColumn(UiServiceImpl service, Element xml)
+	{
+		// EntityListColumn stuff
+		super(service, xml);
+
+		// short for model
+		String model = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(model);
+			setProperty(pRef);
+		}
+
+		// model
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "model");
+		if (settingsXml != null)
+		{
+			PropertyReference pRef = service.parsePropertyReference(settingsXml);
+			if (pRef != null) setProperty(pRef);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -44,8 +83,38 @@ public class UiAutoColumn extends UiEntityListColumn implements AutoColumn
 	{
 		// TODO: watch out for overflow...
 
-		String rv = this.autoValues[row];
+		// see if we have a model reference, use row if not
+		int index = row;
+		if (this.propertyReference != null)
+		{
+			String value = this.propertyReference.read(context, entity);
 
-		return Validator.escapeHtml(rv);
+			if (value != null)
+			{
+				try
+				{
+					index = Integer.parseInt(value);
+				}
+				catch (NumberFormatException e)
+				{
+
+				}
+			}
+		}
+
+		// guard against over and under flow
+		if (index < 0) index = 0;
+		if (index >= this.autoValues.length) index = this.autoValues.length - 1;
+
+		return this.autoValues[index];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public AutoColumn setProperty(PropertyReference propertyReference)
+	{
+		this.propertyReference = propertyReference;
+		return this;
 	}
 }
