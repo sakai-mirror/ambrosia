@@ -22,6 +22,7 @@
 package org.muse.ambrosia.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.muse.ambrosia.api.CompareDecision;
@@ -132,10 +133,35 @@ public class UiCompareDecision extends UiDecision implements CompareDecision
 				// check against the reference, if set
 				if (this.compareReference != null)
 				{
-					String compare = this.compareReference.read(context, focus);
-					if (compare != null)
+					Object compareObject = this.compareReference.readObject(context, focus);
+					if (compareObject != null)
 					{
-						return value.equalsIgnoreCase(compare);
+						// if value is a member of the collection
+						if (compareObject instanceof Collection)
+						{
+							Collection compare = (Collection) compareObject;
+							return compare.contains(value);
+						}
+
+						// if value is in an array
+						else if (compareObject.getClass().isArray())
+						{
+							Object[] compare = (Object[]) compareObject;
+							for (Object o : compare)
+							{
+								if (value.equalsIgnoreCase(o.toString()))
+								{
+									return true;
+								}
+							}
+						}
+
+						// compare to the string value of whatever we found
+						else
+						{
+							String compare = compareObject.toString();
+							return value.equalsIgnoreCase(compare);
+						}
 					}
 				}
 
