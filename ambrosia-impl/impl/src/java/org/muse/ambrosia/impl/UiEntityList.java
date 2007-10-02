@@ -382,6 +382,7 @@ public class UiEntityList extends UiComponent implements EntityList
 		{
 			// columns headers
 			response.println("<thead><tr>");
+			colNum = 0;
 			for (EntityListColumn c : this.columns)
 			{
 				// included?
@@ -394,7 +395,7 @@ public class UiEntityList extends UiComponent implements EntityList
 					boolean submit = c.getSortSubmit();
 
 					// navigation render id for sort
-					String sortId = id + "_s" + (cols - 1);
+					String sortId = id + "_s" + colNum;
 
 					// if this is the sort column
 					if ((c.getSortingDecision() != null) && (c.getSortingDecision().decide(context, focus)))
@@ -468,7 +469,10 @@ public class UiEntityList extends UiComponent implements EntityList
 				{
 					response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">" + "" + "</th>");
 				}
+
+				colNum++;
 			}
+
 			response.println("</tr></thead>");
 		}
 
