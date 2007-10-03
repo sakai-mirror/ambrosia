@@ -209,6 +209,12 @@ public class UiSelection extends UiComponent implements Selection
 			}
 		}
 
+		String readOnly = StringUtil.trimToNull(xml.getAttribute("readOnly"));
+		if ((readOnly != null) && ("TRUE".equals(readOnly)))
+		{
+			this.readOnly = new UiDecision().setProperty(new UiConstantPropertyReference().setValue("true"));
+		}
+
 		// read only
 		settingsXml = XmlHelper.getChildElementNamed(xml, "readOnly");
 		if (settingsXml != null)
