@@ -84,6 +84,16 @@ public class UiComponent implements Component
 	/**
 	 * {@inheritDoc}
 	 */
+	protected String getId(Context context)
+	{
+		String iteration = (String) context.get("ambrosia_iteration_index");
+
+		return this.id + ((iteration != null) ? ("_" + iteration) : "");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isIncluded(Context context, Object focus)
 	{
 		if (this.included == null) return true;

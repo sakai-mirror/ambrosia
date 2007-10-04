@@ -178,8 +178,15 @@ public class UiToggle extends UiComponent implements Toggle
 
 		PrintWriter response = context.getResponseWriter();
 
+		String targetId = this.target;
+		String iteratation = (String) context.get("ambrosia_iteration_index");
+		if (iteratation != null)
+		{
+			targetId += "_" + iteratation;
+		}
+
 		// the script
-		context.addScript("function act_" + id + "()\n{\n\tambrosiaToggleVisibility(\"" + this.target + "\")\n}\n");
+		context.addScript("function act_" + id + "()\n{\n\tambrosiaToggleVisibility(\"" + targetId + "\")\n}\n");
 
 		switch (this.style)
 		{

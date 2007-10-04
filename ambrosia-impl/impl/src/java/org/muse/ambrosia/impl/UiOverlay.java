@@ -64,7 +64,7 @@ public class UiOverlay extends UiContainer implements Overlay
 		PrintWriter response = context.getResponseWriter();
 
 		// setup the container
-		response.println("<div id=\"" + getId() + "\" class=\"ambrosiaOverlay\" style=\"width:500px;height:250px;overflow:auto;display:none\">");
+		response.println("<div id=\"" + getId(context) + "\" class=\"ambrosiaOverlay\" style=\"width:500px;height:250px;overflow:auto;display:none\">");
 		// TODO: style width height left overflow:auto
 		// TODO: display:none
 

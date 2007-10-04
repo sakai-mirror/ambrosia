@@ -213,6 +213,9 @@ public class UiSection extends UiContainer implements Section
 					context.put(this.iteratorName, o, this.iteratorReference.getEncoding(context, o, index));
 				}
 
+				// place the iteration index
+				context.put("ambrosia_iteration_index", Integer.toString(index));
+
 				// check if this entity is to be included
 				if ((this.entityIncluded == null) || (this.entityIncluded.decide(context, o)))
 				{
@@ -224,6 +227,8 @@ public class UiSection extends UiContainer implements Section
 				{
 					context.remove(this.iteratorName);
 				}
+
+				context.remove("ambrosia_iteration_index");
 			}
 
 			return;
@@ -244,6 +249,9 @@ public class UiSection extends UiContainer implements Section
 					context.put(this.iteratorName, o, this.iteratorReference.getEncoding(context, o, index));
 				}
 
+				// place the iteration index
+				context.put("ambrosia_iteration_index", Integer.toString(index));
+
 				// check if this entity is to be included
 				if ((this.entityIncluded == null) || (this.entityIncluded.decide(context, o)))
 				{
@@ -255,6 +263,8 @@ public class UiSection extends UiContainer implements Section
 				{
 					context.remove(this.iteratorName);
 				}
+
+				context.remove("ambrosia_iteration_index");
 			}
 
 			return;
