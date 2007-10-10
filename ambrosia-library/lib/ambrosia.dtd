@@ -137,39 +137,37 @@
 <!ELEMENT container (alert | alias | attachments | attachmentsEdit | container | countEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | floatEdit | htmlEdit | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | overlay | pager | password | section | selection | text | textEdit | toggle)* >
 <!ELEMENT modeContainer (alert | alias | attachments | attachmentsEdit | countEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | floatEdit | htmlEdit | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | overlay | pager | password | section | selection | text | textEdit | toggle)* >
 
-<!ELEMENT included (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT disabled (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT default (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT validate (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT entityIncluded (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT titleIncluded (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT asAlert (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT active (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT direction (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT readOnly (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT singleSelect (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT focus (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT highlighted (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ELEMENT correctDecision (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT included (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT disabled (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT default (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT validate (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT entityIncluded (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT titleIncluded (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT asAlert (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT active (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT direction (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT readOnly (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT singleSelect (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT focus (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT highlighted (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT correctDecision (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 
 <!ATTLIST entityIncluded selector CDATA #IMPLIED >
 
 <!ELEMENT decision (model)* >
-<!ATTLIST decision type (hasValue|compare|and|or|pastDate) #IMPLIED >
+<!ATTLIST decision type (hasValue|compare|and|or|pastDate|true) #IMPLIED >
 <!ATTLIST decision reversed (TRUE|FALSE) #IMPLIED >
 <!ATTLIST decision model CDATA #IMPLIED >
 <!ATTLIST decision delegate CDATA #IMPLIED >
 <!ATTLIST decision tool CDATA #IMPLIED >
 
 <!ELEMENT hasValueDecision (model)* >
-<!ATTLIST hasValueDecision type (hasValue|compare|and|or|pastDate) #IMPLIED >
 <!ATTLIST hasValueDecision reversed (TRUE|FALSE) #IMPLIED >
 <!ATTLIST hasValueDecision model CDATA #IMPLIED >
 <!ATTLIST hasValueDecision delegate CDATA #IMPLIED >
 <!ATTLIST hasValueDecision tool CDATA #IMPLIED >
 
 <!ELEMENT compareDecision (model | constant)* >
-<!ATTLIST compareDecision type (hasValue|compare|and|or|pastDate) #IMPLIED >
 <!ATTLIST compareDecision reversed (TRUE|FALSE) #IMPLIED >
 <!ATTLIST compareDecision model CDATA #IMPLIED >
 <!ATTLIST compareDecision delegate CDATA #IMPLIED >
@@ -179,26 +177,29 @@
 <!ELEMENT constant EMPTY >
 <!ATTLIST constant value CDATA #IMPLIED >
 
-<!ELEMENT andDecision (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ATTLIST andDecision type (hasValue|compare|and|or|pastDate) #IMPLIED >
+<!ELEMENT andDecision (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 <!ATTLIST andDecision reversed (TRUE|FALSE) #IMPLIED >
 <!ATTLIST andDecision model CDATA #IMPLIED >
 <!ATTLIST andDecision delegate CDATA #IMPLIED >
 <!ATTLIST andDecision tool CDATA #IMPLIED >
 
-<!ELEMENT orDecision (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
-<!ATTLIST orDecision type (hasValue|compare|and|or|pastDate) #IMPLIED >
+<!ELEMENT orDecision (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 <!ATTLIST orDecision reversed (TRUE|FALSE) #IMPLIED >
 <!ATTLIST orDecision model CDATA #IMPLIED >
 <!ATTLIST orDecision delegate CDATA #IMPLIED >
 <!ATTLIST orDecision tool CDATA #IMPLIED >
 
 <!ELEMENT pastDateDecision (model)* >
-<!ATTLIST pastDateDecision type (hasValue|compare|and|or|pastDate) #IMPLIED >
 <!ATTLIST pastDateDecision reversed (TRUE|FALSE) #IMPLIED >
 <!ATTLIST pastDateDecision model CDATA #IMPLIED >
 <!ATTLIST pastDateDecision delegate CDATA #IMPLIED >
 <!ATTLIST pastDateDecision tool CDATA #IMPLIED >
+
+<!ELEMENT trueDecision (model)* >
+<!ATTLIST trueDecision reversed (TRUE|FALSE) #IMPLIED >
+<!ATTLIST trueDecision model CDATA #IMPLIED >
+<!ATTLIST trueDecision delegate CDATA #IMPLIED >
+<!ATTLIST trueDecision tool CDATA #IMPLIED >
 
 <!ELEMENT alert (included | message)* >
 <!ATTLIST alert id CDATA #IMPLIED >
@@ -253,7 +254,7 @@
 <!ATTLIST attachmentsEdit size (TRUE|FALSE) #IMPLIED>
 <!ATTLIST attachmentsEdit timestamp (TRUE|FALSE) #IMPLIED>
 
-<!ELEMENT confirm (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | message | cancel)* >
+<!ELEMENT confirm (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision | message | cancel)* >
 <!ATTLIST confirm decision (TRUE|FALSE) #IMPLIED >
 <!ATTLIST confirm cancelSelector CDATA #IMPLIED >
 <!ATTLIST confirm cancelIcon CDATA #IMPLIED >
@@ -343,7 +344,7 @@
 <!ELEMENT footnote EMPTY >
 
 <!ELEMENT headings (heading)* >
-<!ELEMENT heading (message | navigation | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT heading (message | navigation | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 
 <!ELEMENT autoColumn (model)* >
 <!ATTLIST autoColumn model CDATA #IMPLIED >
@@ -372,7 +373,7 @@
 
 <!ELEMENT label (message) >
 
-<!ELEMENT onEmptyAlert (message | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT onEmptyAlert (message | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 
 <!ELEMENT value (model) >
 
@@ -398,7 +399,7 @@
 <!ATTLIST fillIn cols CDATA #IMPLIED >
 <!ATTLIST fillIn correct CDATA #IMPLIED >
 
-<!ELEMENT correctMarker (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT correctMarker (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 <!ATTLIST correctMarker correctIcon CDATA #IMPLIED >
 <!ATTLIST correctMarker correctSelector CDATA #IMPLIED >
 <!ATTLIST correctMarker incorrectIcon CDATA #IMPLIED >
@@ -432,7 +433,7 @@
 <!ELEMENT partsTitle (model) >
 <!ELEMENT select (message) >
 
-<!ELEMENT feedback (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision)* >
+<!ELEMENT feedback (model | decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 <!ATTLIST feedback selector CDATA #IMPLIED >
 
 <!ELEMENT menuBar EMPTY >
@@ -466,14 +467,15 @@
 <!ELEMENT focusOn (model)* >
 <!ATTLIST focusOn model CDATA #IMPLIED >
 
-<!ELEMENT selection (included | title | model | readOnly | selectionChoices | correct | correctDecision)* >
+<!ELEMENT selection (included | title | model | readOnly | selectionChoices | correct | correctDecision | selectionModel | singleSelect)* >
 <!ATTLIST selection id CDATA #IMPLIED >
 <!ATTLIST selection title CDATA #IMPLIED >
 <!ATTLIST selection model CDATA #IMPLIED >
 <!ATTLIST selection correct CDATA #IMPLIED >
 <!ATTLIST selection value CDATA #IMPLIED >
-<!ATTLIST selection orientation (HORIZONTAL|VERTICAL) #IMPLIED >
+<!ATTLIST selection orientation (HORIZONTAL|VERTICAL|DROPDOWN) #IMPLIED >
 <!ATTLIST selection readOnly (TRUE|FALSE) #IMPLIED >
+<!ATTLIST selection height CDATA #IMPLIED >
 
 <!ELEMENT correct (model) >
 
@@ -481,6 +483,14 @@
 <!ELEMENT selectionChoice (container)* >
 <!ATTLIST selectionChoice value CDATA #IMPLIED >
 <!ATTLIST selectionChoice selector CDATA #IMPLIED >
+
+<!ELEMENT selectionModel (model | valueModel | displayModel)* >
+<!ATTLIST selectionModel name CDATA #IMPLIED >
+<!ATTLIST selectionModel model CDATA #IMPLIED >
+<!ATTLIST selectionModel value CDATA #IMPLIED >
+<!ATTLIST selectionModel display CDATA #IMPLIED >
+<!ELEMENT valueModel (model)* >
+<!ELEMENT displayModel (model)* >
 
 <!ELEMENT textEdit (included | title | model | options | onEmptyAlert | readOnly | focus)* >
 <!ATTLIST textEdit id CDATA #IMPLIED >

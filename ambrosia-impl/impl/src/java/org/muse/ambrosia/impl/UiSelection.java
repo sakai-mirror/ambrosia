@@ -23,6 +23,7 @@ package org.muse.ambrosia.impl;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,11 +60,17 @@ public class UiSelection extends UiComponent implements Selection
 	/** A model reference to a value that is considered "correct" for correct/incorrect marking. */
 	protected PropertyReference correctReference = null;
 
+	/** Dropdown # lines to display. */
+	protected int height = 1;
+
 	/** Icon to use to show incorrect. */
 	protected String incorrectIcon = "!/ambrosia_library/icons/incorrect.png";
 
 	/** The incorrect message. */
 	protected Message incorrectMessage = new UiMessage().setMessage("incorrect");
+
+	/** The context name for the current iteration object when using selectionReference. */
+	protected String iteratorName = null;
 
 	/** The value we use if the user does not selecet the selection. */
 	protected String notSelectedValue = "false";
@@ -86,11 +93,23 @@ public class UiSelection extends UiComponent implements Selection
 	/** Containers holding dependent components to a selection, keyed by the selection value. */
 	protected Map<String, Container> selectionContainers = new HashMap<String, Container>();
 
+	/** The ref to the selectionReference collection that pulls out the display text for each selection. */
+	protected PropertyReference selectionDisplayReference = null;
+
 	/** The set of messages for multiple selection choices. */
 	protected List<Message> selectionMessages = new ArrayList<Message>();
 
+	/** The ref to a Collection or [] in the model that will populate the selection. */
+	protected PropertyReference selectionReference = null;
+
+	/** The ref to the selectionReference collection that pulls out the value for each selection. */
+	protected PropertyReference selectionValueReference = null;
+
 	/** The set of values for multiple selection choices. */
 	protected List<String> selectionValues = new ArrayList<String>();
+
+	/** If set, use this instead of sigleSelect to see if we are going to be single or multiple select. */
+	protected Decision singleSelectDecision = null;
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
@@ -144,7 +163,17 @@ public class UiSelection extends UiComponent implements Selection
 
 		// orientation
 		String orientation = StringUtil.trimToNull(xml.getAttribute("orientation"));
-		if ((orientation != null) && (orientation.equals("HORIZONTAL"))) setOrientation(Orientation.horizontal);
+		if (orientation != null)
+		{
+			if (orientation.equals("HORIZONTAL"))
+			{
+				setOrientation(Orientation.horizontal);
+			}
+			else if (orientation.equals("DROPDOWN"))
+			{
+				setOrientation(Orientation.dropdown);
+			}
+		}
 
 		// title
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
@@ -209,6 +238,63 @@ public class UiSelection extends UiComponent implements Selection
 			}
 		}
 
+		// selection choices from model
+		settingsXml = XmlHelper.getChildElementNamed(xml, "selectionModel");
+		if (settingsXml != null)
+		{
+			String name = StringUtil.trimToNull(settingsXml.getAttribute("name"));
+			if (name != null) this.iteratorName = name;
+
+			// short for model
+			model = StringUtil.trimToNull(settingsXml.getAttribute("model"));
+			if (model != null)
+			{
+				this.selectionReference = service.newPropertyReference().setReference(model);
+			}
+
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				this.selectionReference = service.parsePropertyReference(innerXml);
+			}
+
+			// short for value model
+			model = StringUtil.trimToNull(settingsXml.getAttribute("value"));
+			if (model != null)
+			{
+				this.selectionValueReference = service.newPropertyReference().setReference(model);
+			}
+
+			// value model
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "valueModel");
+			if (innerXml != null)
+			{
+				Element modelXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+				if (modelXml != null)
+				{
+					this.selectionValueReference = service.parsePropertyReference(modelXml);
+				}
+			}
+
+			// short for display model
+			model = StringUtil.trimToNull(settingsXml.getAttribute("display"));
+			if (model != null)
+			{
+				this.selectionDisplayReference = service.newPropertyReference().setReference(model);
+			}
+
+			// display model
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "displayModel");
+			if (innerXml != null)
+			{
+				Element modelXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+				if (modelXml != null)
+				{
+					this.selectionDisplayReference = service.parsePropertyReference(modelXml);
+				}
+			}
+		}
+
 		String readOnly = StringUtil.trimToNull(xml.getAttribute("readOnly"));
 		if ((readOnly != null) && ("TRUE".equals(readOnly)))
 		{
@@ -220,6 +306,20 @@ public class UiSelection extends UiComponent implements Selection
 		if (settingsXml != null)
 		{
 			this.readOnly = service.parseDecisions(settingsXml);
+		}
+
+		// single select
+		settingsXml = XmlHelper.getChildElementNamed(xml, "singleSelect");
+		if (settingsXml != null)
+		{
+			this.singleSelectDecision = service.parseDecisions(settingsXml);
+		}
+
+		// short for height
+		String height = StringUtil.trimToNull(xml.getAttribute("height"));
+		if (height != null)
+		{
+			this.setHeight(Integer.parseInt(height));
 		}
 	}
 
@@ -259,17 +359,90 @@ public class UiSelection extends UiComponent implements Selection
 		// included?
 		if (!isIncluded(context, focus)) return;
 
-		if (this.orientation == Orientation.dropdown)
-		{
-			renderDropdown(context, focus);
-			return;
-		}
-
 		// read only?
 		boolean readOnly = false;
 		if (this.readOnly != null)
 		{
 			readOnly = this.readOnly.decide(context, focus);
+		}
+
+		// single select?
+		boolean single = true;
+		if (this.singleSelectDecision != null)
+		{
+			single = this.singleSelectDecision.decide(context, focus);
+		}
+
+		// find values and display text
+		List<String> values = this.selectionValues;
+
+		List<String> display = new ArrayList<String>();
+		if (!this.selectionMessages.isEmpty())
+		{
+			for (Message msg : this.selectionMessages)
+			{
+				display.add(msg.getMessage(context, focus));
+			}
+		}
+
+		// if that didn't do it, pick them up from the model
+		if (values.isEmpty() && display.isEmpty())
+		{
+			if ((this.selectionValueReference != null) && (this.selectionDisplayReference != null) && (this.selectionReference != null))
+			{
+				// get the main collection
+				Collection collection = null;
+				Object obj = this.selectionReference.readObject(context, focus);
+				if (obj != null)
+				{
+					if (obj instanceof Collection)
+					{
+						collection = (Collection) obj;
+					}
+
+					else if (obj.getClass().isArray())
+					{
+						Object[] array = (Object[]) obj;
+						collection = new ArrayList(array.length);
+						for (Object o : array)
+						{
+							collection.add(o);
+						}
+					}
+				}
+
+				// if we got something
+				if (collection != null)
+				{
+					// like iteration, make each object available then get the value and display
+					int index = -1;
+					for (Object o : collection)
+					{
+						index++;
+
+						// place the item
+						if (this.iteratorName != null)
+						{
+							context.put(this.iteratorName, o, this.selectionReference.getEncoding(context, o, index));
+						}
+
+						values.add(this.selectionValueReference.read(context, o));
+						display.add(this.selectionDisplayReference.read(context, o));
+
+						// remove item
+						if (this.iteratorName != null)
+						{
+							context.remove(this.iteratorName);
+						}
+					}
+				}
+			}
+		}
+
+		if (this.orientation == Orientation.dropdown)
+		{
+			renderDropdown(context, focus, readOnly, single, values, display);
+			return;
 		}
 
 		// generate some ids
@@ -301,7 +474,7 @@ public class UiSelection extends UiComponent implements Selection
 
 		response.println("<div class=\"ambrosiaSelection\">");
 
-		if (this.selectionValues.isEmpty())
+		if (values.isEmpty())
 		{
 			// convert to boolean
 			boolean checked = Boolean.parseBoolean(value);
@@ -359,11 +532,10 @@ public class UiSelection extends UiComponent implements Selection
 				onclick = "onclick=\"ambrosiaSelectDependencies(this.value, " + dependencyId + ")\" ";
 			}
 
-			for (int i = 0; i < this.selectionValues.size(); i++)
+			for (int i = 0; i < values.size(); i++)
 			{
-				Message msg = this.selectionMessages.get(i);
-				String message = msg.getMessage(context, focus);
-				String val = this.selectionValues.get(i);
+				String message = display.get(i);
+				String val = values.get(i);
 
 				boolean selected = (value == null) ? false : value.equals(val);
 				if (selected)
@@ -399,9 +571,20 @@ public class UiSelection extends UiComponent implements Selection
 					}
 				}
 
-				// the radio button
-				response.println("<input " + onclick + "type=\"radio\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + val + "\" "
-						+ (selected ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " /> " + message);
+				// use a radio for single select
+				if (single)
+				{
+					// the radio button
+					response.println("<input " + onclick + "type=\"radio\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + val + "\" "
+							+ (selected ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " /> " + message);
+				}
+
+				// for multiple selection, use a checkbox set
+				else
+				{
+					response.println("<input " + onclick + "type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + val + "\" "
+							+ (selected ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " /> " + message);
+				}
 
 				// container of dependent components
 				Container container = this.selectionContainers.get(val);
@@ -452,7 +635,6 @@ public class UiSelection extends UiComponent implements Selection
 				response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\""
 						+ "prop_" + decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
 			}
-
 		}
 
 		// title after
@@ -481,6 +663,16 @@ public class UiSelection extends UiComponent implements Selection
 	public Selection setCorrectDecision(Decision decision)
 	{
 		this.correctDecision = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Selection setHeight(int height)
+	{
+		this.height = height;
+
 		return this;
 	}
 
@@ -523,6 +715,28 @@ public class UiSelection extends UiComponent implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
+	public Selection setSelectionModel(PropertyReference modelRef, String iteratorName, PropertyReference valueRef, PropertyReference displayRef)
+	{
+		this.selectionReference = modelRef;
+		this.iteratorName = iteratorName;
+		this.selectionValueReference = valueRef;
+		this.selectionDisplayReference = displayRef;
+
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Selection setSingleSelectDecision(Decision decision)
+	{
+		this.singleSelectDecision = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Selection setTitle(String selector, PropertyReference... references)
 	{
 		this.titleMessage = new UiMessage().setMessage(selector, references);
@@ -532,15 +746,8 @@ public class UiSelection extends UiComponent implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
-	protected void renderDropdown(Context context, Object focus)
+	protected void renderDropdown(Context context, Object focus, boolean readOnly, boolean single, List<String> values, List<String> display)
 	{
-		// read only?
-		boolean readOnly = false;
-		if (this.readOnly != null)
-		{
-			readOnly = this.readOnly.decide(context, focus);
-		}
-
 		// generate some ids
 		int idRoot = context.getUniqueId();
 		String id = this.getClass().getSimpleName() + "_" + idRoot;
@@ -560,9 +767,6 @@ public class UiSelection extends UiComponent implements Selection
 		// TODO:
 		response.println("<div class=\"ambrosiaSelection\">");
 
-		// TODO: configure dropdown size
-		Integer dropdownSize = Integer.valueOf(1);
-
 		// title
 		if (this.titleMessage != null)
 		{
@@ -571,7 +775,7 @@ public class UiSelection extends UiComponent implements Selection
 			response.println("</label>");
 		}
 
-		response.println("<select size=\"" + dropdownSize.toString() + "\" name=\"" + id + "\" id=\"" + id + "\""
+		response.println("<select size=\"" + Integer.toString(this.height) + "\" " + (single ? "" : "multiple ") + "name=\"" + id + "\" id=\"" + id + "\""
 				+ (readOnly ? " disabled=\"disabled\"" : "") + ">");
 
 		// TODO: must have selection values
@@ -581,11 +785,10 @@ public class UiSelection extends UiComponent implements Selection
 
 		// TODO: selectionContainers not supported
 
-		for (int i = 0; i < this.selectionValues.size(); i++)
+		for (int i = 0; i < values.size(); i++)
 		{
-			Message msg = this.selectionMessages.get(i);
-			String message = msg.getMessage(context, focus);
-			String val = this.selectionValues.get(i);
+			String message = display.get(i);
+			String val = values.get(i);
 
 			boolean selected = (value == null) ? false : value.equals(val);
 

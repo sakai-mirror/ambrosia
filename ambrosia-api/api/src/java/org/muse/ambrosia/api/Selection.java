@@ -72,6 +72,15 @@ public interface Selection extends Component
 	Selection setCorrectDecision(Decision decision);
 
 	/**
+	 * Set the number of lines to display (if dropdown).
+	 * 
+	 * @param height
+	 *        The number of lines to display (if dropdown).
+	 * @return self.
+	 */
+	Selection setHeight(int height);
+
+	/**
 	 * Set the orientation of multiple selection choices.
 	 * 
 	 * @param orientation
@@ -105,6 +114,30 @@ public interface Selection extends Component
 	 * @return self.
 	 */
 	Selection setSelectedValue(String value);
+
+	/**
+	 * Set the selection from a model.
+	 * 
+	 * @param modelRef
+	 *        The ref to get the objects from the model, one for each selection choice.
+	 * @param iteratorName
+	 *        The name to place in the model to represent each selection choice.
+	 * @param valueRef
+	 *        The ref to get, from the named selection choice object, the value.
+	 * @param displayRef
+	 *        The ref to get, from the named selection choice object, the display text.
+	 * @return self.
+	 */
+	Selection setSelectionModel(PropertyReference modelRef, String iteratorName, PropertyReference valueRef, PropertyReference displayRef);
+
+	/**
+	 * Set a decision to use to determine if we are going to be single select (true) or multiple select (false).
+	 * 
+	 * @param decision
+	 *        The decision to use to determine if we are going to be single select (true) or multiple select (false).
+	 * @return self.
+	 */
+	Selection setSingleSelectDecision(Decision decision);
 
 	/**
 	 * Set the title text.
