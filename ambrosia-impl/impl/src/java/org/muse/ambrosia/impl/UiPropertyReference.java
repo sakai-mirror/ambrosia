@@ -26,6 +26,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -578,6 +579,11 @@ public class UiPropertyReference implements PropertyReference
 	protected boolean missing(Object value)
 	{
 		if (value == null) return true;
+
+		if (value instanceof Collection)
+		{
+			if (((Collection) value).isEmpty()) return true;
+		}
 
 		String val = StringUtil.trimToNull(value.toString());
 		if (val == null) return true;
