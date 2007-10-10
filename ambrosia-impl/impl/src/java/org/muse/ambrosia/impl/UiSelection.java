@@ -473,10 +473,6 @@ public class UiSelection extends UiComponent implements Selection
 				}
 			}
 		}
-		if (value.isEmpty())
-		{
-			value.add("false");
-		}
 
 		if (this.orientation == Orientation.dropdown)
 		{
