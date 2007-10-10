@@ -842,21 +842,24 @@ public class UiPropertyReference implements PropertyReference
 				// multiple value string in list
 				else if (paramTypes[0] == List.class)
 				{
-					// trim it into a List
-					List valueList = new ArrayList(value.length);
 					if (value != null)
 					{
-						for (int i = 0; i < value.length; i++)
+						// trim it into a List
+						List valueList = new ArrayList(value.length);
+						if (value != null)
 						{
-							String v = StringUtil.trimToNull(value[i]);
-							if (v != null)
+							for (int i = 0; i < value.length; i++)
 							{
-								valueList.add(v);
+								String v = StringUtil.trimToNull(value[i]);
+								if (v != null)
+								{
+									valueList.add(v);
+								}
 							}
 						}
-					}
 
-					params[0] = valueList;
+						params[0] = valueList;
+					}
 				}
 
 				// multiple value string in set
