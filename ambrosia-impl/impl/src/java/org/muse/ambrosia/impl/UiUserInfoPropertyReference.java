@@ -21,9 +21,11 @@
 
 package org.muse.ambrosia.impl;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.UserInfoPropertyReference;
-import org.muse.ambrosia.api.ContextInfoPropertyReference.Selector;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.cover.UserDirectoryService;
@@ -83,33 +85,70 @@ public class UiUserInfoPropertyReference extends UiPropertyReference implements 
 	}
 
 	/**
+	 * Format the user object using our configured selector.
+	 * 
+	 * @param user
+	 *        The user object.
+	 * @return The formatted string
+	 */
+	protected String fmt(User user)
+	{
+		String rv = null;
+		switch (this.selector)
+		{
+			case displayName:
+			{
+				rv = user.getDisplayName();
+				break;
+			}
+			case sortName:
+			{
+				rv = user.getSortName();
+				break;
+			}
+		}
+
+		return Validator.escapeHtml(rv);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	protected String format(Context context, Object value)
 	{
 		if (value == null) return super.format(context, value);
+
+		// deal with a collection of ids
+		if (value instanceof Collection)
+		{
+			Collection ids = (Collection) value;
+			List<User> users = UserDirectoryService.getUsers(ids);
+
+			StringBuilder rv = new StringBuilder();
+			for (User user : users)
+			{
+				rv.append(fmt(user));
+
+				// TODO: offer comma separated horizontal option?
+				rv.append("<br />");
+			}
+
+			// get rid of the trailing '<br />'
+			if (rv.length() > 0)
+			{
+				rv.setLength(rv.length() - 6);
+			}
+
+			return rv.toString();
+		}
+
+		// or a single one
 		if (!(value instanceof String)) return super.format(context, value);
 
 		try
 		{
 			User user = UserDirectoryService.getUser((String) value);
-
-			String selected = null;
-
-			switch (this.selector)
-			{
-				case displayName:
-				{
-					selected = user.getDisplayName();
-					break;
-				}
-				case sortName:
-				{
-					selected = user.getSortName();
-					break;
-				}
-			}
-			return Validator.escapeHtml(selected);
+			return Validator.escapeHtml(fmt(user));
 		}
 		catch (UserNotDefinedException e)
 		{
