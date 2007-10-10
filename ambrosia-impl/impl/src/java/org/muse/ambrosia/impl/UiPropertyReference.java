@@ -27,8 +27,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.logging.Log;
@@ -466,7 +468,7 @@ public class UiPropertyReference implements PropertyReference
 			Object o = ((PopulatingSet) collection).assure(index);
 			return o;
 		}
-		
+
 		else if (collection instanceof Map)
 		{
 			// treat as a key
@@ -835,6 +837,46 @@ public class UiPropertyReference implements PropertyReference
 						}
 						params[0] = values;
 					}
+				}
+
+				// multiple value string in list
+				else if (paramTypes[0] == List.class)
+				{
+					// trim it into a List
+					List valueList = new ArrayList(value.length);
+					if (value != null)
+					{
+						for (int i = 0; i < value.length; i++)
+						{
+							String v = StringUtil.trimToNull(value[i]);
+							if (v != null)
+							{
+								valueList.add(v);
+							}
+						}
+					}
+
+					params[0] = valueList;
+				}
+
+				// multiple value string in set
+				else if (paramTypes[0] == Set.class)
+				{
+					// trim it into a List
+					Set valueSet = new HashSet(value.length);
+					if (value != null)
+					{
+						for (int i = 0; i < value.length; i++)
+						{
+							String v = StringUtil.trimToNull(value[i]);
+							if (v != null)
+							{
+								valueSet.add(v);
+							}
+						}
+					}
+
+					params[0] = valueSet;
 				}
 
 				// TODO: other types

@@ -25,8 +25,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Container;
@@ -374,7 +376,7 @@ public class UiSelection extends UiComponent implements Selection
 		}
 
 		// find values and display text
-		List<String> values = this.selectionValues;
+		List<String> values = new ArrayList<String>(this.selectionValues);
 
 		List<String> display = new ArrayList<String>();
 		if (!this.selectionMessages.isEmpty())
@@ -439,9 +441,46 @@ public class UiSelection extends UiComponent implements Selection
 			}
 		}
 
+		// read the current value(s)
+		Set<String> value = new HashSet<String>();
+		if (this.propertyReference != null)
+		{
+			Object obj = this.propertyReference.readObject(context, focus);
+			if (obj != null)
+			{
+				// any sort of collection
+				if (obj instanceof Collection)
+				{
+					for (Object o : ((Collection) obj))
+					{
+						value.add(o.toString());
+					}
+				}
+
+				// any sort of array
+				if (obj.getClass().isArray())
+				{
+					for (Object o : ((Object[]) obj))
+					{
+						value.add(o.toString());
+					}
+				}
+
+				// otherwise take it as a string
+				else
+				{
+					value.add(obj.toString());
+				}
+			}
+		}
+		if (value.isEmpty())
+		{
+			value.add("false");
+		}
+
 		if (this.orientation == Orientation.dropdown)
 		{
-			renderDropdown(context, focus, readOnly, single, values, display);
+			renderDropdown(context, focus, readOnly, single, values, display, value);
 			return;
 		}
 
@@ -452,13 +491,6 @@ public class UiSelection extends UiComponent implements Selection
 		String dependencyId = id + "_dependencies";
 
 		PrintWriter response = context.getResponseWriter();
-
-		// read the current value
-		String value = "false";
-		if (this.propertyReference != null)
-		{
-			value = this.propertyReference.read(context, focus);
-		}
 
 		// read the "correct" value
 		String correctValue = null;
@@ -477,7 +509,7 @@ public class UiSelection extends UiComponent implements Selection
 		if (values.isEmpty())
 		{
 			// convert to boolean
-			boolean checked = Boolean.parseBoolean(value);
+			boolean checked = value.contains("true");
 
 			// if we are doing correct marking
 			if (includeCorrectMarkers)
@@ -534,10 +566,14 @@ public class UiSelection extends UiComponent implements Selection
 
 			for (int i = 0; i < values.size(); i++)
 			{
-				String message = display.get(i);
 				String val = values.get(i);
+				String message = "";
+				if (i < display.size())
+				{
+					message = display.get(i);
+				}
 
-				boolean selected = (value == null) ? false : value.equals(val);
+				boolean selected = value.contains(val);
 				if (selected)
 				{
 					startingValue = val;
@@ -746,7 +782,8 @@ public class UiSelection extends UiComponent implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
-	protected void renderDropdown(Context context, Object focus, boolean readOnly, boolean single, List<String> values, List<String> display)
+	protected void renderDropdown(Context context, Object focus, boolean readOnly, boolean single, List<String> values, List<String> display,
+			Set<String> value)
 	{
 		// generate some ids
 		int idRoot = context.getUniqueId();
@@ -754,13 +791,6 @@ public class UiSelection extends UiComponent implements Selection
 		String decodeId = "decode_" + idRoot;
 
 		PrintWriter response = context.getResponseWriter();
-
-		// read the current value
-		String value = "false";
-		if (this.propertyReference != null)
-		{
-			value = this.propertyReference.read(context, focus);
-		}
 
 		// Note: correct / incorrect markings not supported for dropdown
 
@@ -775,8 +805,8 @@ public class UiSelection extends UiComponent implements Selection
 			response.println("</label>");
 		}
 
-		response.println("<select size=\"" + Integer.toString(this.height) + "\" " + (single ? "" : "multiple ") + "name=\"" + id + "\" id=\"" + id + "\""
-				+ (readOnly ? " disabled=\"disabled\"" : "") + ">");
+		response.println("<select size=\"" + Integer.toString(this.height) + "\" " + (single ? "" : "multiple ") + "name=\"" + id + "\" id=\"" + id
+				+ "\"" + (readOnly ? " disabled=\"disabled\"" : "") + ">");
 
 		// TODO: must have selection values
 
@@ -787,10 +817,14 @@ public class UiSelection extends UiComponent implements Selection
 
 		for (int i = 0; i < values.size(); i++)
 		{
-			String message = display.get(i);
 			String val = values.get(i);
+			String message = "";
+			if (i < display.size())
+			{
+				message = display.get(i);
+			}
 
-			boolean selected = (value == null) ? false : value.equals(val);
+			boolean selected = value.contains(val);
 
 			// the option
 			response.println("<option " + onclick + " value=\"" + val + "\" " + (selected ? "SELECTED" : "") + ">" + message + "</option>");
