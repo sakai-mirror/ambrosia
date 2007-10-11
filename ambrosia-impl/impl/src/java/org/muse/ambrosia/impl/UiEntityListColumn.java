@@ -71,8 +71,8 @@ public class UiEntityListColumn implements EntityListColumn
 	/** The navigations defined for display in this column. */
 	protected List<Component> navigations = new ArrayList<Component>();
 
-	/** The message selector for text to show if an entity is not included in this column. */
-	protected String notIncludedText = null;
+	/** The message  to show if an entity is not included in this column. */
+	protected Message notIncludedMsg = null;
 
 	/** The no-wrapping indicator for the column. */
 	protected boolean noWrap = false;
@@ -146,11 +146,25 @@ public class UiEntityListColumn implements EntityListColumn
 		settingsXml = XmlHelper.getChildElementNamed(xml, "entityIncluded");
 		if (settingsXml != null)
 		{
-			// the message if not included
-			String selector = StringUtil.trimToNull(settingsXml.getAttribute("selector"));
+			Message notIncluded = null;
 
+			// short for not included message
+			String selector = StringUtil.trimToNull(settingsXml.getAttribute("selector"));
+			if (selector != null)
+			{
+				notIncluded = new UiMessage().setMessage(selector);
+			}
+			
 			Decision decision = service.parseDecisions(settingsXml);
-			setEntityIncluded(decision, selector);
+			
+			// not included message
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
+			if (innerXml != null)
+			{
+				notIncluded = new UiMessage(service, innerXml);
+			}
+
+			setEntityIncluded(decision, notIncluded);
 		}
 
 		// included
@@ -521,9 +535,9 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getNotIncludedText()
+	public Message getNotIncludedMsg()
 	{
-		return this.notIncludedText;
+		return this.notIncludedMsg;
 	}
 
 	/**
@@ -705,10 +719,10 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityListColumn setEntityIncluded(Decision inclusionDecision, String notIncludedText)
+	public EntityListColumn setEntityIncluded(Decision inclusionDecision, Message notIncludedMsg)
 	{
 		this.entityIncluded = inclusionDecision;
-		this.notIncludedText = notIncludedText;
+		this.notIncludedMsg = notIncludedMsg;
 		return this;
 	}
 

@@ -160,11 +160,11 @@ public interface EntityListColumn
 	List<Component> getNavigations();
 
 	/**
-	 * Access the text message to show if an entity is not included in the column.
+	 * Access the message to show if an entity is not included in the column.
 	 * 
-	 * @return the text message to show if an entity is not included in the column, or null if not defined.
+	 * @return the message to show if an entity is not included in the column, or null if not defined.
 	 */
-	String getNotIncludedText();
+	Message getNotIncludedMsg();
 
 	/**
 	 * Get additional encoding text only once, not per entity / per row.
@@ -325,11 +325,11 @@ public interface EntityListColumn
 	 * 
 	 * @param inclusionDecision
 	 *        The decision for inclusion of each entity in this column.
-	 * @param notIncludedText
-	 *        The message selector of the text to show if an entity is not included in this column (or null for a blank display).
+	 * @param notIncludedMsg
+	 *        The message to show if an entity is not included in this column (or null for a blank display).
 	 * @return self.
 	 */
-	EntityListColumn setEntityIncluded(Decision inclusionDecision, String notIncludedText);
+	EntityListColumn setEntityIncluded(Decision inclusionDecision, Message notIncludedMsg);
 
 	/**
 	 * Set the decision to include the entire column.

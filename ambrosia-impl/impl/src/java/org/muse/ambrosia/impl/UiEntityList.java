@@ -627,9 +627,9 @@ public class UiEntityList extends UiComponent implements EntityList
 					}
 
 					// otherwise show a message
-					else if (c.getNotIncludedText() != null)
+					else if (c.getNotIncludedMsg() != null)
 					{
-						response.print(context.getMessages().getString(c.getNotIncludedText()));
+						response.print(c.getNotIncludedMsg().getMessage(context, entity));
 					}
 
 					response.println("</td>");
