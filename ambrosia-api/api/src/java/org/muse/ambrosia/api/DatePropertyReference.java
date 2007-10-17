@@ -27,6 +27,13 @@ package org.muse.ambrosia.api;
 public interface DatePropertyReference extends PropertyReference
 {
 	/**
+	 * Set to use the java "SHORT" format, instead of the default "MEDIUM" format.
+	 * 
+	 * @return self.
+	 */
+	DatePropertyReference setShort();
+
+	/**
 	 * Set the format to be two lines: date on top, time below (assumes HTML formatting)
 	 * 
 	 * @return self.

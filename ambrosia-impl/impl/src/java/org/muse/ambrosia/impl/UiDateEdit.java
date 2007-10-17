@@ -47,7 +47,7 @@ public class UiDateEdit extends UiComponent implements DateEdit
 	protected Message iconAlt = new UiMessage().setMessage("date-alt");
 
 	/** The number of columns per row for the box. */
-	protected int numCols = 16;
+	protected int numCols = 21;
 
 	/** The number of rows for the text box. */
 	protected int numRows = 1;

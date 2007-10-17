@@ -39,6 +39,9 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 	/** If set, split the date to date on top, time below. */
 	protected boolean multiLine = false;
 
+	/** If set, use the SHORT instad of MEDIUM format. */
+	protected boolean shortFormat = false;
+
 	/**
 	 * No-arg constructor.
 	 */
@@ -62,6 +65,9 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 		// two line
 		String twoLine = StringUtil.trimToNull(xml.getAttribute("twoLine"));
 		if ((twoLine != null) && (twoLine.equals("TRUE"))) setTwoLine();
+
+		String fmt = StringUtil.trimToNull(xml.getAttribute("format"));
+		if ((fmt != null) && (fmt.equals("SHORT"))) setShort();
 	}
 
 	/**
@@ -70,6 +76,15 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 	public String getType()
 	{
 		return "date";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public DatePropertyReference setShort()
+	{
+		this.shortFormat = true;
+		return this;
 	}
 
 	/**
@@ -91,17 +106,21 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 			Date date = (Date) value;
 			// TODO: use the end-user's locale and time zone prefs
 
+			// pick format
+			int fmt = DateFormat.MEDIUM;
+			if (shortFormat) fmt = DateFormat.SHORT;
+
 			if (multiLine)
 			{
-				DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
-				DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+				DateFormat dateFormat = DateFormat.getDateInstance(fmt);
+				DateFormat timeFormat = DateFormat.getTimeInstance(fmt);
 
 				return "<span style=\"white-space: nowrap;\">" + Validator.escapeHtml(dateFormat.format(date))
 						+ "</span><br /><spanstyle=\"white-space: nowrap;\">" + Validator.escapeHtml(timeFormat.format(date)) + "</span>";
 			}
 			else
 			{
-				DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+				DateFormat format = DateFormat.getDateTimeInstance(fmt, fmt);
 
 				return Validator.escapeHtml(format.format(date));
 			}
@@ -118,8 +137,13 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 		if (value == null) return null;
 
 		// assume single line, both date and time
+
+		// pick format
+		int fmt = DateFormat.MEDIUM;
+		if (shortFormat) fmt = DateFormat.SHORT;
+
 		// TODO: use the end-user's locale and time zone prefs
-		DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+		DateFormat format = DateFormat.getDateTimeInstance(fmt, fmt);
 		try
 		{
 			Date date = format.parse(value);

@@ -29,6 +29,7 @@
 <!ATTLIST model stripHtml (TRUE|FALSE) #IMPLIED >
 <!ATTLIST model icon CDATA #IMPLIED >
 <!ATTLIST model twoLine (TRUE|FALSE) #IMPLIED >
+<!ATTLIST model format (SHORT|MEDIUM) #IMPLIED >
 <!ATTLIST model value CDATA #IMPLIED >
 <!ATTLIST model true CDATA #IMPLIED >
 <!ATTLIST model false CDATA #IMPLIED >
