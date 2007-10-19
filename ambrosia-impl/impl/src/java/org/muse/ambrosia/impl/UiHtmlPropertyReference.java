@@ -83,6 +83,9 @@ public class UiHtmlPropertyReference extends UiPropertyReference implements Html
 		String value = super.read(context, focus);
 		if (value == null) return null;
 
+		// if missing, don't do special treatment
+		if (value.equals(missingValue(context))) return value;
+
 		// truncate if desired and needed
 		if (this.maxChars > -1)
 		{

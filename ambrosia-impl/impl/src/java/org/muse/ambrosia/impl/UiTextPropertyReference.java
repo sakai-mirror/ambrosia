@@ -90,6 +90,9 @@ public class UiTextPropertyReference extends UiPropertyReference implements Text
 	{
 		String value = super.read(context, focus);
 		if (value == null) return null;
+		
+		// if missing, don't do special treatment
+		if (value.equals(missingValue(context))) return value;
 
 		// strip the html if desired
 		if (this.stripHtml)
