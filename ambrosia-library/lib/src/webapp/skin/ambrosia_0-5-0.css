@@ -110,6 +110,20 @@ Sakai ~ navPanel + style
 }
 
 /*
+Mode bar that contains the tool mode navigations at the very top of the view (ModeBar)
+*/
+.ambrosiaModeBar
+{
+	background: #EEEEEE;
+	border: 1px solid #bbb;
+	line-height: 2em;
+	height: 2.3em;
+	margin: 5px 0 0 0;
+	white-space: nowrap;
+	text-align: center
+}
+
+/*
 Contains the navigations in the navigation bar (NavigationBar Navigation)
 Sakai ~ itemNav + style
 */

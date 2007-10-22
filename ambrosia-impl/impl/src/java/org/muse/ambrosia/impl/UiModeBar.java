@@ -72,19 +72,25 @@ public class UiModeBar extends UiSection implements ModeBar
 	 */
 	protected void renderContents(Context context, Object focus)
 	{
-		// TODO: uniquely as a mode bar, not a nav bar!
 		PrintWriter response = context.getResponseWriter();
 
 		// the bar
-		response.println("<div class=\"ambrosiaNavigationBar\"" + (this.width != null ? (" style=\"width: " + this.width + ";\"") : "") + ">");
+		response.println("<div class=\"ambrosiaModeBar\"" + (this.width != null ? (" style=\"width: " + this.width + ";\"") : "") + ">");
 
 		// wrap the items
 		response.println("<div class=\"ambrosiaNavigationItems\">");
 
 		// render
+		Component last = this.contained.get(this.contained.size() - 1);
 		for (Component c : this.contained)
 		{
 			c.render(context, focus);
+
+			// dividers between
+			if (c != last)
+			{
+				response.println(" | ");
+			}
 		}
 
 		response.println("</div></div>");
