@@ -835,12 +835,10 @@ public class UiEntityList extends UiComponent implements EntityList
 		if (actions.isEmpty() && this.entityActions.isEmpty() && (this.pager == null)) return;
 
 		// render the bar
-		// TODO: uniquely as an entity action bar, not a nav bar!
 		PrintWriter response = context.getResponseWriter();
 
 		// the bar
-		// TODO: width?
-		response.println("<div class=\"ambrosiaNavigationBar\">");
+		response.println("<div class=\"ambrosiaEntityActionBar\">");
 
 		// wrap the items
 		response.println("<div class=\"ambrosiaNavigationItems\">");

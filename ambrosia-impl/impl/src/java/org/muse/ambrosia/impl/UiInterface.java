@@ -124,7 +124,7 @@ public class UiInterface extends UiContainer implements Interface
 		{
 			// let Message parse this
 			this.header = new UiMessage(service, settingsXml);
-			
+
 			// contained
 			Element container = XmlHelper.getChildElementNamed(settingsXml, "container");
 			if (container != null)
@@ -153,7 +153,7 @@ public class UiInterface extends UiContainer implements Interface
 		{
 			// let Message parse this
 			this.subHeader = new UiMessage(service, settingsXml);
-			
+
 			// contained
 			Element container = XmlHelper.getChildElementNamed(settingsXml, "container");
 			if (container != null)
@@ -313,7 +313,7 @@ public class UiInterface extends UiContainer implements Interface
 		if ((this.header != null) || (!this.headerComponents.isEmpty()))
 		{
 			response.println("<div class=\"ambrosiaInterfaceHeader\">");
-			
+
 			// the message, if defiend
 			if (this.header != null)
 			{
@@ -325,15 +325,14 @@ public class UiInterface extends UiContainer implements Interface
 			{
 				c.render(context, focus);
 			}
-			
+
 			response.println("</div>");
 		}
 
-		// sub-header, if defined
+		// sub-header, even if not defined
+		response.println("<div class=\"ambrosiaInterfaceSubHeader\">");
 		if ((this.subHeader != null) || (!this.subHeaderComponents.isEmpty()))
 		{
-			response.println("<div class=\"ambrosiaInterfaceSubHeader\">");
-			
 			// the message, if defiend
 			if (this.subHeader != null)
 			{
@@ -345,9 +344,8 @@ public class UiInterface extends UiContainer implements Interface
 			{
 				c.render(context, focus);
 			}
-			
-			response.println("</div>");
 		}
+		response.println("</div>");
 
 		// render the contained
 		for (Component c : this.contained)
@@ -434,6 +432,7 @@ public class UiInterface extends UiContainer implements Interface
 		this.modeContainer.add(bar);
 		return this;
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */

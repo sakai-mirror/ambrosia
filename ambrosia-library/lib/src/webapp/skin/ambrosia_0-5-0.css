@@ -134,6 +134,21 @@ Mode bar that contains the tool mode navigations at the very top of the view (Mo
 }
 
 /*
+Entity action bar that contains the navigations that pertain to entities in a list (EntityActionBar)
+*/
+.ambrosiaEntityActionBar
+{
+	border-top: 1px solid #bbb;
+	border-left: 1px solid #bbb;
+	border-right: 1px solid #bbb;
+	line-height: 2em;
+	height: 2.3em;
+	margin: 5px 0 0 0;
+	white-space: nowrap;
+	padding: 0;
+}
+
+/*
 Container for fine print (FinePrint)
 */
 .ambrosiaFinePrint
@@ -329,7 +344,6 @@ Sakai ~ listHier lines nolines
 {
 	font-size: 1em;
 	clear: both;
-	margin-top: .5em;
 	border-collapse: collapse;
 }
 .ambrosiaEntityList th a:link,
@@ -350,8 +364,7 @@ Sakai ~ listHier lines nolines
 	text-align: left;
 	white-space: nowrap;
 	padding: .3em;
-	background-color: #ddd;
-	border: 1px solid #999;
+	background-color: #EEEEEE;
 }
 .ambrosiaEntityList td
 {

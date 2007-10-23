@@ -71,11 +71,10 @@ public class UiEntityActionBar extends UiSection implements EntityActionBar
 	 */
 	protected void renderContents(Context context, Object focus)
 	{
-		// TODO: uniquely as an entity action bar, not a nav bar!
 		PrintWriter response = context.getResponseWriter();
 
 		// the bar
-		response.println("<div class=\"ambrosiaNavigationBar\"" + (this.width != null ? (" style=\"width: " + this.width + ";\"") : "") + ">");
+		response.println("<div class=\"ambrosiaEntityActionBar\"" + (this.width != null ? (" style=\"width: " + this.width + ";\"") : "") + ">");
 
 		// wrap the items
 		response.println("<div class=\"ambrosiaNavigationItems\">");
