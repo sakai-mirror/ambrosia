@@ -28,6 +28,7 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.FloatEdit;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.muse.ambrosia.api.TextEdit;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
@@ -48,9 +49,6 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 
 	/** The number of columns per row for the box. */
 	protected int numCols = 16;
-
-	/** The number of rows for the text box. */
-	protected int numRows = 1;
 
 	/** The decision to control the onEmptyAlert. */
 	protected Decision onEmptyAlertDecision = null;
@@ -158,6 +156,16 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 			this.focusDecision = service.parseDecisions(settingsXml);
 		}
 
+		// size
+		try
+		{
+			int cols = Integer.parseInt(xml.getAttribute("cols"));
+			setSize(cols);
+		}
+		catch (Throwable ignore)
+		{
+		}
+
 		// icon
 		// String icon = StringUtil.trimToNull(xml.getAttribute("icon"));
 		// if (icon != null) this.icon = icon;
@@ -234,7 +242,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
-		response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
+		// response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
 
 		// title
 		if (this.titleMessage != null)
@@ -270,7 +278,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 
 		context.editComponentRendered(id);
 
-		response.println("</div>");
+		// response.println("</div>");
 
 		// the shadow value field (holding the last known value)
 		if (this.sumToId != null)
@@ -349,6 +357,16 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 	public FloatEdit setReadOnly(Decision decision)
 	{
 		this.readOnly = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FloatEdit setSize(int cols)
+	{
+		this.numCols = cols;
+
 		return this;
 	}
 

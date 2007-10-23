@@ -48,6 +48,7 @@ import org.muse.ambrosia.api.BarChart;
 import org.muse.ambrosia.api.BooleanPropertyReference;
 import org.muse.ambrosia.api.CompareDecision;
 import org.muse.ambrosia.api.Component;
+import org.muse.ambrosia.api.ComponentPropertyReference;
 import org.muse.ambrosia.api.ConstantPropertyReference;
 import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
@@ -329,6 +330,22 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public Component newComponent()
+	{
+		return new UiComponent();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ComponentPropertyReference newComponentPropertyReference()
+	{
+		return new UiComponentPropertyReference();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public ConstantPropertyReference newConstantPropertyReference()
 	{
 		return new UiConstantPropertyReference();
@@ -356,14 +373,6 @@ public class UiServiceImpl implements UiService
 	public ContextInfoPropertyReference newContextInfoPropertyReference()
 	{
 		return new UiContextInfoPropertyReference();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Component newComponent()
-	{
-		return new UiComponent();
 	}
 
 	/**
@@ -1087,6 +1096,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("urlModel")) return new UiUrlPropertyReference(this, xml);
 		if (xml.getTagName().equals("userInfoModel")) return new UiUserInfoPropertyReference(this, xml);
 		if (xml.getTagName().equals("enumModel")) return new UiEnumPropertyReference(this, xml);
+		if (xml.getTagName().equals("componentModel")) return new UiComponentPropertyReference(this, xml);
 
 		if (!xml.getTagName().equals("model")) return null;
 
@@ -1105,6 +1115,7 @@ public class UiServiceImpl implements UiService
 		if ("url".equals(type)) return new UiUrlPropertyReference(this, xml);
 		if ("userInfo".equals(type)) return new UiUserInfoPropertyReference(this, xml);
 		if ("enum".equals(type)) return new UiEnumPropertyReference(this, xml);
+		if ("component".equals(type)) return new UiComponentPropertyReference(this, xml);
 
 		return new UiPropertyReference(this, xml);
 	}

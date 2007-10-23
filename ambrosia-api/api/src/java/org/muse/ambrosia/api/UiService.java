@@ -110,6 +110,20 @@ public interface UiService
 	CompareDecision newCompareDecision();
 
 	/**
+	 * Construct a new Component
+	 * 
+	 * @return a new Component
+	 */
+	Component newComponent();
+
+	/**
+	 * Construct a new ComponentPropertyReference
+	 * 
+	 * @return a new ComponentPropertyReference
+	 */
+	ComponentPropertyReference newComponentPropertyReference();
+
+	/**
 	 * Construct a new ConstantPropertyReference
 	 * 
 	 * @return a new ConstantPropertyReference
@@ -136,13 +150,6 @@ public interface UiService
 	 * @return a new ContextInfoPropertyReference
 	 */
 	ContextInfoPropertyReference newContextInfoPropertyReference();
-
-	/**
-	 * Construct a new Component
-	 * 
-	 * @return a new Component
-	 */
-	Component newComponent();
 
 	/**
 	 * Construct a new CountdownTimer

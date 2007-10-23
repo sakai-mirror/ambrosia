@@ -77,6 +77,15 @@ public interface FloatEdit extends Component
 	FloatEdit setReadOnly(Decision decision);
 
 	/**
+	 * Set the size of the text edit box in columns.
+	 * 
+	 * @param cols
+	 *        The number of columns to show.
+	 * @return self.
+	 */
+	FloatEdit setSize(int cols);
+
+	/**
 	 * Set the component id that the value in this component will sum to in the UI.
 	 * 
 	 * @param id

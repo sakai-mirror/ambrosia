@@ -12,7 +12,7 @@
 
 <!ELEMENT header (message) >
 
-<!ELEMENT message (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT message (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST message selector CDATA #IMPLIED >
 <!ATTLIST message model CDATA #IMPLIED >
 
@@ -100,6 +100,13 @@
 <!ATTLIST iconModel tool CDATA #IMPLIED >
 <!ATTLIST iconModel missing CDATA #IMPLIED >
 <!ATTLIST iconModel icon CDATA #IMPLIED >
+
+<!ELEMENT componentModel (missingValues | container)* >
+<!ATTLIST componentModel ref CDATA #IMPLIED >
+<!ATTLIST componentModel delegate CDATA #IMPLIED>
+<!ATTLIST componentModel tool CDATA #IMPLIED >
+<!ATTLIST componentModel missing CDATA #IMPLIED >
+<!ATTLIST componentModel icon CDATA #IMPLIED >
 
 <!ELEMENT textModel (missingValues)* >
 <!ATTLIST textModel ref  CDATA #REQUIRED >
@@ -266,7 +273,7 @@
 <!ATTLIST cancel selector CDATA #IMPLIED >
 <!ATTLIST cancel icon CDATA #IMPLIED >
 
-<!ELEMENT destination (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT destination (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST destination template CDATA #IMPLIED >
 <!ATTLIST destination model CDATA #IMPLIED >
 
@@ -285,11 +292,11 @@
 <!ATTLIST countdownTimer disabled (TRUE|FALSE) #IMPLIED >
 <!ATTLIST countdownTimer distination CDATA #IMPLIED >
 
-<!ELEMENT duration (message | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT duration (message | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ELEMENT hide (message)* >
 <!ELEMENT remaining (message)* >
 <!ELEMENT show (message)* >
-<!ELEMENT timeTillExpire (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT timeTillExpire (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 
 <!ELEMENT courier (included | destination)* >
 <!ATTLIST courier id CDATA #IMPLIED >
@@ -305,7 +312,7 @@
 <!ATTLIST entityDisplay title CDATA #IMPLIED >
 
 <!ELEMENT rows (row)* >
-<!ELEMENT row (included | container | title | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT row (included | container | title | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST row title CDATA #IMPLIED >
 <!ATTLIST row model CDATA #IMPLIED >
 
@@ -524,7 +531,6 @@
 <!ATTLIST floatEdit id CDATA #IMPLIED >
 <!ATTLIST floatEdit title CDATA #IMPLIED >
 <!ATTLIST floatEdit model CDATA #IMPLIED >
-<!ATTLIST floatEdit rows CDATA #IMPLIED >
 <!ATTLIST floatEdit cols CDATA #IMPLIED >
 <!ATTLIST floatEdit readOnly (TRUE|FALSE) #IMPLIED >
 <!ATTLIST floatEdit sumTo CDATA #IMPLIED >
