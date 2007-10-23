@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!ELEMENT interface (included | header | title | container | modeContainer)* >
+<!ELEMENT interface (included | header | subHeader | title | container | modeContainer)* >
 <!ATTLIST interface id CDATA #IMPLIED >
 <!ATTLIST interface autoComplete (TRUE|FALSE) #IMPLIED >
 <!ATTLIST interface title CDATA #IMPLIED >
 <!ATTLIST interface header CDATA #IMPLIED >
+<!ATTLIST interface subHeader CDATA #IMPLIED >
 
 <!ELEMENT fragment (included | container)* >
 
 <!ELEMENT title (message | included | highlighted)* >
 <!ATTLIST title highlighted (TRUE|FALSE) #IMPLIED >
 
-<!ELEMENT header (message) >
+<!ELEMENT header (message | container)* >
+
+<!ELEMENT subHeader (message | container)* >
 
 <!ELEMENT message (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST message selector CDATA #IMPLIED >

@@ -47,6 +47,16 @@ Sakai ~ H3 in portletBody
 }
 
 /*
+Sub-header for interface.
+*/
+.ambrosiaInterfaceSubHeader
+{
+	padding: 0;
+	font-family: Arial,Helvetica,sans-serif;
+	margin: 1em 0 2em 0;
+}
+
+/*
 Around each section of a view (Section)
 Sakai ~ samSection
 */

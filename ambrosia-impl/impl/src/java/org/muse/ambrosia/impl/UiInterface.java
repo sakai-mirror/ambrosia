@@ -46,11 +46,20 @@ public class UiInterface extends UiContainer implements Interface
 	/** The message selector and properties for the header. */
 	protected Message header = null;
 
+	/** Components contained in the header. */
+	protected List<Component> headerComponents = new ArrayList<Component>();
+
 	/** Components contained in the mode container. */
 	protected List<Component> modeContainer = new ArrayList<Component>();
 
 	/** If we want to disable browser auto-complete. */
 	protected boolean noAutoComplete = false;
+
+	/** The message selector and properties for the sub-header. */
+	protected Message subHeader = null;
+
+	/** Components contained in the sub-header. */
+	protected List<Component> subHeaderComponents = new ArrayList<Component>();
 
 	/** The message selector and properties for the title. */
 	protected Message title = null;
@@ -89,6 +98,13 @@ public class UiInterface extends UiContainer implements Interface
 			setHeader(header);
 		}
 
+		// short form for sub-header - attribute "subHeader" as the selector
+		String subHeader = StringUtil.trimToNull(xml.getAttribute("subHeader"));
+		if (subHeader != null)
+		{
+			setSubHeader(subHeader);
+		}
+
 		String autoComplete = StringUtil.trimToNull(xml.getAttribute("autoComplete"));
 		if ((autoComplete != null) && ("FALSE".equals(autoComplete)))
 		{
@@ -108,6 +124,57 @@ public class UiInterface extends UiContainer implements Interface
 		{
 			// let Message parse this
 			this.header = new UiMessage(service, settingsXml);
+			
+			// contained
+			Element container = XmlHelper.getChildElementNamed(settingsXml, "container");
+			if (container != null)
+			{
+				NodeList contained = container.getChildNodes();
+				for (int i = 0; i < contained.getLength(); i++)
+				{
+					Node node = contained.item(i);
+					if (node.getNodeType() == Node.ELEMENT_NODE)
+					{
+						Element componentXml = (Element) node;
+
+						// create a component from each node in the container
+						Component c = service.parseComponent(componentXml);
+						if (c != null)
+						{
+							addHeader(c);
+						}
+					}
+				}
+			}
+		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "subHeader");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.subHeader = new UiMessage(service, settingsXml);
+			
+			// contained
+			Element container = XmlHelper.getChildElementNamed(settingsXml, "container");
+			if (container != null)
+			{
+				NodeList contained = container.getChildNodes();
+				for (int i = 0; i < contained.getLength(); i++)
+				{
+					Node node = contained.item(i);
+					if (node.getNodeType() == Node.ELEMENT_NODE)
+					{
+						Element componentXml = (Element) node;
+
+						// create a component from each node in the container
+						Component c = service.parseComponent(componentXml);
+						if (c != null)
+						{
+							addSubHeader(c);
+						}
+					}
+				}
+			}
 		}
 
 		settingsXml = XmlHelper.getChildElementNamed(xml, "modeContainer");
@@ -138,6 +205,24 @@ public class UiInterface extends UiContainer implements Interface
 	public Interface add(Component component)
 	{
 		super.add(component);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Interface addHeader(Component c)
+	{
+		this.headerComponents.add(c);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Interface addSubHeader(Component c)
+	{
+		this.subHeaderComponents.add(c);
 		return this;
 	}
 
@@ -225,9 +310,43 @@ public class UiInterface extends UiContainer implements Interface
 		}
 
 		// header, if defined
-		if (this.header != null)
+		if ((this.header != null) || (!this.headerComponents.isEmpty()))
 		{
-			response.println("<div class=\"ambrosiaInterfaceHeader\">" + this.header.getMessage(context, focus) + "</div>");
+			response.println("<div class=\"ambrosiaInterfaceHeader\">");
+			
+			// the message, if defiend
+			if (this.header != null)
+			{
+				response.println(this.header.getMessage(context, focus));
+			}
+
+			// the components, if defined
+			for (Component c : this.headerComponents)
+			{
+				c.render(context, focus);
+			}
+			
+			response.println("</div>");
+		}
+
+		// sub-header, if defined
+		if ((this.subHeader != null) || (!this.subHeaderComponents.isEmpty()))
+		{
+			response.println("<div class=\"ambrosiaInterfaceSubHeader\">");
+			
+			// the message, if defiend
+			if (this.subHeader != null)
+			{
+				response.println(this.subHeader.getMessage(context, focus));
+			}
+
+			// the components, if defined
+			for (Component c : this.subHeaderComponents)
+			{
+				c.render(context, focus);
+			}
+			
+			response.println("</div>");
 		}
 
 		// render the contained
@@ -315,13 +434,21 @@ public class UiInterface extends UiContainer implements Interface
 		this.modeContainer.add(bar);
 		return this;
 	}
-
 	/**
 	 * {@inheritDoc}
 	 */
 	public Interface setNoAutoComplete()
 	{
 		this.noAutoComplete = true;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Interface setSubHeader(String selector, PropertyReference... references)
+	{
+		this.subHeader = new UiMessage().setMessage(selector, references);
 		return this;
 	}
 
