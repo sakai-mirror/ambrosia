@@ -124,6 +124,16 @@ Mode bar that contains the tool mode navigations at the very top of the view (Mo
 }
 
 /*
+Container for fine print (FinePrint)
+*/
+.ambrosiaFinePrint
+{
+	text-align: right;
+	font-style: italic;
+	font-size: 0.8em;
+}
+
+/*
 Contains the navigations in the navigation bar (NavigationBar Navigation)
 Sakai ~ itemNav + style
 */

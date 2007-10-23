@@ -76,6 +76,7 @@ import org.muse.ambrosia.api.EnumPropertyReference;
 import org.muse.ambrosia.api.Evaluation;
 import org.muse.ambrosia.api.FileUpload;
 import org.muse.ambrosia.api.FillIn;
+import org.muse.ambrosia.api.FinePrint;
 import org.muse.ambrosia.api.FloatEdit;
 import org.muse.ambrosia.api.FloatPropertyReference;
 import org.muse.ambrosia.api.Footnote;
@@ -544,6 +545,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public FinePrint newFinePrint()
+	{
+		return new UiFinePrint();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public FloatEdit newFloatEdit()
 	{
 		return new UiFloatEdit();
@@ -907,6 +916,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("floatEdit")) return new UiFloatEdit(this, xml);
 		if (xml.getTagName().equals("fileUpload")) return new UiFileUpload(this, xml);
 		if (xml.getTagName().equals("fillIn")) return new UiFillIn(this, xml);
+		if (xml.getTagName().equals("finePrint")) return new UiFinePrint(this, xml);
 		if (xml.getTagName().equals("fragment")) return new UiFragment(this, xml);
 		if (xml.getTagName().equals("gap")) return new UiGap(this, xml);
 		if (xml.getTagName().equals("htmlEdit")) return new UiHtmlEdit(this, xml);

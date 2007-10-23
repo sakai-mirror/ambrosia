@@ -135,8 +135,8 @@
 <!ATTLIST pagingModel tool CDATA #IMPLIED >
 <!ATTLIST pagingModel missing CDATA #IMPLIED >
 
-<!ELEMENT container (alert | alias | attachments | attachmentsEdit | container | countEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | floatEdit | htmlEdit | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | overlay | pager | password | section | selection | text | textEdit | toggle)* >
-<!ELEMENT modeContainer (alert | alias | attachments | attachmentsEdit | countEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | floatEdit | htmlEdit | evaluation | fileUpload | fillIn | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | overlay | pager | password | section | selection | text | textEdit | toggle)* >
+<!ELEMENT container (alert | alias | attachments | attachmentsEdit | container | countEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | floatEdit | htmlEdit | evaluation | fileUpload | fillIn | finePrint | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | overlay | pager | password | section | selection | text | textEdit | toggle)* >
+<!ELEMENT modeContainer (alert | alias | attachments | attachmentsEdit | countEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | floatEdit | htmlEdit | evaluation | fileUpload | fillIn | finePrint | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | overlay | pager | password | section | selection | text | textEdit | toggle)* >
 
 <!ELEMENT included (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 <!ELEMENT disabled (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
@@ -422,6 +422,11 @@
 <!ATTLIST instructions id CDATA #IMPLIED >
 <!ATTLIST instructions selector CDATA #IMPLIED >
 <!ATTLIST instructions model CDATA #IMPLIED >
+
+<!ELEMENT finePrint (included | message)* >
+<!ATTLIST finePrint id CDATA #IMPLIED >
+<!ATTLIST finePrint selector CDATA #IMPLIED >
+<!ATTLIST finePrint model CDATA #IMPLIED >
 
 <!ELEMENT match (included | correctMarker | choiceId | choiceLabel | choiceText | feedback | onEmptyAlert | parts | partsChoices | partsTitle | model | readOnly | select | title)* >
 <!ATTLIST match id CDATA #IMPLIED >

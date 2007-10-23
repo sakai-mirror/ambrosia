@@ -299,6 +299,13 @@ public interface UiService
 	FillIn newFillIn();
 
 	/**
+	 * Construct a new FinePrint
+	 * 
+	 * @return a new FinePrint
+	 */
+	FinePrint newFinePrint();
+
+	/**
 	 * Construct a new FloatEdit
 	 * 
 	 * @return a new FloatEdit
