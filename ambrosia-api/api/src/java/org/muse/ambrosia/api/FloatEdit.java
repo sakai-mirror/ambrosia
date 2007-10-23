@@ -27,6 +27,14 @@ package org.muse.ambrosia.api;
 public interface FloatEdit extends Component
 {
 	/**
+	 * Set the property reference for the default value (if the UI goes blank this value is immediately used).
+	 * 
+	 * @param propertyReference
+	 *        The property reference for the default value.
+	 */
+	FloatEdit setDefaultProperty(PropertyReference propertyReference);
+
+	/**
 	 * Set a decision to enable on-load cursor focus on this field.
 	 * 
 	 * @param decision

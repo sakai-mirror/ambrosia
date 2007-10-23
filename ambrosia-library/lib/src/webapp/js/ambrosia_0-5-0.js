@@ -112,7 +112,7 @@ function ambrosiaCountSummaryInt(source, shadowId, summaryId)
 	}
 }
 
-function ambrosiaCountSummaryFloat(source, shadowId, summaryId)
+function ambrosiaCountSummaryFloat(source, shadowId, summaryId, defaultValue)
 {
 	// get the objects
 	var summary = document.getElementById(summaryId);
@@ -120,6 +120,13 @@ function ambrosiaCountSummaryFloat(source, shadowId, summaryId)
 	
 	var oldValue = 0;
 	var newValue = source.value;
+
+	// apply the default if the newValue is blank
+	if (newValue == "")
+	{
+		newValue = defaultValue;
+		source.value = defaultValue;
+	}
 
 	// read the old value and store the new value if we have a shadow
 	if (shadow != null)

@@ -28,7 +28,6 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.FloatEdit;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.TextEdit;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
@@ -38,6 +37,9 @@ import org.w3c.dom.Element;
  */
 public class UiFloatEdit extends UiComponent implements FloatEdit
 {
+	/** optional model reference for value to use in the UI if the field becomes blank. */
+	protected PropertyReference defaultReference = null;
+
 	/** The decision that controls if the field should get on-load focus. */
 	protected Decision focusDecision = null;
 
@@ -106,6 +108,14 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 			setProperty(pRef);
 		}
 
+		// short for defaultModel
+		String defaultModel = StringUtil.trimToNull(xml.getAttribute("default"));
+		if (defaultModel != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(defaultModel);
+			setDefaultProperty(pRef);
+		}
+
 		// short for sumTo
 		String sumTo = StringUtil.trimToNull(xml.getAttribute("sumTo"));
 		if (sumTo != null)
@@ -127,6 +137,18 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		{
 			PropertyReference pRef = service.parsePropertyReference(settingsXml);
 			if (pRef != null) setProperty(pRef);
+		}
+
+		// default
+		settingsXml = XmlHelper.getChildElementNamed(xml, "default");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setDefaultProperty(pRef);
+			}
 		}
 
 		// onEmptyAlert
@@ -232,6 +254,14 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 			value = this.propertyReference.read(context, focus);
 		}
 
+		// read the default value
+		String defaultValue = null;
+		if (this.defaultReference != null)
+		{
+			defaultValue = this.defaultReference.read(context, focus);
+		}
+		if (defaultValue == null) defaultValue = "";
+
 		if (onEmptyAlert)
 		{
 			// this will become visible if a submit happens and the validation fails
@@ -261,20 +291,19 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 
 		// TODO: make the icon link to a popup picker!
 
-		response
-				.println("<input type=\"text\" id=\""
-						+ id
-						+ "\" name=\""
-						+ id
-						+ "\" size=\""
-						+ Integer.toString(numCols)
-						+ "\" value=\""
-						+ Validator.escapeHtml(value)
-						+ "\""
-						+ (readOnly ? " disabled=\"disabled\"" : "")
-						+ ((this.sumToId != null) ? " onchange=\"ambrosiaCountSummaryFloat(this, '" + shadowId + "', '" + this.sumToId + "');\"" : "")
-						+ " />"
-						+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
+		response.println("<input type=\"text\" id=\""
+				+ id
+				+ "\" name=\""
+				+ id
+				+ "\" size=\""
+				+ Integer.toString(numCols)
+				+ "\" value=\""
+				+ Validator.escapeHtml(value)
+				+ "\""
+				+ (readOnly ? " disabled=\"disabled\"" : "")
+				+ ((this.sumToId != null) ? " onchange=\"ambrosiaCountSummaryFloat(this, '" + shadowId + "', '" + this.sumToId + "', '"
+						+ defaultValue + "');\"" : "") + " />"
+				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
 
 		context.editComponentRendered(id);
 
@@ -309,6 +338,15 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 			// add the field name / id to the focus path
 			context.addFocusId(id);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FloatEdit setDefaultProperty(PropertyReference propertyReference)
+	{
+		this.defaultReference = propertyReference;
+		return this;
 	}
 
 	/**

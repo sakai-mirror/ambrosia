@@ -530,13 +530,16 @@
 <!ELEMENT minValue (model)* >
 <!ELEMENT maxValue (model)* >
 
-<!ELEMENT floatEdit (included | title | model | onEmptyAlert | readOnly | focus | summary)* >
+<!ELEMENT floatEdit (included | title | model | default | onEmptyAlert | readOnly | focus | summary)* >
 <!ATTLIST floatEdit id CDATA #IMPLIED >
 <!ATTLIST floatEdit title CDATA #IMPLIED >
 <!ATTLIST floatEdit model CDATA #IMPLIED >
+<!ATTLIST floatEdit default CDATA #IMPLIED >
 <!ATTLIST floatEdit cols CDATA #IMPLIED >
 <!ATTLIST floatEdit readOnly (TRUE|FALSE) #IMPLIED >
 <!ATTLIST floatEdit sumTo CDATA #IMPLIED >
+
+<!ELEMENT default (model) >
 
 <!ELEMENT summary (initialValue | title)*>
 <!ATTLIST summary initialValue CDATA #IMPLIED >
