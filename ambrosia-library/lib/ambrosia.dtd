@@ -527,6 +527,7 @@
 <!ATTLIST floatEdit rows CDATA #IMPLIED >
 <!ATTLIST floatEdit cols CDATA #IMPLIED >
 <!ATTLIST floatEdit readOnly (TRUE|FALSE) #IMPLIED >
+<!ATTLIST floatEdit sumTo CDATA #IMPLIED >
 
 <!ELEMENT summary (initialValue | title)*>
 <!ATTLIST summary initialValue CDATA #IMPLIED >

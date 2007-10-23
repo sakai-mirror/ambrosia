@@ -77,6 +77,15 @@ public interface FloatEdit extends Component
 	FloatEdit setReadOnly(Decision decision);
 
 	/**
+	 * Set the component id that the value in this component will sum to in the UI.
+	 * 
+	 * @param id
+	 *        The component id that the value in this component will sum to in the UI.
+	 * @return self.
+	 */
+	FloatEdit setSumToId(String id);
+
+	/**
 	 * Set the title text.
 	 * 
 	 * @param selector

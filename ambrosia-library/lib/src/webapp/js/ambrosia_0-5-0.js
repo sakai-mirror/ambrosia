@@ -80,7 +80,16 @@ function getInt(str)
 	return rv;
 }
 
-function ambrosiaCountSummary(source, shadowId, summaryId)
+function getFloat(str)
+{
+	var rv = parseFloat(str);
+	
+	// return 0 if its not a parsable int
+	if (isNaN(rv)) rv = 0.0;
+	return rv;
+}
+
+function ambrosiaCountSummaryInt(source, shadowId, summaryId)
 {
 	// get the objects
 	var summary = document.getElementById(summaryId);
@@ -100,6 +109,29 @@ function ambrosiaCountSummary(source, shadowId, summaryId)
 	if (summary != null)
 	{
 		summary.value = getInt(summary.value) - getInt(oldValue) + getInt(newValue);
+	}
+}
+
+function ambrosiaCountSummaryFloat(source, shadowId, summaryId)
+{
+	// get the objects
+	var summary = document.getElementById(summaryId);
+	var shadow = document.getElementById(shadowId);
+	
+	var oldValue = 0;
+	var newValue = source.value;
+
+	// read the old value and store the new value if we have a shadow
+	if (shadow != null)
+	{
+		oldValue = shadow.value;
+		shadow.value = newValue;
+	}
+	
+	// update the summary
+	if (summary != null)
+	{
+		summary.value = getFloat(summary.value) - getFloat(oldValue) + getFloat(newValue);
 	}
 }
 

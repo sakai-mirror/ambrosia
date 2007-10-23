@@ -67,6 +67,9 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 	/** The read-only decision. */
 	protected Decision readOnly = null;
 
+	/** Component ID that we sumarize any change of value to. */
+	protected String sumToId = null;
+
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
 
@@ -103,6 +106,13 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		{
 			PropertyReference pRef = service.newPropertyReference().setReference(model);
 			setProperty(pRef);
+		}
+
+		// short for sumTo
+		String sumTo = StringUtil.trimToNull(xml.getAttribute("sumTo"));
+		if (sumTo != null)
+		{
+			setSumToId(sumTo);
 		}
 
 		// title
@@ -203,8 +213,9 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 
 		// set some ids
 		int idRoot = context.getUniqueId();
-		String id = this.getClass().getSimpleName() + "_" + idRoot;
+		String id = (this.id != null) ? this.id : this.getClass().getSimpleName() + "_" + idRoot;
 		String decodeId = "decode_" + idRoot;
+		String shadowId = "shadow_" + idRoot;
 
 		// read the current value
 		String value = "";
@@ -242,13 +253,31 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 
 		// TODO: make the icon link to a popup picker!
 
-		response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
-				+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />"
-				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
+		response
+				.println("<input type=\"text\" id=\""
+						+ id
+						+ "\" name=\""
+						+ id
+						+ "\" size=\""
+						+ Integer.toString(numCols)
+						+ "\" value=\""
+						+ Validator.escapeHtml(value)
+						+ "\""
+						+ (readOnly ? " disabled=\"disabled\"" : "")
+						+ ((this.sumToId != null) ? " onchange=\"ambrosiaCountSummaryFloat(this, '" + shadowId + "', '" + this.sumToId + "');\"" : "")
+						+ " />"
+						+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
 
 		context.editComponentRendered(id);
 
 		response.println("</div>");
+
+		// the shadow value field (holding the last known value)
+		if (this.sumToId != null)
+		{
+			response.println("<input type=\"hidden\" name=\"" + shadowId + "\" id=\"" + shadowId + "\"value =\"" + Validator.escapeHtml(value)
+					+ "\" />");
+		}
 
 		// the decode directive
 		if ((this.propertyReference != null) && (!readOnly))
@@ -320,6 +349,15 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 	public FloatEdit setReadOnly(Decision decision)
 	{
 		this.readOnly = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FloatEdit setSumToId(String id)
+	{
+		this.sumToId = id;
 		return this;
 	}
 
