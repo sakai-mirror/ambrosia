@@ -34,7 +34,9 @@ import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Container;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
+import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.Message;
+import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.RenderListener;
 import org.muse.ambrosia.api.Selection;
@@ -113,6 +115,12 @@ public class UiSelection extends UiComponent implements Selection
 	/** If set, use this instead of sigleSelect to see if we are going to be single or multiple select. */
 	protected Decision singleSelectDecision = null;
 
+	/** The destination to submit if we are submitting on change. */
+	protected Destination submitDestination = null;
+
+	/** if set, submit on change and use the value selected as the destination. */
+	protected boolean submitValue = false;
+
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
 
@@ -157,6 +165,13 @@ public class UiSelection extends UiComponent implements Selection
 		{
 			PropertyReference pRef = service.newPropertyReference().setReference(correct);
 			setCorrect(pRef);
+		}
+
+		// short form for destination - attribute "destination" as the destination
+		String destination = StringUtil.trimToNull(xml.getAttribute("destination"));
+		if (destination != null)
+		{
+			setDestination(service.newDestination().setDestination(destination));
 		}
 
 		// selected value
@@ -322,6 +337,21 @@ public class UiSelection extends UiComponent implements Selection
 		if (height != null)
 		{
 			this.setHeight(Integer.parseInt(height));
+		}
+
+		// submit value
+		String submitValue = StringUtil.trimToNull(xml.getAttribute("submitValue"));
+		if ((submitValue != null) && ("TRUE".equals(submitValue)))
+		{
+			this.submitValue = true;
+		}
+
+		// submitDestination
+		settingsXml = XmlHelper.getChildElementNamed(xml, "destination");
+		if (settingsXml != null)
+		{
+			// let Destination parse this
+			this.submitDestination = new UiDestination(service, settingsXml);
 		}
 	}
 
@@ -504,6 +534,18 @@ public class UiSelection extends UiComponent implements Selection
 
 		if (values.isEmpty())
 		{
+			String onclick = "";
+
+			if (this.submitDestination != null)
+			{
+				String destination = this.submitDestination.getDestination(context, focus);
+				onclick = "onclick=\"ambrosiaSubmit('" + destination + "')\" ";
+			}
+			else if (this.submitValue)
+			{
+				onclick = "onclick=\"ambrosiaSubmit(this.value)\" ";
+			}
+
 			// convert to boolean
 			boolean checked = value.contains("true");
 
@@ -536,7 +578,7 @@ public class UiSelection extends UiComponent implements Selection
 			}
 
 			// the check box
-			response.println("<input type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + this.selectedValue + "\" "
+			response.println("<input " + onclick + "type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + this.selectedValue + "\" "
 					+ (checked ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 
 			// the decode directive
@@ -558,6 +600,16 @@ public class UiSelection extends UiComponent implements Selection
 			if (!this.selectionContainers.isEmpty())
 			{
 				onclick = "onclick=\"ambrosiaSelectDependencies(this.value, " + dependencyId + ")\" ";
+			}
+
+			else if (this.submitDestination != null)
+			{
+				String destination = this.submitDestination.getDestination(context, focus);
+				onclick = "onclick=\"ambrosiaSubmit('" + destination + "')\" ";
+			}
+			else if (this.submitValue)
+			{
+				onclick = "onclick=\"ambrosiaSubmit(this.value)\" ";
 			}
 
 			for (int i = 0; i < values.size(); i++)
@@ -701,6 +753,15 @@ public class UiSelection extends UiComponent implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
+	public Selection setDestination(Destination destination)
+	{
+		this.submitDestination = destination;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Selection setHeight(int height)
 	{
 		this.height = height;
@@ -769,6 +830,15 @@ public class UiSelection extends UiComponent implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
+	public Selection setSubmitValue()
+	{
+		this.submitValue = true;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Selection setTitle(String selector, PropertyReference... references)
 	{
 		this.titleMessage = new UiMessage().setMessage(selector, references);
@@ -806,8 +876,16 @@ public class UiSelection extends UiComponent implements Selection
 
 		// TODO: must have selection values
 
-		// TODO: on change?
 		String onclick = "";
+		if (this.submitDestination != null)
+		{
+			String destination = this.submitDestination.getDestination(context, focus);
+			onclick = "onclick=\"ambrosiaSubmit('" + destination + "')\" ";
+		}
+		else if (this.submitValue)
+		{
+			onclick = "onclick=\"ambrosiaSubmit(this.value)\" ";
+		}
 
 		// TODO: selectionContainers not supported
 

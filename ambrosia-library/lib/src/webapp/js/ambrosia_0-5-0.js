@@ -142,6 +142,12 @@ function ambrosiaCountSummaryFloat(source, shadowId, summaryId, defaultValue)
 	}
 }
 
+function ambrosiaSubmit(destination)
+{
+	document.form0.destination_.value=destination;
+	document.form0.submit();
+}
+
 function ambrosiaNavigate(enabled, enableFunction, confirm, confirmDivId, validateFlag, submit, destination, root, requirementsFunction, requirementsDivId)
 {
 	if (requirementsFunction != null)

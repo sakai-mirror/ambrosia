@@ -72,6 +72,15 @@ public interface Selection extends Component
 	Selection setCorrectDecision(Decision decision);
 
 	/**
+	 * Set the selection to auto-submit on change, and report this destination when it does.
+	 * 
+	 * @param destination
+	 *        The destination for the submit.
+	 * @return self
+	 */
+	Selection setDestination(Destination destination);
+
+	/**
 	 * Set the number of lines to display (if dropdown).
 	 * 
 	 * @param height
@@ -138,6 +147,13 @@ public interface Selection extends Component
 	 * @return self.
 	 */
 	Selection setSingleSelectDecision(Decision decision);
+
+	/**
+	 * Set so that we submit on change, and the selected value is the destination.
+	 * 
+	 * @return self.
+	 */
+	Selection setSubmitValue();
 
 	/**
 	 * Set the title text.

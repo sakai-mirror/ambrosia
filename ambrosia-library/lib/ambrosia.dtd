@@ -483,7 +483,7 @@
 <!ELEMENT focusOn (model)* >
 <!ATTLIST focusOn model CDATA #IMPLIED >
 
-<!ELEMENT selection (included | title | model | readOnly | selectionChoices | correct | correctDecision | selectionModel | singleSelect)* >
+<!ELEMENT selection (included | title | model | readOnly | selectionChoices | destination | correct | correctDecision | selectionModel | singleSelect)* >
 <!ATTLIST selection id CDATA #IMPLIED >
 <!ATTLIST selection title CDATA #IMPLIED >
 <!ATTLIST selection model CDATA #IMPLIED >
@@ -492,6 +492,8 @@
 <!ATTLIST selection orientation (HORIZONTAL|VERTICAL|DROPDOWN) #IMPLIED >
 <!ATTLIST selection readOnly (TRUE|FALSE) #IMPLIED >
 <!ATTLIST selection height CDATA #IMPLIED >
+<!ATTLIST selection destination CDATA #IMPLIED >
+<!ATTLIST selection submitValue (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT correct (model) >
 
