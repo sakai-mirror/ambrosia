@@ -340,6 +340,8 @@ public class UiPager extends UiComponent implements Pager
 
 		context.put(PagingPropertyReference.SELECTOR, PagingPropertyReference.LAST);
 		last.render(context, focus);
+
+		context.remove(PagingPropertyReference.SELECTOR);
 	}
 
 	/**
@@ -447,6 +449,8 @@ public class UiPager extends UiComponent implements Pager
 			context.put(PagingPropertyReference.SELECTOR, PagingPropertyReference.SIZE);
 			context.put(PagingPropertyReference.SELECTOR_SIZE, sizeOption);
 			String destination = this.destination.getDestination(context, focus);
+			context.remove(PagingPropertyReference.SELECTOR_SIZE);
+			context.remove(PagingPropertyReference.SELECTOR);
 
 			response.println("    <option value=\"" + destination + "\">" + Validator.escapeHtml(msg) + "</option>");
 		}
