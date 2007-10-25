@@ -163,8 +163,10 @@
 <!ELEMENT focus (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 <!ELEMENT highlighted (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 <!ELEMENT correctDecision (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ELEMENT colorize (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 
 <!ATTLIST entityIncluded selector CDATA #IMPLIED >
+<!ATTLIST colorize color CDATA #IMPLIED >
 
 <!ELEMENT decision (model)* >
 <!ATTLIST decision type (hasValue|compare|and|or|pastDate|true) #IMPLIED >
@@ -179,12 +181,15 @@
 <!ATTLIST hasValueDecision delegate CDATA #IMPLIED >
 <!ATTLIST hasValueDecision tool CDATA #IMPLIED >
 
-<!ELEMENT compareDecision (model | constant)* >
+<!ELEMENT compareDecision (model | constant | compare)* >
 <!ATTLIST compareDecision reversed (TRUE|FALSE) #IMPLIED >
 <!ATTLIST compareDecision model CDATA #IMPLIED >
 <!ATTLIST compareDecision delegate CDATA #IMPLIED >
 <!ATTLIST compareDecision tool CDATA #IMPLIED >
 <!ATTLIST compareDecision constant CDATA #IMPLIED >
+<!ATTLIST compareDecision compare CDATA #IMPLIED >
+
+<!ELEMENT compare (model) >
 
 <!ELEMENT constant EMPTY >
 <!ATTLIST constant value CDATA #IMPLIED >
@@ -320,7 +325,7 @@
 <!ATTLIST row title CDATA #IMPLIED >
 <!ATTLIST row model CDATA #IMPLIED >
 
-<!ELEMENT entityList (included | emptyTitle | entityActions | entityIncluded | iterator | title | titleIncluded | columns | headings | pager)* >
+<!ELEMENT entityList (included | emptyTitle | entityActions | entityIncluded | colorize | iterator | title | titleIncluded | columns | headings | pager)* >
 <!ATTLIST entityList id CDATA #IMPLIED >
 <!ATTLIST entityList style (FLAT|FORM) #IMPLIED >
 

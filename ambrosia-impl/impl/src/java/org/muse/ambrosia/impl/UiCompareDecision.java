@@ -61,8 +61,6 @@ public class UiCompareDecision extends UiDecision implements CompareDecision
 	 */
 	protected UiCompareDecision(UiServiceImpl service, Element xml)
 	{
-		// TODO: no xml support for comparing one model to another -ggolden
-
 		// do the Decision stuff
 		super(service, xml);
 
@@ -98,6 +96,26 @@ public class UiCompareDecision extends UiDecision implements CompareDecision
 		if (!values.isEmpty())
 		{
 			this.compareReferenceValue = values.toArray(new String[values.size()]);
+		}
+
+		// short for compare model
+		String model = StringUtil.trimToNull(xml.getAttribute("compare"));
+		if (model != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(model);
+			setEqualsProperty(pRef);
+		}
+
+		// the full compare model reference
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "compare");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(xml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setEqualsProperty(pRef);
+			}
 		}
 	}
 

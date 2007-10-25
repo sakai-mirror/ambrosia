@@ -49,6 +49,12 @@ import org.w3c.dom.NodeList;
  */
 public class UiEntityList extends UiComponent implements EntityList
 {
+	/** The color for colorized rows. */
+	protected String colorizeBkg = null;
+
+	/** The decision for colorizing rows. */
+	protected Decision colorizeDecision = null;
+
 	/** Columns for this list. */
 	protected List<EntityListColumn> columns = new ArrayList<EntityListColumn>();
 
@@ -58,6 +64,9 @@ public class UiEntityList extends UiComponent implements EntityList
 	/** The enitity actions defined related to this column. */
 	protected List<Component> entityActions = new ArrayList<Component>();
 
+	/** The inclusion decision for each entity. */
+	protected Decision entityIncluded = null;
+
 	/** A single decision for each possible heading - order matches that in headingMessages. */
 	protected List<Decision> headingDecisions = new ArrayList<Decision>();
 
@@ -66,9 +75,6 @@ public class UiEntityList extends UiComponent implements EntityList
 
 	/** A navigation for each possible heading - order matches that in headingDecisions. */
 	protected List<Navigation> headingNavigations = new ArrayList<Navigation>();
-
-	/** The inclusion decision for each entity. */
-	protected Decision entityIncluded = null;
 
 	/** The context name for the current iteration object. */
 	protected String iteratorName = null;
@@ -121,6 +127,18 @@ public class UiEntityList extends UiComponent implements EntityList
 		{
 			Decision decision = service.parseDecisions(settingsXml);
 			this.entityIncluded = decision;
+		}
+
+		// colorize
+		settingsXml = XmlHelper.getChildElementNamed(xml, "colorize");
+		if (settingsXml != null)
+		{
+			// color
+			this.colorizeBkg = StringUtil.trimToNull(settingsXml.getAttribute("color"));
+
+			// decision
+			Decision decision = service.parseDecisions(settingsXml);
+			this.colorizeDecision = decision;
 		}
 
 		// iterator
@@ -532,7 +550,16 @@ public class UiEntityList extends UiComponent implements EntityList
 					h++;
 				}
 
-				response.println("<tr>");
+				// start the row, possibly colorizing
+				if ((this.colorizeBkg != null) && (this.colorizeDecision != null) && (this.colorizeDecision.decide(context, entity)))
+				{
+					response.println("<tr bgcolor=\"" + this.colorizeBkg + "\">");
+				}
+				else
+				{
+					response.println("<tr>");
+				}
+
 				colNum = 0;
 				for (EntityListColumn c : this.columns)
 				{
@@ -719,6 +746,17 @@ public class UiEntityList extends UiComponent implements EntityList
 		}
 
 		response.println("</div>");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EntityList setColorize(Decision decision, String color)
+	{
+		this.colorizeDecision = decision;
+		this.colorizeBkg = color;
+
+		return this;
 	}
 
 	/**

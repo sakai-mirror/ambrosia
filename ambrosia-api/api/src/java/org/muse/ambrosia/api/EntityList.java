@@ -74,6 +74,17 @@ public interface EntityList extends Component
 	EntityList addHeading(Decision decision, String selector, PropertyReference... properties);
 
 	/**
+	 * Set some entity rows, those that meet the decision criteria, to have a background color.
+	 * 
+	 * @param decision
+	 *        The criteria for entity colorization.
+	 * @param color
+	 *        The color value.
+	 * @return self.
+	 */
+	EntityList setColorize(Decision decision, String color);
+
+	/**
 	 * Set the message for text to display instead of the title if there are no items in the list.
 	 * 
 	 * @param selector
