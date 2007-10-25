@@ -27,7 +27,7 @@
 <!ATTLIST model missing CDATA #IMPLIED >
 <!ATTLIST model type (boolean|constant|contextInfo|count|date|duration|enum|float|html|icon|paging|text|url|userInfo) #IMPLIED >
 <!ATTLIST model concise (TRUE|FALSE) #IMPLIED >
-<!ATTLIST model selector (DISPLAYNAME|SORTNAME|TITLE) #IMPLIED >
+<!ATTLIST model selector (DISPLAYNAME|SORTNAME|TITLE|FIRST|NEXT|LAST|PREV) #IMPLIED >
 <!ATTLIST model max CDATA #IMPLIED >
 <!ATTLIST model stripHtml (TRUE|FALSE) #IMPLIED >
 <!ATTLIST model icon CDATA #IMPLIED >
@@ -144,6 +144,7 @@
 <!ATTLIST pagingModel delegate CDATA #IMPLIED>
 <!ATTLIST pagingModel tool CDATA #IMPLIED >
 <!ATTLIST pagingModel missing CDATA #IMPLIED >
+<!ATTLIST pagingModel selector (FIRST|NEXT|LAST|PREV) #IMPLIED >
 
 <!ELEMENT container (alert | alias | attachments | attachmentsEdit | container | countEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | floatEdit | htmlEdit | evaluation | fileUpload | fillIn | finePrint | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | overlay | pager | password | section | selection | text | textEdit | toggle)* >
 <!ELEMENT modeContainer (alert | alias | attachments | attachmentsEdit | countEdit | countdownTimer | courier | dateEdit | durationEdit | divider | entityActionBar | entityDisplay | entityList | floatEdit | htmlEdit | evaluation | fileUpload | fillIn | finePrint | gap | iconKey | instructions | match | menuBar | modelComponent | modeBar | navigation | navigationBar | overlay | pager | password | section | selection | text | textEdit | toggle)* >

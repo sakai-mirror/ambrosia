@@ -24,6 +24,7 @@ package org.muse.ambrosia.impl;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Paging;
 import org.muse.ambrosia.api.PagingPropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -31,6 +32,9 @@ import org.w3c.dom.Element;
  */
 public class UiPagingPropertyReference extends UiPropertyReference implements PagingPropertyReference
 {
+	/** Selector for different paging options. */
+	protected String selector = null;
+
 	/**
 	 * No-arg constructor.
 	 */
@@ -50,6 +54,8 @@ public class UiPagingPropertyReference extends UiPropertyReference implements Pa
 	{
 		// do the property reference stuff
 		super(service, xml);
+
+		this.selector = StringUtil.trimToNull(xml.getAttribute("selector"));
 	}
 
 	/**
@@ -72,6 +78,8 @@ public class UiPagingPropertyReference extends UiPropertyReference implements Pa
 			Paging p = (Paging) rv;
 
 			String selector = (String) context.get(SELECTOR);
+			if (selector == null) selector = this.selector;
+
 			if (selector != null)
 			{
 				if (FIRST.equals(selector))
