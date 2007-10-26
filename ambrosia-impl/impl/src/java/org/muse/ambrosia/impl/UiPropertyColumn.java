@@ -25,6 +25,7 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyColumn;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -58,6 +59,14 @@ public class UiPropertyColumn extends UiEntityListColumn implements PropertyColu
 		// EntityListColumn stuff
 		super(service, xml);
 
+		// short for model
+		String ref = StringUtil.trimToNull(xml.getAttribute("model"));
+		if (ref != null)
+		{
+			setProperty(service.newPropertyReference().setReference(ref));
+		}
+
+		// model
 		Element settingsXml = XmlHelper.getChildElementNamed(xml, "model");
 		if (settingsXml != null)
 		{
@@ -65,6 +74,7 @@ public class UiPropertyColumn extends UiEntityListColumn implements PropertyColu
 			if (pRef != null) setProperty(pRef);
 		}
 
+		// message
 		settingsXml = XmlHelper.getChildElementNamed(xml, "message");
 		if (settingsXml != null)
 		{

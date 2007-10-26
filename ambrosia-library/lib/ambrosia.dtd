@@ -372,6 +372,7 @@
 <!ATTLIST modelColumn title CDATA #IMPLIED >
 <!ATTLIST modelColumn pixels CDATA #IMPLIED >
 <!ATTLIST modelColumn em CDATA #IMPLIED >
+<!ATTLIST modelColumn model CDATA #IMPLIED >
 
 <!ELEMENT selectionColumn (value | singleSelect | readOnly | model | onEmptyAlert | label | asAlert | entityIncluded | included | sort | title | container | entityActions | entityNavigations | footnotes | navigations | correct | correctDecision)* >
 <!ATTLIST selectionColumn centered (TRUE|FALSE) #IMPLIED >
@@ -542,12 +543,12 @@
 <!ATTLIST floatEdit id CDATA #IMPLIED >
 <!ATTLIST floatEdit title CDATA #IMPLIED >
 <!ATTLIST floatEdit model CDATA #IMPLIED >
-<!ATTLIST floatEdit default CDATA #IMPLIED >
+<!ATTLIST floatEdit defaultValue CDATA #IMPLIED >
 <!ATTLIST floatEdit cols CDATA #IMPLIED >
 <!ATTLIST floatEdit readOnly (TRUE|FALSE) #IMPLIED >
 <!ATTLIST floatEdit sumTo CDATA #IMPLIED >
 
-<!ELEMENT default (model) >
+<!ELEMENT defaultValue (model) >
 
 <!ELEMENT summary (initialValue | title)*>
 <!ATTLIST summary initialValue CDATA #IMPLIED >

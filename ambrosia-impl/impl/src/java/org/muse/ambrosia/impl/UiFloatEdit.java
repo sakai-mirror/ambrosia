@@ -109,7 +109,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		}
 
 		// short for defaultModel
-		String defaultModel = StringUtil.trimToNull(xml.getAttribute("default"));
+		String defaultModel = StringUtil.trimToNull(xml.getAttribute("defaultValue"));
 		if (defaultModel != null)
 		{
 			PropertyReference pRef = service.newPropertyReference().setReference(defaultModel);
@@ -140,7 +140,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		}
 
 		// default
-		settingsXml = XmlHelper.getChildElementNamed(xml, "default");
+		settingsXml = XmlHelper.getChildElementNamed(xml, "defaultValue");
 		if (settingsXml != null)
 		{
 			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
