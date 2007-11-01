@@ -392,6 +392,15 @@ public class UiFillIn extends UiComponent implements FillIn
 						response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
 								+ ((this.correctMessage != null) ? this.correctMessage.getMessage(context, focus) : "") + "\" />");
 					}
+
+					else
+					{
+						if (this.incorrectIcon != null)
+						{
+							response.print("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\""
+									+ ((this.incorrectMessage != null) ? this.incorrectMessage.getMessage(context, focus) : "") + "\" />");
+						}
+					}
 				}
 
 				response.print("<input type=\"text\" name=\"" + id + "\" id=\"" + id + Integer.toString(fillInParts.length - 1) + "\" size=\""
