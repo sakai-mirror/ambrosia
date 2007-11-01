@@ -116,7 +116,7 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 				DateFormat timeFormat = DateFormat.getTimeInstance(fmt);
 
 				return "<span style=\"white-space: nowrap;\">" + Validator.escapeHtml(dateFormat.format(date))
-						+ "</span><br /><spanstyle=\"white-space: nowrap;\">" + Validator.escapeHtml(timeFormat.format(date)) + "</span>";
+						+ "</span><br /><span style=\"white-space: nowrap;\">" + Validator.escapeHtml(timeFormat.format(date)) + "</span>";
 			}
 			else
 			{

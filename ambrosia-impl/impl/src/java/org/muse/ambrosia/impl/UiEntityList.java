@@ -589,7 +589,7 @@ public class UiEntityList extends UiComponent implements EntityList
 					{
 						response.print("text-align:center;");
 					}
-					response.print("vertical-align:middle;\">");
+					response.print("\">");
 
 					// if the entity is to be included in this column
 					if (c.getIsEntityIncluded(context, entity))
@@ -699,7 +699,7 @@ public class UiEntityList extends UiComponent implements EntityList
 				{
 					response.print("text-align:center;");
 				}
-				response.print("vertical-align:middle;\">");
+				response.print("\">");
 
 				if (c.isSummaryRequired())
 				{

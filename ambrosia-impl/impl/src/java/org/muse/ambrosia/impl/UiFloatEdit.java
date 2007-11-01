@@ -291,7 +291,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 
 		// TODO: make the icon link to a popup picker!
 
-		response.println("<input type=\"text\" id=\""
+		response.println("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\""
 				+ id
 				+ "\" name=\""
 				+ id
@@ -303,7 +303,8 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 				+ (readOnly ? " disabled=\"disabled\"" : "")
 				+ ((this.sumToId != null) ? " onchange=\"ambrosiaCountSummaryFloat(this, '" + shadowId + "', '" + this.sumToId + "', '"
 						+ defaultValue + "');\"" : "") + " />"
-				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
+				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : "")
+				+ "</span>");
 
 		context.editComponentRendered(id);
 
