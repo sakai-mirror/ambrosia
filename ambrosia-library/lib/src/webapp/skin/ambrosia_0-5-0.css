@@ -57,6 +57,16 @@ Sub-header for interface.
 }
 
 /*
+Footer for interface.
+*/
+.ambrosiaInterfaceFooter
+{
+	padding: 0;
+	font-family: Arial,Helvetica,sans-serif;
+	margin: 1em 0 2em 0;
+}
+
+/*
 Around each section of a view (Section)
 Sakai ~ samSection
 */

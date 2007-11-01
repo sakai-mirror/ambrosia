@@ -29,6 +29,15 @@ package org.muse.ambrosia.api;
 public interface Interface extends Container
 {
 	/**
+	 * Add a component to the footer
+	 * 
+	 * @param c
+	 *        The component to add to the footer.
+	 * @return self.
+	 */
+	Interface addFooter(Component c);
+
+	/**
 	 * Add a component to the header
 	 * 
 	 * @param c
@@ -36,13 +45,26 @@ public interface Interface extends Container
 	 * @return self.
 	 */
 	Interface addHeader(Component c);
-	
+
 	/**
 	 * Add a component to the sub-header
-	 * @param c The component to add to the sub-header.
+	 * 
+	 * @param c
+	 *        The component to add to the sub-header.
 	 * @return self.
 	 */
 	Interface addSubHeader(Component c);
+
+	/**
+	 * Set the user interface footer message.
+	 * 
+	 * @param selector
+	 *        The message selector.
+	 * @param references
+	 *        one or more (or an array) of UiPropertyReferences to form the additional values in the formatted message.
+	 * @return self.
+	 */
+	Interface setFooter(String selector, PropertyReference... references);
 
 	/**
 	 * Set the user interface header message.
@@ -63,7 +85,7 @@ public interface Interface extends Container
 	 * @return self.
 	 */
 	Interface setModeBar(Component bar);
-	
+
 	/**
 	 * Set to disable browser auto-complete for the interface.
 	 * 

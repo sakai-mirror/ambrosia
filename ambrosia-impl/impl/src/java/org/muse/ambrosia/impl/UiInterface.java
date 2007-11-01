@@ -43,6 +43,12 @@ import org.w3c.dom.NodeList;
  */
 public class UiInterface extends UiContainer implements Interface
 {
+	/** The message selector and properties for the footer. */
+	protected Message footer = null;
+
+	/** Components contained in the footer. */
+	protected List<Component> footerComponents = new ArrayList<Component>();
+
 	/** The message selector and properties for the header. */
 	protected Message header = null;
 
@@ -103,6 +109,13 @@ public class UiInterface extends UiContainer implements Interface
 		if (subHeader != null)
 		{
 			setSubHeader(subHeader);
+		}
+
+		// short form for footer - attribute "footer" as the selector
+		String footer = StringUtil.trimToNull(xml.getAttribute("footer"));
+		if (footer != null)
+		{
+			setFooter(footer);
 		}
 
 		String autoComplete = StringUtil.trimToNull(xml.getAttribute("autoComplete"));
@@ -177,6 +190,35 @@ public class UiInterface extends UiContainer implements Interface
 			}
 		}
 
+		settingsXml = XmlHelper.getChildElementNamed(xml, "footer");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.footer = new UiMessage(service, settingsXml);
+
+			// contained
+			Element container = XmlHelper.getChildElementNamed(settingsXml, "container");
+			if (container != null)
+			{
+				NodeList contained = container.getChildNodes();
+				for (int i = 0; i < contained.getLength(); i++)
+				{
+					Node node = contained.item(i);
+					if (node.getNodeType() == Node.ELEMENT_NODE)
+					{
+						Element componentXml = (Element) node;
+
+						// create a component from each node in the container
+						Component c = service.parseComponent(componentXml);
+						if (c != null)
+						{
+							addFooter(c);
+						}
+					}
+				}
+			}
+		}
+
 		settingsXml = XmlHelper.getChildElementNamed(xml, "modeContainer");
 		if (settingsXml != null)
 		{
@@ -205,6 +247,15 @@ public class UiInterface extends UiContainer implements Interface
 	public Interface add(Component component)
 	{
 		super.add(component);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Interface addFooter(Component c)
+	{
+		this.footerComponents.add(c);
 		return this;
 	}
 
@@ -353,6 +404,24 @@ public class UiInterface extends UiContainer implements Interface
 			c.render(context, focus);
 		}
 
+		// footer, even if not defined
+		response.println("<div class=\"ambrosiaInterfaceFooter\">");
+		if ((this.footer != null) || (!this.footerComponents.isEmpty()))
+		{
+			// the message, if defiend
+			if (this.footer != null)
+			{
+				response.println(this.footer.getMessage(context, focus));
+			}
+
+			// the components, if defined
+			for (Component c : this.footerComponents)
+			{
+				c.render(context, focus);
+			}
+		}
+		response.println("</div>");
+
 		// end
 		response.println("</form></div>");
 
@@ -413,6 +482,15 @@ public class UiInterface extends UiContainer implements Interface
 		{
 			response.println("</body></html>");
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Interface setFooter(String selector, PropertyReference... references)
+	{
+		this.footer = new UiMessage().setMessage(selector, references);
+		return this;
 	}
 
 	/**
