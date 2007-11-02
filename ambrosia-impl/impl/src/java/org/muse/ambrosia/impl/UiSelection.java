@@ -588,10 +588,26 @@ public class UiSelection extends UiComponent implements Selection
 						+ "prop_" + decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />"
 						+ "<input type=\"hidden\" name=\"" + "null_" + decodeId + "\" value=\"" + this.notSelectedValue + "\" />");
 			}
+
+			// title after (right) for the single check box version
+			if (this.titleMessage != null)
+			{
+				response.println("<label for=\"" + id + "\">");
+				response.println(this.titleMessage.getMessage(context, focus));
+				response.println("</label>");
+			}
 		}
 
 		else
 		{
+			// title first for multiple choices
+			if (this.titleMessage != null)
+			{
+				response.println("<label for=\"" + id + "\">");
+				response.println(this.titleMessage.getMessage(context, focus) + "<br />");
+				response.println("</label>");
+			}
+
 			final StringBuffer dependency = new StringBuffer();
 			dependency.append("var " + dependencyId + "=[");
 			String startingValue = null;
@@ -719,14 +735,6 @@ public class UiSelection extends UiComponent implements Selection
 				response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\""
 						+ "prop_" + decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
 			}
-		}
-
-		// title after
-		if (this.titleMessage != null)
-		{
-			response.println("<label for=\"" + id + "\">");
-			response.println(this.titleMessage.getMessage(context, focus));
-			response.println("</label>");
 		}
 
 		response.println("</div>");
