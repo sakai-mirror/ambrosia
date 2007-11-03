@@ -81,7 +81,7 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 		}
 
 		// alt=\"" + Validator.escapeHtml(name) + "\"
-		return "<img style=\"vertical-align:middle\" src=\"" + context.getUrl(iconName) + "\" />";
+		return "<img src=\"" + context.getUrl(iconName) + "\" />";
 	}
 
 	/**

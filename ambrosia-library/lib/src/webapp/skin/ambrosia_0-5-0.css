@@ -68,31 +68,19 @@ Footer for interface.
 
 /*
 Around each section of a view (Section)
-Sakai ~ samSection
 */
 .ambrosiaSection
 {
 	margin-top: 2em;
-	/*margin-left: 4em;*/
 	margin-bottom: 2em;
-	/*margin-right: 4em;*/
 }
 
 /*
 Header text at the top of a section (Section.header)
-Sakai ~ samSectionHeader h4 + <br />
 */
 .ambrosiaSectionHeader
 {
-	margin-top: 1em;
-	/*margin-left: -2em;*/
-	margin-bottom: 1em;
-	/*margin-right: -2em;*/
-	color: #555;
-	padding: 0;
-	font-size: 100%;
 	font-weight: bold;	
-	background-color: transparent !important;
 }
 
 /*
@@ -103,13 +91,7 @@ Header text at the top of a section that has been highlighted (Section.header)
 	background: #E4E4E4;
 	height: 2em;
 	line-height: 2em;
-	margin-top: 1em;
-	/*margin-left: -4em;*/
 	padding-left: 4px;
-	margin-bottom: 1em;
-	/*margin-right: -2em;*/
-	color: #555;
-	font-size: 100%;
 	font-weight: bold;
 }
 
