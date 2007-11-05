@@ -145,6 +145,20 @@ public class UiPropertyReference implements PropertyReference
 			}
 		}
 
+		// related references
+		// use all the direct model references
+		NodeList settings = xml.getChildNodes();
+		for (int i = 0; i < settings.getLength(); i++)
+		{
+			Node node = settings.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element innerXml = (Element) node;
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) addProperty(pRef);
+			}
+		}
+
 		ref = StringUtil.trimToNull(xml.getAttribute("indexRef"));
 		if (ref != null)
 		{
@@ -176,7 +190,7 @@ public class UiPropertyReference implements PropertyReference
 		// if we have an index ref, apply it to the focus for the index value
 		if (this.indexRef != null)
 		{
-			Object o = getNestedValue(this.indexRef, focus, false);
+			Object o = getNestedValue(context, this.indexRef, focus, false);
 			if (o != null) rv.append(o.toString());
 		}
 
@@ -207,7 +221,50 @@ public class UiPropertyReference implements PropertyReference
 			}
 		}
 
-		return (entityRefName == null ? "" : entityRefName) + (this.propertyReference == null ? "" : ("." + this.propertyReference));
+		// if the property ref has any sub-property reference, expand into an index (map) reference
+		String ref = this.propertyReference;
+		if ((ref != null) && (ref.indexOf(".{") != -1))
+		{
+			StringBuilder newRef = new StringBuilder();
+			String[] nesting = ref.split("\\.");
+			for (String s : nesting)
+			{
+				// sub-property reference
+				if (s.startsWith("{") && s.endsWith("}"))
+				{
+					try
+					{
+						String propertiesIndex = s.substring(1, s.length() - 1);
+						int i = Integer.parseInt(propertiesIndex);
+						PropertyReference pref = this.properties.get(i);
+						String index = pref.read(context, null);
+
+						newRef.append(".[");
+						newRef.append(index);
+						newRef.append("]");
+					}
+					catch (NumberFormatException e)
+					{
+					}
+					catch (IndexOutOfBoundsException e)
+					{
+					}
+				}
+
+				else
+				{
+					newRef.append(".");
+					newRef.append(s);
+				}
+			}
+			ref = newRef.toString();
+		}
+		else if (ref != null)
+		{
+			ref = "." + ref;
+		}
+
+		return (entityRefName == null ? "" : entityRefName) + (ref == null ? "" : ref);
 	}
 
 	/**
@@ -275,7 +332,7 @@ public class UiPropertyReference implements PropertyReference
 		if (entity == null) return null;
 
 		// pull out the value object
-		Object value = getNestedValue(this.propertyReference, entity, false);
+		Object value = getNestedValue(context, this.propertyReference, entity, false);
 
 		return value;
 	}
@@ -362,7 +419,7 @@ public class UiPropertyReference implements PropertyReference
 		if (entity == null) return;
 
 		// read all the way to one property short of the end - that's the object we are writing to
-		Object target = getNestedValue(this.propertyReference, entity, true);
+		Object target = getNestedValue(context, this.propertyReference, entity, true);
 
 		// write value to the property of target that is the last dotted component of our property reference
 		int pos = this.propertyReference.lastIndexOf(".");
@@ -386,7 +443,7 @@ public class UiPropertyReference implements PropertyReference
 		if (entity == null) return;
 
 		// read all the way to one property short of the end - that's the object we are writing to
-		Object target = getNestedValue(this.propertyReference, entity, true);
+		Object target = getNestedValue(context, this.propertyReference, entity, true);
 
 		// write value to the property of target that is the last dotted component of our property reference
 		int pos = this.propertyReference.lastIndexOf(".");
@@ -487,7 +544,7 @@ public class UiPropertyReference implements PropertyReference
 	 *        The entity to read from.
 	 * @return The selector value object found, or null if not.
 	 */
-	protected Object getNestedValue(String ref, Object entity, boolean skipLast)
+	protected Object getNestedValue(Context context, String ref, Object entity, boolean skipLast)
 	{
 		// if no property defined, used the entity
 		if (ref == null) return entity;
@@ -496,7 +553,7 @@ public class UiPropertyReference implements PropertyReference
 		if (ref.indexOf(".") == -1)
 		{
 			if (skipLast) return entity;
-			return getValue(entity, ref);
+			return getValue(context, entity, ref);
 		}
 
 		String[] nesting = ref.split("\\.");
@@ -506,7 +563,7 @@ public class UiPropertyReference implements PropertyReference
 			// if last and we want to skip last, get out
 			if ((skipLast) && (s == nesting[nesting.length - 1])) break;
 
-			current = getValue(current, s);
+			current = getValue(context, current, s);
 
 			// early exit if we run out of values
 			if (current == null) break;
@@ -518,13 +575,15 @@ public class UiPropertyReference implements PropertyReference
 	/**
 	 * Read the configured selector value from the entity.
 	 * 
+	 * @param context
+	 *        The context.
 	 * @param entity
 	 *        The entity to read from.
 	 * @param selector
 	 *        The selector name.
 	 * @return The selector value object found, or null if not.
 	 */
-	protected Object getValue(Object entity, String property)
+	protected Object getValue(Context context, Object entity, String property)
 	{
 		// if no selector named, just use the entity
 		if (property == null) return entity;
@@ -533,6 +592,26 @@ public class UiPropertyReference implements PropertyReference
 		if (property.startsWith("[") && property.endsWith("]"))
 		{
 			return getIndexValue(entity, property.substring(1, property.length() - 1));
+		}
+
+		// another form of index, taking the index value from the nested references
+		if (property.startsWith("{") && property.endsWith("}"))
+		{
+			try
+			{
+				String propertiesIndex = property.substring(1, property.length() - 1);
+				int i = Integer.parseInt(propertiesIndex);
+				PropertyReference ref = this.properties.get(i);
+				String index = ref.read(context, entity);
+
+				return getIndexValue(entity, index);
+			}
+			catch (NumberFormatException e)
+			{
+			}
+			catch (IndexOutOfBoundsException e)
+			{
+			}
 		}
 
 		// form a "getFoo()" based getter method name

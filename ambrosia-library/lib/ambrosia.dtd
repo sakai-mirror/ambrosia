@@ -22,7 +22,7 @@
 <!ATTLIST message selector CDATA #IMPLIED >
 <!ATTLIST message model CDATA #IMPLIED >
 
-<!ELEMENT model (missingValues)* >
+<!ELEMENT model (missingValues | model)* >
 <!ATTLIST model ref CDATA #IMPLIED >
 <!ATTLIST model indexRef CDATA #IMPLIED >
 <!ATTLIST model delegate CDATA #IMPLIED >
@@ -45,7 +45,7 @@
 <!ELEMENT missing EMPTY >
 <!ATTLIST missing value CDATA #IMPLIED >
 
-<!ELEMENT booleanModel (missingValues)* >
+<!ELEMENT booleanModel (missingValues | model)* >
 <!ATTLIST booleanModel ref CDATA #REQUIRED >
 <!ATTLIST booleanModel delegate CDATA #IMPLIED>
 <!ATTLIST booleanModel tool CDATA #IMPLIED >
@@ -53,68 +53,68 @@
 <!ATTLIST booleanModel true CDATA #IMPLIED >
 <!ATTLIST booleanModel false CDATA #IMPLIED >
 
-<!ELEMENT constantModel (missingValues)* >
+<!ELEMENT constantModel (missingValues | model)* >
 <!ATTLIST constantModel ref CDATA #IMPLIED >
 <!ATTLIST constantModel delegate CDATA #IMPLIED>
 <!ATTLIST constantModel tool CDATA #IMPLIED >
 <!ATTLIST constantModel missing CDATA #IMPLIED >
 <!ATTLIST constantModel value CDATA #IMPLIED >
 
-<!ELEMENT contextInfoModel (missingValues)* >
+<!ELEMENT contextInfoModel (missingValues | model)* >
 <!ATTLIST contextInfoModel ref CDATA #REQUIRED >
 <!ATTLIST contextInfoModel delegate CDATA #IMPLIED>
 <!ATTLIST contextInfoModel tool CDATA #IMPLIED >
 <!ATTLIST contextInfoModel missing CDATA #IMPLIED >
 <!ATTLIST contextInfoModel selector (TITLE) #IMPLIED >
 
-<!ELEMENT dateModel (missingValues)* >
+<!ELEMENT dateModel (missingValues | model)* >
 <!ATTLIST dateModel ref CDATA #REQUIRED >
 <!ATTLIST dateModel delegate CDATA #IMPLIED>
 <!ATTLIST dateModel tool CDATA #IMPLIED >
 <!ATTLIST dateModel missing CDATA #IMPLIED >
 <!ATTLIST dateModel twoLine (TRUE|FALSE) #IMPLIED >
 
-<!ELEMENT durationModel (missingValues)* >
+<!ELEMENT durationModel (missingValues | model)* >
 <!ATTLIST durationModel ref CDATA #REQUIRED >
 <!ATTLIST durationModel delegate CDATA #IMPLIED>
 <!ATTLIST durationModel tool CDATA #IMPLIED >
 <!ATTLIST durationModel missing CDATA #IMPLIED >
 <!ATTLIST durationModel concise (TRUE|FALSE) #IMPLIED >
 
-<!ELEMENT countModel (missingValues)* >
+<!ELEMENT countModel (missingValues | model)* >
 <!ATTLIST countModel ref CDATA #REQUIRED >
 <!ATTLIST countModel delegate CDATA #IMPLIED>
 <!ATTLIST countModel tool CDATA #IMPLIED >
 <!ATTLIST countModel missing CDATA #IMPLIED >
 
-<!ELEMENT floatModel (missingValues)* >
+<!ELEMENT floatModel (missingValues | model)* >
 <!ATTLIST floatModel ref CDATA #REQUIRED >
 <!ATTLIST floatModel delegate CDATA #IMPLIED>
 <!ATTLIST floatModel tool CDATA #IMPLIED >
 <!ATTLIST floatModel missing CDATA #IMPLIED >
 
-<!ELEMENT htmlModel (missingValues)* >
+<!ELEMENT htmlModel (missingValues | model)* >
 <!ATTLIST htmlModel ref CDATA #REQUIRED >
 <!ATTLIST htmlModel delegate CDATA #IMPLIED>
 <!ATTLIST htmlModel tool CDATA #IMPLIED >
 <!ATTLIST htmlModel missing CDATA #IMPLIED >
 <!ATTLIST htmlModel max CDATA #IMPLIED >
 
-<!ELEMENT iconModel (missingValues)* >
+<!ELEMENT iconModel (missingValues | model)* >
 <!ATTLIST iconModel ref CDATA #IMPLIED >
 <!ATTLIST iconModel delegate CDATA #IMPLIED>
 <!ATTLIST iconModel tool CDATA #IMPLIED >
 <!ATTLIST iconModel missing CDATA #IMPLIED >
 <!ATTLIST iconModel icon CDATA #IMPLIED >
 
-<!ELEMENT componentModel (missingValues | container)* >
+<!ELEMENT componentModel (missingValues | container | model)* >
 <!ATTLIST componentModel ref CDATA #IMPLIED >
 <!ATTLIST componentModel delegate CDATA #IMPLIED>
 <!ATTLIST componentModel tool CDATA #IMPLIED >
 <!ATTLIST componentModel missing CDATA #IMPLIED >
 <!ATTLIST componentModel icon CDATA #IMPLIED >
 
-<!ELEMENT textModel (missingValues)* >
+<!ELEMENT textModel (missingValues | model)* >
 <!ATTLIST textModel ref  CDATA #REQUIRED >
 <!ATTLIST textModel delegate CDATA #IMPLIED>
 <!ATTLIST textModel tool CDATA #IMPLIED >
@@ -122,27 +122,27 @@
 <!ATTLIST textModel max CDATA #IMPLIED >
 <!ATTLIST textModel stripHtml (TRUE|FALSE) #IMPLIED >
 
-<!ELEMENT urlModel (missingValues)* >
+<!ELEMENT urlModel (missingValues | model)* >
 <!ATTLIST urlModel ref CDATA #REQUIRED >
 <!ATTLIST urlModel delegate CDATA #IMPLIED>
 <!ATTLIST urlModel tool CDATA #IMPLIED >
 <!ATTLIST urlModel missing CDATA #IMPLIED >
 
-<!ELEMENT userInfoModel (missingValues)* >
+<!ELEMENT userInfoModel (missingValues | model)* >
 <!ATTLIST userInfoModel ref CDATA #REQUIRED >
 <!ATTLIST userInfoModel delegate CDATA #IMPLIED>
 <!ATTLIST userInfoModel tool CDATA #IMPLIED >
 <!ATTLIST userInfoModel missing CDATA #IMPLIED >
 <!ATTLIST userInfoModel selector (DISPLAYNAME|SORTNAME) #IMPLIED >
 
-<!ELEMENT enumModel (missingValues)* >
+<!ELEMENT enumModel (missingValues | model)* >
 <!ATTLIST enumModel ref CDATA #REQUIRED >
 <!ATTLIST enumModel delegate CDATA #IMPLIED>
 <!ATTLIST enumModel tool CDATA #IMPLIED >
 <!ATTLIST enumModel missing CDATA #IMPLIED >
 <!ATTLIST enumModel messageRoot CDATA #IMPLIED >
 
-<!ELEMENT pagingModel (missingValues)* >
+<!ELEMENT pagingModel (missingValues | model)* >
 <!ATTLIST pagingModel ref CDATA #REQUIRED >
 <!ATTLIST pagingModel delegate CDATA #IMPLIED>
 <!ATTLIST pagingModel tool CDATA #IMPLIED >

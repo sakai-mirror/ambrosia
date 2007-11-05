@@ -417,55 +417,52 @@ public class UiSelection extends UiComponent implements Selection
 			}
 		}
 
-		// if that didn't do it, pick them up from the model
-		if (values.isEmpty() && display.isEmpty())
+		// add in any from the model
+		if ((this.selectionValueReference != null) && (this.selectionDisplayReference != null) && (this.selectionReference != null))
 		{
-			if ((this.selectionValueReference != null) && (this.selectionDisplayReference != null) && (this.selectionReference != null))
+			// get the main collection
+			Collection collection = null;
+			Object obj = this.selectionReference.readObject(context, focus);
+			if (obj != null)
 			{
-				// get the main collection
-				Collection collection = null;
-				Object obj = this.selectionReference.readObject(context, focus);
-				if (obj != null)
+				if (obj instanceof Collection)
 				{
-					if (obj instanceof Collection)
-					{
-						collection = (Collection) obj;
-					}
-
-					else if (obj.getClass().isArray())
-					{
-						Object[] array = (Object[]) obj;
-						collection = new ArrayList(array.length);
-						for (Object o : array)
-						{
-							collection.add(o);
-						}
-					}
+					collection = (Collection) obj;
 				}
 
-				// if we got something
-				if (collection != null)
+				else if (obj.getClass().isArray())
 				{
-					// like iteration, make each object available then get the value and display
-					int index = -1;
-					for (Object o : collection)
+					Object[] array = (Object[]) obj;
+					collection = new ArrayList(array.length);
+					for (Object o : array)
 					{
-						index++;
+						collection.add(o);
+					}
+				}
+			}
 
-						// place the item
-						if (this.iteratorName != null)
-						{
-							context.put(this.iteratorName, o, this.selectionReference.getEncoding(context, o, index));
-						}
+			// if we got something
+			if (collection != null)
+			{
+				// like iteration, make each object available then get the value and display
+				int index = -1;
+				for (Object o : collection)
+				{
+					index++;
 
-						values.add(this.selectionValueReference.read(context, o));
-						display.add(this.selectionDisplayReference.read(context, o));
+					// place the item
+					if (this.iteratorName != null)
+					{
+						context.put(this.iteratorName, o, this.selectionReference.getEncoding(context, o, index));
+					}
 
-						// remove item
-						if (this.iteratorName != null)
-						{
-							context.remove(this.iteratorName);
-						}
+					values.add(this.selectionValueReference.read(context, o));
+					display.add(this.selectionDisplayReference.read(context, o));
+
+					// remove item
+					if (this.iteratorName != null)
+					{
+						context.remove(this.iteratorName);
 					}
 				}
 			}
@@ -909,7 +906,7 @@ public class UiSelection extends UiComponent implements Selection
 			boolean selected = value.contains(val);
 
 			// the option
-			response.println("<option " + onclick + " value=\"" + val + "\" " + (selected ? "SELECTED" : "") + ">" + message + "</option>");
+			response.println("<option " + onclick + "value=\"" + val + "\" " + (selected ? "SELECTED" : "") + ">" + message + "</option>");
 		}
 
 		response.println("</select>");
