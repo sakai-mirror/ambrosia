@@ -272,13 +272,11 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
-		// response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
-
 		// title
 		if (this.titleMessage != null)
 		{
-			response.println("<label for=\"" + id + "\">");
-			response.println(this.titleMessage.getMessage(context, focus));
+			response.print("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
+			response.print(this.titleMessage.getMessage(context, focus));
 			response.println("</label>");
 		}
 
@@ -307,8 +305,6 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 				+ "</span>");
 
 		context.editComponentRendered(id);
-
-		// response.println("</div>");
 
 		// the shadow value field (holding the last known value)
 		if (this.sumToId != null)
