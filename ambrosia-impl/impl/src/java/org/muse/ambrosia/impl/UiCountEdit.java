@@ -449,10 +449,9 @@ public class UiCountEdit extends UiComponent implements CountEdit
 		// title
 		if (this.summaryTitle != null)
 		{
-			response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
-			response.println("<label for=\"" + summaryId + "\">");
-			response.println(Validator.escapeHtml(this.summaryTitle.getMessage(context, focus)));
-			response.println("</label><br />");
+			response.println("<label class=\"ambrosiaComponentTitle\" for=\"" + summaryId + "\">");
+			response.println(this.summaryTitle.getMessage(context, focus));
+			response.println("</label>");
 		}
 
 		response.println("<input type=\"text\" id=\"" + summaryId + "\" name=\"" + summaryId + "\" size=\"" + Integer.toString(numCols)
