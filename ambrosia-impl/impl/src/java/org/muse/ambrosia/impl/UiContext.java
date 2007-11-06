@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Container;
@@ -230,8 +231,14 @@ public class UiContext implements Context
 	/** A print write to use to collect output rather than send it to the real writer. */
 	protected PrintWriter collectingWriter = null;
 
+	/** we might need to nest collecting calls . */
+	protected Stack<PrintWriter> collectingWriterStack = new Stack<PrintWriter>();
+
 	/** The stream collecting the bytes while collecting. */
 	protected ByteArrayOutputStream collectionStream = null;
+
+	/** we might need to nest collecting calls . */
+	protected Stack<ByteArrayOutputStream> collectionStreamStack = new Stack<ByteArrayOutputStream>();
 
 	/** The tool destination of the request. */
 	protected String destination = null;
@@ -416,8 +423,8 @@ public class UiContext implements Context
 		}
 
 		// clear out of collecting mode
-		this.collectionStream = null;
-		this.collectingWriter = null;
+		this.collectionStream = this.collectionStreamStack.empty() ? null : this.collectionStreamStack.pop();
+		this.collectingWriter = this.collectingWriterStack.empty() ? null : this.collectingWriterStack.pop();
 
 		return rv;
 	}
@@ -639,10 +646,11 @@ public class UiContext implements Context
 	 */
 	public void setCollecting()
 	{
-		if (this.collectingWriter != null) return;
+		if (this.collectingWriter != null) this.collectingWriterStack.push(this.collectingWriter);
+		if (this.collectionStream != null) this.collectionStreamStack.push(this.collectionStream);
 
 		this.collectionStream = new ByteArrayOutputStream();
-		collectingWriter = new PrintWriter(this.collectionStream);
+		this.collectingWriter = new PrintWriter(this.collectionStream);
 	}
 
 	/**
