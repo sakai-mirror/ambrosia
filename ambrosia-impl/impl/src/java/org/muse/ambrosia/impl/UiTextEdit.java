@@ -238,13 +238,11 @@ public class UiTextEdit extends UiComponent implements TextEdit
 				// response.println("<span class=\"reqStarInline\">*</span>");
 			}
 
-			response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
-
 			// title
 			if (this.titleMessage != null)
 			{
-				response.println("<label for=\"" + id + "\">");
-				response.println(this.titleMessage.getMessage(context, focus));
+				response.print("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
+				response.print(this.titleMessage.getMessage(context, focus));
 				response.println("</label>");
 			}
 
@@ -254,8 +252,6 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			context.editComponentRendered(id);
 
 			renderOptions(context, focus, id);
-
-			response.println("</div>");
 		}
 
 		// or multi line
@@ -271,23 +267,20 @@ public class UiTextEdit extends UiComponent implements TextEdit
 				// response.println("<span class=\"reqStarInline\">*</span>");
 			}
 
-			response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditMultiple\">");
-
 			if (this.titleMessage != null)
 			{
-				response.println("<label class=\"block\" for=\"" + id + "\">");
-				response.println(this.titleMessage.getMessage(context, focus));
+				response.print("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
+				response.print(this.titleMessage.getMessage(context, focus));
 				response.println("</label>");
 			}
 
-			response.println("<textarea " + (readOnly ? " class=\"ambrosiaTextEditDisabled\"" : "") + "id=\"" + id + "\" name=\"" + id + "\" cols="
+			// TODO: (readOnly ? " class=\"ambrosiaTextEditDisabled\"" : "") +
+			response.println("<textarea " + "id=\"" + id + "\" name=\"" + id + "\" cols="
 					+ Integer.toString(numCols) + " rows=" + Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
 
 			context.editComponentRendered(id);
-
-			response.println("</div>");
 		}
 
 		// the decode directive

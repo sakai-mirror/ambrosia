@@ -76,6 +76,24 @@ Around each section of a view (Section)
 }
 
 /*
+Items in a container.
+*/
+.ambrosiaContainerComponent
+{
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+/*
+For component titles.
+*/
+.ambrosiaComponentTitle
+{
+	display:block;
+	font-weight: bold;
+}
+
+/*
 Header text at the top of a section (Section.header)
 */
 .ambrosiaSectionHeader
@@ -272,7 +290,6 @@ Sakai ~ itemAction
 
 /*
 Divider in a navigation bar between navigations (use in a span around a &nbsp;)
-Sakai ~ style...
 */
 .ambrosiaDivider
 {
@@ -412,142 +429,6 @@ Sakai ~ listHier lines nolines tableAction
 {
 	vertical-align:middle;
 	padding: .3em;
-}
-
-/*
-Match
-*/
-.ambrosiaMatchHighlight
-{
-	margin: 1em 0;
-	padding: .5em;
-	border: 1px solid #eee;
-	width: auto;
-}
-
-/*
-MenuBar
-Sakai ~ navIntraTool
-*/
-.ambrosiaMenuBar
-{
-	height: 1.5em;
-	white-space: nowrap;
-	background-color: #eee;	
-	padding:.3em;
-	margin: 0;
-	line-height: 1.5em;
-	border-top:1px solid #eee;
-	border-bottom:1px solid #eee;
-	text-align: left;
-	font-size: .9em;
-	font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
-}
-.ambrosiaMenuBar a,
-.ambrosiaMenuBar a:link
-{
-	margin-right:1em;
-	text-decoration: underline;
-	white-space: nowrap;
-	display: inline-block
-}
-.ambrosiaMenuBar a:visited
-{
-	color: #35b;
-	text-decoration: underline;
-}
-.ambrosiaMenuBar a:hover
-{
-	color: #33f;
-	text-decoration: underline;
-}
-.ambrosiaMenuBar a:active
-{
-	color: #33f;
-	text-decoration: none;
-}
-/*ie does not understand font sizing well - so fix here with the star hack*/
-* html .ambrosiaMenuBar
-{
-	font-size:.85em;
-}
-.ambrosiaMenuBar
-{
-	border-bottom:1px solid silver;
-}
-.ambrosiaMenuBar input
-{
-	padding: 0;
-	border: none;
-	background: transparent;
-}
-.ambrosiaMenuBar input.disabled
-{
-	padding-bottom: 1px;
-	border-bottom: none;
-	background: transparent;
-}
-.ambrosiaMenuBar input.enabled
-{
-	color: #35b;
-	border-bottom: 1px solid #35b;
-	background: transparent;
-}
-.ambrosiaMenuBar input.enabled:hover
-{
-	color:#33f;
-	cursor: pointer;
-}
-.ambrosiaMenuBar span.separator
-{
-	left: -.5em;
-	position: relative;
-}
-
-/*
-Text
-*/
-.ambrosiaText
-{
-}
-
-/*
-TextEdit
-Sakai ~ shorttext longtext
-*/
-.ambrosiaTextEdit
-{
-	margin-bottom: 1em;
-}
-
-.ambrosiaTextEditSingle
-{
-}
-
-.ambrosiaTextEditMultiple
-{
-}
-
-.ambrosiaTextEditDisabled
-{
-	background-color: white;
-	color: black;
-}
-
-/*
-FillIn
-*/
-.ambrosiaFillIn
-{
-	margin-bottom: 1em;
-}
-
-/*
-Selection
-*/
-.ambrosiaSelection
-{
-	margin-bottom: 1em;
 }
 
 /*

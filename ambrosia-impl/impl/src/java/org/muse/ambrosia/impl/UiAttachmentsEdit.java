@@ -184,13 +184,18 @@ public class UiAttachmentsEdit extends UiComponent implements AttachmentsEdit
 
 		PrintWriter response = context.getResponseWriter();
 
+		int idRoot = context.getUniqueId();
+		String id = this.getClass().getSimpleName() + "_" + idRoot;
+
 		// title
 		if (this.title != null)
 		{
-			response.println("<div class=\"ambrosiaAttachmentsTitle\">" + this.title.getMessage(context, focus) + "</div>");
+			response.println("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
+			response.println(this.title.getMessage(context, focus));
+			response.println("</label>");
 		}
 
-		response.println("<ul class=\"ambrosiaAttachmentsList\">");
+		response.println("<ul id=\"" + id + "\" class=\"ambrosiaAttachmentsList\">");
 
 		// attachments
 		if (this.attachments != null)

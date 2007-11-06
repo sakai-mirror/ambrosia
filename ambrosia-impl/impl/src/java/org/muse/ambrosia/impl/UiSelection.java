@@ -527,9 +527,16 @@ public class UiSelection extends UiComponent implements Selection
 			}
 		}
 
-		response.println("<div class=\"ambrosiaSelection\">");
+		// title
+		if (this.titleMessage != null)
+		{
+			response.print("<div class=\"ambrosiaComponentTitle\">");
+			response.print(this.titleMessage.getMessage(context, focus));
+			response.println("</div>");
+		}
 
-		if (values.isEmpty())
+		// for a single option
+		if (values.size() == 1)
 		{
 			String onclick = "";
 
@@ -575,7 +582,7 @@ public class UiSelection extends UiComponent implements Selection
 			}
 
 			// the check box
-			response.println("<input " + onclick + "type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + this.selectedValue + "\" "
+			response.println("<input " + onclick + "type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + values.get(0) + "\" "
 					+ (checked ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 
 			// the decode directive
@@ -587,24 +594,16 @@ public class UiSelection extends UiComponent implements Selection
 			}
 
 			// title after (right) for the single check box version
-			if (this.titleMessage != null)
+			if ((display.size() > 0) && (display.get(0) != null))
 			{
-				response.println("<label for=\"" + id + "\">");
-				response.println(this.titleMessage.getMessage(context, focus));
+				response.print("<label for=\"" + id + "\">");
+				response.print(display.get(0));
 				response.println("</label>");
 			}
 		}
 
 		else
 		{
-			// title first for multiple choices
-			if (this.titleMessage != null)
-			{
-				response.println("<label for=\"" + id + "\">");
-				response.println(this.titleMessage.getMessage(context, focus) + "<br />");
-				response.println("</label>");
-			}
-
 			final StringBuffer dependency = new StringBuffer();
 			dependency.append("var " + dependencyId + "=[");
 			String startingValue = null;
@@ -672,16 +671,21 @@ public class UiSelection extends UiComponent implements Selection
 				if (single)
 				{
 					// the radio button
-					response.println("<input " + onclick + "type=\"radio\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + val + "\" "
-							+ (selected ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " /> " + message);
+					response.println("<input " + onclick + "type=\"radio\" name=\"" + id + "\" id=\"" + id + "_" + i + "\" value=\"" + val + "\" "
+							+ (selected ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 				}
 
 				// for multiple selection, use a checkbox set
 				else
 				{
-					response.println("<input " + onclick + "type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + val + "\" "
-							+ (selected ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " /> " + message);
+					response.println("<input " + onclick + "type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "_" + i + "\" value=\"" + val + "\" "
+							+ (selected ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 				}
+
+				// message
+				response.print("<label for=\"" + id + "_" + i + "\">");
+				response.print(message);
+				response.println("</label>");
 
 				// container of dependent components
 				Container container = this.selectionContainers.get(val);
@@ -702,7 +706,10 @@ public class UiSelection extends UiComponent implements Selection
 					context.addEditComponentRenderListener(listener);
 
 					// render the dependent components
-					container.render(context, focus);
+					for (Component c : container.getContained())
+					{
+						c.render(context, focus);
+					}
 
 					// stop listening
 					context.removeEditComponentRenderListener(listener);
@@ -711,8 +718,7 @@ public class UiSelection extends UiComponent implements Selection
 					dependency.append("],");
 				}
 
-				// contained stuff will most likely include a break...
-				if ((this.orientation == Orientation.vertical) && (container == null))
+				if (this.orientation == Orientation.vertical)
 				{
 					response.println("<br />");
 				}
@@ -733,8 +739,6 @@ public class UiSelection extends UiComponent implements Selection
 						+ "prop_" + decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
 			}
 		}
-
-		response.println("</div>");
 	}
 
 	/**
@@ -865,14 +869,11 @@ public class UiSelection extends UiComponent implements Selection
 
 		// Note: correct / incorrect markings not supported for dropdown
 
-		// TODO:
-		response.println("<div class=\"ambrosiaSelection\">");
-
 		// title
 		if (this.titleMessage != null)
 		{
-			response.println("<label for=\"" + id + "\">");
-			response.println(this.titleMessage.getMessage(context, focus));
+			response.print("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
+			response.print(this.titleMessage.getMessage(context, focus));
 			response.println("</label>");
 		}
 
@@ -917,7 +918,5 @@ public class UiSelection extends UiComponent implements Selection
 			response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\"" + "prop_"
 					+ decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
 		}
-
-		response.println("</div>");
 	}
 }

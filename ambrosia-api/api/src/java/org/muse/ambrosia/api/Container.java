@@ -46,4 +46,11 @@ public interface Container extends Component
 	 * @return The contained components with this id, or an empty list not found.
 	 */
 	List<Component> findComponents(String id);
+
+	/**
+	 * Access the contained components.
+	 * 
+	 * @return The contained components.
+	 */
+	List<Component> getContained();
 }

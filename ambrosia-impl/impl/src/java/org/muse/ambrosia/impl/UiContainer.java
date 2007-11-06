@@ -21,6 +21,7 @@
 
 package org.muse.ambrosia.impl;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,12 +123,24 @@ public class UiContainer extends UiComponent implements Container
 	/**
 	 * {@inheritDoc}
 	 */
+	public List<Component> getContained()
+	{
+		return this.contained;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void render(Context context, Object focus)
 	{
+		PrintWriter response = context.getResponseWriter();
+
 		// render the contained
 		for (Component c : this.contained)
 		{
+			response.println("<div class=\"ambrosiaContainerComponent\">");
 			c.render(context, focus);
+			response.println("</div>");
 		}
 	}
 }

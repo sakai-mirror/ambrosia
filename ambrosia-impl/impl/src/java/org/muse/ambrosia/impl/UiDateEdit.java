@@ -223,13 +223,11 @@ public class UiDateEdit extends UiComponent implements DateEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
-		response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
-
 		// title
 		if (this.titleMessage != null)
 		{
-			response.println("<label for=\"" + id + "\">");
-			response.println(this.titleMessage.getMessage(context, focus));
+			response.print("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
+			response.print(this.titleMessage.getMessage(context, focus));
 			response.println("</label>");
 		}
 
@@ -248,8 +246,6 @@ public class UiDateEdit extends UiComponent implements DateEdit
 				+ "</span>");
 
 		context.editComponentRendered(id);
-
-		response.println("</div>");
 
 		// the decode directive
 		if ((this.propertyReference != null) && (!readOnly))

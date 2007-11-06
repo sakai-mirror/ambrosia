@@ -215,12 +215,10 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 				// response.println("<span class=\"reqStarInline\">*</span>");
 			}
 
-			response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditSingle\">");
-
 			// title
 			if (this.titleMessage != null)
 			{
-				response.println("<label for=\"" + id + "\">");
+				response.println("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
 				response.println(this.titleMessage.getMessage(context, focus));
 				response.println("</label>");
 			}
@@ -229,8 +227,6 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 					+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 
 			context.editComponentRendered(id);
-
-			response.println("</div>");
 		}
 
 		// or multi line
@@ -246,11 +242,9 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 				// response.println("<span class=\"reqStarInline\">*</span>");
 			}
 
-			response.println("<div class=\"ambrosiaTextEdit ambrosiaTextEditMultiple\">");
-
 			if (this.titleMessage != null)
 			{
-				response.println("<label class=\"block\" for=\"" + id + "\">");
+				response.println("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
 				response.println(this.titleMessage.getMessage(context, focus));
 				response.println("</label>");
 			}
@@ -259,8 +253,6 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 					+ Integer.toString(numCols) + " rows=" + Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
-
-			response.println("</div>");
 		}
 
 		// the decode directive
