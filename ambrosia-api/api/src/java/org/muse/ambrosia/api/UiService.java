@@ -415,13 +415,6 @@ public interface UiService
 	Fragment newFragment(InputStream in);
 
 	/**
-	 * Construct a new Match
-	 * 
-	 * @return a new Match
-	 */
-	Match newMatch();
-
-	/**
 	 * Construct a new MenuBar
 	 * 
 	 * @return a new MenuBar

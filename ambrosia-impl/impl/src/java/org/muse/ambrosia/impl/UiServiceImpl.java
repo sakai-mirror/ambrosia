@@ -92,7 +92,6 @@ import org.muse.ambrosia.api.IconKey;
 import org.muse.ambrosia.api.IconPropertyReference;
 import org.muse.ambrosia.api.Instructions;
 import org.muse.ambrosia.api.Interface;
-import org.muse.ambrosia.api.Match;
 import org.muse.ambrosia.api.MenuBar;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.ModeBar;
@@ -658,14 +657,6 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
-	public Match newMatch()
-	{
-		return new UiMatch();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public MenuBar newMenuBar()
 	{
 		return new UiMenuBar();
@@ -932,7 +923,6 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("iconKey")) return new UiIconKey(this, xml);
 		if (xml.getTagName().equals("instructions")) return new UiInstructions(this, xml);
 		if (xml.getTagName().equals("interface")) return new UiInterface(this, xml);
-		if (xml.getTagName().equals("match")) return new UiMatch(this, xml);
 		if (xml.getTagName().equals("menuBar")) return new UiMenuBar();
 		if (xml.getTagName().equals("modeBar")) return new UiModeBar(this, xml);
 		if (xml.getTagName().equals("modelComponent")) return new UiModelComponent(this, xml);
