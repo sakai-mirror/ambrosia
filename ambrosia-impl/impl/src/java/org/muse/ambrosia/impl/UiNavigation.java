@@ -872,6 +872,8 @@ public class UiNavigation extends UiComponent implements Navigation
 			}
 		}
 
+		response.print("<span style=\"height:2em;white-space:nowrap\">");
+
 		switch (this.style)
 		{
 			case link:
@@ -952,5 +954,7 @@ public class UiNavigation extends UiComponent implements Navigation
 				break;
 			}
 		}
+		
+		response.print("</span>");
 	}
 }

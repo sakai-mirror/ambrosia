@@ -77,9 +77,6 @@ public class UiModeBar extends UiSection implements ModeBar
 		// the bar
 		response.println("<div class=\"ambrosiaModeBar\"" + (this.width != null ? (" style=\"width: " + this.width + ";\"") : "") + ">");
 
-		// wrap the items
-		response.println("<div class=\"ambrosiaNavigationItems\">");
-
 		// render
 		Component last = this.contained.get(this.contained.size() - 1);
 		for (Component c : this.contained)
@@ -93,6 +90,6 @@ public class UiModeBar extends UiSection implements ModeBar
 			}
 		}
 
-		response.println("</div></div>");
+		response.println("</div>");
 	}
 }

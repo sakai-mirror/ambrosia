@@ -293,6 +293,8 @@ public class UiPager extends UiComponent implements Pager
 
 		PrintWriter response = context.getResponseWriter();
 
+		response.print("<span style=\"white-space:nowrap\">");
+
 		String pagingRef = this.pagingModel.getFullReference(context);
 
 		Navigation first = new UiNavigation().setStyle(Navigation.Style.link).setDescription(this.firstMessage).setDestination(this.destination)
@@ -340,6 +342,8 @@ public class UiPager extends UiComponent implements Pager
 
 		context.put(PagingPropertyReference.SELECTOR, PagingPropertyReference.LAST);
 		last.render(context, focus);
+
+		response.print("</span>");
 
 		context.remove(PagingPropertyReference.SELECTOR);
 	}

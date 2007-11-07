@@ -87,15 +87,19 @@ public class UiNavigationBar extends UiSection implements NavigationBar
 		// the bar
 		response.println("<div class=\"ambrosiaNavigationBar\"" + (this.width != null ? (" style=\"width: " + this.width + ";\"") : "") + ">");
 
-		// wrap the items
-		response.println("<div class=\"ambrosiaNavigationItems\">");
-
 		// render
-		for (Component c : this.contained)
+		if (this.contained.isEmpty())
 		{
-			c.render(context, focus);
+			response.print("&nbsp;");
+		}
+		else
+		{
+			for (Component c : this.contained)
+			{
+				c.render(context, focus);
+			}
 		}
 
-		response.println("</div></div>");
+		response.println("</div>");
 	}
 }

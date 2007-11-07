@@ -878,9 +878,6 @@ public class UiEntityList extends UiComponent implements EntityList
 		// the bar
 		response.println("<div class=\"ambrosiaEntityActionBar\">");
 
-		// wrap the items
-		response.println("<div class=\"ambrosiaNavigationItems\">");
-
 		// render any column-related ones
 		int colNum = 0;
 		for (EntityListColumn col : this.columns)
@@ -932,6 +929,6 @@ public class UiEntityList extends UiComponent implements EntityList
 		// render the pager
 		if (this.pager != null) this.pager.render(context, focus);
 
-		response.println("</div></div>");
+		response.println("</div>");
 	}
 }

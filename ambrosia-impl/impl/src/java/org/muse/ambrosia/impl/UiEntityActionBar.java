@@ -76,15 +76,12 @@ public class UiEntityActionBar extends UiSection implements EntityActionBar
 		// the bar
 		response.println("<div class=\"ambrosiaEntityActionBar\"" + (this.width != null ? (" style=\"width: " + this.width + ";\"") : "") + ">");
 
-		// wrap the items
-		response.println("<div class=\"ambrosiaNavigationItems\">");
-
 		// render
 		for (Component c : this.contained)
 		{
 			c.render(context, focus);
 		}
 
-		response.println("</div></div>");
+		response.println("</div>");
 	}
 }

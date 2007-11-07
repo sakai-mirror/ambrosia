@@ -98,7 +98,8 @@ Header text at the top of a section (Section.header)
 */
 .ambrosiaSectionHeader
 {
-	font-weight: bold;	
+	font-weight: bold;
+	line-height: 2em;
 }
 
 /*
@@ -107,10 +108,9 @@ Header text at the top of a section that has been highlighted (Section.header)
 .ambrosiaSectionHeaderHighlight
 {
 	background: #E4E4E4;
-	height: 2em;
-	line-height: 2em;
 	padding-left: 4px;
 	font-weight: bold;
+	line-height: 2em;
 }
 
 /*
@@ -121,10 +121,8 @@ Sakai ~ navPanel + style
 {
 	background: #EEEEEE;
 	border: 1px solid #bbb;
-	line-height: 2em;
-	height: 2.3em;
 	margin: 5px 0 0 0;
-	white-space: nowrap;
+	line-height: 2em;
 }
 
 /*
@@ -134,11 +132,9 @@ Mode bar that contains the tool mode navigations at the very top of the view (Mo
 {
 	background: #EEEEEE;
 	border: 1px solid #bbb;
-	line-height: 2em;
-	height: 2.3em;
 	margin: 5px 0 0 0;
-	white-space: nowrap;
-	text-align: center
+	text-align: center;
+	line-height: 2em;
 }
 
 /*
@@ -150,10 +146,6 @@ Entity action bar that contains the navigations that pertain to entities in a li
 	border-left: 1px solid #bbb;
 	border-right: 1px solid #bbb;
 	line-height: 2em;
-	height: 2.3em;
-	margin: 5px 0 0 0;
-	white-space: nowrap;
-	padding: 0;
 }
 
 /*
@@ -164,19 +156,6 @@ Container for fine print (FinePrint)
 	text-align: right;
 	font-style: italic;
 	font-size: 0.8em;
-}
-
-/*
-Contains the navigations in the navigation bar (NavigationBar Navigation)
-Sakai ~ itemNav + style
-*/
-.ambrosiaNavigationItems
-{
-	font-size: 1em;
-	padding: .2em;
-	width: auto;
-	line-height: 2em;
-	margin: 0 .1em;
 }
 
 /*
@@ -294,7 +273,7 @@ Divider in a navigation bar between navigations (use in a span around a &nbsp;)
 .ambrosiaDivider
 {
 	border: none;
-	padding: 0 0 0 3em;
+	padding: 0 0 0 2em;
 	white-space: nowrap;
 }
 
@@ -410,7 +389,7 @@ Gap
 */
 .ambrosiaGap
 {
-	height:5em
+	height:3em
 }
 
 /*
