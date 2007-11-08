@@ -216,10 +216,10 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// read only?
 		boolean readOnly = false;
@@ -335,6 +335,8 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 			// add the field name / id to the focus path
 			context.addFocusId(id);
 		}
+
+		return true;
 	}
 
 	/**

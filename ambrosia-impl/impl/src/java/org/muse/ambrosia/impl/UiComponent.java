@@ -103,8 +103,9 @@ public class UiComponent implements Component
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
+		return false;
 	}
 
 	/**

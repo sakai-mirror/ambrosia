@@ -56,15 +56,16 @@ public class UiOverlay extends UiContainer implements Overlay
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		PrintWriter response = context.getResponseWriter();
 
 		// setup the container
-		response.println("<div id=\"" + getId(context) + "\" class=\"ambrosiaOverlay\" style=\"width:500px;height:250px;overflow:auto;display:none\">");
+		response.println("<div id=\"" + getId(context)
+				+ "\" class=\"ambrosiaOverlay\" style=\"width:500px;height:250px;overflow:auto;display:none\">");
 		// TODO: style width height left overflow:auto
 		// TODO: display:none
 
@@ -73,5 +74,7 @@ public class UiOverlay extends UiContainer implements Overlay
 
 		// end the container
 		response.println("</div>");
+
+		return true;
 	}
 }

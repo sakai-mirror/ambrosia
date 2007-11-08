@@ -100,7 +100,7 @@ public class UiEntityDisplayRow extends UiContainer implements EntityDisplayRow
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object entity)
+	public boolean render(Context context, Object entity)
 	{
 		// start with the property
 		if (getProperty() != null)
@@ -115,6 +115,8 @@ public class UiEntityDisplayRow extends UiContainer implements EntityDisplayRow
 		{
 			c.render(context, entity);
 		}
+
+		return true;
 	}
 
 	/**

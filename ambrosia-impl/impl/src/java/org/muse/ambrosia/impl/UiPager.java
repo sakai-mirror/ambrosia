@@ -286,10 +286,10 @@ public class UiPager extends UiComponent implements Pager
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		PrintWriter response = context.getResponseWriter();
 
@@ -346,6 +346,8 @@ public class UiPager extends UiComponent implements Pager
 		response.print("</span>");
 
 		context.remove(PagingPropertyReference.SELECTOR);
+
+		return true;
 	}
 
 	/**

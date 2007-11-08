@@ -55,17 +55,18 @@ public class UiFinePrint extends UiText implements FinePrint
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
+
+		if (this.message == null) return false;
 
 		PrintWriter response = context.getResponseWriter();
 
 		// we allow rich text / html
-		if (this.message != null)
-		{
-			response.println("<div class =\"ambrosiaFinePrint\" >" + this.message.getMessage(context, focus) + "</div>");
-		}
+		response.println("<div class =\"ambrosiaFinePrint\" >" + this.message.getMessage(context, focus) + "</div>");
+
+		return true;
 	}
 }

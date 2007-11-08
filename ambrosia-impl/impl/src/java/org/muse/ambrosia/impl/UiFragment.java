@@ -70,10 +70,12 @@ public class UiFragment extends UiContainer implements Fragment
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
+
+		if (this.contained.isEmpty()) return false;
 
 		// setup the custom messages
 		if (this.messages != null)
@@ -86,12 +88,14 @@ public class UiFragment extends UiContainer implements Fragment
 		{
 			c.render(context, focus);
 		}
-		
+
 		// remove the custom messages
 		if (this.messages != null)
 		{
 			context.popMessages();
 		}
+
+		return true;
 	}
 
 	/**

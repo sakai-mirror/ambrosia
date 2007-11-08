@@ -144,10 +144,10 @@ public class UiToggle extends UiComponent implements Toggle
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// disabled?
 		boolean disabled = isDisabled(context, focus);
@@ -268,6 +268,8 @@ public class UiToggle extends UiComponent implements Toggle
 				break;
 			}
 		}
+
+		return true;
 	}
 
 	/**

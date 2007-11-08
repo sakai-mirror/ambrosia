@@ -176,10 +176,10 @@ public class UiDateEdit extends UiComponent implements DateEdit
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// read only?
 		boolean readOnly = false;
@@ -240,8 +240,8 @@ public class UiDateEdit extends UiComponent implements DateEdit
 
 		// TODO: make the icon link to a popup picker!
 
-		response.println("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
-				+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />"
+		response.println("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
+				+ Integer.toString(numCols) + "\" value=\"" + Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : "")
 				+ "</span>");
 
@@ -269,6 +269,8 @@ public class UiDateEdit extends UiComponent implements DateEdit
 			// add the field name / id to the focus path
 			context.addFocusId(id);
 		}
+
+		return true;
 	}
 
 	/**

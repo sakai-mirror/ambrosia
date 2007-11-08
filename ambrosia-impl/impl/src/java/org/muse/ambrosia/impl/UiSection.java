@@ -174,7 +174,7 @@ public class UiSection extends UiContainer implements Section
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		PrintWriter response = context.getResponseWriter();
 
@@ -189,7 +189,7 @@ public class UiSection extends UiContainer implements Section
 		}
 
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// the iterator
 		Object iterator = null;
@@ -231,7 +231,7 @@ public class UiSection extends UiContainer implements Section
 				context.remove("ambrosia_iteration_index");
 			}
 
-			return;
+			return true;
 		}
 
 		// if iterating over an array, we will repeat our contents once for each one
@@ -267,11 +267,13 @@ public class UiSection extends UiContainer implements Section
 				context.remove("ambrosia_iteration_index");
 			}
 
-			return;
+			return true;
 		}
 
 		// if no repeating entity, just render once
 		renderContents(context, focus);
+
+		return true;
 	}
 
 	/**

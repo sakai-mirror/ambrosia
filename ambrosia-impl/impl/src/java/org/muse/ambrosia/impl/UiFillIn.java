@@ -224,10 +224,10 @@ public class UiFillIn extends UiComponent implements FillIn
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// read only?
 		boolean readOnly = false;
@@ -445,6 +445,8 @@ public class UiFillIn extends UiComponent implements FillIn
 			// add the first field id to the focus path
 			context.addFocusId(id + "0");
 		}
+
+		return true;
 	}
 
 	/**

@@ -264,10 +264,10 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// read only?
 		boolean readOnly = false;
@@ -414,6 +414,8 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			// add the field name / id to the focus path
 			context.addFocusId(id);
 		}
+
+		return true;
 	}
 
 	/**

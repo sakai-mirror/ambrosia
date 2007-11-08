@@ -131,7 +131,7 @@ public class UiContainer extends UiComponent implements Container
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		PrintWriter response = context.getResponseWriter();
 
@@ -142,5 +142,7 @@ public class UiContainer extends UiComponent implements Container
 			c.render(context, focus);
 			response.println("</div>");
 		}
+
+		return true;
 	}
 }

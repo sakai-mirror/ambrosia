@@ -178,8 +178,11 @@ public class UiIconKey extends UiComponent implements IconKey
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
+		// included?
+		if (!isIncluded(context, focus)) return false;
+
 		if (this.iconUrls.size() > 0)
 		{
 			renderInternal(context, focus);
@@ -188,6 +191,8 @@ public class UiIconKey extends UiComponent implements IconKey
 		{
 			renderReferences(context, focus);
 		}
+
+		return true;
 	}
 
 	/**
@@ -231,9 +236,6 @@ public class UiIconKey extends UiComponent implements IconKey
 	 */
 	protected void renderInternal(Context context, Object focus)
 	{
-		// included?
-		if (!isIncluded(context, focus)) return;
-
 		PrintWriter response = context.getResponseWriter();
 
 		// the set of objects describing the icons are in this.iconUrls and this.iconDescriptions
@@ -286,9 +288,6 @@ public class UiIconKey extends UiComponent implements IconKey
 	 */
 	protected void renderReferences(Context context, Object focus)
 	{
-		// included?
-		if (!isIncluded(context, focus)) return;
-
 		PrintWriter response = context.getResponseWriter();
 
 		// the set of objects describing the icons

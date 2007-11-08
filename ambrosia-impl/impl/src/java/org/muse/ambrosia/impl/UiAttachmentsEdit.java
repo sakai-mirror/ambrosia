@@ -177,10 +177,10 @@ public class UiAttachmentsEdit extends UiComponent implements AttachmentsEdit
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		PrintWriter response = context.getResponseWriter();
 
@@ -228,6 +228,8 @@ public class UiAttachmentsEdit extends UiComponent implements AttachmentsEdit
 		}
 
 		response.println("</ul>");
+
+		return true;
 	}
 
 	/**

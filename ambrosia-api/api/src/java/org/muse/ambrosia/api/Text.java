@@ -36,4 +36,14 @@ public interface Text extends Component
 	 *        one or more (or an array) of UiPropertyReferences to form the additional values in the formatted message.
 	 */
 	Text setText(String selector, PropertyReference... references);
+
+	/**
+	 * Set the title text.
+	 * 
+	 * @param selector
+	 *        The message selector.
+	 * @param references
+	 *        one or more (or an array) of UiPropertyReferences to form the additional values in the formatted message.
+	 */
+	Text setTitle(String selector, PropertyReference... references);
 }

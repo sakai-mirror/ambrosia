@@ -27,6 +27,7 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Text;
+import org.muse.ambrosia.api.TextEdit;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -39,6 +40,9 @@ public class UiText extends UiComponent implements Text
 {
 	/** The message that will provide text to display. */
 	protected Message message = null;
+
+	/** The message that will provide title text. */
+	protected Message titleMessage = null;
 
 	/**
 	 * Public no-arg constructor.
@@ -75,8 +79,23 @@ public class UiText extends UiComponent implements Text
 			}
 		}
 
+		// short form for title - attribute "title" as the selector
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
+		// title
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.titleMessage = new UiMessage(service, settingsXml);
+		}
+
 		// message
-		Element settingsXml = XmlHelper.getChildElementNamed(xml, "message");
+		settingsXml = XmlHelper.getChildElementNamed(xml, "message");
 		if (settingsXml != null)
 		{
 			this.message = new UiMessage(service, settingsXml);
@@ -86,21 +105,40 @@ public class UiText extends UiComponent implements Text
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
+
+		String msg = null;
+		String titleMsg = null;
+		if (this.message != null)
+		{
+			msg = this.message.getMessage(context, focus);
+		}
+		if (this.titleMessage != null)
+		{
+			titleMsg = this.titleMessage.getMessage(context, focus);
+		}
+
+		if ((msg == null) && (titleMsg == null)) return false;
 
 		PrintWriter response = context.getResponseWriter();
 
-		if (this.message != null)
+		// title
+		if (titleMsg != null)
 		{
-			String msg = this.message.getMessage(context, focus);
-			if (msg != null)
-			{
-				response.println(msg);
-			}
+			response.print("<div class=\"ambrosiaComponentTitle\">");
+			response.print(titleMsg);
+			response.println("</div>");
 		}
+
+		if (msg != null)
+		{
+			response.println(msg);
+		}
+
+		return true;
 	}
 
 	/**
@@ -109,6 +147,15 @@ public class UiText extends UiComponent implements Text
 	public Text setText(String selector, PropertyReference... references)
 	{
 		this.message = new UiMessage().setMessage(selector, references);
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Text setTitle(String selector, PropertyReference... references)
+	{
+		this.titleMessage = new UiMessage().setMessage(selector, references);
 		return this;
 	}
 }

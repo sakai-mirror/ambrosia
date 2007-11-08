@@ -51,8 +51,9 @@ public interface Component
 	 *        The UI context.
 	 * @param focus
 	 *        An optional entity that is the focus of the rendering.
+	 * @return true if rendered, false if not.
 	 */
-	void render(Context context, Object focus);
+	boolean render(Context context, Object focus);
 
 	/**
 	 * Set the id of this component, which can be referenced by an Alias, for example.

@@ -280,7 +280,7 @@ public class UiInterface extends UiContainer implements Interface
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		PrintWriter response = context.getResponseWriter();
 
@@ -482,6 +482,8 @@ public class UiInterface extends UiContainer implements Interface
 		{
 			response.println("</body></html>");
 		}
+
+		return true;
 	}
 
 	/**

@@ -56,13 +56,15 @@ public class UiGap extends UiComponent implements Gap
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		PrintWriter response = context.getResponseWriter();
 
 		response.println("<div class=\"ambrosiaGap\"></div>");
+
+		return true;
 	}
 }

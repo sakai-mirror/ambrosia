@@ -79,24 +79,24 @@ public class UiModelComponent extends UiComponent implements ModelComponent
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// defined?
-		if (this.propertyReference == null) return;
+		if (this.propertyReference == null) return false;
 
 		// read the reference as an object
 		Object o = this.propertyReference.readObject(context, focus);
 
 		// did we get a Component?
-		if (o == null) return;
-		if (!(o instanceof Component)) return;
+		if (o == null) return false;
+		if (!(o instanceof Component)) return false;
 
 		// render it
 		Component component = (Component) o;
-		component.render(context, focus);
+		return component.render(context, focus);
 	}
 
 	/**

@@ -85,10 +85,10 @@ public class UiAlert extends UiComponent implements Alert
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		PrintWriter response = context.getResponseWriter();
 
@@ -96,6 +96,8 @@ public class UiAlert extends UiComponent implements Alert
 		{
 			response.println("<div class =\"ambrosiaAlert\">" + this.text.getMessage(context, focus) + "</div>");
 		}
+
+		return true;
 	}
 
 	/**

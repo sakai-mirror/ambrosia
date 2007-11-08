@@ -383,12 +383,12 @@ public class UiNavigation extends UiComponent implements Navigation
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		PrintWriter response = context.getResponseWriter();
 
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// the iterator
 		Object iterator = null;
@@ -425,7 +425,7 @@ public class UiNavigation extends UiComponent implements Navigation
 				}
 			}
 
-			return;
+			return true;
 		}
 
 		// if iterating over an array, we will repeat our contents once for each one
@@ -456,11 +456,13 @@ public class UiNavigation extends UiComponent implements Navigation
 				}
 			}
 
-			return;
+			return true;
 		}
 
 		// if no repeating entity, just render once
 		renderContents(context, focus);
+
+		return true;
 	}
 
 	/**
@@ -954,7 +956,7 @@ public class UiNavigation extends UiComponent implements Navigation
 				break;
 			}
 		}
-		
+
 		response.print("</span>");
 	}
 }

@@ -182,6 +182,13 @@ public class UiEntityList extends UiComponent implements EntityList
 			}
 		}
 
+		// short form for title - attribute "title" as the selector
+		String title = StringUtil.trimToNull(xml.getAttribute("title"));
+		if (title != null)
+		{
+			setTitle(title);
+		}
+
 		// title
 		settingsXml = XmlHelper.getChildElementNamed(xml, "title");
 		if (settingsXml != null)
@@ -331,12 +338,12 @@ public class UiEntityList extends UiComponent implements EntityList
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		PrintWriter response = context.getResponseWriter();
 
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// get an id
 		int idRoot = context.getUniqueId();
@@ -348,6 +355,12 @@ public class UiEntityList extends UiComponent implements EntityList
 		// the data
 		Collection data = (Collection) this.iteratorReference.readObject(context, focus);
 		boolean empty = ((data == null) || (data.isEmpty()));
+
+		// title, if there is one and there is data
+		if ((this.title != null) && (isTitleIncluded(context, focus)))
+		{
+			response.println("<div class =\"ambrosiaComponentTitle\">" + Validator.escapeHtml(this.title.getMessage(context, focus)) + "</div>");
+		}
 
 		renderEntityActions(context, focus, idRoot);
 
@@ -365,12 +378,6 @@ public class UiEntityList extends UiComponent implements EntityList
 			}
 
 			colNum++;
-		}
-
-		// title, if there is one and there is data
-		if ((this.title != null) && (isTitleIncluded(context, focus)))
-		{
-			response.println("<div class =\"ambrosiaInstructions\">" + Validator.escapeHtml(this.title.getMessage(context, focus)) + "</div>");
 		}
 
 		response.println("<div class=\"ambrosiaEntityList\">");
@@ -746,6 +753,8 @@ public class UiEntityList extends UiComponent implements EntityList
 		}
 
 		response.println("</div>");
+
+		return true;
 	}
 
 	/**
@@ -880,6 +889,8 @@ public class UiEntityList extends UiComponent implements EntityList
 
 		// render any column-related ones
 		int colNum = 0;
+		boolean needDivider = false;
+		boolean renderedAny = false;
 		for (EntityListColumn col : this.columns)
 		{
 			// included?
@@ -893,10 +904,26 @@ public class UiEntityList extends UiComponent implements EntityList
 
 			for (Component c : col.getEntityActions())
 			{
-				c.render(context, focus);
+				// render into a buffer
+				context.setCollecting();
+				boolean rendered = c.render(context, focus);
+				String rendering = context.getCollected();
 
-				// add a divider
-				response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+				if (rendered)
+				{
+					// add a divider if needed
+					if (needDivider)
+					{
+						response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+					}
+
+					response.print(rendering);
+
+					// if rendered, we need a divider
+					needDivider = true;
+
+					renderedAny = true;
+				}
 			}
 
 			// clear the related field in the context
@@ -905,29 +932,64 @@ public class UiEntityList extends UiComponent implements EntityList
 			colNum++;
 		}
 
-		// divide the column ones from the general ones
-		if (!actions.isEmpty() && !this.entityActions.isEmpty())
-		{
-			response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
-		}
-
 		// render any general ones
+		boolean extraDivider = renderedAny;
 		for (Component c : this.entityActions)
 		{
-			c.render(context, focus);
+			// render into a buffer
+			context.setCollecting();
+			boolean rendered = c.render(context, focus);
+			String rendering = context.getCollected();
 
-			// add a divider
-			response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
-		}
+			if (rendered)
+			{
+				// add a divider if needed
+				if (needDivider)
+				{
+					response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+				}
 
-		// divide again if we have a pager
-		if ((!this.entityActions.isEmpty()) || (!actions.isEmpty()))
-		{
-			response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+				// again if needed (do space the general ones from the column specific ones)
+				if (extraDivider)
+				{
+					response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+					extraDivider = false;
+				}
+
+				response.print(rendering);
+
+				// if rendered, we need a divider
+				needDivider = true;
+
+				renderedAny = true;
+			}
 		}
 
 		// render the pager
-		if (this.pager != null) this.pager.render(context, focus);
+		extraDivider = renderedAny;
+		if (this.pager != null)
+		{
+			context.setCollecting();
+			boolean rendered = this.pager.render(context, focus);
+			String rendering = context.getCollected();
+
+			if (rendered)
+			{
+				// add a divider if needed
+				if (needDivider)
+				{
+					response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+				}
+
+				// again if needed (do space the general ones from the column specific ones)
+				if (extraDivider)
+				{
+					response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+				}
+
+				response.print(rendering);
+			}
+		}
 
 		response.println("</div>");
 	}

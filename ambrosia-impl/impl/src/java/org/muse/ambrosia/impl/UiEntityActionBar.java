@@ -77,9 +77,26 @@ public class UiEntityActionBar extends UiSection implements EntityActionBar
 		response.println("<div class=\"ambrosiaEntityActionBar\"" + (this.width != null ? (" style=\"width: " + this.width + ";\"") : "") + ">");
 
 		// render
+		boolean needDivider = false;
 		for (Component c : this.contained)
 		{
-			c.render(context, focus);
+			context.setCollecting();
+			boolean rendered = c.render(context, focus);
+			String rendering = context.getCollected();
+
+			if (rendered)
+			{
+				// add a divider if needed
+				if (needDivider)
+				{
+					response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+				}
+
+				response.print(rendering);
+
+				// if rendered, we need a divider
+				needDivider = true;
+			}
 		}
 
 		response.println("</div>");

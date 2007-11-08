@@ -177,10 +177,10 @@ public class UiAttachments extends UiComponent implements Attachments
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		PrintWriter response = context.getResponseWriter();
 
@@ -223,6 +223,8 @@ public class UiAttachments extends UiComponent implements Attachments
 		}
 
 		response.println("</ul>");
+
+		return true;
 	}
 
 	/**

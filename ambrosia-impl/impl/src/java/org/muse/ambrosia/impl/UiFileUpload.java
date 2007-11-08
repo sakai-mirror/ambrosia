@@ -143,10 +143,10 @@ public class UiFileUpload extends UiComponent implements FileUpload
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// read only?
 		boolean readOnly = false;
@@ -227,6 +227,8 @@ public class UiFileUpload extends UiComponent implements FileUpload
 
 			response.println("</div>");
 		}
+
+		return true;
 	}
 
 	/**

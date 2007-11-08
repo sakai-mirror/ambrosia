@@ -55,17 +55,40 @@ public class UiInstructions extends UiText implements Instructions
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
+
+		String msg = null;
+		String titleMsg = null;
+		if (this.message != null)
+		{
+			msg = this.message.getMessage(context, focus);
+		}
+		if (this.titleMessage != null)
+		{
+			titleMsg = this.titleMessage.getMessage(context, focus);
+		}
+
+		if ((msg == null) && (titleMsg == null)) return false;
 
 		PrintWriter response = context.getResponseWriter();
 
-		// we allow rich text / html
-		if (this.message != null)
+		// title
+		if (titleMsg != null)
 		{
+			response.print("<div class=\"ambrosiaComponentTitle\">");
+			response.print(titleMsg);
+			response.println("</div>");
+		}
+
+		if (msg != null)
+		{
+			// we allow rich text / html
 			response.println("<span class =\"ambrosiaInstructions\" >" + this.message.getMessage(context, focus) + "</span>");
 		}
+
+		return true;
 	}
 }

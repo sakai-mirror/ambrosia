@@ -73,12 +73,12 @@ public class UiAlias extends UiComponent implements Alias
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
-		if (this.to == null) return;
+		if (this.to == null) return false;
 
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// for local access, look at siblings
 		if (toolId == null)
@@ -111,6 +111,8 @@ public class UiAlias extends UiComponent implements Alias
 				context.clearGlobalFragment(this.to, this.toolId);
 			}
 		}
+
+		return true;
 	}
 
 	/**

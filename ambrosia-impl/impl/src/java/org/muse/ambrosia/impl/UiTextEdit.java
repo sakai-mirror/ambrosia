@@ -188,10 +188,10 @@ public class UiTextEdit extends UiComponent implements TextEdit
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// read only?
 		boolean readOnly = false;
@@ -275,8 +275,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			}
 
 			// TODO: (readOnly ? " class=\"ambrosiaTextEditDisabled\"" : "") +
-			response.println("<textarea " + "id=\"" + id + "\" name=\"" + id + "\" cols="
-					+ Integer.toString(numCols) + " rows=" + Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
+			response.println("<textarea " + "id=\"" + id + "\" name=\"" + id + "\" cols=" + Integer.toString(numCols) + " rows="
+					+ Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
 
@@ -305,6 +305,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			// add the field name / id to the focus path
 			context.addFocusId(id);
 		}
+
+		return true;
 	}
 
 	/**

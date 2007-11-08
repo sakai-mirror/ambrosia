@@ -121,10 +121,10 @@ public class UiPassword extends UiComponent implements Password
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// alert if empty at submit?
 		boolean onEmptyAlert = false;
@@ -161,9 +161,6 @@ public class UiPassword extends UiComponent implements Password
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
-		// class=\"shorttext\"
-		response.println("<p>");
-
 		// title
 		if (this.titleMessage != null)
 		{
@@ -173,8 +170,6 @@ public class UiPassword extends UiComponent implements Password
 		}
 
 		response.println("<input type=\"password\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" />");
-
-		response.println("</p>");
 
 		// the decode directive
 		if (this.propertyReference != null)
@@ -190,6 +185,8 @@ public class UiPassword extends UiComponent implements Password
 					+ "		if (document.getElementById('alert_" + id + "').style.display == \"none\")\n" + "		{\n"
 					+ "			document.getElementById('alert_" + id + "').style.display = \"\";\n" + "			rv=false;\n" + "		}\n" + "	}\n");
 		}
+
+		return true;
 	}
 
 	/**

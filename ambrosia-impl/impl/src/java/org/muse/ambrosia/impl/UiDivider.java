@@ -56,16 +56,15 @@ public class UiDivider extends UiComponent implements Divider
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		// if (!isIncluded(context, focus)) return;
-
-		// disabled?
-		// boolean disabled = isDisabled(context, focus);
+		if (!isIncluded(context, focus)) return false;
 
 		PrintWriter response = context.getResponseWriter();
 
 		response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+
+		return true;
 	}
 }

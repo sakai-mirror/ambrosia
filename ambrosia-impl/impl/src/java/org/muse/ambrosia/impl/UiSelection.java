@@ -386,10 +386,10 @@ public class UiSelection extends UiComponent implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// read only?
 		boolean readOnly = false;
@@ -504,7 +504,7 @@ public class UiSelection extends UiComponent implements Selection
 		if (this.orientation == Orientation.dropdown)
 		{
 			renderDropdown(context, focus, readOnly, single, values, display, value);
-			return;
+			return true;
 		}
 
 		// generate some ids
@@ -739,6 +739,8 @@ public class UiSelection extends UiComponent implements Selection
 						+ "prop_" + decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
 			}
 		}
+
+		return true;
 	}
 
 	/**

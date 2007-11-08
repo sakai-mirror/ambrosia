@@ -87,13 +87,13 @@ public class UiCourier extends UiComponent implements Courier
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// if not fully defined
-		if ((this.destination == null) || (this.frequency < 1)) return;
+		if ((this.destination == null) || (this.frequency < 1)) return false;
 
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
 
 		// here's the URL for the courier's GET
 		String url = context.get("sakai.return.url") + this.destination.getDestination(context, focus);
@@ -103,6 +103,8 @@ public class UiCourier extends UiComponent implements Courier
 		context.addScript("updateTime = " + this.frequency + "000;\n");
 		context.addScript("updateUrl = \"" + url + "\"\n");
 		context.addScript("scheduleUpdate();\n");
+
+		return true;
 	}
 
 	/**

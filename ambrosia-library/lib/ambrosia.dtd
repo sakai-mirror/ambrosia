@@ -331,6 +331,7 @@
 <!ELEMENT entityList (included | emptyTitle | entityActions | entityIncluded | colorize | iterator | title | titleIncluded | columns | headings | pager)* >
 <!ATTLIST entityList id CDATA #IMPLIED >
 <!ATTLIST entityList style (FLAT|FORM) #IMPLIED >
+<!ATTLIST entityList title CDATA #IMPLIED >
 
 <!ELEMENT emptyTitle (message) >
 
@@ -398,16 +399,18 @@
 
 <!ELEMENT value (model) >
 
-<!ELEMENT text (included | message)* >
+<!ELEMENT text (included | message | title)* >
 <!ATTLIST text id CDATA #IMPLIED >
 <!ATTLIST text selector CDATA #IMPLIED >
 <!ATTLIST text model CDATA #IMPLIED >
+<!ATTLIST text title CDATA #IMPLIED >
 
-<!ELEMENT evaluation (included | message | icon)* >
+<!ELEMENT evaluation (included | message | icon | title)* >
 <!ATTLIST evaluation id CDATA #IMPLIED >
 <!ATTLIST evaluation selector CDATA #IMPLIED >
 <!ATTLIST evaluation model CDATA #IMPLIED >
 <!ATTLIST evaluation icon CDATA #IMPLIED >
+<!ATTLIST evaluation title CDATA #IMPLIED >
 
 <!ELEMENT fileUpload (included | onEmptyAlert | model | readOnly | title | upload)* >
 <!ATTLIST fileUpload id CDATA #IMPLIED >
@@ -438,10 +441,11 @@
 <!ELEMENT keysModel (model) >
 <!ELEMENT icons (icon)* >
 
-<!ELEMENT instructions (included | message)* >
+<!ELEMENT instructions (included | message | title)* >
 <!ATTLIST instructions id CDATA #IMPLIED >
 <!ATTLIST instructions selector CDATA #IMPLIED >
 <!ATTLIST instructions model CDATA #IMPLIED >
+<!ATTLIST instructions title CDATA #IMPLIED >
 
 <!ELEMENT finePrint (included | message)* >
 <!ATTLIST finePrint id CDATA #IMPLIED >

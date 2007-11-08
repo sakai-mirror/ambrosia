@@ -90,12 +90,33 @@ public class UiEvaluation extends UiText implements Evaluation
 	/**
 	 * {@inheritDoc}
 	 */
-	public void render(Context context, Object focus)
+	public boolean render(Context context, Object focus)
 	{
 		// included?
-		if (!isIncluded(context, focus)) return;
+		if (!isIncluded(context, focus)) return false;
+
+		String msg = null;
+		String titleMsg = null;
+		if (this.message != null)
+		{
+			msg = this.message.getMessage(context, focus);
+		}
+		if (this.titleMessage != null)
+		{
+			titleMsg = this.titleMessage.getMessage(context, focus);
+		}
+
+		if ((msg == null) && (titleMsg == null)) return false;
 
 		PrintWriter response = context.getResponseWriter();
+
+		// title
+		if (titleMsg != null)
+		{
+			response.print("<div class=\"ambrosiaComponentTitle\">");
+			response.print(titleMsg);
+			response.println("</div>");
+		}
 
 		String alt = "";
 		if (this.iconAlt != null)
@@ -103,12 +124,14 @@ public class UiEvaluation extends UiText implements Evaluation
 			alt = this.iconAlt.getMessage(context, focus);
 		}
 
-		if (this.message != null)
+		if (msg != null)
 		{
 			response.println("<div class =\"instruction\" style=\"color:#990033\">"
 					+ ((this.icon != null) ? "<img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : "")
-					+ Validator.escapeHtml(this.message.getMessage(context, focus)) + "</div>");
+					+ Validator.escapeHtml(msg) + "</div>");
 		}
+
+		return true;
 	}
 
 	/**
