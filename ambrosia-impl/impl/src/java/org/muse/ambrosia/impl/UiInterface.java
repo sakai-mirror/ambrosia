@@ -393,16 +393,15 @@ public class UiInterface extends UiContainer implements Interface
 			// the components, if defined
 			for (Component c : this.subHeaderComponents)
 			{
+				response.println("<div>");
 				c.render(context, focus);
+				response.println("</div>");
 			}
 		}
 		response.println("</div>");
 
-		// render the contained
-		for (Component c : this.contained)
-		{
-			c.render(context, focus);
-		}
+		// body... being a container, let the base class render the contained
+		super.render(context, focus);
 
 		// footer, even if not defined
 		response.println("<div class=\"ambrosiaInterfaceFooter\">");
@@ -417,7 +416,9 @@ public class UiInterface extends UiContainer implements Interface
 			// the components, if defined
 			for (Component c : this.footerComponents)
 			{
+				response.println("<div>");
 				c.render(context, focus);
+				response.println("</div>");
 			}
 		}
 		response.println("</div>");

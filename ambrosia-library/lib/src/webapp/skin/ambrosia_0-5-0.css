@@ -100,8 +100,6 @@ Header text at the top of a section (Section.header)
 {
 	font-weight: bold;
 	line-height: 2em;
-	padding-left: 0.5em;
-	border: 1px solid #bbb;
 }
 
 /*
