@@ -123,6 +123,7 @@ Sakai ~ navPanel + style
 	border: 1px solid #bbb;
 	margin: 5px 0 0 0;
 	line-height: 2em;
+	padding-left: 1em;
 }
 
 /*
@@ -146,6 +147,7 @@ Entity action bar that contains the navigations that pertain to entities in a li
 	border-left: 1px solid #bbb;
 	border-right: 1px solid #bbb;
 	line-height: 2em;
+	padding-left: 1em;
 }
 
 /*
@@ -283,8 +285,6 @@ Sakai ~ insruction
 */
 .ambrosiaInstructions
 {
-	line-height: 1.3em;
-	margin: .5em 0;
 	color: #555;
 }
 

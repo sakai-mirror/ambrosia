@@ -65,7 +65,7 @@ public class UiInstructions extends UiText implements Instructions
 		// we allow rich text / html
 		if (this.message != null)
 		{
-			response.println("<div class =\"ambrosiaInstructions\" >" + this.message.getMessage(context, focus) + "</div>");
+			response.println("<span class =\"ambrosiaInstructions\" >" + this.message.getMessage(context, focus) + "</span>");
 		}
 	}
 }
