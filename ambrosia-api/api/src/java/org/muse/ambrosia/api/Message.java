@@ -27,6 +27,17 @@ package org.muse.ambrosia.api;
 public interface Message
 {
 	/**
+	 * Add an alternate selector, used if this decision is true.
+	 * 
+	 * @param selector
+	 *        The alternate selector.
+	 * @param decision
+	 *        The decision.
+	 * @return
+	 */
+	Message addSelector(String selector, Decision decision);
+
+	/**
 	 * Format the message from the message selector and the array of property references.
 	 * 
 	 * @param context

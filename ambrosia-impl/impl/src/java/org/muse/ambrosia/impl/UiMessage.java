@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.muse.ambrosia.api.Context;
+import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
+import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
@@ -37,21 +39,17 @@ import org.w3c.dom.NodeList;
  */
 public class UiMessage implements Message
 {
+	/** A list of alternate selector decisions. */
+	protected List<Decision> alternateSelectorDecisions = new ArrayList<Decision>();
+
+	/** A list of alternate selectors. */
+	protected List<String> alternateSelectors = new ArrayList<String>();
+
 	/** A set of additional properties to put in the message. */
 	protected PropertyReference[] references = null;
 
 	/** The message selector. */
 	protected String selector = null;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Message setMessage(String selector, PropertyReference... references)
-	{
-		this.selector = selector;
-		this.references = references;
-		return this;
-	}
 
 	/**
 	 * Public no-arg constructor.
@@ -82,7 +80,7 @@ public class UiMessage implements Message
 			List<PropertyReference> refs = new ArrayList<PropertyReference>();
 
 			String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
-			
+
 			// short for model
 			String ref = StringUtil.trimToNull(xml.getAttribute("model"));
 			if (ref != null)
@@ -104,6 +102,27 @@ public class UiMessage implements Message
 				}
 			}
 
+			// alternate selectors
+			Element settingsXml = XmlHelper.getChildElementNamed(xml, "selectors");
+			if (settingsXml != null)
+			{
+				NodeList contained = settingsXml.getChildNodes();
+				for (int i = 0; i < contained.getLength(); i++)
+				{
+					Node node = contained.item(i);
+					if (node.getNodeType() == Node.ELEMENT_NODE)
+					{
+						Element containedXml = (Element) node;
+						if ("selector".equals(containedXml.getTagName()))
+						{
+							Decision d = service.parseDecisions(containedXml);
+							String altSelector = StringUtil.trimToNull(containedXml.getAttribute("selector"));
+							addSelector(altSelector, d);
+						}
+					}
+				}
+			}
+
 			// convert the refs into an array
 			PropertyReference[] refsArray = new PropertyReference[0];
 			refsArray = refs.toArray(refsArray);
@@ -117,32 +136,55 @@ public class UiMessage implements Message
 	/**
 	 * {@inheritDoc}
 	 */
+	public Message addSelector(String selector, Decision decision)
+	{
+		this.alternateSelectors.add(selector);
+		this.alternateSelectorDecisions.add(decision);
+
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getMessage(Context context, Object focus)
 	{
-		// if no references, use just the selector message
-		if ((references == null) || (references.length == 0))
+		// pick the selector
+		String sel = this.selector;
+		for (int i = 0; i < this.alternateSelectorDecisions.size(); i++)
 		{
-			if (selector != null)
+			Decision d = this.alternateSelectorDecisions.get(i);
+			if (d.decide(context, focus))
 			{
-				return StringUtil.trimToZero(context.getMessages().getString(selector));
+				sel = this.alternateSelectors.get(i);
+				break;
+			}
+		}
+
+		// if no references, use just the selector message
+		if ((this.references == null) || (this.references.length == 0))
+		{
+			if (sel != null)
+			{
+				return StringUtil.trimToZero(context.getMessages().getString(sel));
 			}
 			return "";
 		}
 
 		// if there is no selector, just read the first reference as the value
-		if (selector == null)
+		if (sel == null)
 		{
-			if ((references != null) && (references.length == 1))
+			if ((this.references != null) && (this.references.length == 1))
 			{
-				return StringUtil.trimToZero(references[0].read(context, focus));
+				return StringUtil.trimToZero(this.references[0].read(context, focus));
 			}
 			return "";
 		}
 
 		// put the property reference into args for the message
-		Object args[] = new Object[references.length];
+		Object args[] = new Object[this.references.length];
 		int i = 0;
-		for (PropertyReference reference : references)
+		for (PropertyReference reference : this.references)
 		{
 			String value = reference.read(context, focus);
 
@@ -152,6 +194,16 @@ public class UiMessage implements Message
 			args[i++] = value;
 		}
 
-		return StringUtil.trimToZero(context.getMessages().getFormattedMessage(selector, args));
+		return StringUtil.trimToZero(context.getMessages().getFormattedMessage(sel, args));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Message setMessage(String selector, PropertyReference... references)
+	{
+		this.selector = selector;
+		this.references = references;
+		return this;
 	}
 }

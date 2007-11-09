@@ -18,9 +18,13 @@
 
 <!ELEMENT footer (message | container)* >
 
-<!ELEMENT message (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT message (selectors | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST message selector CDATA #IMPLIED >
 <!ATTLIST message model CDATA #IMPLIED >
+
+<!ELEMENT selectors (selector)* >
+<!ELEMENT selector (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
+<!ATTLIST selector selector CDATA #IMPLIED>
 
 <!ELEMENT model (missingValues | model)* >
 <!ATTLIST model ref CDATA #IMPLIED >
