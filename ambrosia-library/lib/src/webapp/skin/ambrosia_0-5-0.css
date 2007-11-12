@@ -290,6 +290,16 @@ Sakai ~ insruction
 }
 
 /*
+Evaluation
+*/
+.ambrosiaEvaluation
+{
+	padding: 1em;
+	border: 3px double #A00000;
+	width: 70%;
+}
+	
+/*
 EntityDisplay (EntityDisplay)
 Sakai ~ itemSummary
 */

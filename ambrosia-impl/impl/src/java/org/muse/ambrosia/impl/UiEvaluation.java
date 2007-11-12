@@ -126,9 +126,9 @@ public class UiEvaluation extends UiText implements Evaluation
 
 		if (msg != null)
 		{
-			response.println("<div class =\"instruction\" style=\"color:#990033\">"
+			response.println("<div class =\"ambrosiaEvaluation\">"
 					+ ((this.icon != null) ? "<img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : "")
-					+ Validator.escapeHtml(msg) + "</div>");
+					+ msg + "</div>");
 		}
 
 		return true;
