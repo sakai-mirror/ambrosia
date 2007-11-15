@@ -464,7 +464,7 @@ public class UiEntityList extends UiComponent implements EntityList
 								+ (c.getCentered() ? " style=\"text-align:center\"" : "")
 								+ "><a href=\"#\" onclick=\"act_"
 								+ sortId
-								+ "();\">"
+								+ "();return false;\">"
 								+ Validator.escapeHtml(title.getMessage(context, focus))
 								+ ((icon != null) ? ("&nbsp;<img src=\"" + context.getUrl(icon) + "\""
 										+ ((iconAlt != null) ? (" alt=\"" + Validator.escapeHtml(iconAlt) + "\"") : "") + " />") : "") + "</a></th>");
@@ -477,7 +477,7 @@ public class UiEntityList extends UiComponent implements EntityList
 						UiNavigation.generateLinkScript(context, sortId, false, false, submit, c.getSortDestinationAsc().getDestination(context,
 								focus), (String) context.get("sakai.return.url"), false);
 						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
-								+ "><a href=\"#\" onclick=\"act_" + sortId + "();\">" + Validator.escapeHtml(title.getMessage(context, focus))
+								+ "><a href=\"#\" onclick=\"act_" + sortId + "();return false;\">" + Validator.escapeHtml(title.getMessage(context, focus))
 								+ "</a></th>");
 					}
 
@@ -608,7 +608,7 @@ public class UiEntityList extends UiComponent implements EntityList
 							String navId = id + "_r" + row + "_c_" + colNum;
 							UiNavigation.generateLinkScript(context, navId, false, false, c.getEntityNavigationSubmit(), href, (String) context
 									.get("sakai.return.url"), false);
-							response.print("<a style=\"text-decoration:none !important\" href=\"#\" onclick=\"act_" + navId + "();\">");
+							response.print("<a style=\"text-decoration:none !important\" href=\"#\" onclick=\"act_" + navId + "();return false;\">");
 						}
 
 						// get the column's value for display

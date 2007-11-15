@@ -180,12 +180,13 @@ Confirm for Navigation
 
 .ambrosiaOverlay
 {
-	border-left:medium double black;
-	border-right:medium double black;
-	border-bottom:medium double black;
-	border-top:medium double black;
-	background:#F8F8F8;
-	position:absolute;
+	border-left: medium double black;
+	border-right: medium double black;
+	border-bottom: medium double black;
+	border-top: medium double black;
+	background: #F8F8F8;
+	position: absolute;
+	padding: 1em;
 }
 
 /*

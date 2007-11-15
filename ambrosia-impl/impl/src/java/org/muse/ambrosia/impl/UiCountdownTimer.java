@@ -291,7 +291,7 @@ public class UiCountdownTimer extends UiComponent implements CountdownTimer
 
 		if ((hideText != null) && (showText != null))
 		{
-			response.println("<input id=\"hideshow_" + id + "\" type=\"button\" onclick=\"hideShow_" + id + "()\" value = \"" + hideText + "\" />");
+			response.println("<input id=\"hideshow_" + id + "\" type=\"button\" onclick=\"hideShow_" + id + "();return false;\" value = \"" + hideText + "\" />");
 		}
 
 		// our script

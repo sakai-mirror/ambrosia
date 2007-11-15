@@ -195,7 +195,7 @@ public class UiToggle extends UiComponent implements Toggle
 				// no title special case
 				if (title.length() == 0)
 				{
-					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
+					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
 
 					if (this.icon != null)
 					{
@@ -220,7 +220,7 @@ public class UiToggle extends UiComponent implements Toggle
 										+ Validator.escapeHtml(description) + "\" ") + " />");
 					}
 
-					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
+					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
 
 					response.print(title);
 
@@ -255,7 +255,7 @@ public class UiToggle extends UiComponent implements Toggle
 								+ (disabled ? " disabled=\"disabled\"" : "")
 								+ " onclick=\"act_"
 								+ id
-								+ "();\" "
+								+ "();return false;\" "
 								+ ((accessKey == null) ? "" : "accesskey=\"" + accessKey.charAt(0) + "\" ")
 								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" ")
 								+ (((this.icon != null) && (this.iconStyle == Navigation.IconStyle.left)) ? "style=\"padding-left:2em; background: #eee url('"

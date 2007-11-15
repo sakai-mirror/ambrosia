@@ -819,11 +819,11 @@ public class UiNavigation extends UiComponent implements Navigation
 						+ id
 						+ "','cancel_"
 						+ id
-						+ "()');\" "
+						+ "()');return false;\" "
 						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('"
 								+ context.getUrl(this.confirmCancelIcon) + "') .2em no-repeat;\"" : "") + "/></td>");
 				response.println("<td style=\"padding:1em\" align=\"right\"><input type=\"button\" value=\"" + title
-						+ "\" onclick=\"hideConfirm('confirm_" + id + "','act_" + id + "();');\" style=\"padding-left:2em; background: #eee url('"
+						+ "\" onclick=\"hideConfirm('confirm_" + id + "','act_" + id + "();');return false;\" style=\"padding-left:2em; background: #eee url('"
 						+ context.getUrl(this.icon) + "') .2em no-repeat;\"/></td>");
 				response.println("</tr></table></div>");
 			}
@@ -842,7 +842,7 @@ public class UiNavigation extends UiComponent implements Navigation
 						+ this.failedRequirementsOk.getMessage(context, focus)
 						+ "\" onclick=\"hideConfirm('failure_"
 						+ id
-						+ "','');\" "
+						+ "','');return false;\" "
 						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('"
 								+ context.getUrl(this.confirmCancelIcon) + "') .2em no-repeat;\"" : "") + "/></td>");
 				response.println("</tr></table></div>");
@@ -883,7 +883,7 @@ public class UiNavigation extends UiComponent implements Navigation
 				// no title special case
 				if (title.length() == 0)
 				{
-					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
+					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
 
 					if (this.icon != null)
 					{
@@ -908,7 +908,7 @@ public class UiNavigation extends UiComponent implements Navigation
 										+ Validator.escapeHtml(description) + "\" ") + " />");
 					}
 
-					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();\">");
+					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
 
 					response.print(title);
 
@@ -944,7 +944,7 @@ public class UiNavigation extends UiComponent implements Navigation
 								+ (disabled ? " disabled=\"disabled\"" : "")
 								+ " onclick=\"act_"
 								+ id
-								+ "();\" "
+								+ "();return false;\" "
 								+ ((accessKey == null) ? "" : "accesskey=\"" + accessKey.charAt(0) + "\" ")
 								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" ")
 								+ (((this.icon != null) && (this.iconStyle == IconStyle.left)) ? "style=\"padding-left:2em; background: #eee url('"
