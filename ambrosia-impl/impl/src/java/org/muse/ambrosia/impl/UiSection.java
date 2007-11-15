@@ -128,7 +128,7 @@ public class UiSection extends UiContainer implements Section
 		if (settingsXml != null)
 		{
 			Decision decision = service.parseDecisions(settingsXml);
-			this.included = decision;
+			this.entityIncluded = decision;
 		}
 
 		// focus
