@@ -981,6 +981,9 @@ public class UiPropertyReference implements PropertyReference
 				M_log.warn("setValue: method: " + property + " object: " + entity.getClass() + " : no one parameter setter method defined");
 			}
 		}
+		catch (NumberFormatException ie)
+		{
+		}
 		catch (IntrospectionException ie)
 		{
 			M_log.warn("setValue: method: " + property + " object: " + entity.getClass() + " : " + ie);

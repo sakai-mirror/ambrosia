@@ -89,6 +89,50 @@ function getFloat(str)
 	return rv;
 }
 
+function ambrosiaCountChange(source, shadowId, summaryId, min, max, validateId)
+{
+	// validate
+	if (ambrosiaValidateInt(source, min, max, validateId))
+	{
+		// then summary
+		if (summaryId != null) ambrosiaCountSummaryInt(source, shadowId, summaryId)
+	}
+}
+
+function ambrosiaValidateInt(source, min, max, validateId)
+{
+	var str = trim(source.value);
+	if (str != "")
+	{
+		var value = parseInt(str, 10);
+		if (isNaN(value))
+		{
+			ambrosiaShow(validateId);
+			return false;
+		}
+		if (value != str)
+		{
+			ambrosiaShow(validateId);
+			return false;
+		}
+
+		if ((min != null) && (value < parseInt(min, 10)))
+		{
+			ambrosiaShow(validateId);
+			return false;
+		}
+
+		if ((max != null) && (value > parseInt(max, 10)))
+		{
+			ambrosiaShow(validateId);
+			return false;
+		}
+
+		ambrosiaHide(validateId);
+		return true;
+	}
+}
+
 function ambrosiaCountSummaryInt(source, shadowId, summaryId)
 {
 	// get the objects
@@ -332,8 +376,25 @@ function ambrosiaCountChecked(name)
 function ambrosiaToggleVisibility(name)
 {
 	el = document.getElementById(name);
+	if (el == null) return;
 	if (el.style.display == "")
 		el.style.display = "none";
 	else
 		el.style.display = "";
+}
+
+function ambrosiaShow(name)
+{
+	el = document.getElementById(name);
+	if (el == null) return;
+	if (el.style.display == "none")
+		el.style.display = "";
+}
+
+function ambrosiaHide(name)
+{
+	el = document.getElementById(name);
+	if (el == null) return;
+	if (el.style.display == "")
+		el.style.display = "none";
 }

@@ -58,6 +58,14 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	/** The message for the onEmptyAlert. */
 	protected Message onEmptyAlertMsg = null;
 
+	/** The message for the validation alert - min and max. */
+	protected Message validationMsgMinMax = new UiMessage().setMessage("count-edit-validate-min-max", new UiPropertyReference()
+			.setReference("ambrosia_min"), new UiPropertyReference().setReference("ambrosia_max"));
+
+	/** The message for the validation alert - min only. */
+	protected Message validationMsgMin = new UiMessage()
+			.setMessage("count-edit-validate-min", new UiPropertyReference().setReference("ambrosia_min"));
+
 	/** A minimum acceptable value for the edit. Default is 0. */
 	protected PropertyReference min = null;
 
@@ -360,6 +368,24 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
+		// validate failure alert
+		if (maxValue == null)
+		{
+			context.put("ambrosia_min", minValue);
+			response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"validate_" + id + "\">"
+					+ Validator.escapeHtml(this.validationMsgMin.getMessage(context, focus)) + "</div>");
+			context.remove("ambrosia_min");
+		}
+		else
+		{
+			context.put("ambrosia_min", minValue);
+			context.put("ambrosia_max", maxValue);
+			response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"validate_" + id + "\">"
+					+ Validator.escapeHtml(this.validationMsgMinMax.getMessage(context, focus)) + "</div>");
+			context.remove("ambrosia_max");
+			context.remove("ambrosia_min");
+		}
+
 		// title
 		if (this.titleMessage != null)
 		{
@@ -379,7 +405,8 @@ public class UiCountEdit extends UiComponent implements CountEdit
 
 		response.println("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
 				+ Integer.toString(numCols) + "\" value=\"" + Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
-				+ (this.summary ? " onchange=\"ambrosiaCountSummaryInt(this, '" + shadowId + "', '" + summaryId + "');\"" : "") + " />"
+				+ " onchange=\"ambrosiaCountChange(this, " + valueOrNull(shadowId) + ", " + valueOrNull(summaryId) + ", " + valueOrNull(minValue)
+				+ ", " + valueOrNull(maxValue) + ", 'validate_" + id + "');\"" + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : "")
 				+ "</span>");
 
@@ -415,7 +442,23 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			context.addFocusId(id);
 		}
 
+		// pre-validate
+		context.addScript("ambrosiaValidateInt(document.getElementById('" + id + "'), " + valueOrNull(minValue) + ", " + valueOrNull(maxValue)
+				+ ", 'validate_" + id + "');");
+
 		return true;
+	}
+
+	/**
+	 * Prepare the value for a javascript parameter, either sending 'null', or the value quoted.
+	 * 
+	 * @param value
+	 *        The value.
+	 * @return The value prepared for a javascript parameter, either sending 'null', or the value quoted.
+	 */
+	protected String valueOrNull(String value)
+	{
+		return value == null ? "null" : "'" + value + "'";
 	}
 
 	/**
