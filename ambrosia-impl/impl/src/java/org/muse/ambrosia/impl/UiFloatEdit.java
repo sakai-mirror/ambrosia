@@ -324,9 +324,9 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		// for onEmptyAlert, add some client-side validation
 		if ((onEmptyAlert) && (!readOnly))
 		{
-			context.addValidation("	if (trim(document.getElementById('" + id + "').value) == \"\")\n" + "	{\n"
-					+ "		if (document.getElementById('alert_" + id + "').style.display == \"none\")\n" + "		{\n"
-					+ "			document.getElementById('alert_" + id + "').style.display = \"\";\n" + "			rv=false;\n" + "		}\n" + "	}\n");
+			context.addValidation("  if (trim(document.getElementById('" + id + "').value) == \"\")\n" + "  {\n"
+					+ "    if (document.getElementById('alert_" + id + "').style.display == \"none\")\n" + "    {\n"
+					+ "      document.getElementById('alert_" + id + "').style.display = \"\";\n" + "      rv=false;\n" + "    }\n" + "  }\n");
 		}
 
 		// for on-load focus

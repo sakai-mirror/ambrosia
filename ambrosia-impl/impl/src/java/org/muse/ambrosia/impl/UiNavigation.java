@@ -739,8 +739,8 @@ public class UiNavigation extends UiComponent implements Navigation
 		// is this a default choice?
 		boolean dflt = isDefault(context, focus);
 
-		// validate?
-		boolean validate = false;
+		// validate? default to true
+		boolean validate = true;
 		if (this.validationDecision != null)
 		{
 			validate = this.validationDecision.decide(context, focus);

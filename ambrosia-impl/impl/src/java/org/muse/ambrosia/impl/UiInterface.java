@@ -428,7 +428,7 @@ public class UiInterface extends UiContainer implements Interface
 
 		// add validation method
 		response.println("<script language=\"JavaScript\">");
-		response.println("var enableValidate=false;");
+		response.println("var enableValidate=true;");
 		response.println("function validate()");
 		response.println("{");
 		response.println("  if (!enableValidate) return true;");
@@ -440,7 +440,7 @@ public class UiInterface extends UiContainer implements Interface
 			response.println(validation);
 		}
 
-		// reset the enableValidate
+		// reset the enableValidate, so the next submit skips validation
 		response.println("  enableValidate=false;\n");
 
 		response.println("  return rv;");
