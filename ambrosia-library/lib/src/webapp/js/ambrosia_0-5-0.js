@@ -127,10 +127,10 @@ function ambrosiaValidateInt(source, min, max, validateId)
 			ambrosiaShow(validateId);
 			return false;
 		}
-
-		ambrosiaHide(validateId);
-		return true;
 	}
+
+	ambrosiaHide(validateId);
+	return true;
 }
 
 function ambrosiaCountSummaryInt(source, shadowId, summaryId)
