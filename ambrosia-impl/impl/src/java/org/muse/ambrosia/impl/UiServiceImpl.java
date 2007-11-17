@@ -122,6 +122,7 @@ import org.muse.ambrosia.api.UrlPropertyReference;
 import org.muse.ambrosia.api.UserInfoPropertyReference;
 import org.muse.ambrosia.api.Value;
 import org.muse.ambrosia.api.Values;
+import org.muse.ambrosia.api.Warning;
 import org.muse.ambrosia.api.PopulatingSet.Factory;
 import org.muse.ambrosia.api.PopulatingSet.Id;
 import org.sakaiproject.i18n.InternationalizedMessages;
@@ -886,6 +887,14 @@ public class UiServiceImpl implements UiService
 		return new UiValues();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public Warning newWarning()
+	{
+		return new UiWarning();
+	}
+
 	/*************************************************************************************************************************************************
 	 * Interface loading from XML
 	 ************************************************************************************************************************************************/
@@ -937,6 +946,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("textEdit")) return new UiTextEdit(this, xml);
 		if (xml.getTagName().equals("toggle")) return new UiToggle(this, xml);
 		if (xml.getTagName().equals("view")) return new UiInterface(this, xml);
+		if (xml.getTagName().equals("warning")) return new UiWarning(this, xml);
 
 		return null;
 	}

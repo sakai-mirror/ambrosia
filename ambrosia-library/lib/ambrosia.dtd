@@ -230,6 +230,11 @@
 <!ATTLIST alert selector CDATA #IMPLIED >
 <!ATTLIST alert model CDATA #IMPLIED >
 
+<!ELEMENT warning (included | message)* >
+<!ATTLIST warning id CDATA #IMPLIED >
+<!ATTLIST warning selector CDATA #IMPLIED >
+<!ATTLIST warning model CDATA #IMPLIED >
+
 <!ELEMENT alias (included)* >
 <!ATTLIST alias id CDATA #IMPLIED >
 <!ATTLIST alias to CDATA #REQUIRED >
