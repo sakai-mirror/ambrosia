@@ -107,29 +107,29 @@ function ambrosiaValidateInt(source, min, max, validateId)
 		var value = parseInt(str, 10);
 		if (isNaN(value))
 		{
-			ambrosiaShow(validateId);
+			ambrosiaShowInline(validateId);
 			return false;
 		}
 		if (value != str)
 		{
-			ambrosiaShow(validateId);
+			ambrosiaShowInline(validateId);
 			return false;
 		}
 
 		if ((min != null) && (value < parseInt(min, 10)))
 		{
-			ambrosiaShow(validateId);
+			ambrosiaShowInline(validateId);
 			return false;
 		}
 
 		if ((max != null) && (value > parseInt(max, 10)))
 		{
-			ambrosiaShow(validateId);
+			ambrosiaShowInline(validateId);
 			return false;
 		}
 	}
 
-	ambrosiaHide(validateId);
+	ambrosiaHideInline(validateId);
 	return true;
 }
 
@@ -383,18 +383,18 @@ function ambrosiaToggleVisibility(name)
 		el.style.display = "";
 }
 
-function ambrosiaShow(name)
+function ambrosiaShowInline(name)
 {
 	el = document.getElementById(name);
 	if (el == null) return;
 	if (el.style.display == "none")
-		el.style.display = "";
+		el.style.display = "inline";
 }
 
-function ambrosiaHide(name)
+function ambrosiaHideInline(name)
 {
 	el = document.getElementById(name);
 	if (el == null) return;
-	if (el.style.display == "")
+	if (el.style.display == "inline")
 		el.style.display = "none";
 }

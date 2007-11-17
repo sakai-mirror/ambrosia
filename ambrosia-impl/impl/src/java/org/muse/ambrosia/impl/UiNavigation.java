@@ -843,6 +843,7 @@ public class UiNavigation extends UiComponent implements Navigation
 						+ "\" onclick=\"hideConfirm('failure_"
 						+ id
 						+ "','');return false;\" "
+						// TODO: do we need confirm cancel? -ggolden
 						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('"
 								+ context.getUrl(this.confirmCancelIcon) + "') .2em no-repeat;\"" : "") + "/></td>");
 				response.println("</tr></table></div>");

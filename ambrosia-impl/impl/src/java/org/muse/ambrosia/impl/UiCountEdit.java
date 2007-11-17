@@ -46,6 +46,18 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	/** The alt text for the icon. */
 	protected Message iconAlt = null; // new UiMessage().setMessage("duration-alt");
 
+	/** Icon for showing invalid. */
+	protected String invalidIcon = "!/ambrosia_library/icons/warning.png";
+
+	/** The message selector for the invalid dismiss message. */
+	protected Message invalidOk = new UiMessage().setMessage("ok");
+
+	/** A maximum acceptable value for the edit. */
+	protected PropertyReference max = null;
+
+	/** A minimum acceptable value for the edit. Default is 0. */
+	protected PropertyReference min = null;
+
 	/** The number of columns per row for the box. */
 	protected int numCols = 6;
 
@@ -57,20 +69,6 @@ public class UiCountEdit extends UiComponent implements CountEdit
 
 	/** The message for the onEmptyAlert. */
 	protected Message onEmptyAlertMsg = null;
-
-	/** The message for the validation alert - min and max. */
-	protected Message validationMsgMinMax = new UiMessage().setMessage("count-edit-validate-min-max", new UiPropertyReference()
-			.setReference("ambrosia_min"), new UiPropertyReference().setReference("ambrosia_max"));
-
-	/** The message for the validation alert - min only. */
-	protected Message validationMsgMin = new UiMessage()
-			.setMessage("count-edit-validate-min", new UiPropertyReference().setReference("ambrosia_min"));
-
-	/** A minimum acceptable value for the edit. Default is 0. */
-	protected PropertyReference min = null;
-
-	/** A maximum acceptable value for the edit. */
-	protected PropertyReference max = null;
 
 	/**
 	 * The PropertyReference for encoding and decoding this selection - this is what will be updated with the end-user's text edit, and what value
@@ -90,6 +88,14 @@ public class UiCountEdit extends UiComponent implements CountEdit
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
+
+	/** The message for the validation alert - min only. */
+	protected Message validationMsgMin = new UiMessage()
+			.setMessage("count-edit-validate-min", new UiPropertyReference().setReference("ambrosia_min"));
+
+	/** The message for the validation alert - min and max. */
+	protected Message validationMsgMinMax = new UiMessage().setMessage("count-edit-validate-min-max", new UiPropertyReference()
+			.setReference("ambrosia_min"), new UiPropertyReference().setReference("ambrosia_max"));
 
 	/**
 	 * No-arg constructor.
@@ -368,23 +374,37 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
-		// validate failure alert
+		// the validation failure message
+		String failureMsg = null;
 		if (maxValue == null)
 		{
 			context.put("ambrosia_min", minValue);
-			response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"validate_" + id + "\">"
-					+ Validator.escapeHtml(this.validationMsgMin.getMessage(context, focus)) + "</div>");
+			failureMsg = Validator.escapeHtml(this.validationMsgMin.getMessage(context, focus));
 			context.remove("ambrosia_min");
 		}
 		else
 		{
 			context.put("ambrosia_min", minValue);
 			context.put("ambrosia_max", maxValue);
-			response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"validate_" + id + "\">"
-					+ Validator.escapeHtml(this.validationMsgMinMax.getMessage(context, focus)) + "</div>");
+			failureMsg = Validator.escapeHtml(this.validationMsgMinMax.getMessage(context, focus));
 			context.remove("ambrosia_max");
 			context.remove("ambrosia_min");
 		}
+
+		// the "failure" panel shown if requirements are not met
+		response.println("<div class=\"ambrosiaConfirmPanel\" style=\"display:none; left:0px; top:0px; width:340px; height:120px\" id=\"failure_"
+				+ id + "\">");
+		response.println("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>");
+		response.println("<td colspan=\"2\" style=\"padding:1em; white-space:normal; line-height:1em; \" align=\"left\">" + failureMsg + "</td>");
+		response.println("</tr><tr>");
+		response.println("<td style=\"padding:1em\" align=\"left\"><input type=\"button\" value=\"" + this.invalidOk.getMessage(context, focus)
+				+ "\" onclick=\"hideConfirm('failure_" + id + "','');return false;\" " + "/></td>");
+		response.println("</tr></table></div>");
+
+		// validation function
+		StringBuffer script = new StringBuffer();
+		script.append("function popupInvalid_" + id + "()\n{\n  showConfirm('failure_" + id + "');\n}\n");
+		context.addScript(script.toString());
 
 		// title
 		if (this.titleMessage != null)
@@ -403,12 +423,19 @@ public class UiCountEdit extends UiComponent implements CountEdit
 
 		// TODO: make the icon link to a popup picker!
 
-		response.println("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
+		response.print("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
 				+ Integer.toString(numCols) + "\" value=\"" + Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
 				+ " onchange=\"ambrosiaCountChange(this, " + valueOrNull(shadowId) + ", " + valueOrNull(summaryId) + ", " + valueOrNull(minValue)
-				+ ", " + valueOrNull(maxValue) + ", 'validate_" + id + "');\"" + " />"
-				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : "")
-				+ "</span>");
+				+ ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\"" + " />"
+				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
+
+		// validate failure alert (will display:inline when made visible)
+		response.print("<div style=\"display:none\" id=\"invalid_" + id + "\">");
+		response.print("<a href=\"#\" onclick=\"popupInvalid_" + id + "();return false;\" title=\"" + failureMsg + "\">");
+		response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.invalidIcon) + "\" />");
+		response.print("</a></div>");
+
+		response.println("</span>");
 
 		context.editComponentRendered(id);
 
@@ -444,21 +471,9 @@ public class UiCountEdit extends UiComponent implements CountEdit
 
 		// pre-validate
 		context.addScript("ambrosiaValidateInt(document.getElementById('" + id + "'), " + valueOrNull(minValue) + ", " + valueOrNull(maxValue)
-				+ ", 'validate_" + id + "');");
+				+ ", 'invalid_" + id + "');");
 
 		return true;
-	}
-
-	/**
-	 * Prepare the value for a javascript parameter, either sending 'null', or the value quoted.
-	 * 
-	 * @param value
-	 *        The value.
-	 * @return The value prepared for a javascript parameter, either sending 'null', or the value quoted.
-	 */
-	protected String valueOrNull(String value)
-	{
-		return value == null ? "null" : "'" + value + "'";
 	}
 
 	/**
@@ -510,6 +525,24 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	{
 		this.focusDecision = decision;
 
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public CountEdit setMax(PropertyReference max)
+	{
+		this.max = max;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public CountEdit setMin(PropertyReference min)
+	{
+		this.min = min;
 		return this;
 	}
 
@@ -589,20 +622,14 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Prepare the value for a javascript parameter, either sending 'null', or the value quoted.
+	 * 
+	 * @param value
+	 *        The value.
+	 * @return The value prepared for a javascript parameter, either sending 'null', or the value quoted.
 	 */
-	public CountEdit setMax(PropertyReference max)
+	protected String valueOrNull(String value)
 	{
-		this.max = max;
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public CountEdit setMin(PropertyReference min)
-	{
-		this.min = min;
-		return this;
+		return value == null ? "null" : "'" + value + "'";
 	}
 }
