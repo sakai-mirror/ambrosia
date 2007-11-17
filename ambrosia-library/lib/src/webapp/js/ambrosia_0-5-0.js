@@ -156,6 +156,50 @@ function ambrosiaCountSummaryInt(source, shadowId, summaryId)
 	}
 }
 
+function ambrosiaFloatChange(source, shadowId, summaryId, defaultValue, min, max, validateId)
+{
+	// validate
+	if (ambrosiaValidateFloat(source, min, max, validateId))
+	{
+		// then summary
+		if (summaryId != null) ambrosiaCountSummaryFloat(source, shadowId, summaryId, defaultValue)
+	}
+}
+
+function ambrosiaValidateFloat(source, min, max, validateId)
+{
+	var str = trim(source.value);
+	if (str != "")
+	{
+		var value = parseFloat(str, 10);
+		if (isNaN(value))
+		{
+			ambrosiaShowInline(validateId);
+			return false;
+		}
+		if (value != str)
+		{
+			ambrosiaShowInline(validateId);
+			return false;
+		}
+
+		if ((min != null) && (value < parseFloat(min, 10)))
+		{
+			ambrosiaShowInline(validateId);
+			return false;
+		}
+
+		if ((max != null) && (value > parseFloat(max, 10)))
+		{
+			ambrosiaShowInline(validateId);
+			return false;
+		}
+	}
+
+	ambrosiaHideInline(validateId);
+	return true;
+}
+
 function ambrosiaCountSummaryFloat(source, shadowId, summaryId, defaultValue)
 {
 	// get the objects

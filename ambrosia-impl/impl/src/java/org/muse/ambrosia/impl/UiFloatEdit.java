@@ -24,6 +24,7 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 
 import org.muse.ambrosia.api.Context;
+import org.muse.ambrosia.api.CountEdit;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.FloatEdit;
 import org.muse.ambrosia.api.Message;
@@ -49,6 +50,18 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 	/** The alt text for the icon. */
 	protected Message iconAlt = null; // new UiMessage().setMessage("duration-alt");
 
+	/** Icon for showing invalid. */
+	protected String invalidIcon = "!/ambrosia_library/icons/warning.png";
+
+	/** The message selector for the invalid dismiss message. */
+	protected Message invalidOk = new UiMessage().setMessage("ok");
+
+	/** A maximum acceptable value for the edit. */
+	protected PropertyReference max = null;
+
+	/** A minimum acceptable value for the edit. Default is 0. */
+	protected PropertyReference min = null;
+
 	/** The number of columns per row for the box. */
 	protected int numCols = 16;
 
@@ -72,6 +85,21 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
+
+	/** The message for the validation alert. */
+	protected Message validationMsg = new UiMessage().setMessage("float-edit-validate");
+
+	/** The message for the validation alert - max only. */
+	protected Message validationMsgMax = new UiMessage()
+			.setMessage("float-edit-validate-max", new UiPropertyReference().setReference("ambrosia_max"));
+
+	/** The message for the validation alert - min only. */
+	protected Message validationMsgMin = new UiMessage()
+			.setMessage("float-edit-validate-min", new UiPropertyReference().setReference("ambrosia_min"));
+
+	/** The message for the validation alert - min and max. */
+	protected Message validationMsgMinMax = new UiMessage().setMessage("float-edit-validate-min-max", new UiPropertyReference()
+			.setReference("ambrosia_min"), new UiPropertyReference().setReference("ambrosia_max"));
 
 	/**
 	 * No-arg constructor.
@@ -188,6 +216,30 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		{
 		}
 
+		// min
+		settingsXml = XmlHelper.getChildElementNamed(xml, "minValue");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setMin(pRef);
+			}
+		}
+
+		// max
+		settingsXml = XmlHelper.getChildElementNamed(xml, "maxValue");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setMax(pRef);
+			}
+		}
+
 		// icon
 		// String icon = StringUtil.trimToNull(xml.getAttribute("icon"));
 		// if (icon != null) this.icon = icon;
@@ -272,6 +324,81 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
+		// min
+		String minValue = null;
+		if (this.min != null)
+		{
+			try
+			{
+				minValue = this.min.read(context, focus);
+				Float.parseFloat(minValue);
+			}
+			catch (NumberFormatException e)
+			{
+				minValue = null;
+			}
+		}
+
+		// max
+		String maxValue = null;
+		if (this.max != null)
+		{
+			try
+			{
+				maxValue = this.max.read(context, focus);
+				Float.parseFloat(maxValue);
+			}
+			catch (NumberFormatException e)
+			{
+				maxValue = null;
+			}
+		}
+
+		// the validation failure message
+		String failureMsg = null;
+		if ((minValue == null) && (maxValue == null))
+		{
+			failureMsg = Validator.escapeHtml(this.validationMsg.getMessage(context, focus));
+		}
+
+		else if (maxValue == null)
+		{
+			context.put("ambrosia_min", minValue);
+			failureMsg = Validator.escapeHtml(this.validationMsgMin.getMessage(context, focus));
+			context.remove("ambrosia_min");
+		}
+
+		else if (minValue == null)
+		{
+			context.put("ambrosia_max", maxValue);
+			failureMsg = Validator.escapeHtml(this.validationMsgMax.getMessage(context, focus));
+			context.remove("ambrosia_max");
+		}
+
+		else
+		{
+			context.put("ambrosia_min", minValue);
+			context.put("ambrosia_max", maxValue);
+			failureMsg = Validator.escapeHtml(this.validationMsgMinMax.getMessage(context, focus));
+			context.remove("ambrosia_max");
+			context.remove("ambrosia_min");
+		}
+
+		// the "failure" panel shown if requirements are not met
+		response.println("<div class=\"ambrosiaConfirmPanel\" style=\"display:none; left:0px; top:0px; width:340px; height:120px\" id=\"failure_"
+				+ id + "\">");
+		response.println("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>");
+		response.println("<td colspan=\"2\" style=\"padding:1em; white-space:normal; line-height:1em; \" align=\"left\">" + failureMsg + "</td>");
+		response.println("</tr><tr>");
+		response.println("<td style=\"padding:1em\" align=\"left\"><input type=\"button\" value=\"" + this.invalidOk.getMessage(context, focus)
+				+ "\" onclick=\"hideConfirm('failure_" + id + "','');return false;\" " + "/></td>");
+		response.println("</tr></table></div>");
+
+		// validation function
+		StringBuffer script = new StringBuffer();
+		script.append("function popupInvalid_" + id + "()\n{\n  showConfirm('failure_" + id + "');\n}\n");
+		context.addScript(script.toString());
+
 		// title
 		if (this.titleMessage != null)
 		{
@@ -289,20 +416,19 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 
 		// TODO: make the icon link to a popup picker!
 
-		response.println("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\""
-				+ id
-				+ "\" name=\""
-				+ id
-				+ "\" size=\""
-				+ Integer.toString(numCols)
-				+ "\" value=\""
-				+ Validator.escapeHtml(value)
-				+ "\""
-				+ (readOnly ? " disabled=\"disabled\"" : "")
-				+ ((this.sumToId != null) ? " onchange=\"ambrosiaCountSummaryFloat(this, '" + shadowId + "', '" + this.sumToId + "', '"
-						+ defaultValue + "');\"" : "") + " />"
-				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : "")
-				+ "</span>");
+		response.print("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
+				+ Integer.toString(numCols) + "\" value=\"" + Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
+				+ " onchange=\"ambrosiaFloatChange(this, " + valueOrNull(shadowId) + ", " + valueOrNull(this.sumToId) + ", "
+				+ valueOrNull(defaultValue) + ", " + valueOrNull(minValue) + ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\"" + " />"
+				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
+
+		// validate failure alert (will display:inline when made visible)
+		response.print("<div style=\"display:none\" id=\"invalid_" + id + "\">");
+		response.print("<a href=\"#\" onclick=\"popupInvalid_" + id + "();return false;\" title=\"" + failureMsg + "\">");
+		response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.invalidIcon) + "\" />");
+		response.print("</a></div>");
+
+		response.println("</span>");
 
 		context.editComponentRendered(id);
 
@@ -336,6 +462,10 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 			context.addFocusId(id);
 		}
 
+		// pre-validate
+		context.addScript("ambrosiaValidateFloat(document.getElementById('" + id + "'), " + valueOrNull(minValue) + ", " + valueOrNull(maxValue)
+				+ ", 'invalid_" + id + "');");
+
 		return true;
 	}
 
@@ -355,6 +485,24 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 	{
 		this.focusDecision = decision;
 
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FloatEdit setMax(PropertyReference max)
+	{
+		this.max = max;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FloatEdit setMin(PropertyReference min)
+	{
+		this.min = min;
 		return this;
 	}
 
@@ -423,5 +571,17 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 	{
 		this.titleMessage = new UiMessage().setMessage(selector, references);
 		return this;
+	}
+
+	/**
+	 * Prepare the value for a javascript parameter, either sending 'null', or the value quoted.
+	 * 
+	 * @param value
+	 *        The value.
+	 * @return The value prepared for a javascript parameter, either sending 'null', or the value quoted.
+	 */
+	protected String valueOrNull(String value)
+	{
+		return value == null ? "null" : "'" + value + "'";
 	}
 }

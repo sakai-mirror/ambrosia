@@ -44,6 +44,24 @@ public interface FloatEdit extends Component
 	FloatEdit setFocus(Decision decision);
 
 	/**
+	 * Set a maximum acceptable value for the edit.
+	 * 
+	 * @param min
+	 *        The model reference to compute the maximum acceptable value for the edit.
+	 * @return self.
+	 */
+	FloatEdit setMax(PropertyReference max);
+
+	/**
+	 * Set a minimum acceptable value for the edit.
+	 * 
+	 * @param minimum
+	 *        The model reference to compute the minimum acceptable value for the edit.
+	 * @return self.
+	 */
+	FloatEdit setMin(PropertyReference min);
+
+	/**
 	 * Set an icon
 	 * 
 	 * @param url

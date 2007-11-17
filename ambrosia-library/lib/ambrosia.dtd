@@ -555,7 +555,7 @@
 <!ELEMENT minValue (model)* >
 <!ELEMENT maxValue (model)* >
 
-<!ELEMENT floatEdit (included | title | model | default | onEmptyAlert | readOnly | focus | summary)* >
+<!ELEMENT floatEdit (included | title | model | default | onEmptyAlert | readOnly | focus | summary | minValue | maxValue)* >
 <!ATTLIST floatEdit id CDATA #IMPLIED >
 <!ATTLIST floatEdit title CDATA #IMPLIED >
 <!ATTLIST floatEdit model CDATA #IMPLIED >
