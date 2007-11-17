@@ -261,6 +261,7 @@ function ambrosiaSelectDependencies(selected, dependencies)
 				if (target == null) continue;
 				target.disabled = true;
 				target.value = "";
+				if (target.onchange) target.onchange();
 			}
 		}
 	}
