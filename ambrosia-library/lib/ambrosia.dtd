@@ -83,7 +83,6 @@
 <!ATTLIST durationModel delegate CDATA #IMPLIED>
 <!ATTLIST durationModel tool CDATA #IMPLIED >
 <!ATTLIST durationModel missing CDATA #IMPLIED >
-<!ATTLIST durationModel concise (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT countModel (missingValues | model)* >
 <!ATTLIST countModel ref CDATA #REQUIRED >

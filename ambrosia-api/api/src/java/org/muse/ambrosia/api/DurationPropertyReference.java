@@ -26,11 +26,4 @@ package org.muse.ambrosia.api;
  */
 public interface DurationPropertyReference extends PropertyReference
 {
-	/**
-	 * Set the display to be concise (hh:mm:ss)
-	 * 
-	 * @param setting
-	 *        The concise setting.
-	 */
-	DurationPropertyReference setConcise(Boolean setting);
 }

@@ -32,8 +32,6 @@ import org.w3c.dom.Element;
  */
 public class UiDurationPropertyReference extends UiPropertyReference implements DurationPropertyReference
 {
-	protected boolean concise = true;
-
 	/**
 	 * No-arg constructor.
 	 */
@@ -53,10 +51,6 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 	{
 		// do the property reference stuff
 		super(service, xml);
-
-		// concise
-		String concise = StringUtil.trimToNull(xml.getAttribute("concise"));
-		if ((concise != null) && (concise.equals("FALSE"))) setConcise(Boolean.FALSE);
 	}
 
 	/**
@@ -65,16 +59,6 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 	public String getType()
 	{
 		return "duration";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public DurationPropertyReference setConcise(Boolean setting)
-	{
-		if (setting == null) throw new IllegalArgumentException();
-		this.concise = setting;
-		return this;
 	}
 
 	/**
@@ -95,6 +79,8 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 	 */
 	protected String format(Context context, Object value)
 	{
+		// support h:mm
+
 		long time = 0;
 		if (value instanceof Integer)
 		{
@@ -117,20 +103,7 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 		long minutes = (time - (hours * (60 * 60))) / 60;
 		long seconds = (time - (hours * (60 * 60)) - (minutes * 60));
 
-		// TODO: take message id for pattern... {0} hours, {1} minutes
-		// Object[] args = new Object[2];
-		// args[0] = Long.toString(hours);
-		// args[1] = Long.toString(minutes);
-		// return (String) messages.getFormattedMessage("time_taken", args);
-
-		// TODO: handle days?
-
-		if (this.concise)
-		{
-			return Validator.escapeHtml(fmtTwoDigit(hours) + ":" + fmtTwoDigit(minutes) + ":" + fmtTwoDigit(seconds));
-		}
-
-		return Validator.escapeHtml(Long.toString(hours) + " hours, " + Long.toString(minutes) + " minutes, " + Long.toString(seconds) + " seconds");
+		return Validator.escapeHtml(hours + ":" + fmtTwoDigit(minutes));
 	}
 
 	/**
@@ -138,19 +111,21 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 	 */
 	protected String unFormat(String value)
 	{
-		// if (this.concise)
+		String[] parts = StringUtil.split(value, ":");
+		if (parts.length == 2)
 		{
-			String[] parts = StringUtil.split(value, ":");
-			if (parts.length == 3)
+			try
 			{
 				long duration = 0;
 				// hours
 				duration = Integer.parseInt(parts[0]) * 60l * 60l * 1000l;
 				// minutes
 				duration += Integer.parseInt(parts[1]) * 60l * 1000l;
-				// seconds
-				duration += Integer.parseInt(parts[2]) * 1000l;
+
 				return Long.toString(duration);
+			}
+			catch (NumberFormatException e)
+			{
 			}
 		}
 

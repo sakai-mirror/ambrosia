@@ -89,6 +89,30 @@ function getFloat(str)
 	return rv;
 }
 
+function ambrosiaDurationChange(source, validateId)
+{
+	ambrosiaValidateDuration(source, validateId);
+}
+
+function ambrosiaValidateDuration(source, validateId)
+{
+	var reg = new RegExp("^[0-9]+:[0-9]{2}$", "i");
+
+	var str = trim(source.value);
+	
+	if (str != "")
+	{
+		if (reg.exec(str) == null)
+		{
+			ambrosiaShowInline(validateId);
+			return false;
+		}
+	}
+
+	ambrosiaHideInline(validateId);
+	return true;
+}
+
 function ambrosiaCountChange(source, shadowId, summaryId, min, max, validateId)
 {
 	// validate

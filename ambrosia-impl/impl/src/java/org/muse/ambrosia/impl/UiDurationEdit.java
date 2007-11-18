@@ -46,8 +46,14 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 	/** The alt text for the icon. */
 	protected Message iconAlt = new UiMessage().setMessage("duration-alt");
 
+	/** Icon for showing invalid. */
+	protected String invalidIcon = "!/ambrosia_library/icons/warning.png";
+
+	/** The message selector for the invalid dismiss message. */
+	protected Message invalidOk = new UiMessage().setMessage("ok");
+
 	/** The number of columns per row for the box. */
-	protected int numCols = 16;
+	protected int numCols = 6;
 
 	/** The number of rows for the text box. */
 	protected int numRows = 1;
@@ -69,6 +75,9 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
+
+	/** The message for the validation alert. */
+	protected Message validationMsg = new UiMessage().setMessage("duration-edit-validate");
 
 	/**
 	 * No-arg constructor.
@@ -223,6 +232,24 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
+		// the validation failure message
+		String failureMsg = Validator.escapeHtml(this.validationMsg.getMessage(context, focus));
+
+		// the "failure" panel shown if requirements are not met
+		response.println("<div class=\"ambrosiaConfirmPanel\" style=\"display:none; left:0px; top:0px; width:340px; height:120px\" id=\"failure_"
+				+ id + "\">");
+		response.println("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>");
+		response.println("<td colspan=\"2\" style=\"padding:1em; white-space:normal; line-height:1em; \" align=\"left\">" + failureMsg + "</td>");
+		response.println("</tr><tr>");
+		response.println("<td style=\"padding:1em\" align=\"left\"><input type=\"button\" value=\"" + this.invalidOk.getMessage(context, focus)
+				+ "\" onclick=\"hideConfirm('failure_" + id + "','');return false;\" " + "/></td>");
+		response.println("</tr></table></div>");
+
+		// validation function
+		StringBuffer script = new StringBuffer();
+		script.append("function popupInvalid_" + id + "()\n{\n  showConfirm('failure_" + id + "');\n}\n");
+		context.addScript(script.toString());
+
 		// title
 		if (this.titleMessage != null)
 		{
@@ -240,10 +267,18 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 
 		// TODO: make the icon link to a popup picker!
 
-		response.println("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
-				+ Integer.toString(numCols) + "\" value=\"" + Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />"
-				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : "")
-				+ "</span>");
+		response.print("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
+				+ Integer.toString(numCols) + "\" value=\"" + Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
+				+ " onchange=\"ambrosiaDurationChange(this, 'invalid_" + id + "');\"" + " />"
+				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
+
+		// validate failure alert (will display:inline when made visible)
+		response.print("<div style=\"display:none\" id=\"invalid_" + id + "\">");
+		response.print("<a href=\"#\" onclick=\"popupInvalid_" + id + "();return false;\" title=\"" + failureMsg + "\">");
+		response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.invalidIcon) + "\" />");
+		response.print("</a></div>");
+
+		response.println("</span>");
 
 		context.editComponentRendered(id);
 
@@ -269,6 +304,9 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 			// add the field name / id to the focus path
 			context.addFocusId(id);
 		}
+
+		// pre-validate
+		context.addScript("ambrosiaValidateDuration(document.getElementById('" + id + "'), 'invalid_" + id + "');");
 
 		return true;
 	}
