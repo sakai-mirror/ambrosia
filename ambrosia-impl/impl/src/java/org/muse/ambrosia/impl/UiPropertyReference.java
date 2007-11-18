@@ -628,22 +628,22 @@ public class UiPropertyReference implements PropertyReference
 		}
 		catch (IntrospectionException ie)
 		{
-			M_log.warn("getValue: method: " + property + " object: " + entity.getClass() + " : " + ie);
+			M_log.warn("getValue: method: " + property + " object: " + entity.getClass(), ie);
 			return null;
 		}
 		catch (IllegalAccessException ie)
 		{
-			M_log.warn("getValue: method: " + property + " object: " + entity.getClass() + " :" + ie);
+			M_log.warn("getValue: method: " + property + " object: " + entity.getClass(), ie);
 			return null;
 		}
 		catch (IllegalArgumentException ie)
 		{
-			M_log.warn("getValue: method: " + property + " object: " + entity.getClass() + " :" + ie);
+			M_log.warn("getValue: method: " + property + " object: " + entity.getClass(), ie);
 			return null;
 		}
 		catch (InvocationTargetException ie)
 		{
-			M_log.warn("getValue: method: " + property + " object: " + entity.getClass() + " :" + ie);
+			M_log.warn("getValue: method: " + property + " object: " + entity.getClass(), ie);
 			return null;
 		}
 	}
@@ -986,19 +986,19 @@ public class UiPropertyReference implements PropertyReference
 		}
 		catch (IntrospectionException ie)
 		{
-			M_log.warn("setValue: method: " + property + " object: " + entity.getClass() + " : " + ie);
+			M_log.warn("setValue: method: " + property + " object: " + entity.getClass(), ie);
 		}
 		catch (IllegalAccessException ie)
 		{
-			M_log.warn("setValue: method: " + property + " object: " + entity.getClass() + " :" + ie);
+			M_log.warn("setValue: method: " + property + " object: " + entity.getClass(), ie);
 		}
 		catch (IllegalArgumentException ie)
 		{
-			M_log.warn("setValue: method: " + property + " object: " + entity.getClass() + " :" + ie);
+			M_log.warn("setValue: method: " + property + " object: " + entity.getClass(), ie);
 		}
 		catch (InvocationTargetException ie)
 		{
-			M_log.warn("setValue: method: " + property + " object: " + entity.getClass() + " :" + ie);
+			M_log.warn("setValue: method: " + property + " object: " + entity.getClass(), ie);
 		}
 	}
 
