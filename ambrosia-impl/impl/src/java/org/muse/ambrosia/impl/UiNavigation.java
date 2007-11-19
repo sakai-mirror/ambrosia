@@ -295,6 +295,13 @@ public class UiNavigation extends UiComponent implements Navigation
 			this.title = new UiMessage(service, settingsXml);
 		}
 
+		settingsXml = XmlHelper.getChildElementNamed(xml, "description");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			setDescription(new UiMessage(service, settingsXml));
+		}
+
 		settingsXml = XmlHelper.getChildElementNamed(xml, "destination");
 		if (settingsXml != null)
 		{

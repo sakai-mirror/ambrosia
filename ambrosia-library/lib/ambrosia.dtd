@@ -14,6 +14,8 @@
 
 <!ELEMENT header (message | container)* >
 
+<!ELEMENT description (message) >
+
 <!ELEMENT subHeader (message | container)* >
 
 <!ELEMENT footer (message | container)* >
@@ -250,7 +252,7 @@
 
 <!ELEMENT navigations (navigation | container)* >
 
-<!ELEMENT navigation (included | confirm | title | destination | disabled | default | validate | icon | iterator)* >
+<!ELEMENT navigation (included | confirm | title | destination | disabled | default | validate | icon | iterator | description)* >
 <!ATTLIST navigation id CDATA #IMPLIED >
 <!ATTLIST navigation title CDATA #IMPLIED >
 <!ATTLIST navigation style (BUTTON|LINK) #IMPLIED >
