@@ -549,7 +549,6 @@
 <!ATTLIST countEdit id CDATA #IMPLIED >
 <!ATTLIST countEdit title CDATA #IMPLIED >
 <!ATTLIST countEdit model CDATA #IMPLIED >
-<!ATTLIST countEdit rows CDATA #IMPLIED >
 <!ATTLIST countEdit cols CDATA #IMPLIED >
 <!ATTLIST countEdit readOnly (TRUE|FALSE) #IMPLIED >
 

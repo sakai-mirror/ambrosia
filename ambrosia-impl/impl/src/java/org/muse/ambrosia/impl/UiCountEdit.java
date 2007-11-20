@@ -242,6 +242,16 @@ public class UiCountEdit extends UiComponent implements CountEdit
 			}
 		}
 
+		// size
+		try
+		{
+			int cols = Integer.parseInt(xml.getAttribute("cols"));
+			setSize(cols);
+		}
+		catch (Throwable ignore)
+		{
+		}
+
 		// icon
 		// String icon = StringUtil.trimToNull(xml.getAttribute("icon"));
 		// if (icon != null) this.icon = icon;
@@ -582,6 +592,16 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	public CountEdit setReadOnly(Decision decision)
 	{
 		this.readOnly = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public CountEdit setSize(int cols)
+	{
+		this.numCols = cols;
+
 		return this;
 	}
 

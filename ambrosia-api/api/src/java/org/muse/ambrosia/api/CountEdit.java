@@ -85,6 +85,15 @@ public interface CountEdit extends SummarizingComponent
 	CountEdit setReadOnly(Decision decision);
 
 	/**
+	 * Set the size of the text edit box in columns.
+	 * 
+	 * @param cols
+	 *        The number of columns to show.
+	 * @return self.
+	 */
+	CountEdit setSize(int cols);
+
+	/**
 	 * Set the field to have a summary if it is used in an iteration.
 	 * 
 	 * @return self.
