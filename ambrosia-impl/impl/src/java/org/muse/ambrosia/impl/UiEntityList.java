@@ -477,8 +477,8 @@ public class UiEntityList extends UiComponent implements EntityList
 						UiNavigation.generateLinkScript(context, sortId, false, false, submit, c.getSortDestinationAsc().getDestination(context,
 								focus), (String) context.get("sakai.return.url"), false);
 						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
-								+ "><a href=\"#\" onclick=\"act_" + sortId + "();return false;\">" + Validator.escapeHtml(title.getMessage(context, focus))
-								+ "</a></th>");
+								+ "><a href=\"#\" onclick=\"act_" + sortId + "();return false;\">"
+								+ Validator.escapeHtml(title.getMessage(context, focus)) + "</a></th>");
 					}
 
 					// no sort
@@ -680,45 +680,24 @@ public class UiEntityList extends UiComponent implements EntityList
 			}
 		}
 
-		// summary row
+		response.println("</table>");
+
+		// summary
 		if (summaryNeeded)
 		{
-			response.println("<tr>");
 			for (EntityListColumn c : this.columns)
 			{
 				// included?
 				if (!c.included(context)) continue;
 
-				response.print("<td style=\"");
-				if (c.getWidth() != null)
-				{
-					response.print("width:" + c.getWidth().toString() + "px;");
-				}
-				else if (c.getWidthEm() != null)
-				{
-					response.print("width:" + c.getWidthEm().toString() + "em;");
-				}
-				if (c.getIsNoWrap())
-				{
-					response.print("white-space:nowrap;");
-				}
-				if (c.getCentered())
-				{
-					response.print("text-align:center;");
-				}
-				response.print("\">");
-
 				if (c.isSummaryRequired())
 				{
+					response.println("<div class=\"ambrosiaContainerComponent\">");
 					c.renderSummary(context, focus);
+					response.println("</div>");
 				}
-
-				response.println("</td>");
 			}
-			response.println("</tr>");
 		}
-
-		response.println("</table>");
 
 		// columns one time text
 		colNum = 0;

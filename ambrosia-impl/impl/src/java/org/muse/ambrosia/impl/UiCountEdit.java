@@ -491,9 +491,6 @@ public class UiCountEdit extends UiComponent implements CountEdit
 	 */
 	public void renderSummary(Context context, Object focus)
 	{
-		// included?
-		if (!isIncluded(context, focus)) return;
-
 		// summarizing?
 		if (!this.summary) return;
 
@@ -501,13 +498,7 @@ public class UiCountEdit extends UiComponent implements CountEdit
 
 		// get the summaryId
 		String summaryId = context.getRegistration(getId());
-		if (summaryId == null) return;
-
-		// set some uniqe ids for this field (among our brethren iterations)
-		int idRoot = context.getUniqueId();
-		// String id = this.getClass().getSimpleName() + "_" + idRoot;
-		String decodeId = "decode_" + idRoot;
-		String shadowId = "shadow_" + idRoot;
+		if (summaryId == null) summaryId = this.getClass().getSimpleName() + "_" + context.getUniqueId();
 
 		// read the initial value
 		String value = "";
@@ -519,13 +510,14 @@ public class UiCountEdit extends UiComponent implements CountEdit
 		// title
 		if (this.summaryTitle != null)
 		{
-			response.println("<label class=\"ambrosiaComponentTitle\" for=\"" + summaryId + "\">");
-			response.println(this.summaryTitle.getMessage(context, focus));
-			response.println("</label>");
+			Object extraArgs[] = new Object[1];
+			extraArgs[0] = "<span id=\"" + summaryId + "\">" + Validator.escapeHtml(value) + "</span>";
+			response.print(this.summaryTitle.getMessage(context, focus, extraArgs));
 		}
-
-		response.println("<input type=\"text\" id=\"" + summaryId + "\" name=\"" + summaryId + "\" size=\"" + Integer.toString(numCols)
-				+ "\" value=\"" + Validator.escapeHtml(value) + "\" disabled=\"disabled\" />");
+		else
+		{
+			response.println("<span id=\"" + summaryId + "\">" + Validator.escapeHtml(value) + "</span>");
+		}
 	}
 
 	/**

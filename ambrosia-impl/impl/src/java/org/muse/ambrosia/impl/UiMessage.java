@@ -27,7 +27,6 @@ import java.util.List;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Message;
-import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
@@ -149,6 +148,16 @@ public class UiMessage implements Message
 	 */
 	public String getMessage(Context context, Object focus)
 	{
+		return getMessage(context, focus, null);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getMessage(Context context, Object focus, Object[] extraArgs)
+	{
+		int extraLength = (extraArgs == null) ? 0 : extraArgs.length;
+
 		// pick the selector
 		String sel = this.selector;
 		for (int i = 0; i < this.alternateSelectorDecisions.size(); i++)
@@ -162,7 +171,7 @@ public class UiMessage implements Message
 		}
 
 		// if no references, use just the selector message
-		if ((this.references == null) || (this.references.length == 0))
+		if (((this.references == null) || (this.references.length == 0)) && (extraLength == 0))
 		{
 			if (sel != null)
 			{
@@ -178,11 +187,15 @@ public class UiMessage implements Message
 			{
 				return StringUtil.trimToZero(this.references[0].read(context, focus));
 			}
+			else if (extraLength == 1)
+			{
+				return StringUtil.trimToZero(extraArgs[0].toString());
+			}
 			return "";
 		}
 
 		// put the property reference into args for the message
-		Object args[] = new Object[this.references.length];
+		Object args[] = new Object[this.references.length + extraLength];
 		int i = 0;
 		for (PropertyReference reference : this.references)
 		{
@@ -192,6 +205,15 @@ public class UiMessage implements Message
 			if (value == null) value = "";
 
 			args[i++] = value;
+		}
+
+		// add in the extras
+		if (extraLength > 0)
+		{
+			for (Object extra : extraArgs)
+			{
+				args[i++] = (extra == null) ? "" : extra.toString();
+			}
 		}
 
 		return StringUtil.trimToZero(context.getMessages().getFormattedMessage(sel, args));

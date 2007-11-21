@@ -176,7 +176,8 @@ function ambrosiaCountSummaryInt(source, shadowId, summaryId)
 	// update the summary
 	if (summary != null)
 	{
-		summary.value = getInt(summary.value) - getInt(oldValue) + getInt(newValue);
+		// (for a field) summary.value = getInt(summary.value) - getInt(oldValue) + getInt(newValue);
+		summary.innerHTML = getInt(summary.innerHTML) - getInt(oldValue) + getInt(newValue);
 	}
 }
 

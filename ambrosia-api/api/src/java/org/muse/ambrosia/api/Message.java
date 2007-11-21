@@ -49,6 +49,19 @@ public interface Message
 	String getMessage(Context context, Object focus);
 
 	/**
+	 * Format the message from the message selector and the array of property references, and the extra args.
+	 * 
+	 * @param context
+	 *        The UiContext.
+	 * @param focus
+	 *        The entity object focus.
+	 * @param extraArgs
+	 *        additional arguments for the formatting.
+	 * @return The formatted message.
+	 */
+	String getMessage(Context context, Object focus, Object[] extraArgs);
+
+	/**
 	 * Set the message selector and optional property references.
 	 * 
 	 * @param selector
