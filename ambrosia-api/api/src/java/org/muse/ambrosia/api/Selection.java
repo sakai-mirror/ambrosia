@@ -39,8 +39,10 @@ public interface Selection extends Component
 	 *        The selection's value.
 	 * @param component
 	 *        the component to add.
+	 * @param separate
+	 *        if true, render the component separately, else render it inline
 	 */
-	Selection addComponentToSelection(String value, Component component);
+	Selection addComponentToSelection(String value, Component component, boolean separate);
 
 	/**
 	 * Add a selection, one more choice the user can select.

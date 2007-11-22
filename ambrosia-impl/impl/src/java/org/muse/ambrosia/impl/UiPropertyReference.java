@@ -889,16 +889,23 @@ public class UiPropertyReference implements PropertyReference
 				// single value enum
 				else if (paramTypes[0].isEnum())
 				{
-					Object[] constants = paramTypes[0].getEnumConstants();
-					if (constants != null)
+					if ((value == null) || (value[0] == null))
 					{
-						// see if value matches any of these
-						for (Object o : constants)
+						params[0] = null;
+					}
+					else
+					{
+						Object[] constants = paramTypes[0].getEnumConstants();
+						if (constants != null)
 						{
-							if (o.toString().equals(value[0]))
+							// see if value matches any of these
+							for (Object o : constants)
 							{
-								params[0] = o;
-								break;
+								if (o.toString().equals(value[0]))
+								{
+									params[0] = o;
+									break;
+								}
 							}
 						}
 					}

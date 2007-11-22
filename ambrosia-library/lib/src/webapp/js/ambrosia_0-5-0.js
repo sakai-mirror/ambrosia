@@ -317,7 +317,14 @@ function ambrosiaSelectDependencies(selected, dependencies)
 				if (i == 0) continue;
 				var target = document.getElementById(list[i]);
 				if (target == null) continue;
-				target.disabled = false;
+				if (target.disabled == true)
+				{
+					target.disabled = false;
+					if (target.type == "radio")
+					{
+						target.checked = true;
+					}
+				}
 			}
 		}
 		
@@ -329,7 +336,14 @@ function ambrosiaSelectDependencies(selected, dependencies)
 				var target = document.getElementById(list[i]);
 				if (target == null) continue;
 				target.disabled = true;
-				target.value = "";
+				if (target.type == "text")
+				{
+					target.value = "";
+				}
+				else if (target.type == "radio")
+				{
+					target.checked = false;
+				}
 				if (target.onchange) target.onchange();
 			}
 		}

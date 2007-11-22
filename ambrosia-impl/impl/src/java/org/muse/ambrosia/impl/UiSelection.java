@@ -24,6 +24,7 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,7 +37,6 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.Message;
-import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.RenderListener;
 import org.muse.ambrosia.api.Selection;
@@ -52,6 +52,19 @@ import org.w3c.dom.NodeList;
  */
 public class UiSelection extends UiComponent implements Selection
 {
+	protected class ContainerRef
+	{
+		Container container;
+
+		boolean separate = false;
+
+		ContainerRef(Container c, boolean separate)
+		{
+			this.container = c;
+			this.separate = separate;
+		}
+	}
+
 	/** Decision for including the correct markers. */
 	protected Decision correctDecision = null;
 
@@ -95,7 +108,7 @@ public class UiSelection extends UiComponent implements Selection
 	protected String selectedValue = "true";
 
 	/** Containers holding dependent components to a selection, keyed by the selection value. */
-	protected Map<String, Container> selectionContainers = new HashMap<String, Container>();
+	protected Map<String, ContainerRef> selectionContainers = new HashMap<String, ContainerRef>();
 
 	/** The ref to the selectionReference collection that pulls out the display text for each selection. */
 	protected PropertyReference selectionDisplayReference = null;
@@ -245,10 +258,14 @@ public class UiSelection extends UiComponent implements Selection
 						addSelection(selector, value);
 
 						// is there a container?
-						if (XmlHelper.getChildElementNamed(innerXml, "container") != null)
+						Element containerXml = XmlHelper.getChildElementNamed(innerXml, "container");
+						if (containerXml != null)
 						{
+							String separateCode = StringUtil.trimToNull(containerXml.getAttribute("separate"));
+							boolean separate = "TRUE".equals(separateCode);
+
 							Container container = new UiContainer(service, innerXml);
-							this.selectionContainers.put(value, container);
+							this.selectionContainers.put(value, new ContainerRef(container, separate));
 						}
 					}
 				}
@@ -358,16 +375,16 @@ public class UiSelection extends UiComponent implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
-	public Selection addComponentToSelection(String value, Component component)
+	public Selection addComponentToSelection(String value, Component component, boolean separate)
 	{
-		Container container = this.selectionContainers.get(value);
+		ContainerRef container = this.selectionContainers.get(value);
 		if (container == null)
 		{
-			container = new UiContainer();
+			container = new ContainerRef(new UiContainer(), separate);
 			this.selectionContainers.put(value, container);
 		}
 
-		container.add(component);
+		container.container.add(component);
 
 		return this;
 	}
@@ -624,6 +641,12 @@ public class UiSelection extends UiComponent implements Selection
 				onclick = "onclick=\"ambrosiaSubmit(this.value)\" ";
 			}
 
+			// collect the rendered ids
+			List<String> ids = new ArrayList<String>();
+
+			// collected dependent components marked separate
+			String fragment = "";
+
 			for (int i = 0; i < values.size(); i++)
 			{
 				String val = values.get(i);
@@ -668,27 +691,29 @@ public class UiSelection extends UiComponent implements Selection
 				}
 
 				// use a radio for single select
+				String thisId = id + "_" + i;
 				if (single)
 				{
 					// the radio button
-					response.println("<input " + onclick + "type=\"radio\" name=\"" + id + "\" id=\"" + id + "_" + i + "\" value=\"" + val + "\" "
+					response.println("<input " + onclick + "type=\"radio\" name=\"" + id + "\" id=\"" + thisId + "\" value=\"" + val + "\" "
 							+ (selected ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 				}
 
 				// for multiple selection, use a checkbox set
 				else
 				{
-					response.println("<input " + onclick + "type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "_" + i + "\" value=\"" + val + "\" "
+					response.println("<input " + onclick + "type=\"checkbox\" name=\"" + id + "\" id=\"" + thisId + "\" value=\"" + val + "\" "
 							+ (selected ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 				}
+				ids.add(thisId);
 
 				// message
-				response.print("<label for=\"" + id + "_" + i + "\">");
+				response.print("<label for=\"" + thisId + "\">");
 				response.print(message);
 				response.println("</label>");
 
 				// container of dependent components
-				Container container = this.selectionContainers.get(val);
+				ContainerRef container = this.selectionContainers.get(val);
 				if (container != null)
 				{
 					needDependencies = true;
@@ -705,10 +730,24 @@ public class UiSelection extends UiComponent implements Selection
 					// listen for any dependent edit components being rendered
 					context.addEditComponentRenderListener(listener);
 
-					// render the dependent components
-					for (Component c : container.getContained())
+					if (container.separate)
 					{
+						context.setCollecting();
+						response = context.getResponseWriter();
+					}
+
+					// render the dependent components
+					for (Component c : container.container.getContained())
+					{
+						if (container.separate) response.println("<div class=\"ambrosiaContainerComponent\">");
 						c.render(context, focus);
+						if (container.separate) response.println("</div>");
+					}
+
+					if (container.separate)
+					{
+						fragment += context.getCollected();
+						response = context.getResponseWriter();
 					}
 
 					// stop listening
@@ -724,6 +763,14 @@ public class UiSelection extends UiComponent implements Selection
 				}
 			}
 
+			// register the ids in reverse order
+			// Note: reverse order so that the first choice gets processed last, as in when this is a dependent component to another selection
+			Collections.reverse(ids);
+			for (String thisId : ids)
+			{
+				context.editComponentRendered(thisId);
+			}
+
 			if (needDependencies)
 			{
 				dependency.setLength(dependency.length() - 1);
@@ -737,6 +784,11 @@ public class UiSelection extends UiComponent implements Selection
 			{
 				response.println("<input type=\"hidden\" name=\"" + decodeId + "\" value =\"" + id + "\" />" + "<input type=\"hidden\" name=\""
 						+ "prop_" + decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
+			}
+
+			if (fragment.length() > 0)
+			{
+				response.print(fragment);
 			}
 		}
 
