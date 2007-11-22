@@ -250,7 +250,7 @@ Sakai ~ itemAction
 */
 .ambrosiaUnderNav
 {
-	font-size: .80em;
+	font-size: .8em;
 	font-family: verdana,arial;
 	color: #888;
 }
@@ -419,15 +419,6 @@ Sakai ~ listHier lines nolines tableAction
 {
 	vertical-align:middle;
 	padding: .3em;
-}
-
-/*
-FileUpload
-*/
-.ambrosiaFileUpload
-{
-	margin-top: 1em;
-	margin-bottom: 1em;
 }
 
 /*

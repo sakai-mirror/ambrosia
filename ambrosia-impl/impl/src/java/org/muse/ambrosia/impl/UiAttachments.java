@@ -297,7 +297,20 @@ public class UiAttachments extends UiComponent implements Attachments
 		// for raw, print only the reference
 		if (this.raw)
 		{
-			response.print("<li>" + Validator.escapeHtml(ref.getReference()) + "</li>");
+			response.print("<li>" + Validator.escapeHtml(ref.getReference()));
+			
+			// navigations
+			if (!this.navigations.isEmpty())
+			{
+				response.print("<div class=\"ambrosiaUnderNav\" />");
+				for (Navigation navigation : this.navigations)
+				{
+					navigation.render(context, ref);
+				}
+				response.print("</div>");
+			}
+
+			response.println("</li>");
 		}
 
 		// otherwise format it

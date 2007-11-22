@@ -173,8 +173,6 @@ public class UiFileUpload extends UiComponent implements FileUpload
 
 		PrintWriter response = context.getResponseWriter();
 
-		response.println("<div class=\"ambrosiaFileUpload\">");
-
 		if (onEmptyAlert)
 		{
 			// this will become visible if a submit happens and the validation fails
@@ -191,7 +189,7 @@ public class UiFileUpload extends UiComponent implements FileUpload
 		// the file chooser
 		if (!readOnly)
 		{
-			response.println("<input type=\"file\" name=\"" + id + "\" id=\"" + id + "\" class=\"upload\" />");
+			response.println("<input type=\"file\" name=\"" + id + "\" id=\"" + id + "\" />");
 
 			// the decode directive
 			if ((this.propertyReference != null) && (!readOnly))
@@ -202,8 +200,6 @@ public class UiFileUpload extends UiComponent implements FileUpload
 
 			if (this.uploadSubmit != null)
 			{
-				// tool destination URL - right where we are
-				String href = (String) context.get("sakai.destination.url");
 				boolean dflt = false;
 
 				response.println("<input type=\"submit\" " + (dflt ? "class=\"active\"" : "") + " name=\"" + id + "_u" + "\" id=\"" + id + "_u"
