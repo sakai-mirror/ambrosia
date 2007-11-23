@@ -183,7 +183,9 @@ public class UiFileUpload extends UiComponent implements FileUpload
 		// title
 		if ((this.title != null) && (isTitleIncluded(context, focus)))
 		{
-			response.println("<label for=\"" + id + "\">" + Validator.escapeHtml(this.title.getMessage(context, focus)) + "</label><br />");
+			response.print("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
+			response.print(this.title.getMessage(context, focus));
+			response.println("</label>");
 		}
 
 		// the file chooser
@@ -220,8 +222,6 @@ public class UiFileUpload extends UiComponent implements FileUpload
 						+ "		if (document.getElementById('alert_" + id + "').style.display == \"none\")\n" + "		{\n"
 						+ "			document.getElementById('alert_" + id + "').style.display = \"\";\n" + "			rv=false;\n" + "		}\n" + "	}\n");
 			}
-
-			response.println("</div>");
 		}
 
 		return true;

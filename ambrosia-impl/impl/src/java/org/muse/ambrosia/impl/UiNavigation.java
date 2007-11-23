@@ -342,7 +342,7 @@ public class UiNavigation extends UiComponent implements Navigation
 		{
 			String icon = StringUtil.trimToNull(settingsXml.getAttribute("icon"));
 			String iStyle = StringUtil.trimToNull(settingsXml.getAttribute("style"));
-			IconStyle is = "LEFT".equals(iStyle) ? IconStyle.left : IconStyle.right;
+			IconStyle is = "LEFT".equals(iStyle) ? IconStyle.left : (("RIGHT".equals(iStyle)) ? IconStyle.right : IconStyle.none);
 			setIcon(icon, is);
 		}
 

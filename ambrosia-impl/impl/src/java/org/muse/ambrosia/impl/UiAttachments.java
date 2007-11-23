@@ -187,7 +187,9 @@ public class UiAttachments extends UiComponent implements Attachments
 		// title
 		if (this.title != null)
 		{
-			response.println("<div class=\"ambrosiaAttachmentsTitle\">" + Validator.escapeHtml(this.title.getMessage(context, focus)) + "</div>");
+			response.print("<div class=\"ambrosiaComponentTitle\">");
+			response.print(this.title.getMessage(context, focus));
+			response.println("</div>");
 		}
 
 		response.println("<ul class=\"ambrosiaAttachmentsList\">");
