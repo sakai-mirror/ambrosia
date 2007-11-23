@@ -651,12 +651,10 @@ public class UiEntityList extends UiComponent implements EntityList
 						// navigations
 						if (!c.getNavigations().isEmpty())
 						{
-							response.print("<div class=\"ambrosiaUnderNav\" style=\"line-height: 1em;\">");
 							for (Component navigation : c.getNavigations())
 							{
 								navigation.render(context, entity);
 							}
-							response.print("</div>");
 						}
 					}
 

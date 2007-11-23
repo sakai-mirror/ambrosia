@@ -30,7 +30,7 @@ public interface Navigation extends Component
 	/** Icon styles. */
 	enum IconStyle
 	{
-		left, right
+		left, none, right
 	};
 
 	/** selection requirements. */
@@ -214,6 +214,13 @@ public interface Navigation extends Component
 	 * @return self.
 	 */
 	Navigation setSelectRequirementId(String id);
+
+	/**
+	 * Set the text to be small.
+	 * 
+	 * @return self.
+	 */
+	Navigation setSmall();
 
 	/**
 	 * Set the format style.

@@ -248,27 +248,18 @@ ul.ambrosiaAttachmentsList li
 Navigation container as links under an option (Attachment) (EntityList?)
 Sakai ~ itemAction
 */
-.ambrosiaUnderNav
+.ambrosiaNavSmall
 {
 	font-size: .8em;
-	font-family: verdana,arial;
-	color: #888;
+	white-space: nowrap;
+	height: 1em;
 }
-.ambrosiaUnderNav a,
-.ambrosiaUnderNav a:visited
+
+.ambrosiaNavNormal
 {
-	color: #35b;
+	white-space: nowrap;
+	height: 2em;
 }
-.ambrosiaUnderNav a:hover
-{
-	background:#eee;
-}
-
-/* TODO: (BarChart) */
-
-/* TODO: (CountdownTimer) */
-
-/* TODO: (DistributionChart) */
 
 /*
 Divider in a navigation bar between navigations (use in a span around a &nbsp;)

@@ -302,12 +302,10 @@ public class UiAttachments extends UiComponent implements Attachments
 			// navigations
 			if (!this.navigations.isEmpty())
 			{
-				response.print("<div class=\"ambrosiaUnderNav\" />");
 				for (Navigation navigation : this.navigations)
 				{
 					navigation.render(context, ref);
 				}
-				response.print("</div>");
 			}
 
 			response.println("</li>");

@@ -137,6 +137,9 @@ public class UiNavigation extends UiComponent implements Navigation
 	/** The component id the select requirement is against. */
 	protected String selectRequirementId = null;
 
+	/** Set to get the navigation text smaller. */
+	protected boolean small = false;
+
 	/** The display style. */
 	protected Style style = Style.link;
 
@@ -181,6 +184,13 @@ public class UiNavigation extends UiComponent implements Navigation
 		if (style != null)
 		{
 			setStyle("BUTTON".equals(style) ? Style.button : Style.link);
+		}
+
+		// small?
+		String small = StringUtil.trimToNull(xml.getAttribute("small"));
+		if (small != null)
+		{
+			setSmall();
 		}
 
 		// short form for destination - attribute "destination" as the destination
@@ -641,6 +651,15 @@ public class UiNavigation extends UiComponent implements Navigation
 	/**
 	 * {@inheritDoc}
 	 */
+	public Navigation setSmall()
+	{
+		this.small = true;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Navigation setStyle(Navigation.Style style)
 	{
 		this.style = style;
@@ -886,7 +905,14 @@ public class UiNavigation extends UiComponent implements Navigation
 			}
 		}
 
-		response.print("<span style=\"height:2em;white-space:nowrap\">");
+		if (this.small)
+		{
+			response.print("<div class=\"ambrosiaNavSmall\">");
+		}
+		else
+		{
+			response.print("<span class=\"ambrosiaNavNormal\">");
+		}
 
 		switch (this.style)
 		{
@@ -969,6 +995,13 @@ public class UiNavigation extends UiComponent implements Navigation
 			}
 		}
 
-		response.print("</span>");
+		if (this.small)
+		{
+			response.print("</div>");
+		}
+		else
+		{
+			response.print("</span>");
+		}
 	}
 }
