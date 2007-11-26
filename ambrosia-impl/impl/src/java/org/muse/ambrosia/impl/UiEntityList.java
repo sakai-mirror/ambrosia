@@ -716,7 +716,7 @@ public class UiEntityList extends UiComponent implements EntityList
 		// empty title, if there is no data (or no entities passed the entityIncluded test so no rows were generated)
 		if ((this.emptyTitle != null) && (empty || (row == -1)))
 		{
-			response.println("<div class =\"ambrosiaInstructions\">" + Validator.escapeHtml(this.emptyTitle.getMessage(context, focus)) + "</div>");
+			response.println("<div class =\"ambrosiaInstructions\">" + this.emptyTitle.getMessage(context, focus) + "</div>");
 		}
 
 		// footnotes
