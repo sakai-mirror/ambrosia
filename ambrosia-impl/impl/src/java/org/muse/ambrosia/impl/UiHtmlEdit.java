@@ -249,7 +249,7 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 				response.println("</label>");
 			}
 
-			response.println("<textarea " + (readOnly ? " class=\"ambrosiaTextEditDisabled\"" : "") + "id=\"" + id + "\" name=\"" + id + "\" cols="
+			response.println("<textarea " + (readOnly ? " class=\"ambrosiaHtmlEditDisabled\"" : "class=\"ambrosiaHtmlEdit\"") + "id=\"" + id + "\" name=\"" + id + "\" cols="
 					+ Integer.toString(numCols) + " rows=" + Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
