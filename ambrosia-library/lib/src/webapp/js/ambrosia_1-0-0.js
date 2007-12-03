@@ -384,6 +384,48 @@ function ambrosiaPrevSibling(obj, tag)
 	return prev;
 }
 
+function ambrosiaFirstSibling(obj, tag)
+{
+	var first = obj;
+	if (first != null)
+	{
+		var tmp = first;
+		while (tmp != null)
+		{
+			tmp = ambrosiaPrevSibling(tmp, tag);
+			if (tmp != null) first = tmp;
+		}
+	}
+	return first;
+}
+
+function ambrosiaNthSibling(obj, tag, n)
+{
+	// n is 1 based
+	var count = 1;	
+	var candidate = ambrosiaFirstSibling(obj, "TR");
+	while ((candidate != null) && (count < n))
+	{
+		count++;
+		candidate = ambrosiaNextSibling(candidate, "TR");
+	}
+	
+	return candidate;
+}
+
+function ambrosiaWhichSibling(obj, tag)
+{
+	var count = 1;	
+	var candidate = ambrosiaFirstSibling(obj, "TR");
+	while ((candidate != null) && (candidate != obj))
+	{
+		count++;
+		candidate = ambrosiaNextSibling(candidate, "TR");
+	}
+	if (candidate == null) return 0;
+	return count;
+}
+
 function ambrosiaParent(obj, tag)
 {
 	if (obj == null) return null;
@@ -395,6 +437,116 @@ function ambrosiaParent(obj, tag)
 		return up;
 	}
 	return ambrosiaParent(up, tag);
+}
+
+function ambrosiaFindChild(obj, tag, idRoot)
+{
+	if (obj == null) return null;
+	if ((obj.nodeName == tag) && (obj.id != null) && (obj.id.substring(0, idRoot.length) == idRoot)) return obj;
+	if (obj.childNodes == null) return null;
+	for (var i = 0; i < obj.childNodes.length; i++)
+	{
+		var candidate = ambrosiaFindChild(obj.childNodes[i], tag, idRoot);
+		if (candidate != null) return candidate;
+	}
+}
+
+function ambrosiaFirstChild(obj, tag)
+{
+	if (obj == null) return null;
+	if (obj.nodeName == tag) return obj;
+	if (obj.childNodes == null) return null;
+	for (var i = 0; i < obj.childNodes.length; i++)
+	{
+		var candidate = ambrosiaFirstChild(obj.childNodes[i], tag);
+		if (candidate != null) return candidate;
+	}
+}
+
+function ambrosiaTableReorderRowPosition(innerObj, position)
+{
+	var toPos = parseInt(position);
+	if (isNaN(toPos)) return true;
+
+	var obj = innerObj;
+	if (obj.nodeName != "TR")
+	{
+		obj = ambrosiaParent(obj, "TR");
+	}
+	if (obj == null) return true;
+	
+	var objPos = ambrosiaWhichSibling(obj, "TR");
+
+	if (toPos < objPos)
+	{
+		var target = ambrosiaNthSibling(obj, "TR", toPos);
+		obj.parentNode.insertBefore(obj, target);
+		return false;
+	}
+	else
+	{
+		var target = ambrosiaNthSibling(obj, "TR", toPos);
+		if (target) target = ambrosiaNextSibling(target, "TR");
+		if (target)
+		{
+			obj.parentNode.insertBefore(obj, target);
+		}
+		else
+		{
+			obj.parentNode.appendChild(obj);
+		}
+	}
+}
+
+function ambrosiaRenumberSelect(selectIdRoot, innerObj)
+{
+	var obj = innerObj;
+	if (obj.nodeName != "TR")
+	{
+		obj = ambrosiaParent(obj, "TR");
+	}
+	if (obj == null) return true;
+
+	var target = ambrosiaFirstSibling(obj, "TR");
+	var index = 0;
+	while (target != null)
+	{
+		// find a select in target that has a name matching selectIdRoot
+		var select = ambrosiaFindChild(target, "SELECT", selectIdRoot);
+		if (select != null)
+		{
+			// change the options to have the nth selected
+			ambrosiaSetNthSelected(select, index);
+		}
+		target = ambrosiaNextSibling(target, "TR");
+		index++;
+	}
+}
+
+function ambrosiaSetNthSelected(obj, index)
+{
+	// index is 0 based
+	var option = ambrosiaFirstChild(obj, "OPTION");
+	var i = 0;
+	while (option != null)
+	{
+		if (i == index)
+		{
+			option.selected = true;
+		}
+		else
+		{
+			option.selected=false;
+		}
+		option = ambrosiaNextSibling(option, "OPTION");
+		i++;
+	}
+}
+
+function ambrosiaTableReorderPosition(innerObj, position, selectIdRoot)
+{
+	ambrosiaTableReorderRowPosition(innerObj, position);
+	ambrosiaRenumberSelect(selectIdRoot, innerObj);
 }
 
 function ambrosiaTableReorder(event, innerObj)

@@ -30,9 +30,9 @@ import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
- * UiOrderColumn implements OrderColumn.
+ * UiOrderColumn implements OrderColumn using a drop-down select with positions.
  */
-public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
+public class UiOrderColumnSelect extends UiEntityListColumn implements OrderColumn
 {
 	/** The PropertyReference for decoding this column - this is what will be updated with the selected value(s). */
 	protected PropertyReference propertyReference = null;
@@ -43,7 +43,7 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 	/**
 	 * Public no-arg constructor.
 	 */
-	public UiOrderColumn()
+	public UiOrderColumnSelect()
 	{
 	}
 
@@ -55,7 +55,7 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 	 * @param xml
 	 *        The dom element.
 	 */
-	protected UiOrderColumn(UiServiceImpl service, Element xml)
+	protected UiOrderColumnSelect(UiServiceImpl service, Element xml)
 	{
 		// entity list column stuff
 		super(service, xml);
@@ -97,9 +97,6 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 		// read only?
 		boolean readOnly = false;
 
-		// alert if empty at submit?
-		boolean onEmptyAlert = false;
-
 		// read the entity id for this entity / column
 		String value = null;
 		if (this.valuePropertyReference != null)
@@ -113,16 +110,23 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 			value = Integer.toString(row);
 		}
 
-		// read the encode / decode property, and see if this should be seeded as selected
-		boolean checked = false;
-
-		StringBuffer rv = new StringBuffer();
+		StringBuilder rv = new StringBuilder();
 
 		rv.append("<input type=\"hidden\" name=\"" + id + "\" value=\"" + value + "\" />");
 
-		// TODO: icon
-		rv.append("<a href=\"#\" onclick=\"this.focus(); return false;\" onkeyup=\"return false;\""
-				+ " onkeypress=\"return false;\" onkeydown=\"return ambrosiaTableReorder(event, this);\">" + (row + ":" + size) + "</a>");
+		String onchange = "onchange=\"ambrosiaTableReorderPosition(this, this.value, '" + id + "_');\" ";
+
+		rv.append("<select " + onchange + " size=\"1\" id=\"" + id + "_" + (row + 1) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + ">\n");
+
+		for (int i = 1; i <= size; i++)
+		{
+			boolean selected = (row + 1 == i);
+
+			// the option
+			rv.append("<option value=\"" + i + "\" " + (selected ? "SELECTED" : "") + ">" + i + "</option>\n");
+		}
+
+		rv.append("</select>\n");
 
 		return rv.toString();
 	}
