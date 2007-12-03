@@ -359,7 +359,7 @@ public class UiEntityList extends UiComponent implements EntityList
 		// title, if there is one and there is data
 		if ((this.title != null) && (isTitleIncluded(context, focus)))
 		{
-			response.println("<div class =\"ambrosiaComponentTitle\">" + Validator.escapeHtml(this.title.getMessage(context, focus)) + "</div>");
+			response.println("<div class =\"ambrosiaComponentTitle\">" + this.title.getMessage(context, focus) + "</div>");
 		}
 
 		renderEntityActions(context, focus, idRoot);
@@ -465,7 +465,7 @@ public class UiEntityList extends UiComponent implements EntityList
 								+ "><a href=\"#\" onclick=\"act_"
 								+ sortId
 								+ "();return false;\">"
-								+ Validator.escapeHtml(title.getMessage(context, focus))
+								+ title.getMessage(context, focus)
 								+ ((icon != null) ? ("&nbsp;<img src=\"" + context.getUrl(icon) + "\""
 										+ ((iconAlt != null) ? (" alt=\"" + Validator.escapeHtml(iconAlt) + "\"") : "") + " />") : "") + "</a></th>");
 					}
@@ -478,14 +478,14 @@ public class UiEntityList extends UiComponent implements EntityList
 								focus), (String) context.get("sakai.return.url"), false);
 						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
 								+ "><a href=\"#\" onclick=\"act_" + sortId + "();return false;\">"
-								+ Validator.escapeHtml(title.getMessage(context, focus)) + "</a></th>");
+								+ title.getMessage(context, focus) + "</a></th>");
 					}
 
 					// no sort
 					else
 					{
 						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">"
-								+ Validator.escapeHtml(title.getMessage(context, focus)) + "</th>");
+								+ title.getMessage(context, focus) + "</th>");
 					}
 				}
 
@@ -725,7 +725,7 @@ public class UiEntityList extends UiComponent implements EntityList
 			if (f.getText() != null)
 			{
 				response.println("<div class =\"ambrosiaInstructions\">" + footnotes.get(f) + " "
-						+ Validator.escapeHtml(f.getText().getMessage(context, focus)) + "</div>");
+						+ f.getText().getMessage(context, focus) + "</div>");
 			}
 		}
 
