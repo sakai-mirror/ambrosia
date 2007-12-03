@@ -477,8 +477,7 @@ public class UiEntityList extends UiComponent implements EntityList
 						UiNavigation.generateLinkScript(context, sortId, false, false, submit, c.getSortDestinationAsc().getDestination(context,
 								focus), (String) context.get("sakai.return.url"), false);
 						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
-								+ "><a href=\"#\" onclick=\"act_" + sortId + "();return false;\">"
-								+ title.getMessage(context, focus) + "</a></th>");
+								+ "><a href=\"#\" onclick=\"act_" + sortId + "();return false;\">" + title.getMessage(context, focus) + "</a></th>");
 					}
 
 					// no sort
@@ -513,6 +512,40 @@ public class UiEntityList extends UiComponent implements EntityList
 		// data
 		if (!empty)
 		{
+			// filter out the entites that are not included
+			int size = data.size();
+			if (this.entityIncluded != null)
+			{
+				size = 0;
+				Collection dataIncluded = new ArrayList();
+				int index = -1;
+				for (Object entity : data)
+				{
+					index++;
+
+					// place the context item
+					if (this.iteratorName != null)
+					{
+						context.put(this.iteratorName, entity, this.iteratorReference.getEncoding(context, entity, index));
+					}
+
+					// check if this entity is to be included
+					if (this.entityIncluded.decide(context, entity))
+					{
+						size++;
+						dataIncluded.add(entity);
+					}
+
+					// remove the context item
+					if (this.iteratorName != null)
+					{
+						context.remove(this.iteratorName);
+					}
+				}
+
+				data = dataIncluded;
+			}
+
 			int index = -1;
 			for (Object entity : data)
 			{
@@ -525,7 +558,8 @@ public class UiEntityList extends UiComponent implements EntityList
 				}
 
 				// check if this entity is to be included
-				if ((this.entityIncluded != null) && (!this.entityIncluded.decide(context, entity))) continue;
+				// TODO: done above ... if ((this.entityIncluded != null) && (!this.entityIncluded.decide(context, entity))) continue;
+				// TODO: note: the index will be 0..size, not skipping for entities not included -ggolden
 
 				// track the row number
 				row++;
@@ -612,7 +646,7 @@ public class UiEntityList extends UiComponent implements EntityList
 						}
 
 						// get the column's value for display
-						String value = c.getDisplayText(context, entity, row, getId() + "_" + idRoot + "_" + colNum);
+						String value = c.getDisplayText(context, entity, row, getId() + "_" + idRoot + "_" + colNum, size);
 
 						// alert?
 						boolean alert = c.alert(context, entity);
@@ -724,8 +758,8 @@ public class UiEntityList extends UiComponent implements EntityList
 		{
 			if (f.getText() != null)
 			{
-				response.println("<div class =\"ambrosiaInstructions\">" + footnotes.get(f) + " "
-						+ f.getText().getMessage(context, focus) + "</div>");
+				response
+						.println("<div class =\"ambrosiaInstructions\">" + footnotes.get(f) + " " + f.getText().getMessage(context, focus) + "</div>");
 			}
 		}
 

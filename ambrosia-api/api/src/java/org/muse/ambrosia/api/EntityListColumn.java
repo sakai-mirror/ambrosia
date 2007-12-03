@@ -100,9 +100,11 @@ public interface EntityListColumn
 	 *        The current row number of the list.
 	 * @param id
 	 *        An ID value that can be used, unique to the entity list / column.
+	 * @param size
+	 *        The total number of entites.
 	 * @return The the text for display.
 	 */
-	String getDisplayText(Context context, Object entity, int row, String id);
+	String getDisplayText(Context context, Object entity, int row, String id, int size);
 
 	/**
 	 * Access the entity actions list.

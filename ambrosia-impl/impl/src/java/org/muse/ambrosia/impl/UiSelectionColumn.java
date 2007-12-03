@@ -201,7 +201,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, String effectiveId)
+	public String getDisplayText(Context context, Object entity, int row, String effectiveId, int size)
 	{
 		// use our id if set
 		if (this.id != null) effectiveId = this.id;

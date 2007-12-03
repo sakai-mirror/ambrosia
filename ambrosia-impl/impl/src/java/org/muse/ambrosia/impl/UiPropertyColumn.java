@@ -85,7 +85,7 @@ public class UiPropertyColumn extends UiEntityListColumn implements PropertyColu
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, String id)
+	public String getDisplayText(Context context, Object entity, int row, String id, int size)
 	{
 		String rv = "";
 

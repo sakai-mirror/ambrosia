@@ -92,7 +92,7 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, String id)
+	public String getDisplayText(Context context, Object entity, int row, String id, int size)
 	{
 		// read only?
 		boolean readOnly = false;
@@ -121,7 +121,8 @@ public class UiOrderColumn extends UiEntityListColumn implements OrderColumn
 		rv.append("<input type=\"hidden\" name=\"" + id + "\" value=\"" + value + "\" />");
 
 		// TODO: icon
-		rv.append("<a href=\"#\" onclick=\"this.focus(); return false;\" onkeyup=\"return false;\" onkeypress=\"return false;\" onkeydown=\"return ambrosiaTableReorder(event, this);\">link</a>");
+		rv.append("<a href=\"#\" onclick=\"this.focus(); return false;\" onkeyup=\"return false;\""
+				+ " onkeypress=\"return false;\" onkeydown=\"return ambrosiaTableReorder(event, this);\">" + (row + ":" + size) + "</a>");
 
 		return rv.toString();
 	}

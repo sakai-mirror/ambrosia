@@ -448,7 +448,7 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getDisplayText(Context context, Object entity, int row, String id)
+	public String getDisplayText(Context context, Object entity, int row, String id, int size)
 	{
 		// set the context to capture instead of adding to the output
 		context.setCollecting();
