@@ -99,7 +99,6 @@ function ambrosiaValidateDuration(source, validateId)
 	var reg = new RegExp("^[0-9]+:[0-9]{2}$", "i");
 
 	var str = trim(source.value);
-	
 	if (str != "")
 	{
 		if (reg.exec(str) == null)
@@ -113,6 +112,29 @@ function ambrosiaValidateDuration(source, validateId)
 	return true;
 }
 
+function ambrosiaDateChange(source, validateId)
+{
+	ambrosiaValidateDate(source, validateId);
+}
+
+function ambrosiaValidateDate(source, validateId)
+{
+	//Dec 1, 2007 12:00:00 AM
+	var reg = new RegExp("^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) [0-3]?[0-9]{1}, [0-9]{4} (0|00|1|01|2|02|3|03|4|04|5|05|6|06|7|07|8|08|9|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23):[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1} (am|pm){1}$", "i");
+
+	var str = trim(source.value);
+	if (str != "")
+	{
+		if (reg.exec(str) == null)
+		{
+			ambrosiaShowInline(validateId);
+			return false;
+		}
+	}
+
+	ambrosiaHideInline(validateId);
+	return true;
+}
 function ambrosiaCountChange(source, shadowId, summaryId, min, max, validateId)
 {
 	// validate
