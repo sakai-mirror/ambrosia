@@ -42,10 +42,10 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	protected Decision focusDecision = null;
 
 	/** The number of columns per row for the box. */
-	protected int numCols = 50;
+	protected int numCols = 80;
 
 	/** The number of rows for the text box. */
-	protected int numRows = 4;
+	protected int numRows = 5;
 
 	/** The decision to control the onEmptyAlert. */
 	protected Decision onEmptyAlertDecision = null;
