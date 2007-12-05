@@ -216,7 +216,18 @@ public class UiMessage implements Message
 			}
 		}
 
-		return StringUtil.trimToZero(context.getMessages().getFormattedMessage(sel, args));
+		// String msg = StringUtil.trimToZero(context.getMessages().getFormattedMessage(sel, args));
+		// get the message with no args replaced
+		// Note: this is to avoid a possible bug with certain complex arguments, perhaps -ggolden
+		String msg = StringUtil.trimToZero(context.getMessages().getFormattedMessage(sel, args));
+
+		// replace the args
+		for (int arg = 0; arg < this.references.length + extraLength; arg++)
+		{
+			msg = msg.replaceAll("\\{" + arg + "\\}", (String) args[arg]);
+		}
+
+		return msg;
 	}
 
 	/**

@@ -558,7 +558,7 @@ function ambrosiaSetNthSelected(obj, index)
 		}
 		else
 		{
-			option.selected=false;
+			option.selected = false;
 		}
 		option = ambrosiaNextSibling(option, "OPTION");
 		i++;
