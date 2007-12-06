@@ -106,4 +106,19 @@ public class UiHtmlPropertyReference extends UiPropertyReference implements Html
 		this.maxChars = maxChars;
 		return this;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected String unFormat(String value)
+	{
+		// remove surrounding <p> </p>
+		if (value.startsWith("<p>")) value = value.substring(3);
+		if (value.endsWith("</p>")) value = value.substring(0, value.length()-4);
+		
+		// get rid of an html blank
+		if (value.equals("&nbsp;")) value = null;
+
+		return value;
+	}
 }
