@@ -33,27 +33,25 @@ public interface Selection extends Component
 	};
 
 	/**
-	 * Add a component to the container for a particular selection, identified by the value.
+	 * Add a component to the container for the most recently added selection.
 	 * 
-	 * @param value
-	 *        The selection's value.
 	 * @param component
 	 *        the component to add.
 	 * @param separate
 	 *        if true, render the component separately, else render it inline
 	 */
-	Selection addComponentToSelection(String value, Component component, boolean separate);
+	Selection addComponentToSelection(Component component, boolean separate);
 
 	/**
 	 * Add a selection, one more choice the user can select.
 	 * 
-	 * @param selector
-	 *        The message selector to display.
+	 * @param display
+	 *        The message for display.
 	 * @param value
-	 *        The value to return if selected.
+	 *        The message for the value to return if selected.
 	 * @return self.
 	 */
-	Selection addSelection(String selector, String value);
+	Selection addSelection(Message display, Message value);
 
 	/**
 	 * Set the property reference for the correct value.
@@ -133,13 +131,13 @@ public interface Selection extends Component
 	 *        The ref to get the objects from the model, one for each selection choice.
 	 * @param iteratorName
 	 *        The name to place in the model to represent each selection choice.
-	 * @param valueRef
-	 *        The ref to get, from the named selection choice object, the value.
-	 * @param displayRef
-	 *        The ref to get, from the named selection choice object, the display text.
+	 * @param valueMessage
+	 *        The message to get, from the named selection choice object, the value.
+	 * @param displayMessage
+	 *        The message to get, from the named selection choice object, the display text.
 	 * @return self.
 	 */
-	Selection setSelectionModel(PropertyReference modelRef, String iteratorName, PropertyReference valueRef, PropertyReference displayRef);
+	Selection setSelectionModel(PropertyReference modelRef, String iteratorName, Message valueMessage, Message displayMessage);
 
 	/**
 	 * Set a decision to use to determine if we are going to be single select (true) or multiple select (false).

@@ -23,6 +23,7 @@
 <!ELEMENT message (selectors | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST message selector CDATA #IMPLIED >
 <!ATTLIST message model CDATA #IMPLIED >
+<!ATTLIST message template CDATA #IMPLIED >
 
 <!ELEMENT selectors (selector)* >
 <!ELEMENT selector (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
@@ -525,17 +526,13 @@
 <!ELEMENT correct (model) >
 
 <!ELEMENT selectionChoices (selectionChoice)* >
-<!ELEMENT selectionChoice (container)* >
-<!ATTLIST selectionChoice value CDATA #IMPLIED >
-<!ATTLIST selectionChoice selector CDATA #IMPLIED >
+<!ELEMENT selectionChoice (valueMessage | displayMessage | container)* >
 
-<!ELEMENT selectionModel (model | valueModel | displayModel)* >
+<!ELEMENT selectionModel (model | valueMessage | displayMessage)* >
 <!ATTLIST selectionModel name CDATA #IMPLIED >
 <!ATTLIST selectionModel model CDATA #IMPLIED >
-<!ATTLIST selectionModel value CDATA #IMPLIED >
-<!ATTLIST selectionModel display CDATA #IMPLIED >
-<!ELEMENT valueModel (model)* >
-<!ELEMENT displayModel (model)* >
+<!ELEMENT valueMessage (message)* >
+<!ELEMENT displayMessage (message)* >
 
 <!ELEMENT textEdit (included | title | model | options | onEmptyAlert | readOnly | focus)* >
 <!ATTLIST textEdit id CDATA #IMPLIED >

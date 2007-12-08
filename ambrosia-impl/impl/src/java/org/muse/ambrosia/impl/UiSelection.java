@@ -25,10 +25,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.muse.ambrosia.api.Component;
@@ -107,11 +105,11 @@ public class UiSelection extends UiComponent implements Selection
 	/** The value we find if the user selects the selection. */
 	protected String selectedValue = "true";
 
-	/** Containers holding dependent components to a selection, keyed by the selection value. */
-	protected Map<String, ContainerRef> selectionContainers = new HashMap<String, ContainerRef>();
+	/** Containers holding dependent components to a selection. */
+	protected List<ContainerRef> selectionContainers = new ArrayList<ContainerRef>();
 
-	/** The ref to the selectionReference collection that pulls out the display text for each selection. */
-	protected PropertyReference selectionDisplayReference = null;
+	/** The message that pulls out the display text for each selection. */
+	protected Message selectionDisplayMessage = null;
 
 	/** The set of messages for multiple selection choices. */
 	protected List<Message> selectionMessages = new ArrayList<Message>();
@@ -119,11 +117,11 @@ public class UiSelection extends UiComponent implements Selection
 	/** The ref to a Collection or [] in the model that will populate the selection. */
 	protected PropertyReference selectionReference = null;
 
-	/** The ref to the selectionReference collection that pulls out the value for each selection. */
-	protected PropertyReference selectionValueReference = null;
+	/** The message that pulls out the value for each selection. */
+	protected Message selectionValueMessage = null;
 
 	/** The set of values for multiple selection choices. */
-	protected List<String> selectionValues = new ArrayList<String>();
+	protected List<Message> selectionValues = new ArrayList<Message>();
 
 	/** If set, use this instead of sigleSelect to see if we are going to be single or multiple select. */
 	protected Decision singleSelectDecision = null;
@@ -253,20 +251,33 @@ public class UiSelection extends UiComponent implements Selection
 					Element innerXml = (Element) node;
 					if ("selectionChoice".equals(innerXml.getTagName()))
 					{
-						String selector = StringUtil.trimToNull(innerXml.getAttribute("selector"));
-						value = StringUtil.trimToNull(innerXml.getAttribute("value"));
-						addSelection(selector, value);
+						Message displayMsg = null;
+						Message valueMsg = null;
+						Element wayInnerXml = XmlHelper.getChildElementNamed(innerXml, "displayMessage");
+						if (wayInnerXml != null)
+						{
+							displayMsg = new UiMessage(service, wayInnerXml);
+						}
+						wayInnerXml = XmlHelper.getChildElementNamed(innerXml, "valueMessage");
+						if (wayInnerXml != null)
+						{
+							valueMsg = new UiMessage(service, wayInnerXml);
+						}
+						this.selectionMessages.add(displayMsg);
+						this.selectionValues.add(valueMsg);
 
 						// is there a container?
+						Container container = null;
+						boolean separate = false;
 						Element containerXml = XmlHelper.getChildElementNamed(innerXml, "container");
 						if (containerXml != null)
 						{
 							String separateCode = StringUtil.trimToNull(containerXml.getAttribute("separate"));
-							boolean separate = "TRUE".equals(separateCode);
+							separate = "TRUE".equals(separateCode);
 
-							Container container = new UiContainer(service, innerXml);
-							this.selectionContainers.put(value, new ContainerRef(container, separate));
+							container = new UiContainer(service, innerXml);
 						}
+						this.selectionContainers.add(new ContainerRef(container, separate));
 					}
 				}
 			}
@@ -292,40 +303,18 @@ public class UiSelection extends UiComponent implements Selection
 				this.selectionReference = service.parsePropertyReference(innerXml);
 			}
 
-			// short for value model
-			model = StringUtil.trimToNull(settingsXml.getAttribute("value"));
-			if (model != null)
-			{
-				this.selectionValueReference = service.newPropertyReference().setReference(model);
-			}
-
-			// value model
-			innerXml = XmlHelper.getChildElementNamed(settingsXml, "valueModel");
+			// value message
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "valueMessage");
 			if (innerXml != null)
 			{
-				Element modelXml = XmlHelper.getChildElementNamed(settingsXml, "model");
-				if (modelXml != null)
-				{
-					this.selectionValueReference = service.parsePropertyReference(modelXml);
-				}
-			}
-
-			// short for display model
-			model = StringUtil.trimToNull(settingsXml.getAttribute("display"));
-			if (model != null)
-			{
-				this.selectionDisplayReference = service.newPropertyReference().setReference(model);
+				this.selectionValueMessage = new UiMessage(service, innerXml);
 			}
 
 			// display model
-			innerXml = XmlHelper.getChildElementNamed(settingsXml, "displayModel");
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "displayMessage");
 			if (innerXml != null)
 			{
-				Element modelXml = XmlHelper.getChildElementNamed(settingsXml, "model");
-				if (modelXml != null)
-				{
-					this.selectionDisplayReference = service.parsePropertyReference(modelXml);
-				}
+				this.selectionDisplayMessage = new UiMessage(service, innerXml);
 			}
 		}
 
@@ -375,16 +364,10 @@ public class UiSelection extends UiComponent implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
-	public Selection addComponentToSelection(String value, Component component, boolean separate)
+	public Selection addComponentToSelection(Component component, boolean separate)
 	{
-		ContainerRef container = this.selectionContainers.get(value);
-		if (container == null)
-		{
-			container = new ContainerRef(new UiContainer(), separate);
-			this.selectionContainers.put(value, container);
-		}
-
-		container.container.add(component);
+		this.selectionContainers.get(this.selectionContainers.size() - 1).container.add(component);
+		// TODO: separate
 
 		return this;
 	}
@@ -392,10 +375,11 @@ public class UiSelection extends UiComponent implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
-	public Selection addSelection(String selector, String value)
+	public Selection addSelection(Message selector, Message value)
 	{
 		this.selectionValues.add(value);
-		this.selectionMessages.add(new UiMessage().setMessage(selector));
+		this.selectionMessages.add(selector);
+		this.selectionContainers.add(new ContainerRef(new UiContainer(), false));
 
 		return this;
 	}
@@ -423,7 +407,14 @@ public class UiSelection extends UiComponent implements Selection
 		}
 
 		// find values and display text
-		List<String> values = new ArrayList<String>(this.selectionValues);
+		List<String> values = new ArrayList<String>();
+		if (!this.selectionValues.isEmpty())
+		{
+			for (Message msg : this.selectionValues)
+			{
+				values.add(msg.getMessage(context, focus));
+			}
+		}
 
 		List<String> display = new ArrayList<String>();
 		if (!this.selectionMessages.isEmpty())
@@ -435,7 +426,7 @@ public class UiSelection extends UiComponent implements Selection
 		}
 
 		// add in any from the model
-		if ((this.selectionValueReference != null) && (this.selectionDisplayReference != null) && (this.selectionReference != null))
+		if ((this.selectionValueMessage != null) && (this.selectionDisplayMessage != null) && (this.selectionReference != null))
 		{
 			// get the main collection
 			Collection collection = null;
@@ -473,8 +464,8 @@ public class UiSelection extends UiComponent implements Selection
 						context.put(this.iteratorName, o, this.selectionReference.getEncoding(context, o, index));
 					}
 
-					values.add(this.selectionValueReference.read(context, o));
-					display.add(this.selectionDisplayReference.read(context, o));
+					values.add(this.selectionValueMessage.getMessage(context, o));
+					display.add(this.selectionDisplayMessage.getMessage(context, o));
 
 					// remove item
 					if (this.iteratorName != null)
@@ -626,11 +617,20 @@ public class UiSelection extends UiComponent implements Selection
 			String startingValue = null;
 			boolean needDependencies = false;
 			String onclick = "";
-			if (!this.selectionContainers.isEmpty())
+
+			boolean hasContained = false;
+			for (ContainerRef cr : this.selectionContainers)
+			{
+				if (cr.container != null)
+				{
+					hasContained = true;
+					break;
+				}
+			}
+			if (hasContained)
 			{
 				onclick = "onclick=\"ambrosiaSelectDependencies(this.value, " + dependencyId + ")\" ";
 			}
-
 			else if (this.submitDestination != null)
 			{
 				String destination = this.submitDestination.getDestination(context, focus);
@@ -654,6 +654,11 @@ public class UiSelection extends UiComponent implements Selection
 				if (i < display.size())
 				{
 					message = display.get(i);
+				}
+				ContainerRef containerRef = null;
+				if (i < this.selectionContainers.size())
+				{
+					containerRef = this.selectionContainers.get(i);
 				}
 
 				boolean selected = value.contains(val);
@@ -713,8 +718,7 @@ public class UiSelection extends UiComponent implements Selection
 				response.println("</label>");
 
 				// container of dependent components
-				ContainerRef container = this.selectionContainers.get(val);
-				if (container != null)
+				if ((containerRef != null) && (containerRef.container != null))
 				{
 					needDependencies = true;
 
@@ -730,21 +734,21 @@ public class UiSelection extends UiComponent implements Selection
 					// listen for any dependent edit components being rendered
 					context.addEditComponentRenderListener(listener);
 
-					if (container.separate)
+					if (containerRef.separate)
 					{
 						context.setCollecting();
 						response = context.getResponseWriter();
 					}
 
 					// render the dependent components
-					for (Component c : container.container.getContained())
+					for (Component c : containerRef.container.getContained())
 					{
-						if (container.separate) response.println("<div class=\"ambrosiaContainerComponent\">");
+						if (containerRef.separate) response.println("<div class=\"ambrosiaContainerComponent\">");
 						c.render(context, focus);
-						if (container.separate) response.println("</div>");
+						if (containerRef.separate) response.println("</div>");
 					}
 
-					if (container.separate)
+					if (containerRef.separate)
 					{
 						fragment += context.getCollected();
 						response = context.getResponseWriter();
@@ -871,12 +875,12 @@ public class UiSelection extends UiComponent implements Selection
 	/**
 	 * {@inheritDoc}
 	 */
-	public Selection setSelectionModel(PropertyReference modelRef, String iteratorName, PropertyReference valueRef, PropertyReference displayRef)
+	public Selection setSelectionModel(PropertyReference modelRef, String iteratorName, Message valueRef, Message displayRef)
 	{
 		this.selectionReference = modelRef;
 		this.iteratorName = iteratorName;
-		this.selectionValueReference = valueRef;
-		this.selectionDisplayReference = displayRef;
+		this.selectionValueMessage = valueRef;
+		this.selectionDisplayMessage = displayRef;
 
 		return this;
 	}

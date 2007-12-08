@@ -69,4 +69,13 @@ public interface Message
 	 * @return self.
 	 */
 	Message setMessage(String selector, PropertyReference... references);
+
+	/**
+	 * Set the message template and optional property references.
+	 * 
+	 * @param selector
+	 * @param references
+	 * @return self.
+	 */
+	Message setTemplate(String template, PropertyReference... references);
 }

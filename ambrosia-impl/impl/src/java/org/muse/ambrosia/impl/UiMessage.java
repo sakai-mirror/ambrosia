@@ -50,6 +50,9 @@ public class UiMessage implements Message
 	/** The message selector. */
 	protected String selector = null;
 
+	/** The message pattern itself. */
+	protected String template = null;
+
 	/**
 	 * Public no-arg constructor.
 	 */
@@ -79,6 +82,7 @@ public class UiMessage implements Message
 			List<PropertyReference> refs = new ArrayList<PropertyReference>();
 
 			String selector = StringUtil.trimToNull(xml.getAttribute("selector"));
+			String template = StringUtil.trimToNull(xml.getAttribute("template"));
 
 			// short for model
 			String ref = StringUtil.trimToNull(xml.getAttribute("model"));
@@ -128,6 +132,7 @@ public class UiMessage implements Message
 
 			// set
 			this.selector = selector;
+			this.template = template;
 			this.references = refsArray;
 		}
 	}
@@ -173,6 +178,10 @@ public class UiMessage implements Message
 		// if no references, use just the selector message
 		if (((this.references == null) || (this.references.length == 0)) && (extraLength == 0))
 		{
+			if (this.template != null)
+			{
+				return StringUtil.trimToZero(this.template);
+			}
 			if (sel != null)
 			{
 				return StringUtil.trimToZero(context.getMessages().getString(sel));
@@ -180,8 +189,8 @@ public class UiMessage implements Message
 			return "";
 		}
 
-		// if there is no selector, just read the first reference as the value
-		if (sel == null)
+		// if there is no selector (and no template), just read the first reference as the value
+		if ((sel == null) && (this.template == null))
 		{
 			if ((this.references != null) && (this.references.length == 1))
 			{
@@ -219,7 +228,15 @@ public class UiMessage implements Message
 		// String msg = StringUtil.trimToZero(context.getMessages().getFormattedMessage(sel, args));
 		// get the message with no args replaced
 		// Note: this is to avoid a possible bug with certain complex arguments, perhaps -ggolden
-		String msg = StringUtil.trimToZero(context.getMessages().getFormattedMessage(sel, args));
+		String msg = null;
+		if (this.template != null)
+		{
+			msg = StringUtil.trimToZero(this.template);
+		}
+		else
+		{
+			msg = StringUtil.trimToZero(context.getMessages().getString(sel));
+		}
 
 		// replace the args
 		for (int arg = 0; arg < this.references.length + extraLength; arg++)
@@ -236,6 +253,16 @@ public class UiMessage implements Message
 	public Message setMessage(String selector, PropertyReference... references)
 	{
 		this.selector = selector;
+		this.references = references;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Message setTemplate(String template, PropertyReference... references)
+	{
+		this.template = template;
 		this.references = references;
 		return this;
 	}
