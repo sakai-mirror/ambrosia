@@ -412,7 +412,14 @@ public class UiSelection extends UiComponent implements Selection
 		{
 			for (Message msg : this.selectionValues)
 			{
-				values.add(msg.getMessage(context, focus));
+				if (msg != null)
+				{
+					values.add(msg.getMessage(context, focus));
+				}
+				else
+				{
+					values.add("");
+				}
 			}
 		}
 
@@ -421,7 +428,14 @@ public class UiSelection extends UiComponent implements Selection
 		{
 			for (Message msg : this.selectionMessages)
 			{
-				display.add(msg.getMessage(context, focus));
+				if (msg != null)
+				{
+					display.add(msg.getMessage(context, focus));
+				}
+				else
+				{
+					display.add("");
+				}
 			}
 		}
 
