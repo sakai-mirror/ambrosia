@@ -635,7 +635,7 @@ public class UiSelection extends UiComponent implements Selection
 			boolean hasContained = false;
 			for (ContainerRef cr : this.selectionContainers)
 			{
-				if (cr.container != null)
+				if ((cr.container != null) && (!cr.container.getContained().isEmpty()))
 				{
 					hasContained = true;
 					break;
@@ -732,7 +732,7 @@ public class UiSelection extends UiComponent implements Selection
 				response.println("</label>");
 
 				// container of dependent components
-				if ((containerRef != null) && (containerRef.container != null))
+				if ((containerRef != null) && (containerRef.container != null) && (!containerRef.container.getContained().isEmpty()))
 				{
 					needDependencies = true;
 
