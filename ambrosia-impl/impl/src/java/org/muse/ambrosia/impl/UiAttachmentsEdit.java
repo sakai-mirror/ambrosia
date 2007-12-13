@@ -317,7 +317,7 @@ public class UiAttachmentsEdit extends UiComponent implements AttachmentsEdit
 					// for folders
 					if (props.getBooleanProperty(ResourceProperties.PROP_IS_COLLECTION))
 					{
-						response.print("<li><img src = \"/library/" + ContentTypeImageService.getContentTypeImage("folder") + "\" border=\"0\" />");
+						response.print("<li><img src = \"/library/image/" + ContentTypeImageService.getContentTypeImage("folder") + "\" border=\"0\" />");
 					}
 
 					// otherwise lookup the icon from the mime type
