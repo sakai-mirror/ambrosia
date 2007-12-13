@@ -440,6 +440,7 @@ public class UiSelection extends UiComponent implements Selection
 		}
 
 		// add in any from the model
+		boolean fromModel = false;
 		if ((this.selectionValueMessage != null) && (this.selectionDisplayMessage != null) && (this.selectionReference != null))
 		{
 			// get the main collection
@@ -480,6 +481,7 @@ public class UiSelection extends UiComponent implements Selection
 
 					values.add(this.selectionValueMessage.getMessage(context, o));
 					display.add(this.selectionDisplayMessage.getMessage(context, o));
+					fromModel = true;
 
 					// remove item
 					if (this.iteratorName != null)
@@ -557,8 +559,8 @@ public class UiSelection extends UiComponent implements Selection
 			response.println("</div>");
 		}
 
-		// for a single option
-		if (values.size() == 1)
+		// for a single option (unless we are using values from the model, even just one)
+		if ((values.size() == 1) && !fromModel)
 		{
 			String onclick = "";
 
