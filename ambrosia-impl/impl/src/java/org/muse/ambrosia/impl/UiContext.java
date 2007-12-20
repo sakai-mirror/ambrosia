@@ -243,6 +243,8 @@ public class UiContext implements Context
 	/** The tool destination of the request. */
 	protected String destination = null;
 
+	protected String docsPath = null;
+
 	/** Set of listeners for edit component render notices. */
 	protected Set<RenderListener> editRenderListeners = new HashSet<RenderListener>();
 
@@ -435,6 +437,14 @@ public class UiContext implements Context
 	public String getDestination()
 	{
 		return this.destination;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getDocsPath()
+	{
+		return this.docsPath;
 	}
 
 	/**
@@ -659,6 +669,14 @@ public class UiContext implements Context
 	public void setDestination(String destination)
 	{
 		this.destination = destination;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setDocsPath(String docsArea)
+	{
+		this.docsPath = docsArea;
 	}
 
 	/**

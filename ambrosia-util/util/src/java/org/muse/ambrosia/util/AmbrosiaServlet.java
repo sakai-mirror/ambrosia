@@ -34,9 +34,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.UiService;
 import org.muse.ambrosia.api.Controller;
+import org.muse.ambrosia.api.UiService;
 import org.sakaiproject.component.cover.ComponentManager;
+import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiproject.util.ResourceLoader;
 import org.sakaiproject.util.Web;
 
@@ -51,20 +52,23 @@ public class AmbrosiaServlet extends HttpServlet
 	/** Localized messages. */
 	protected static ResourceLoader messages = new ResourceLoader("mneme-test-tool");
 
-	/** Our self-injected ui service reference. */
-	protected UiService ui = null;
-
-	/** Set of static resource paths. */
-	protected Set<String> resourcePaths = new HashSet<String>();
-
 	/** The default view. */
 	protected String defaultView = null;
 
 	/** The error view. */
 	protected String errorView = "error";
 
+	/** Set of static resource paths. */
+	protected Set<String> resourcePaths = new HashSet<String>();
+
 	/** The tool id for this tool. */
 	protected String toolId = null;
+
+	/** Our self-injected ToolManager reference. */
+	protected ToolManager toolManager = null;
+
+	/** Our self-injected ui service reference. */
+	protected UiService ui = null;
 
 	/**
 	 * Shutdown the servlet.
@@ -74,16 +78,6 @@ public class AmbrosiaServlet extends HttpServlet
 		M_log.info("destroy()");
 
 		super.destroy();
-	}
-
-	/**
-	 * Get the default view.
-	 * 
-	 * @return The default view.
-	 */
-	protected String getDefaultView()
-	{
-		return this.defaultView;
 	}
 
 	/**
@@ -120,6 +114,7 @@ public class AmbrosiaServlet extends HttpServlet
 
 		// self-inject
 		ui = (UiService) ComponentManager.get(UiService.class);
+		toolManager = (ToolManager) ComponentManager.get(ToolManager.class);
 
 		M_log.info("init()");
 	}
@@ -149,7 +144,7 @@ public class AmbrosiaServlet extends HttpServlet
 		// handle pathless requests
 		if (ui.redirectToCurrentDestination(req, res, getDefaultView())) return;
 
-		Context context = ui.prepareGet(req, res, getDefaultView());
+		Context context = this.ui.prepareGet(req, res, getDefaultView());
 
 		// get and split up the tool destination: 0 parts means must "/", otherwise parts[0] = "", parts[1] = the first part, etc.
 		String path = context.getDestination();
@@ -169,7 +164,12 @@ public class AmbrosiaServlet extends HttpServlet
 			{
 				context.addMessages(ui.getMessages());
 				context.addMessages(destination.getSharedMessages());
-				context.addMessages(destination.getMessages());				
+				context.addMessages(destination.getMessages());
+
+				String toolContext = this.toolManager.getCurrentPlacement().getContext();
+				String docsPath = destination.getDocsPath();
+				docsPath = docsPath.replaceAll("\\{CONTEXT\\}", toolContext);
+				context.setDocsPath(docsPath);
 
 				destination.get(req, res, context, parts);
 			}
@@ -211,7 +211,7 @@ public class AmbrosiaServlet extends HttpServlet
 			{
 				context.addMessages(ui.getMessages());
 				context.addMessages(destination.getSharedMessages());
-				context.addMessages(destination.getMessages());				
+				context.addMessages(destination.getMessages());
 
 				destination.post(req, res, context, parts);
 			}
@@ -221,6 +221,16 @@ public class AmbrosiaServlet extends HttpServlet
 				redirectError(req, res);
 			}
 		}
+	}
+
+	/**
+	 * Get the default view.
+	 * 
+	 * @return The default view.
+	 */
+	protected String getDefaultView()
+	{
+		return this.defaultView;
 	}
 
 	/**

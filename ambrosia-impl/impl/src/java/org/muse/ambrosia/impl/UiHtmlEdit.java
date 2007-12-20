@@ -28,7 +28,6 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.HtmlEdit;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.TextEdit;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
@@ -38,6 +37,14 @@ import org.w3c.dom.Element;
  */
 public class UiHtmlEdit extends UiComponent implements HtmlEdit
 {
+	/** The alt text for the edit icon. */
+	protected Message editAlt = new UiMessage().setMessage("edit-alt");
+
+	/** Icon for enabling the editor. */
+	// TODO:
+	protected String editIcon = "!/ambrosia_library/icons/edit.png";
+	protected String editIcon2 = "!/ambrosia_library/icons/edit2.png";
+
 	/** The decision that controls if the field should get on-load focus. */
 	protected Decision focusDecision = null;
 
@@ -242,15 +249,40 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 				// response.println("<span class=\"reqStarInline\">*</span>");
 			}
 
+			// enable the editor controls function
+			if (!readOnly)
+			{
+				String docsPath = context.getDocsPath();
+				context.addScript("var htmlEnabled_" + id + "=false;\n");
+				context.addScript("function enableHtml_" + id + "()\n{\n\tif (!htmlEnabled_" + id + ")\n\t{\n\t\thtmlEnabled_" + id
+						+ "=true;\n\t\tambrosiaSetupHtmlEdit(\"" + id + "\",\"" + docsPath + "\");\n\t}\n}\n");
+				context.addScript("function enableHtml2_" + id + "()\n{\n\tif (!htmlEnabled_" + id + ")\n\t{\n\t\thtmlEnabled_" + id
+						+ "=true;\n\t\tambrosiaSetupHtmlEditFck(\"" + id + "\",\"" + docsPath + "\");\n\t}\n}\n");
+			}
+
 			if (this.titleMessage != null)
 			{
 				response.println("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
 				response.println(this.titleMessage.getMessage(context, focus));
+
+				if (!readOnly)
+				{
+					String msg = this.editAlt.getMessage(context, focus);
+					response.print("<a href=\"#\" onclick=\"enableHtml_" + id + "();return false;\" title=\"" + msg + "\">");
+					response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.editIcon) + "\" />");
+					response.println("</a>");
+					// TODO:
+					response.print("<a href=\"#\" onclick=\"enableHtml2_" + id + "();return false;\" title=\"" + msg + "\">");
+					response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.editIcon2) + "\" />");
+					response.println("</a>");
+				}
+
 				response.println("</label>");
 			}
 
-			response.println("<textarea " + (readOnly ? " class=\"ambrosiaHtmlEditDisabled\"" : "class=\"ambrosiaHtmlEdit\"") + "id=\"" + id + "\" name=\"" + id + "\" cols="
-					+ Integer.toString(numCols) + " rows=" + Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
+			response.println("<textarea " + (readOnly ? " class=\"ambrosiaHtmlEditDisabled\"" : "class=\"ambrosiaHtmlEdit\"") + "id=\"" + id
+					+ "\" name=\"" + id + "\" cols=" + Integer.toString(numCols) + " rows=" + Integer.toString(numRows)
+					+ (readOnly ? " disabled=\"disabled\"" : "") + ">");
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
 		}

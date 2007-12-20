@@ -44,6 +44,13 @@ public interface Controller
 	void get(HttpServletRequest req, HttpServletResponse res, Context context, String[] params) throws IOException;
 
 	/**
+	 * Get the content hosting path for embedded media in the UI.
+	 * 
+	 * @return The content hosting path for embedded media in the UI.
+	 */
+	String getDocsPath();
+
+	/**
 	 * Get the messages.
 	 * 
 	 * @return The messages.

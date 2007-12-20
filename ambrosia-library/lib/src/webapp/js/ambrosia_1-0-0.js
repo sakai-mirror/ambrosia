@@ -656,3 +656,32 @@ function ambrosiaHideInline(name)
 	if (el.style.display == "inline")
 		el.style.display = "none";
 }
+
+function ambrosiaSetupHtmlEdit(name, docsArea)
+{
+	ambrosiaSetupHtmlEditTiny(name, docsArea);
+	//ambrosiaSetupHtmlEditFck(name, docsArea);
+}
+
+function ambrosiaSetupHtmlEditFck(name, docsArea)
+{
+	var editor = new FCKeditor(name);
+	editor.BasePath = "/library/editor/FCKeditor/";
+	editor.Config['ImageBrowserURL'] = editor.BasePath + "editor/filemanager/browser/default/browser.html?Connector=/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector&Type=Image&CurrentFolder=" + docsArea;
+	editor.Config['LinkBrowserURL'] = editor.BasePath + "editor/filemanager/browser/default/browser.html?Connector=/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector&Type=Link&CurrentFolder=" + docsArea;
+	editor.Config['FlashBrowserURL'] = editor.BasePath + "editor/filemanager/browser/default/browser.html?Connector=/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector&Type=Flash&CurrentFolder=" + docsArea;
+	editor.Config['ImageUploadURL'] = editor.BasePath + "/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector?Type=Image&Command=QuickUpload&Type=Image&CurrentFolder=" + docsArea;
+	editor.Config['FlashUploadURL'] = editor.BasePath + "/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector?Type=Flash&Command=QuickUpload&Type=Flash&CurrentFolder=" + docsArea;
+	editor.Config['LinkUploadURL'] = editor.BasePath + "/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector?Type=File&Command=QuickUpload&Type=Link&CurrentFolder=" + docsArea;
+	editor.Config['CurrentFolder'] = docsArea;
+	//editor.Config['ToolbarStartExpanded'] = false;
+	editor.Width  = "600";
+	editor.Height = "400";
+	editor.Config['CustomConfigurationsPath'] = "/library/editor/FCKeditor/config.js";
+	editor.ReplaceTextarea();
+}
+
+function ambrosiaSetupHtmlEditTiny(name, docsArea)
+{
+	tinyMCE.execCommand("mceAddControl",true,name);
+}

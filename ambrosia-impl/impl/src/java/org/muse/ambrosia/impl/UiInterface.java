@@ -306,8 +306,12 @@ public class UiInterface extends UiContainer implements Interface
 			response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/ambrosia_library/js/ambrosia_" + UiService.VERSION
 					+ ".js\"></script>\n");
 
-			// for rich editing
+			// TODO:
+			// for rich editing - tiny
 			response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce.js" + "\"></script>\n");
+
+			// for rich editing - fck
+			response.println("<script type=\"text/javascript\" src=\"/library/editor/FCKeditor/fckeditor.js\"></script>");
 
 			// our css
 			response.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"/ambrosia_library/skin/ambrosia_" + UiService.VERSION + ".css\" />");
@@ -432,8 +436,9 @@ public class UiInterface extends UiContainer implements Interface
 		// scripts
 		response.println("<script language=\"JavaScript\">");
 		
+		// TODO:
 		// for tiny_mce
-		response.println("tinyMCE.init({mode : \"textareas\",editor_selector : \"ambrosiaHtmlEdit\",});");
+		response.println("tinyMCE.init({mode : \"none\"});");
 
 		// validation
 		response.println("var enableValidate=true;");

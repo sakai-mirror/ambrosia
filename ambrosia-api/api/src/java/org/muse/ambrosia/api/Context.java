@@ -131,6 +131,13 @@ public interface Context
 	String getDestination();
 
 	/**
+	 * Access the content hosting root for documents available for embedding in component displays.
+	 * 
+	 * @return The content hosting root for documents available for embedding in component displays.
+	 */
+	String getDocsPath();
+
+	/**
 	 * Access the named object's encoding in the context.
 	 * 
 	 * @param name
@@ -305,6 +312,14 @@ public interface Context
 	 *        The tool destination for the current request.
 	 */
 	void setDestination(String destination);
+
+	/**
+	 * Set the content hosting root for documents available for embedding in component displays.
+	 * 
+	 * @param docsArea
+	 *        The content hosting root for documents available for embedding in component displays.
+	 */
+	void setDocsPath(String docsArea);
 
 	/**
 	 * Set the name for the form that wraps the entire interface.

@@ -38,6 +38,9 @@ public abstract class ControllerImpl implements Controller
 	/** Messages bundle name. */
 	protected String bundle = null;
 
+	/** Path to the docs area in content hosting used for embedded media in the UI. */
+	protected String docsPath = null;
+
 	/** Localized messages. */
 	protected InternationalizedMessages messages = null;
 
@@ -61,6 +64,14 @@ public abstract class ControllerImpl implements Controller
 
 	/** The view declaration xml path. */
 	protected String viewPath = null;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getDocsPath()
+	{
+		return docsPath;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -134,6 +145,17 @@ public abstract class ControllerImpl implements Controller
 	public void setComponents(String path)
 	{
 		this.viewPath = path;
+	}
+
+	/**
+	 * Set the docs path.
+	 * 
+	 * @param path
+	 *        The docs path.
+	 */
+	public void setDocsPath(String path)
+	{
+		this.docsPath = path;
 	}
 
 	/**
