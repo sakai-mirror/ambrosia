@@ -436,9 +436,8 @@ public class UiInterface extends UiContainer implements Interface
 		// scripts
 		response.println("<script language=\"JavaScript\">");
 		
-		// TODO:
 		// for tiny_mce
-		response.println("tinyMCE.init({mode : \"none\"});");
+		response.println("ambrosiaTinyInit();");
 
 		// validation
 		response.println("var enableValidate=true;");

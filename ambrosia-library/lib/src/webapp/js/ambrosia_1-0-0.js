@@ -685,3 +685,12 @@ function ambrosiaSetupHtmlEditTiny(name, docsArea)
 {
 	tinyMCE.execCommand("mceAddControl",true,name);
 }
+
+function ambrosiaTinyInit()
+{
+	tinyMCE.init(
+	{
+		mode : "none",
+		convert_urls : false
+	});
+}
