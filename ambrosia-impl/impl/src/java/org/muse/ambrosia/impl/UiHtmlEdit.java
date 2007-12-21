@@ -43,6 +43,7 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	/** Icon for enabling the editor. */
 	// TODO:
 	protected String editIcon = "!/ambrosia_library/icons/edit.png";
+
 	protected String editIcon2 = "!/ambrosia_library/icons/edit2.png";
 
 	/** The decision that controls if the field should get on-load focus. */
@@ -260,25 +261,24 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 						+ "=true;\n\t\tambrosiaSetupHtmlEditFck(\"" + id + "\",\"" + docsPath + "\");\n\t}\n}\n");
 			}
 
+			response.println("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
 			if (this.titleMessage != null)
 			{
-				response.println("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
 				response.println(this.titleMessage.getMessage(context, focus));
-
-				if (!readOnly)
-				{
-					String msg = this.editAlt.getMessage(context, focus);
-					response.print("<a href=\"#\" onclick=\"enableHtml_" + id + "();return false;\" title=\"" + msg + "\">");
-					response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.editIcon) + "\" />");
-					response.println("</a>");
-					// TODO:
-					response.print("<a href=\"#\" onclick=\"enableHtml2_" + id + "();return false;\" title=\"" + msg + "\">");
-					response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.editIcon2) + "\" />");
-					response.println("</a>");
-				}
-
-				response.println("</label>");
 			}
+			if (!readOnly)
+			{
+				String msg = this.editAlt.getMessage(context, focus);
+				response.print("<a href=\"#\" onclick=\"enableHtml_" + id + "();return false;\" title=\"" + msg + "\">");
+				response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.editIcon) + "\" />");
+				response.println("</a>");
+				// TODO:
+				response.print("<a href=\"#\" onclick=\"enableHtml2_" + id + "();return false;\" title=\"" + msg + "\">");
+				response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.editIcon2) + "\" />");
+				response.println("</a>");
+			}
+
+			response.println("</label>");
 
 			response.println("<textarea " + (readOnly ? " class=\"ambrosiaHtmlEditDisabled\"" : "class=\"ambrosiaHtmlEdit\"") + "id=\"" + id
 					+ "\" name=\"" + id + "\" cols=" + Integer.toString(numCols) + " rows=" + Integer.toString(numRows)

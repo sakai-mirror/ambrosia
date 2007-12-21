@@ -692,8 +692,9 @@ function ambrosiaTinyInit()
 	{
 		mode : "none",
 		convert_urls : false,
+		plugins : "safari",
 		theme : "advanced",
-		theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,styleselect,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+		theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 		theme_advanced_buttons2 : "",
 		theme_advanced_buttons3 : ""
 	});
