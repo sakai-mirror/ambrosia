@@ -704,6 +704,12 @@ function ambrosiaEnableHtmlEdit(htmlComponent)
 		renderedEl = document.getElementById(htmlComponent.renderedId);
 		renderedEl.style.display = "none";
 
+		toggleEl = document.getElementById(htmlComponent.toggleId);
+		if (toggleEl != null)
+		{
+			toggleEl.style.display = "none";
+		}
+
 		textAreaIdEl = document.getElementById(htmlComponent.textAreaId);
 		textAreaIdEl.style.display = "";
 	

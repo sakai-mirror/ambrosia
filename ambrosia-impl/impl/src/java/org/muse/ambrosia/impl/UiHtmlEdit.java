@@ -257,6 +257,7 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 				context.addScript("var htmlComponent_" + id + "=new Object();\n");
 				context.addScript("htmlComponent_" + id + ".enabled=false;\n");
 				context.addScript("htmlComponent_" + id + ".renderedId=\"rendered_" + id + "\";\n");
+				context.addScript("htmlComponent_" + id + ".toggleId=\"toggle_" + id + "\";\n");
 				context.addScript("htmlComponent_" + id + ".textAreaId=\"" + id + "\";\n");
 			}
 
@@ -265,17 +266,17 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			{
 				response.println("<div class=\"ambrosiaComponentTitle\">");
 				response.println(this.titleMessage.getMessage(context, focus));
+				if (!readOnly)
+				{
+					response.print("<a style=\"text-decoration:none;\" id=\"toggle_" + id + "\" href=\"#\" onclick=\"ambrosiaEnableHtmlEdit(htmlComponent_" + id + ");return false;\" title=\"" + this.editAlt.getMessage(context, focus) + "\">");
+					response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.editIcon) + "\" />");
+					response.println("</a>");
+				}
 				response.println("</div>");
 			}
 
-			// the rendered content and the edit icon - initially visible
-			response.println("<div class=\"ambrosiaHtmlEditRendered\" id=\"rendered_" + id + "\">");
-			if (!readOnly)
-			{
-				response.print("<div><a href=\"#\" onclick=\"ambrosiaEnableHtmlEdit(htmlComponent_" + id + ");return false;\" title=\"" + this.editAlt.getMessage(context, focus) + "\">");
-				response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.editIcon) + "\" />");
-				response.println("</a></div>");
-			}
+			// the rendered content - initially visible
+			response.println("<div id=\"rendered_" + id + "\" class=\"ambrosiaHtmlEditRendered\">");
 			if (value != null) response.println(value);
 			response.println("</div>");
 
