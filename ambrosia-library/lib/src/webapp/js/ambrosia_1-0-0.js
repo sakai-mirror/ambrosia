@@ -681,11 +681,6 @@ function ambrosiaSetupHtmlEditFck(name, docsArea)
 	editor.ReplaceTextarea();
 }
 
-function ambrosiaSetupHtmlEditTiny(name, docsArea)
-{
-	tinyMCE.execCommand("mceAddControl",true,name);
-}
-
 function ambrosiaTinyInit()
 {
 	tinyMCE.init(
@@ -698,4 +693,20 @@ function ambrosiaTinyInit()
 		theme_advanced_buttons2 : "",
 		theme_advanced_buttons3 : ""
 	});
+}
+
+function ambrosiaEnableHtmlEdit(htmlComponent)
+{
+	if (!htmlComponent.enabled)
+	{
+		htmlComponent.enabled = true;
+
+		renderedEl = document.getElementById(htmlComponent.renderedId);
+		renderedEl.style.display = "none";
+
+		textAreaIdEl = document.getElementById(htmlComponent.textAreaId);
+		textAreaIdEl.style.display = "";
+	
+		tinyMCE.execCommand("mceAddControl", false, htmlComponent.textAreaId);
+	}
 }
