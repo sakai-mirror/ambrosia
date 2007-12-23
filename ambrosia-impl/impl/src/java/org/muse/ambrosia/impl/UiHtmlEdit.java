@@ -262,10 +262,13 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			}
 
 			// the title (if defined), and the edit icon
-			if (this.titleMessage != null)
+			if ((this.titleMessage != null) || (!readOnly))
 			{
 				response.println("<div class=\"ambrosiaComponentTitle\">");
-				response.println(this.titleMessage.getMessage(context, focus));
+				if (this.titleMessage != null)
+				{
+					response.println(this.titleMessage.getMessage(context, focus));
+				}
 				if (!readOnly)
 				{
 					response.print("<a style=\"text-decoration:none;\" id=\"toggle_" + id + "\" href=\"#\" onclick=\"ambrosiaEnableHtmlEdit(htmlComponent_" + id + ");return false;\" title=\"" + this.editAlt.getMessage(context, focus) + "\">");
