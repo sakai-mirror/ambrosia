@@ -48,6 +48,13 @@ public interface HtmlEdit extends Component
 	HtmlEdit setOnEmptyAlert(Decision decision, String selector, PropertyReference... references);
 
 	/**
+	 * Set the editor as initially disabled, showing the rendered text, with the user option to enable by clicking on an edit icon.
+	 * 
+	 * @return self.
+	 */
+	HtmlEdit setOptional();
+
+	/**
 	 * Set the property reference for the encode / decode.
 	 * 
 	 * @param propertyReference
@@ -74,6 +81,13 @@ public interface HtmlEdit extends Component
 	 * @return self.
 	 */
 	HtmlEdit setSize(int rows, int cols);
+
+	/**
+	 * Set the editor to use two lines of controls to allow for a smaller, more narrow screen-print.
+	 * 
+	 * @return self.
+	 */
+	HtmlEdit setSmall();
 
 	/**
 	 * Set the title text.

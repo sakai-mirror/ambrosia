@@ -683,14 +683,25 @@ function ambrosiaSetupHtmlEditFck(name, docsArea)
 
 function ambrosiaTinyInit()
 {
+	// mode:"none" enables nothing
 	tinyMCE.init(
 	{
-		mode : "none",
+		mode : "textareas", editor_selector:"ambrosiaHtmlEdit",
 		convert_urls : false,
 		plugins : "safari",
 		theme : "advanced",
 		theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 		theme_advanced_buttons2 : "",
+		theme_advanced_buttons3 : ""
+	});
+	tinyMCE.init(
+	{
+		mode : "textareas", editor_selector:"ambrosiaHtmlEditSmall",
+		convert_urls : false,
+		plugins : "safari",
+		theme : "advanced",
+		theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
+		theme_advanced_buttons2 : "link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 		theme_advanced_buttons3 : ""
 	});
 }
@@ -701,13 +712,16 @@ function ambrosiaEnableHtmlEdit(htmlComponent)
 	{
 		htmlComponent.enabled = true;
 
-		renderedEl = document.getElementById(htmlComponent.renderedId);
-		renderedEl.style.display = "none";
-
-		toggleEl = document.getElementById(htmlComponent.toggleId);
-		if (toggleEl != null)
+		if (htmlComponent.renderedId != null)
 		{
-			toggleEl.style.display = "none";
+			renderedEl = document.getElementById(htmlComponent.renderedId);
+			if (renderedEl != null) renderedEl.style.display = "none";
+		}
+
+		if (htmlComponent.toggleId != null)
+		{
+			toggleEl = document.getElementById(htmlComponent.toggleId);
+			if (toggleEl != null) toggleEl.style.display = "none";
 		}
 
 		textAreaIdEl = document.getElementById(htmlComponent.textAreaId);
