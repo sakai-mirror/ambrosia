@@ -28,7 +28,7 @@ function trim(s)
 
 function showConfirm(name)
 {
-	el = document.getElementById(name);
+	var el = document.getElementById(name);
 	if (el.style.display == "none")
 	{
 		el.style.left = ((document.body.scrollWidth / 2) - (parseInt(el.style.width) / 2)) + "px";
@@ -54,7 +54,7 @@ var confirmedAction="";
 function hideConfirm(name, action)
 {
 	if (action != "") confirmedAction = action;
-	el = document.getElementById(name);
+	var el = document.getElementById(name);
 
 	if (parseInt(el.style.top) > (-1 * (parseInt(el.style.height))))
 	{
@@ -328,13 +328,13 @@ function ambrosiaNavigate(enabled, enableFunction, confirm, confirmDivId, valida
 // dependencies is an array of arrays, the inner array[0] is the selection value, the rest are field ids
 function ambrosiaSelectDependencies(selected, dependencies)
 {
-	for (d in dependencies)
+	for (var d=0; d < dependencies.length; d++)
 	{
 		var list = dependencies[d];
 		var value = list[0];
 		if (selected == value)
 		{
-			for (i in list)
+			for (var i=0; i < list.length; i++)
 			{
 				if (i == 0) continue;
 				var target = document.getElementById(list[i]);
@@ -352,7 +352,7 @@ function ambrosiaSelectDependencies(selected, dependencies)
 		
 		else
 		{
-			for (i in list)
+			for (var i=0; i < list.length; i++)
 			{
 				if (i == 0) continue;
 				var target = document.getElementById(list[i]);
@@ -389,7 +389,7 @@ function ambrosiaTextOptions(obj, textId)
 function ambrosiaNextSibling(obj, tag)
 {
 	var next = obj.nextSibling;
-	while(next && next.nodeName != tag)
+	while (next && next.nodeName != tag)
 	{
 		next = next.nextSibling;
 	}
@@ -399,7 +399,7 @@ function ambrosiaNextSibling(obj, tag)
 function ambrosiaPrevSibling(obj, tag)
 {
 	var prev = obj.previousSibling;
-	while(prev && prev.nodeName != tag)
+	while (prev && prev.nodeName != tag)
 	{
 		prev = prev.previousSibling;
 	}
@@ -619,9 +619,9 @@ function ambrosiaTableReorder(event, innerObj)
 
 function ambrosiaCountChecked(name)
 {
-	objs = document.getElementsByName(name);
-	count = 0;
-	for (i in objs)
+	var objs = document.getElementsByName(name);
+	var count = 0;
+	for (var i=0; i < objs.length; i++)
 	{
 		if (objs[i].name == name)
 		{
@@ -633,7 +633,7 @@ function ambrosiaCountChecked(name)
 
 function ambrosiaToggleVisibility(name)
 {
-	el = document.getElementById(name);
+	var el = document.getElementById(name);
 	if (el == null) return;
 	if (el.style.display == "")
 		el.style.display = "none";
@@ -643,7 +643,7 @@ function ambrosiaToggleVisibility(name)
 
 function ambrosiaShowInline(name)
 {
-	el = document.getElementById(name);
+	var el = document.getElementById(name);
 	if (el == null) return;
 	if (el.style.display == "none")
 		el.style.display = "inline";
@@ -651,7 +651,7 @@ function ambrosiaShowInline(name)
 
 function ambrosiaHideInline(name)
 {
-	el = document.getElementById(name);
+	var el = document.getElementById(name);
 	if (el == null) return;
 	if (el.style.display == "inline")
 		el.style.display = "none";
@@ -693,6 +693,7 @@ function ambrosiaTinyInit()
 		theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 		theme_advanced_buttons2 : "",
 		theme_advanced_buttons3 : ""
+		// ,tab_focus : ":next"
 	});
 	tinyMCE.init(
 	{
@@ -703,6 +704,7 @@ function ambrosiaTinyInit()
 		theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
 		theme_advanced_buttons2 : "link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 		theme_advanced_buttons3 : ""
+		// ,tab_focus : ":next"
 	});
 }
 
@@ -714,17 +716,17 @@ function ambrosiaEnableHtmlEdit(htmlComponent)
 
 		if (htmlComponent.renderedId != null)
 		{
-			renderedEl = document.getElementById(htmlComponent.renderedId);
+			var renderedEl = document.getElementById(htmlComponent.renderedId);
 			if (renderedEl != null) renderedEl.style.display = "none";
 		}
 
 		if (htmlComponent.toggleId != null)
 		{
-			toggleEl = document.getElementById(htmlComponent.toggleId);
+			var toggleEl = document.getElementById(htmlComponent.toggleId);
 			if (toggleEl != null) toggleEl.style.display = "none";
 		}
 
-		textAreaIdEl = document.getElementById(htmlComponent.textAreaId);
+		var textAreaIdEl = document.getElementById(htmlComponent.textAreaId);
 		textAreaIdEl.style.display = "";
 	
 		tinyMCE.execCommand("mceAddControl", false, htmlComponent.textAreaId);
