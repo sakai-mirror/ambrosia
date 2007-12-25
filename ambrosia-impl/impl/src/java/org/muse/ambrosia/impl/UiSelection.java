@@ -951,21 +951,21 @@ public class UiSelection extends UiComponent implements Selection
 			response.println("</label>");
 		}
 
-		response.println("<select size=\"" + Integer.toString(this.height) + "\" " + (single ? "" : "multiple ") + "name=\"" + id + "\" id=\"" + id
-				+ "\"" + (readOnly ? " disabled=\"disabled\"" : "") + ">");
-
-		// TODO: must have selection values
-
-		String onclick = "";
+		String onchange = "";
 		if (this.submitDestination != null)
 		{
 			String destination = this.submitDestination.getDestination(context, focus);
-			onclick = "onclick=\"ambrosiaSubmit('" + destination + "')\" ";
+			onchange = " onchange=\"ambrosiaSubmit('" + destination + "');\" ";
 		}
 		else if (this.submitValue)
 		{
-			onclick = "onclick=\"ambrosiaSubmit(this.value)\" ";
+			onchange = " onchange=\"ambrosiaSubmit(this.value);\" ";
 		}
+
+		response.println("<select size=\"" + Integer.toString(this.height) + "\" " + (single ? "" : "multiple ") + "name=\"" + id + "\" id=\"" + id
+				+ "\"" + (readOnly ? " disabled=\"disabled\"" : "") + onchange + ">");
+
+		// TODO: must have selection values
 
 		// TODO: selectionContainers not supported
 
@@ -981,7 +981,7 @@ public class UiSelection extends UiComponent implements Selection
 			boolean selected = value.contains(val);
 
 			// the option
-			response.println("<option " + onclick + "value=\"" + val + "\" " + (selected ? "SELECTED" : "") + ">" + message + "</option>");
+			response.println("<option " + "value=\"" + val + "\" " + (selected ? "selected=\"selected\"" : "") + ">" + message + "</option>");
 		}
 
 		response.println("</select>");

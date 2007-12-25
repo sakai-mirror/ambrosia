@@ -123,7 +123,7 @@ public class UiOrderColumnSelect extends UiEntityListColumn implements OrderColu
 			boolean selected = (row + 1 == i);
 
 			// the option
-			rv.append("<option value=\"" + i + "\" " + (selected ? "SELECTED" : "") + ">" + i + "</option>\n");
+			rv.append("<option value=\"" + i + "\" " + (selected ? "selected=\"selected\"" : "") + ">" + i + "</option>\n");
 		}
 
 		rv.append("</select>\n");
