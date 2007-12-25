@@ -32,6 +32,9 @@ import org.w3c.dom.Element;
 public class UiHtmlPropertyReference extends UiPropertyReference implements HtmlPropertyReference
 {
 	final static String htmlEditorBlankLine = "<p>&nbsp;</p>";
+	
+	/** This blank line appears from tiny editor in IE 7. */
+	final static String htmlEditorBlankDoc = "<html />";
 
 	protected int maxChars = -1;
 
@@ -117,7 +120,7 @@ public class UiHtmlPropertyReference extends UiPropertyReference implements Html
 		if (value != null)
 		{
 			// if there is just the htmlEditorBlankLine, remove it (TinyMCE puts this in for a totally blank edit)
-			if (value.equals(htmlEditorBlankLine))
+			if (value.equals(htmlEditorBlankLine) || value.equals(htmlEditorBlankDoc))
 			{
 				value = "";
 			}
