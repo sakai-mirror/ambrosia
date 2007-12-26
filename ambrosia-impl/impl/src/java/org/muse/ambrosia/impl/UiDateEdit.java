@@ -53,7 +53,7 @@ public class UiDateEdit extends UiComponent implements DateEdit
 	protected Message invalidOk = new UiMessage().setMessage("ok");
 
 	/** The number of columns per row for the box. */
-	protected int numCols = 21;
+	protected int numCols = 19;
 
 	/** The number of rows for the text box. */
 	protected int numRows = 1;

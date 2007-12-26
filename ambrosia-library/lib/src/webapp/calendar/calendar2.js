@@ -27,7 +27,7 @@ function calendar2(obj_target) {
 	this.prs_date = ambrosia_parse_date; // cal_prs_date2;
 	this.prs_time = ambrosia_parse_time; // cal_prs_time2;
 	this.prs_tsmp = ambrosia_parse_timeStamp; // cal_prs_tsmp2;
-	this.prs_ampm = cal_prs_ampm2;
+	this.prs_ampm = ambrosia_parse_am_pm; // cal_prs_ampm2;
 	this.popup    = cal_popup2;
 	this.month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	this.gen_now = ambrosia_now;
@@ -70,7 +70,7 @@ function cal_popup2 (str_datetime) {
 	var obj_calwindow = window.open(
 		'/ambrosia_library/calendar/calendar.html?datetime=' + this.dt_current.valueOf()+ '&ampmval=' + this.ampm_val +
 		'&id=' + this.id,
-		'Calendar', 'width=200,height='+(this.time_comp ? 215 : 190)+
+		'Calendar', 'width=240,height='+(this.time_comp ? 240 : 190)+
 		',status=no,resizable=no,top=200,left=200,dependent=yes,alwaysRaised=yes'
 	);
 	obj_calwindow.opener = window;
@@ -109,8 +109,7 @@ function ambrosia_format_time(timeStamp)
 	var hours = timeStamp.getHours();
 	//if (hours == 0) hours = 12;
 	var rv = hours + ":";
-	rv += (timeStamp.getMinutes() < 10 ? "0" : "") + timeStamp.getMinutes() + ":";
-	rv += (timeStamp.getSeconds() < 10 ? "0" : "") + timeStamp.getSeconds();
+	rv += (timeStamp.getMinutes() < 10 ? "0" : "") + timeStamp.getMinutes();
 	return rv;
 }
 
@@ -161,6 +160,17 @@ function cal_prs_tsmp2 (str_datetime) {
 	return this.prs_time(arr_datetime[1], this.prs_date(arr_datetime[0]));
 }
 
+function ambrosia_parse_am_pm(displayStr)
+{
+	if (displayStr == null) return this.gen_now();
+
+	var time = parseInt(displayStr, 10);
+	if (!isNaN(time) && (time >= 0)) return new Date(time);
+	
+	var displayParts = displayStr.split(" ");
+	return displayParts[displayParts.length-1];
+}
+
 // ampm parsing function
 function cal_prs_ampm2 (str_datetime) {
 //alert('In prs_ampm2 '+str_datetime);
@@ -189,7 +199,7 @@ function ambrosia_parse_date(displayStr)
 	if (displayParts.length == 3)
 	{
 		var month = -1;
-		for (var i = 0; i < 11; i++)
+		for (var i = 0; i <= 11; i++)
 		{
 			if (this.month_names[i].toLowerCase() == displayParts[0].toLowerCase())
 			{
@@ -245,7 +255,7 @@ function cal_prs_date2 (str_date) {
 function ambrosia_parse_time(displayStr, timeStamp)
 {
 	var displayParts = displayStr.split(":");
-	if (displayParts.length == 3)
+	if ((displayParts.length == 2) || (displayParts.length == 3))
 	{
 		var hour = parseInt(displayParts[0], 10);
 		if (isNaN(hour)) return timeStamp;
@@ -256,13 +266,9 @@ function ambrosia_parse_time(displayStr, timeStamp)
 		if (isNaN(minute)) return timeStamp;
 		if ((minute < 0) || (minute > 59)) return timeStamp;
 		
-		var second = parseInt(displayParts[2], 10);
-		if (isNaN(second)) return timeStamp;
-		if ((second < 0) || (second > 59)) return timeStamp;
-		
 		timeStamp.setHours(hour);
 		timeStamp.setMinutes(minute);
-		timeStamp.setSeconds(second);
+		timeStamp.setSeconds(0);
 		timeStamp.setMilliseconds(0);		
 	}
 	

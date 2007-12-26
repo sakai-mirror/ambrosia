@@ -97,6 +97,22 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 	}
 
 	/**
+	 * Add in the seconds part expected by the MEDUIM date format (":00").
+	 * 
+	 * @param display
+	 *        The MEDIUM formatted date w/o seconds.
+	 * @return The MEDIUM formatted date with the (0) seconds added.
+	 */
+	protected String addSeconds(String display)
+	{
+		int i = display.lastIndexOf(" ");
+		if (i == -1) return display;
+
+		String rv = display.substring(0, i) + ":00" + display.substring(i);
+		return rv;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	protected String format(Context context, Object value)
@@ -116,17 +132,34 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 				DateFormat timeFormat = DateFormat.getTimeInstance(fmt);
 
 				return "<span style=\"white-space: nowrap;\">" + Validator.escapeHtml(dateFormat.format(date))
-						+ "</span><br /><span style=\"white-space: nowrap;\">" + Validator.escapeHtml(timeFormat.format(date)) + "</span>";
+						+ "</span><br /><span style=\"white-space: nowrap;\">" + Validator.escapeHtml(removeSeconds(timeFormat.format(date)))
+						+ "</span>";
 			}
 			else
 			{
 				DateFormat format = DateFormat.getDateTimeInstance(fmt, fmt);
 
-				return Validator.escapeHtml(format.format(date));
+				return Validator.escapeHtml(removeSeconds(format.format(date)));
 			}
 		}
 
 		return super.format(context, value);
+	}
+
+	/**
+	 * Remove the ":xx" seconds part of a MEDIUM date format display.
+	 * 
+	 * @param display
+	 *        The MEDIUM formatted date.
+	 * @return The MEDIUM formatted date with the seconds removed.
+	 */
+	protected String removeSeconds(String display)
+	{
+		int i = display.lastIndexOf(":");
+		if ((i == -1) || ((i + 3) >= display.length())) return display;
+
+		String rv = display.substring(0, i) + display.substring(i + 3);
+		return rv;
 	}
 
 	/**
@@ -146,7 +179,7 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 		DateFormat format = DateFormat.getDateTimeInstance(fmt, fmt);
 		try
 		{
-			Date date = format.parse(value);
+			Date date = format.parse(addSeconds(value));
 			return Long.toString(date.getTime());
 		}
 		catch (ParseException e)
