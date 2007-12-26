@@ -168,8 +168,11 @@ public class AmbrosiaServlet extends HttpServlet
 
 				String toolContext = this.toolManager.getCurrentPlacement().getContext();
 				String docsPath = destination.getDocsPath();
-				docsPath = docsPath.replaceAll("\\{CONTEXT\\}", toolContext);
-				context.setDocsPath(docsPath);
+				if (docsPath != null)
+				{
+					docsPath = docsPath.replaceAll("\\{CONTEXT\\}", toolContext);
+					context.setDocsPath(docsPath);
+				}
 
 				destination.get(req, res, context, parts);
 			}
