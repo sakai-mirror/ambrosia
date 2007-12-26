@@ -215,7 +215,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 
 		// set some ids
 		int idRoot = context.getUniqueId();
-		String id = this.getClass().getSimpleName() + "_" + idRoot;
+		String id = getId();
+		if (id == null) id = this.getClass().getSimpleName() + "_" + idRoot;
 		String decodeId = "decode_" + idRoot;
 
 		// read the current value

@@ -6,6 +6,7 @@
 <!ATTLIST interface header CDATA #IMPLIED >
 <!ATTLIST interface subHeader CDATA #IMPLIED >
 <!ATTLIST interface footer CDATA #IMPLIED >
+<!ATTLIST interface focus CDATA #IMPLIED >
 
 <!ELEMENT fragment (included | container)* >
 

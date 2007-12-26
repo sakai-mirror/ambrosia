@@ -533,7 +533,8 @@ public class UiSelection extends UiComponent implements Selection
 
 		// generate some ids
 		int idRoot = context.getUniqueId();
-		String id = this.getClass().getSimpleName() + "_" + idRoot;
+		String id = getId();
+		if (id == null) id = this.getClass().getSimpleName() + "_" + idRoot;
 		String decodeId = "decode_" + idRoot;
 		String dependencyId = id + "_dependencies";
 

@@ -43,6 +43,9 @@ import org.w3c.dom.NodeList;
  */
 public class UiInterface extends UiContainer implements Interface
 {
+	/** The id of the element to get focus on load. */
+	protected String focus = null;
+
 	/** The message selector and properties for the footer. */
 	protected Message footer = null;
 
@@ -116,6 +119,13 @@ public class UiInterface extends UiContainer implements Interface
 		if (footer != null)
 		{
 			setFooter(footer);
+		}
+
+		// focus
+		String focus = StringUtil.trimToNull(xml.getAttribute("focus"));
+		if (focus != null)
+		{
+			this.focus = focus;
 		}
 
 		String autoComplete = StringUtil.trimToNull(xml.getAttribute("autoComplete"));
@@ -311,7 +321,7 @@ public class UiInterface extends UiContainer implements Interface
 			response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce.js" + "\"></script>\n");
 
 			// for rich editing - fck
-			//response.println("<script type=\"text/javascript\" src=\"/library/editor/FCKeditor/fckeditor.js\"></script>");
+			// response.println("<script type=\"text/javascript\" src=\"/library/editor/FCKeditor/fckeditor.js\"></script>");
 
 			// for date popup
 			response.println("<script type=\"text/javascript\" src=\"/ambrosia_library/calendar/calendar2.js\"></script>");
@@ -438,9 +448,15 @@ public class UiInterface extends UiContainer implements Interface
 
 		// scripts
 		response.println("<script language=\"JavaScript\">");
-		
+
 		// for tiny_mce
 		response.println("ambrosiaTinyInit();");
+
+		// focus_path
+		if (this.focus != null)
+		{
+			response.println("var focus_path=[\"" + this.focus + "\"];");
+		}
 
 		// validation
 		response.println("var enableValidate=true;");
