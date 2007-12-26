@@ -265,12 +265,16 @@ public class UiDateEdit extends UiComponent implements DateEdit
 			alt = this.iconAlt.getMessage(context, focus);
 		}
 
-		// TODO: make the icon link to a popup picker!
-
 		response.print("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
 				+ Integer.toString(numCols) + "\" value=\"" + Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
-				+ " onchange=\"ambrosiaDateChange(this, 'invalid_" + id + "');\"" + " />"
-				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
+				+ " onchange=\"ambrosiaDateChange(this, 'invalid_" + id + "');\"" + " />");
+		if (this.icon != null)
+		{
+			// for the date picker popup
+			context.addScript("function popupPicker_" + id + "()\n{\n  ambrosiaPopupDate(\"" + id + "\");\n}\n");
+			response.print("<a href=\"#\" onclick=\"popupPicker_" + id + "();return false;\"><img src=\"" + context.getUrl(this.icon) + "\" alt=\""
+					+ alt + "\" title=\"" + alt + "\" /></a>");
+		}
 
 		// validate failure alert (will display:inline when made visible)
 		response.print("<div style=\"display:none\" id=\"invalid_" + id + "\">");

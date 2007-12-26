@@ -732,3 +732,18 @@ function ambrosiaEnableHtmlEdit(htmlComponent)
 		tinyMCE.execCommand("mceAddControl", false, htmlComponent.textAreaId);
 	}
 }
+
+function ambrosiaPopupDate(id)
+{
+	// get the current date value
+	var el = document.getElementById(id);
+	if (el == null) return;
+	
+	var timeStamp = new Date(el.value);
+	if (isNaN(timeStamp)) timeStamp = new Date();
+
+	var popup = new calendar2(el);
+	if (popup == null) return;
+	popup.popup();
+	//el.select();
+}

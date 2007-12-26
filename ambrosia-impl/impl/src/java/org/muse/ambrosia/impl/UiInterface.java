@@ -311,7 +311,10 @@ public class UiInterface extends UiContainer implements Interface
 			response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce.js" + "\"></script>\n");
 
 			// for rich editing - fck
-			response.println("<script type=\"text/javascript\" src=\"/library/editor/FCKeditor/fckeditor.js\"></script>");
+			//response.println("<script type=\"text/javascript\" src=\"/library/editor/FCKeditor/fckeditor.js\"></script>");
+
+			// for date popup
+			response.println("<script type=\"text/javascript\" src=\"/ambrosia_library/calendar/calendar2.js\"></script>");
 
 			// our css
 			response.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"/ambrosia_library/skin/ambrosia_" + UiService.VERSION + ".css\" />");
