@@ -65,9 +65,7 @@ public class UiOverlay extends UiContainer implements Overlay
 
 		// setup the container
 		response.println("<div id=\"" + getId(context)
-				+ "\" class=\"ambrosiaOverlay\" style=\"width:500px;height:250px;overflow:auto;display:none\">");
-		// TODO: style width height left overflow:auto
-		// TODO: display:none
+				+ "\" class=\"ambrosiaOverlay\" style=\"width:500px;height:250px;overflow:hidden;visibility:hidden\">");
 
 		// render the contents
 		super.render(context, focus);

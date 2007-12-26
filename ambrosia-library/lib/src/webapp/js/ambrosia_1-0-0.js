@@ -635,10 +635,16 @@ function ambrosiaToggleVisibility(name)
 {
 	var el = document.getElementById(name);
 	if (el == null) return;
-	if (el.style.display == "")
-		el.style.display = "none";
+	if (el.style.visibility == "hidden")
+	{
+		el.style.visibility = "visible";
+		el.style.overflow = "auto";
+	}
 	else
-		el.style.display = "";
+	{
+		el.style.overflow = "hidden";
+		el.style.visibility = "hidden";
+	}
 }
 
 function ambrosiaShowInline(name)
