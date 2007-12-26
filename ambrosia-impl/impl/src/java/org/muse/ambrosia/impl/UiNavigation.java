@@ -851,10 +851,13 @@ public class UiNavigation extends UiComponent implements Navigation
 						+ "()');return false;\" "
 						+ ((this.confirmCancelIcon != null) ? "style=\"padding-left:2em; background: #eee url('"
 								+ context.getUrl(this.confirmCancelIcon) + "') .2em no-repeat;\"" : "") + "/></td>");
-				response.println("<td style=\"padding:1em\" align=\"right\"><input type=\"button\" value=\"" + title
-						+ "\" onclick=\"hideConfirm('confirm_" + id + "','act_" + id
-						+ "();');return false;\" style=\"padding-left:2em; background: #eee url('" + context.getUrl(this.icon)
-						+ "') .2em no-repeat;\"/></td>");
+				response.print("<td style=\"padding:1em\" align=\"right\"><input type=\"button\" value=\"" + title
+						+ "\" onclick=\"hideConfirm('confirm_" + id + "','act_" + id + "();');return false;\"");
+				if (this.icon != null)
+				{
+					response.print(" style=\"padding-left:2em; background: #eee url('" + context.getUrl(this.icon) + "') .2em no-repeat;\"");
+				}
+				response.println("/></td>");
 				response.println("</tr></table></div>");
 			}
 
