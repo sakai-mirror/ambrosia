@@ -170,7 +170,7 @@ public class AmbrosiaServlet extends HttpServlet
 				String docsPath = destination.getDocsPath();
 				if (docsPath != null)
 				{
-					docsPath = docsPath.replaceAll("\\{CONTEXT\\}", toolContext);
+					docsPath = docsPath.replace("{CONTEXT}", toolContext);
 					context.setDocsPath(docsPath);
 				}
 

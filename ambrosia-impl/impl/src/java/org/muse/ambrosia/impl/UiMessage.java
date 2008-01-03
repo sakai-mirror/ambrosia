@@ -241,7 +241,7 @@ public class UiMessage implements Message
 		// replace the args
 		for (int arg = 0; arg < this.references.length + extraLength; arg++)
 		{
-			msg = msg.replaceAll("\\{" + arg + "\\}", (String) args[arg]);
+			msg = msg.replace("{" + arg + "}", (String) args[arg]);
 		}
 
 		return msg;

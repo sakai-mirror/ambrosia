@@ -114,7 +114,7 @@ public class UiDestination implements Destination
 			if (value == null) value = "";
 
 			// replace
-			rv = rv.replaceAll("\\{" + Integer.toString(i++) + "\\}", value);
+			rv = rv.replace("{" + Integer.toString(i++) + "}", value);
 		}
 
 		return rv;
