@@ -100,7 +100,7 @@ public class UiTextPropertyReference extends UiPropertyReference implements Text
 			value = FormattedText.convertFormattedTextToPlaintext(value);
 
 			// also remove any remaining new lines
-			value = value.replaceAll("\n", " ");
+			value = value.replace("\n", " ");
 		}
 
 		// truncate if desired and needed
