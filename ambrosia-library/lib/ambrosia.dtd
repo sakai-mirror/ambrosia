@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!ELEMENT interface (included | header | subHeader | title | container | modeContainer | footer)* >
+<!ELEMENT interface (included | header | subHeader | title | container | modeContainer | footer | attachmentPicker)* >
 <!ATTLIST interface id CDATA #IMPLIED >
 <!ATTLIST interface autoComplete (TRUE|FALSE) #IMPLIED >
 <!ATTLIST interface title CDATA #IMPLIED >
@@ -7,6 +7,7 @@
 <!ATTLIST interface subHeader CDATA #IMPLIED >
 <!ATTLIST interface footer CDATA #IMPLIED >
 <!ATTLIST interface focus CDATA #IMPLIED >
+<!ATTLIST interface popup (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT fragment (included | container)* >
 
@@ -261,7 +262,7 @@
 <!ATTLIST navigation title CDATA #IMPLIED >
 <!ATTLIST navigation style (BUTTON|LINK) #IMPLIED >
 <!ATTLIST navigation destination CDATA #IMPLIED >
-<!ATTLIST navigation submit (TRUE|FALSE) #IMPLIED >
+<!ATTLIST navigation submit (TRUE|FALSE|TRIGGER) #IMPLIED >
 <!ATTLIST navigation default (TRUE|FALSE) #IMPLIED >
 <!ATTLIST navigation disabled (TRUE|FALSE) #IMPLIED >
 <!ATTLIST navigation accessKey CDATA #IMPLIED >
@@ -303,6 +304,8 @@
 <!ELEMENT destination (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST destination template CDATA #IMPLIED >
 <!ATTLIST destination model CDATA #IMPLIED >
+
+<!ELEMENT attachmentPicker (destination)* >
 
 <!ELEMENT icon (message)* >
 <!ATTLIST icon icon CDATA #IMPLIED >

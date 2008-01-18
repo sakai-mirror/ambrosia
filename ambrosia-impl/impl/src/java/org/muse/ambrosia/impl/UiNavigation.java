@@ -58,14 +58,24 @@ public class UiNavigation extends UiComponent implements Navigation
 	 *        The root of the destination URL.
 	 * @param requirements
 	 *        true if we need to check requirements before allowing the nav to be processed.
+	 * @param trigger
+	 *        if set, use the destination as javascript to run.
 	 */
 	protected static void generateLinkScript(Context context, String id, boolean confirm, boolean validate, boolean submit, String destination,
-			String root, boolean requirements)
+			String root, boolean requirements, boolean trigger)
 	{
 		// the act method call
-		String action = "ambrosiaNavigate(enabled_" + id + ", 'enable_" + id + "()', " + Boolean.toString(confirm) + ", 'confirm_" + id + "', "
-				+ Boolean.toString(validate) + ", " + Boolean.toString(submit) + ", '" + destination + "','" + root + "', "
-				+ (requirements ? "'requirements_" + id + "()','failure_" + id + "'" : "null, null") + ");";
+		String action = null;
+		if (!trigger)
+		{
+			action = "ambrosiaNavigate(enabled_" + id + ", 'enable_" + id + "()', " + Boolean.toString(confirm) + ", 'confirm_" + id + "', "
+					+ Boolean.toString(validate) + ", " + Boolean.toString(submit) + ", '" + destination + "','" + root + "', "
+					+ (requirements ? "'requirements_" + id + "()','failure_" + id + "'" : "null, null") + ");";
+		}
+		else
+		{
+			action = destination;
+		}
 
 		// the script
 		StringBuffer script = new StringBuffer();
@@ -149,6 +159,9 @@ public class UiNavigation extends UiComponent implements Navigation
 	/** The message selector for the button title. */
 	protected Message title = null;
 
+	/** If true, we need to trigger the destination as javascript on the press. */
+	protected boolean trigger = false;
+
 	/** Decision to force form validation when pressed. */
 	protected Decision validationDecision = null;
 
@@ -202,9 +215,16 @@ public class UiNavigation extends UiComponent implements Navigation
 
 		// short form for submit
 		String submit = StringUtil.trimToNull(xml.getAttribute("submit"));
-		if ((submit != null) && ("TRUE".equals(submit)))
+		if (submit != null)
 		{
-			setSubmit();
+			if ("TRUE".equals(submit))
+			{
+				setSubmit();
+			}
+			else if ("TRIGGER".equals(submit))
+			{
+				setTrigger();
+			}
 		}
 
 		// short form for default
@@ -687,6 +707,15 @@ public class UiNavigation extends UiComponent implements Navigation
 	/**
 	 * {@inheritDoc}
 	 */
+	public Navigation setTrigger()
+	{
+		this.trigger = true;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Navigation setValidation(Decision decision)
 	{
 		this.validationDecision = decision;
@@ -830,7 +859,7 @@ public class UiNavigation extends UiComponent implements Navigation
 			if (!disabled)
 			{
 				generateLinkScript(context, id, confirm, validate, this.submit, (this.destination != null ? this.destination.getDestination(context,
-						focus) : ""), (String) context.get("sakai.return.url"), requirements);
+						focus) : ""), (String) context.get("sakai.return.url"), requirements, this.trigger);
 			}
 
 			if (confirm)

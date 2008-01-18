@@ -250,6 +250,13 @@ public interface Navigation extends Component
 	Navigation setTitle(String selector, PropertyReference... references);
 
 	/**
+	 * Indicate that instead of a submit, the action triggers the destination as javascript.
+	 * 
+	 * @return self.
+	 */
+	Navigation setTrigger();
+
+	/**
 	 * Set the decision about forcing form validation when this navigation (submit only) is pressed.
 	 * 
 	 * @param decision

@@ -27,9 +27,9 @@ import java.util.List;
 
 import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Context;
+import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.Interface;
 import org.muse.ambrosia.api.Message;
-import org.muse.ambrosia.api.ModeBar;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.UiService;
 import org.sakaiproject.util.StringUtil;
@@ -43,6 +43,9 @@ import org.w3c.dom.NodeList;
  */
 public class UiInterface extends UiContainer implements Interface
 {
+	/** Optional Destination for the attachment picker UI for this view. */
+	protected Destination attachmentPicker = null;
+
 	/** The id of the element to get focus on load. */
 	protected String focus = null;
 
@@ -63,6 +66,9 @@ public class UiInterface extends UiContainer implements Interface
 
 	/** If we want to disable browser auto-complete. */
 	protected boolean noAutoComplete = false;
+
+	/** Set if this is a popup interface. */
+	protected boolean popup = false;
 
 	/** The message selector and properties for the sub-header. */
 	protected Message subHeader = null;
@@ -132,6 +138,12 @@ public class UiInterface extends UiContainer implements Interface
 		if ((autoComplete != null) && ("FALSE".equals(autoComplete)))
 		{
 			setNoAutoComplete();
+		}
+
+		String popup = StringUtil.trimToNull(xml.getAttribute("popup"));
+		if ((popup != null) && ("TRUE".equals(popup)))
+		{
+			setPopup();
 		}
 
 		// sub-element configuration
@@ -249,6 +261,18 @@ public class UiInterface extends UiContainer implements Interface
 				}
 			}
 		}
+
+		// destination
+		settingsXml = XmlHelper.getChildElementNamed(xml, "attachmentPicker");
+		if (settingsXml != null)
+		{
+			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "destination");
+			if (innerXml != null)
+			{
+				// let Destination parse this
+				this.attachmentPicker = new UiDestination(service, innerXml);
+			}
+		}
 	}
 
 	/**
@@ -316,12 +340,22 @@ public class UiInterface extends UiContainer implements Interface
 			response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/ambrosia_library/js/ambrosia_" + UiService.VERSION
 					+ ".js\"></script>\n");
 
-			// TODO:
 			// for rich editing - tiny
-			response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce.js" + "\"></script>\n");
+			if (this.popup)
+			{
+				response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce_popup.js"
+						+ "\"></script>\n");
 
-			// for rich editing - fck
-			// response.println("<script type=\"text/javascript\" src=\"/library/editor/FCKeditor/fckeditor.js\"></script>");
+				// strips tiny's popup css addition
+				response.println("<script type=\"text/javascript\" language=\"JavaScript\">");
+				response.println("var allLinks=document.getElementsByTagName(\"link\");");
+				response.println("allLinks[allLinks.length-1].parentNode.removeChild(allLinks[allLinks.length-1]);");
+				response.println("</script>");
+			}
+			else
+			{
+				response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce.js" + "\"></script>\n");
+			}
 
 			// for date popup
 			response.println("<script type=\"text/javascript\" src=\"/ambrosia_library/calendar/calendar2.js\"></script>");
@@ -385,7 +419,7 @@ public class UiInterface extends UiContainer implements Interface
 		{
 			response.println("<div class=\"ambrosiaInterfaceHeader\">");
 
-			// the message, if defiend
+			// the message, if defined
 			if (this.header != null)
 			{
 				response.println(this.header.getMessage(context, focus));
@@ -404,7 +438,7 @@ public class UiInterface extends UiContainer implements Interface
 		response.println("<div class=\"ambrosiaInterfaceSubHeader\">");
 		if ((this.subHeader != null) || (!this.subHeaderComponents.isEmpty()))
 		{
-			// the message, if defiend
+			// the message, if defined
 			if (this.subHeader != null)
 			{
 				response.println(this.subHeader.getMessage(context, focus));
@@ -427,7 +461,7 @@ public class UiInterface extends UiContainer implements Interface
 		response.println("<div class=\"ambrosiaInterfaceFooter\">");
 		if ((this.footer != null) || (!this.footerComponents.isEmpty()))
 		{
-			// the message, if defiend
+			// the message, if defined
 			if (this.footer != null)
 			{
 				response.println(this.footer.getMessage(context, focus));
@@ -450,7 +484,18 @@ public class UiInterface extends UiContainer implements Interface
 		response.println("<script language=\"JavaScript\">");
 
 		// for tiny_mce
-		response.println("ambrosiaTinyInit();");
+		if (!popup)
+		{
+			if (this.attachmentPicker != null)
+			{
+				String dest = context.get("sakai.return.url") + this.attachmentPicker.getDestination(context, focus);
+				response.println("ambrosiaTinyInit('" + dest + "');");
+			}
+			else
+			{
+				response.println("ambrosiaTinyInit(null);");
+			}
+		}
 
 		// focus_path
 		if (this.focus != null)
@@ -521,6 +566,15 @@ public class UiInterface extends UiContainer implements Interface
 	/**
 	 * {@inheritDoc}
 	 */
+	public Interface setAttachmentPickerDestination(Destination destination)
+	{
+		this.attachmentPicker = destination;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Interface setFooter(String selector, PropertyReference... references)
 	{
 		this.footer = new UiMessage().setMessage(selector, references);
@@ -551,6 +605,15 @@ public class UiInterface extends UiContainer implements Interface
 	public Interface setNoAutoComplete()
 	{
 		this.noAutoComplete = true;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Interface setPopup()
+	{
+		this.popup = true;
 		return this;
 	}
 

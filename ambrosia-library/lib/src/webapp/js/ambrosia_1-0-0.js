@@ -669,49 +669,94 @@ function ambrosiaSetupHtmlEdit(name, docsArea)
 	//ambrosiaSetupHtmlEditFck(name, docsArea);
 }
 
-function ambrosiaSetupHtmlEditFck(name, docsArea)
+var ambrosiaFileBrowserDestination = null;
+
+function ambrosiaFileBrowser(field_name, url, type, win)
 {
-	var editor = new FCKeditor(name);
-	editor.BasePath = "/library/editor/FCKeditor/";
-	editor.Config['ImageBrowserURL'] = editor.BasePath + "editor/filemanager/browser/default/browser.html?Connector=/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector&Type=Image&CurrentFolder=" + docsArea;
-	editor.Config['LinkBrowserURL'] = editor.BasePath + "editor/filemanager/browser/default/browser.html?Connector=/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector&Type=Link&CurrentFolder=" + docsArea;
-	editor.Config['FlashBrowserURL'] = editor.BasePath + "editor/filemanager/browser/default/browser.html?Connector=/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector&Type=Flash&CurrentFolder=" + docsArea;
-	editor.Config['ImageUploadURL'] = editor.BasePath + "/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector?Type=Image&Command=QuickUpload&Type=Image&CurrentFolder=" + docsArea;
-	editor.Config['FlashUploadURL'] = editor.BasePath + "/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector?Type=Flash&Command=QuickUpload&Type=Flash&CurrentFolder=" + docsArea;
-	editor.Config['LinkUploadURL'] = editor.BasePath + "/sakai-fck-connector/web/editor/filemanager/browser/default/connectors/jsp/connector?Type=File&Command=QuickUpload&Type=Link&CurrentFolder=" + docsArea;
-	editor.Config['CurrentFolder'] = docsArea;
-	//editor.Config['ToolbarStartExpanded'] = false;
-	editor.Width  = "600";
-	editor.Height = "400";
-	editor.Config['CustomConfigurationsPath'] = "/library/editor/FCKeditor/config.js";
-	editor.ReplaceTextarea();
+	tinyMCE.activeEditor.windowManager.open(
+	{
+		file : ambrosiaFileBrowserDestination + "/" + type,
+		width : 600,
+		height : 400,
+		resizable : "yes",
+		close_previous : "no"
+	},
+	{
+		window : win,
+		input : field_name
+	});
+	return false;
 }
 
-function ambrosiaTinyInit()
+function ambrosiaChooseAttachment(url)
 {
-	// mode:"none" enables nothing
-	tinyMCE.init(
+	var win = tinyMCEPopup.getWindowArg("window");
+	win.document.getElementById(tinyMCEPopup.getWindowArg("input")).value = url;
+	if (win.getImageData) win.getImageData();
+	tinyMCEPopup.close();
+}
+
+function ambrosiaDoneAttachments()
+{
+	tinyMCEPopup.close();
+}
+
+function ambrosiaTinyInit(picker)
+{
+	if (picker == null)
 	{
-		mode : "textareas", editor_selector:"ambrosiaHtmlEdit",
-		convert_urls : false,
-		plugins : "safari",
-		theme : "advanced",
-		theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
-		theme_advanced_buttons2 : "",
-		theme_advanced_buttons3 : ""
-		// ,tab_focus : ":next"
-	});
-	tinyMCE.init(
+		tinyMCE.init(
+		{
+			mode : "textareas", editor_selector:"ambrosiaHtmlEdit",
+			convert_urls : false,
+			plugins : "safari,inlinepopups",
+			theme : "advanced",
+			theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+			theme_advanced_buttons2 : "",
+			theme_advanced_buttons3 : ""
+			// ,tab_focus : ":prev,:next"
+		});
+		tinyMCE.init(
+		{
+			mode : "textareas", editor_selector:"ambrosiaHtmlEditSmall",
+			convert_urls : false,
+			plugins : "safari,inlinepopups",
+			theme : "advanced",
+			theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
+			theme_advanced_buttons2 : "link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+			theme_advanced_buttons3 : ""
+			// ,tab_focus : ":prev,:next"
+		});
+	}
+	else
 	{
-		mode : "textareas", editor_selector:"ambrosiaHtmlEditSmall",
-		convert_urls : false,
-		plugins : "safari",
-		theme : "advanced",
-		theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
-		theme_advanced_buttons2 : "link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
-		theme_advanced_buttons3 : ""
-		// ,tab_focus : ":next"
-	});
+		ambrosiaFileBrowserDestination = picker;
+
+		tinyMCE.init(
+		{
+			mode : "textareas", editor_selector:"ambrosiaHtmlEdit",
+			convert_urls : false,
+			plugins : "safari",
+			theme : "advanced",
+			theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+			theme_advanced_buttons2 : "",
+			theme_advanced_buttons3 : "",
+			file_browser_callback : "ambrosiaFileBrowser"
+			// ,tab_focus : ":prev,:next"
+		});
+		tinyMCE.init(
+		{
+			mode : "textareas", editor_selector:"ambrosiaHtmlEditSmall",
+			convert_urls : false,
+			plugins : "safari",
+			theme : "advanced",
+			theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
+			theme_advanced_buttons2 : "link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+			theme_advanced_buttons3 : "",
+			file_browser_callback : "ambrosiaFileBrowser"
+			// ,tab_focus : ":prev,:next"
+		});
+	}
 }
 
 function ambrosiaEnableHtmlEdit(htmlComponent)

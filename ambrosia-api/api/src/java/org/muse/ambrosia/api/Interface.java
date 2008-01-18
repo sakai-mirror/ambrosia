@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,15 @@ public interface Interface extends Container
 	Interface addSubHeader(Component c);
 
 	/**
+	 * Set the Destination for the attachment picker UI for this view.
+	 * 
+	 * @param destination
+	 *        The Destination for the attachment picker UI for this view.
+	 * @return self
+	 */
+	Interface setAttachmentPickerDestination(Destination destination);
+
+	/**
 	 * Set the user interface footer message.
 	 * 
 	 * @param selector
@@ -92,6 +101,13 @@ public interface Interface extends Container
 	 * @return self.
 	 */
 	Interface setNoAutoComplete();
+
+	/**
+	 * Set as a popup interface.
+	 * 
+	 * @return self.
+	 */
+	Interface setPopup();
 
 	/**
 	 * Set the user interface sub-header message.
