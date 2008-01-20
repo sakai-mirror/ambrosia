@@ -383,6 +383,13 @@ public interface UiService
 	IconPropertyReference newIconPropertyReference();
 
 	/**
+	 * Construct a new newImagePropertyReference
+	 * 
+	 * @return a new newImagePropertyReference
+	 */
+	ImagePropertyReference newImagePropertyReference();
+
+	/**
 	 * Construct a new Instructions
 	 * 
 	 * @return a new Instructions
@@ -413,6 +420,13 @@ public interface UiService
 	 * @return a new Interface
 	 */
 	Fragment newFragment(InputStream in);
+
+	/**
+	 * Construct a new Grid
+	 * 
+	 * @return a new Grid
+	 */
+	Grid newGrid();
 
 	/**
 	 * Construct a new MenuBar

@@ -85,11 +85,13 @@ import org.muse.ambrosia.api.FormatDelegate;
 import org.muse.ambrosia.api.Fragment;
 import org.muse.ambrosia.api.FragmentDelegate;
 import org.muse.ambrosia.api.Gap;
+import org.muse.ambrosia.api.Grid;
 import org.muse.ambrosia.api.HasValueDecision;
 import org.muse.ambrosia.api.HtmlEdit;
 import org.muse.ambrosia.api.HtmlPropertyReference;
 import org.muse.ambrosia.api.IconKey;
 import org.muse.ambrosia.api.IconPropertyReference;
+import org.muse.ambrosia.api.ImagePropertyReference;
 import org.muse.ambrosia.api.Instructions;
 import org.muse.ambrosia.api.Interface;
 import org.muse.ambrosia.api.MenuBar;
@@ -602,6 +604,14 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
+	public Grid newGrid()
+	{
+		return new UiGrid();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public HasValueDecision newHasValueDecision()
 	{
 		return new UiHasValueDecision();
@@ -637,6 +647,14 @@ public class UiServiceImpl implements UiService
 	public IconPropertyReference newIconPropertyReference()
 	{
 		return new UiIconPropertyReference();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ImagePropertyReference newImagePropertyReference()
+	{
+		return new UiImagePropertyReference();
 	}
 
 	/**
@@ -1063,6 +1081,7 @@ public class UiServiceImpl implements UiService
 		if ("duration".equals(type)) return new UiDurationPropertyReference();
 		if ("html".equals(type)) return new UiHtmlPropertyReference();
 		if ("icon".equals(type)) return new UiIconPropertyReference();
+		if ("image".equals(type)) return new UiImagePropertyReference();
 		if ("text".equals(type)) return new UiTextPropertyReference();
 		if ("url".equals(type)) return new UiUrlPropertyReference();
 		if ("userInfo".equals(type)) return new UiUserInfoPropertyReference();
@@ -1091,6 +1110,7 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("floatModel")) return new UiFloatPropertyReference(this, xml);
 		if (xml.getTagName().equals("htmlModel")) return new UiHtmlPropertyReference(this, xml);
 		if (xml.getTagName().equals("iconModel")) return new UiIconPropertyReference(this, xml);
+		if (xml.getTagName().equals("imageModel")) return new UiImagePropertyReference(this, xml);
 		if (xml.getTagName().equals("pagingModel")) return new UiPagingPropertyReference(this, xml);
 		if (xml.getTagName().equals("textModel")) return new UiTextPropertyReference(this, xml);
 		if (xml.getTagName().equals("urlModel")) return new UiUrlPropertyReference(this, xml);
@@ -1110,6 +1130,7 @@ public class UiServiceImpl implements UiService
 		if ("float".equals(type)) return new UiFloatPropertyReference(this, xml);
 		if ("html".equals(type)) return new UiHtmlPropertyReference(this, xml);
 		if ("icon".equals(type)) return new UiIconPropertyReference(this, xml);
+		if ("image".equals(type)) return new UiImagePropertyReference(this, xml);
 		if ("paging".equals(type)) return new UiPagingPropertyReference(this, xml);
 		if ("text".equals(type)) return new UiTextPropertyReference(this, xml);
 		if ("url".equals(type)) return new UiUrlPropertyReference(this, xml);

@@ -22,7 +22,7 @@
 
 <!ELEMENT footer (message | container)* >
 
-<!ELEMENT message (selectors | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT message (selectors | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | imageModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST message selector CDATA #IMPLIED >
 <!ATTLIST message model CDATA #IMPLIED >
 <!ATTLIST message template CDATA #IMPLIED >
@@ -37,7 +37,7 @@
 <!ATTLIST model delegate CDATA #IMPLIED >
 <!ATTLIST model tool CDATA #IMPLIED >
 <!ATTLIST model missing CDATA #IMPLIED >
-<!ATTLIST model type (boolean|constant|contextInfo|count|date|duration|enum|float|html|icon|paging|text|url|userInfo) #IMPLIED >
+<!ATTLIST model type (boolean|constant|contextInfo|count|date|duration|enum|float|html|icon|image|paging|text|url|userInfo) #IMPLIED >
 <!ATTLIST model concise (TRUE|FALSE) #IMPLIED >
 <!ATTLIST model selector (DISPLAYNAME|SORTNAME|TITLE|FIRST|NEXT|LAST|PREV) #IMPLIED >
 <!ATTLIST model max CDATA #IMPLIED >
@@ -114,6 +114,14 @@
 <!ATTLIST iconModel tool CDATA #IMPLIED >
 <!ATTLIST iconModel missing CDATA #IMPLIED >
 <!ATTLIST iconModel icon CDATA #IMPLIED >
+
+<!ELEMENT imageModel (missingValues | model | caption)* >
+<!ATTLIST imageModel ref CDATA #IMPLIED >
+<!ATTLIST imageModel delegate CDATA #IMPLIED>
+<!ATTLIST imageModel tool CDATA #IMPLIED >
+<!ATTLIST imageModel missing CDATA #IMPLIED >
+
+<!ELEMENT caption (message) >
 
 <!ELEMENT componentModel (missingValues | container | model)* >
 <!ATTLIST componentModel ref CDATA #IMPLIED >
@@ -301,7 +309,7 @@
 <!ATTLIST cancel selector CDATA #IMPLIED >
 <!ATTLIST cancel icon CDATA #IMPLIED >
 
-<!ELEMENT destination (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT destination (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | imageModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST destination template CDATA #IMPLIED >
 <!ATTLIST destination model CDATA #IMPLIED >
 
@@ -322,11 +330,11 @@
 <!ATTLIST countdownTimer disabled (TRUE|FALSE) #IMPLIED >
 <!ATTLIST countdownTimer distination CDATA #IMPLIED >
 
-<!ELEMENT duration (message | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT duration (message | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | imageModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ELEMENT hide (message)* >
 <!ELEMENT remaining (message)* >
 <!ELEMENT show (message)* >
-<!ELEMENT timeTillExpire (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT timeTillExpire (model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | imageModel | pagingModel | textModel | urlModel | userInfoModel)* >
 
 <!ELEMENT courier (included | destination)* >
 <!ATTLIST courier id CDATA #IMPLIED >
@@ -342,7 +350,7 @@
 <!ATTLIST entityDisplay title CDATA #IMPLIED >
 
 <!ELEMENT rows (row)* >
-<!ELEMENT row (included | container | title | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | pagingModel | textModel | urlModel | userInfoModel)* >
+<!ELEMENT row (included | container | title | model | booleanModel | constantModel | contextInfoModel | dateModel | durationModel | countModel | enumModel | floatModel | htmlModel | componentModel | iconModel | imageModel | pagingModel | textModel | urlModel | userInfoModel)* >
 <!ATTLIST row title CDATA #IMPLIED >
 <!ATTLIST row model CDATA #IMPLIED >
 
