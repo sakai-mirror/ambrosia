@@ -679,7 +679,8 @@ function ambrosiaFileBrowser(field_name, url, type, win)
 		width : 600,
 		height : 400,
 		resizable : "yes",
-		close_previous : "no"
+		close_previous : "no",
+		scrollbars : "yes"
 	},
 	{
 		window : win,
@@ -709,7 +710,7 @@ function ambrosiaTinyInit(picker)
 		{
 			mode : "textareas", editor_selector:"ambrosiaHtmlEdit",
 			convert_urls : false,
-			plugins : "safari,inlinepopups",
+			plugins : "safari",
 			theme : "advanced",
 			theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 			theme_advanced_buttons2 : "",
@@ -720,7 +721,7 @@ function ambrosiaTinyInit(picker)
 		{
 			mode : "textareas", editor_selector:"ambrosiaHtmlEditSmall",
 			convert_urls : false,
-			plugins : "safari,inlinepopups",
+			plugins : "safari",
 			theme : "advanced",
 			theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
 			theme_advanced_buttons2 : "link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
