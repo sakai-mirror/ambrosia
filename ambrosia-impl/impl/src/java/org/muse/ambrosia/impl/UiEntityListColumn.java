@@ -47,6 +47,9 @@ public class UiEntityListColumn implements EntityListColumn
 	/** The decision to display the column for this entry as an alert. */
 	protected Decision alert = null;
 
+	/** The bottomed setting. */
+	protected boolean bottomed = false;
+
 	/** The centered setting. */
 	protected boolean centered = false;
 
@@ -71,7 +74,7 @@ public class UiEntityListColumn implements EntityListColumn
 	/** The navigations defined for display in this column. */
 	protected List<Component> navigations = new ArrayList<Component>();
 
-	/** The message  to show if an entity is not included in this column. */
+	/** The message to show if an entity is not included in this column. */
 	protected Message notIncludedMsg = null;
 
 	/** The no-wrapping indicator for the column. */
@@ -142,6 +145,10 @@ public class UiEntityListColumn implements EntityListColumn
 		String centered = StringUtil.trimToNull(xml.getAttribute("centered"));
 		if ((centered != null) && ("TRUE".equals(centered))) setCentered();
 
+		// short form for bottomed
+		String bottomed = StringUtil.trimToNull(xml.getAttribute("bottomed"));
+		if ((bottomed != null) && ("TRUE".equals(centered))) setBottomed();
+
 		// entity included
 		settingsXml = XmlHelper.getChildElementNamed(xml, "entityIncluded");
 		if (settingsXml != null)
@@ -154,9 +161,9 @@ public class UiEntityListColumn implements EntityListColumn
 			{
 				notIncluded = new UiMessage().setMessage(selector);
 			}
-			
+
 			Decision decision = service.parseDecisions(settingsXml);
-			
+
 			// not included message
 			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
 			if (innerXml != null)
@@ -440,6 +447,14 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
+	public boolean getBottomed()
+	{
+		return this.bottomed;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean getCentered()
 	{
 		return this.centered;
@@ -704,6 +719,15 @@ public class UiEntityListColumn implements EntityListColumn
 	public EntityListColumn setAlert(Decision alertDecision)
 	{
 		this.alert = alertDecision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EntityListColumn setBottomed()
+	{
+		this.bottomed = true;
 		return this;
 	}
 

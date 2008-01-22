@@ -83,6 +83,13 @@ public interface EntityListColumn
 	boolean alert(Context context, Object focus);
 
 	/**
+	 * Access the bottomed setting.
+	 * 
+	 * @return the bottomed setting.
+	 */
+	boolean getBottomed();
+
+	/**
 	 * Access the centered setting.
 	 * 
 	 * @return the centered setting.
@@ -314,6 +321,13 @@ public interface EntityListColumn
 	 * @return self.
 	 */
 	EntityListColumn setAlert(Decision alertDecision);
+
+	/**
+	 * Set the column data to be bottomed.
+	 * 
+	 * @return self.
+	 */
+	EntityListColumn setBottomed();
 
 	/**
 	 * Set the column data to be centered.
