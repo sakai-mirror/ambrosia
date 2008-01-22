@@ -676,8 +676,8 @@ function ambrosiaFileBrowser(field_name, url, type, win)
 	tinyMCE.activeEditor.windowManager.open(
 	{
 		file : ambrosiaFileBrowserDestination + "/" + type,
-		width : 600,
-		height : 400,
+		width : 700,
+		height : 500,
 		resizable : "yes",
 		close_previous : "no",
 		scrollbars : "yes"
