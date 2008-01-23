@@ -702,6 +702,8 @@ function ambrosiaDoneAttachments()
 	tinyMCEPopup.close();
 }
 
+var ambrosiaTinyCss = null;
+
 function ambrosiaTinyInit(picker)
 {
 	if (picker == null)
@@ -714,7 +716,8 @@ function ambrosiaTinyInit(picker)
 			theme : "advanced",
 			theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 			theme_advanced_buttons2 : "",
-			theme_advanced_buttons3 : ""
+			theme_advanced_buttons3 : "",
+			content_css : (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
 			// ,tab_focus : ":prev,:next"
 		});
 		tinyMCE.init(
@@ -725,7 +728,8 @@ function ambrosiaTinyInit(picker)
 			theme : "advanced",
 			theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
 			theme_advanced_buttons2 : "link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
-			theme_advanced_buttons3 : ""
+			theme_advanced_buttons3 : "",
+			content_css : (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
 			// ,tab_focus : ":prev,:next"
 		});
 	}
@@ -742,7 +746,8 @@ function ambrosiaTinyInit(picker)
 			theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 			theme_advanced_buttons2 : "",
 			theme_advanced_buttons3 : "",
-			file_browser_callback : "ambrosiaFileBrowser"
+			file_browser_callback : "ambrosiaFileBrowser",
+			content_css : (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
 			// ,tab_focus : ":prev,:next"
 		});
 		tinyMCE.init(
@@ -754,7 +759,8 @@ function ambrosiaTinyInit(picker)
 			theme_advanced_buttons1 : "undo,redo,separator,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
 			theme_advanced_buttons2 : "link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 			theme_advanced_buttons3 : "",
-			file_browser_callback : "ambrosiaFileBrowser"
+			file_browser_callback : "ambrosiaFileBrowser",
+			content_css : (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
 			// ,tab_focus : ":prev,:next"
 		});
 	}

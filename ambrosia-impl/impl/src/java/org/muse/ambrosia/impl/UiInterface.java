@@ -24,6 +24,8 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Context;
@@ -355,6 +357,16 @@ public class UiInterface extends UiContainer implements Interface
 			else
 			{
 				response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce.js" + "\"></script>\n");
+				String css = findCss(headInclude);
+				if (css == null)
+				{
+					css = "/ambrosia_library/skin/ambrosia_" + UiService.VERSION + ".css";
+				}
+				else
+				{
+					css += ",/ambrosia_library/skin/ambrosia_" + UiService.VERSION + ".css";
+				}
+				response.println("<script type=\"text/javascript\" language=\"JavaScript\">ambrosiaTinyCss=\"" + css + "\";</script>");
 			}
 
 			// for date popup
@@ -633,5 +645,43 @@ public class UiInterface extends UiContainer implements Interface
 	{
 		this.title = new UiMessage().setMessage(selector, references);
 		return this;
+	}
+
+	/**
+	 * Find any css urls in the data, and return them as a comma separated string
+	 * 
+	 * @param data
+	 *        The data (portal head stuff)
+	 * @return The css urls in a comma separated string.
+	 */
+	protected String findCss(String data)
+	{
+		if (data == null) return null;
+
+		// groups: 0: the whole matching text 1: the css url
+		Pattern p = Pattern.compile("href=\"(.*\\.css)\"");
+
+		Matcher m = p.matcher(data);
+		StringBuilder sb = new StringBuilder();
+
+		// process each css url found
+		while (m.find())
+		{
+			if (m.groupCount() == 1)
+			{
+				String ref = m.group(1);
+				if (sb.length() == 0)
+				{
+					sb.append(ref);
+				}
+				else
+				{
+					sb.append(",");
+					sb.append(ref);
+				}
+			}
+		}
+
+		return sb.toString();
 	}
 }
