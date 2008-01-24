@@ -971,11 +971,13 @@ public class UiNavigation extends UiComponent implements Navigation
 				{
 					if ((this.icon != null) && (this.iconStyle == IconStyle.left))
 					{
+						if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
 						response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\""
 								+ context.getUrl(this.icon)
 								+ "\" "
 								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
 										+ Validator.escapeHtml(description) + "\" ") + " />");
+						if (!disabled) response.print("</a>");
 					}
 
 					if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
@@ -986,11 +988,13 @@ public class UiNavigation extends UiComponent implements Navigation
 
 					if ((this.icon != null) && (this.iconStyle == IconStyle.right))
 					{
+						if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
 						response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\""
 								+ context.getUrl(this.icon)
 								+ "\" "
 								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
 										+ Validator.escapeHtml(description) + "\" ") + " />");
+						if (!disabled) response.print("</a>");
 					}
 				}
 
