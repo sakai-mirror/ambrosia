@@ -76,6 +76,9 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	/** If set, the editor is going to use two lines to keep the width down. */
 	protected boolean small = false;
 
+	/** If set, the editor does not allow links, images, or code editing - just presents text controls. */
+	protected boolean textOnly = false;
+
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
 
@@ -137,6 +140,13 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 		if ((small != null) && (small.equals("TRUE")))
 		{
 			setSmall();
+		}
+
+		// textOnly
+		String textOnly = StringUtil.trimToNull(xml.getAttribute("textOnly"));
+		if ((textOnly != null) && (textOnly.equals("TRUE")))
+		{
+			setTextOnly();
 		}
 
 		// title
@@ -317,8 +327,17 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			}
 
 			// the edit textarea - initially invisible
+			String classSuffix = "";
+			if (this.textOnly)
+			{
+				classSuffix = "Tiny";
+			}
+			else if (this.small)
+			{
+				classSuffix = "Small";
+			}
 			response.println("<textarea"
-					+ (this.optional ? " style=\"display:none\"" : (" class=\"ambrosiaHtmlEdit" + (this.small ? "Small" : "") + "\"")) + " id=\""
+					+ (this.optional ? " style=\"display:none\"" : (" class=\"ambrosiaHtmlEdit" + classSuffix + "\"")) + " id=\""
 					+ id + "\" name=\"" + id + "\" cols=" + Integer.toString(numCols) + " rows=" + Integer.toString(numRows)
 					+ (readOnly ? " disabled=\"disabled\"" : "") + ">");
 			response.print(Validator.escapeHtmlTextarea(value));
@@ -416,6 +435,12 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	public HtmlEdit setSmall()
 	{
 		this.small = true;
+		return this;
+	}
+
+	public HtmlEdit setTextOnly()
+	{
+		this.textOnly = true;
 		return this;
 	}
 

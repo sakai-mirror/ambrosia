@@ -596,6 +596,7 @@
 <!ATTLIST htmlEdit readOnly (TRUE|FALSE) #IMPLIED >
 <!ATTLIST htmlEdit optional (TRUE|FALSE) #IMPLIED >
 <!ATTLIST htmlEdit small (TRUE|FALSE) #IMPLIED >
+<!ATTLIST htmlEdit textOnly (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT dateEdit (included | title | model | onEmptyAlert | readOnly | focus | icon)* >
 <!ATTLIST dateEdit id CDATA #IMPLIED >

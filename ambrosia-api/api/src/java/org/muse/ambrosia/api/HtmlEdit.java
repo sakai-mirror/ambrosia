@@ -90,6 +90,13 @@ public interface HtmlEdit extends Component
 	HtmlEdit setSmall();
 
 	/**
+	 * Set the editor to use a single line of text-only controls (no images, no links, no code editing).
+	 * 
+	 * @return self.
+	 */
+	HtmlEdit setTextOnly();
+
+	/**
 	 * Set the title text.
 	 * 
 	 * @param selector

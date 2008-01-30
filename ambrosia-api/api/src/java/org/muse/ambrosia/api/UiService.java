@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import org.sakaiproject.i18n.InternationalizedMessages;
 public interface UiService
 {
 	/** Ambrosia version used in some (js, css) library files that will change with each release. */
-	public static String VERSION = "1-0-0";
+	public static String VERSION = "1-1-0";
 
 	/*************************************************************************************************************************************************
 	 * Component factory methods
