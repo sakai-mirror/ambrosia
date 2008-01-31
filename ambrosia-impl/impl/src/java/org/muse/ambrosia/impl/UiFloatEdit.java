@@ -464,7 +464,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 
 		// pre-validate
 		context.addScript("ambrosiaValidateFloat(document.getElementById('" + id + "'), " + valueOrNull(minValue) + ", " + valueOrNull(maxValue)
-				+ ", 'invalid_" + id + "');");
+				+ ", 'invalid_" + id + "');\n");
 
 		return true;
 	}
