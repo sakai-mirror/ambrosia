@@ -91,7 +91,7 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 			iconName = super.read(context, focus);
 		}
 
-		String title = null;
+		String title = "";
 		if (this.titleMessage != null)
 		{
 			title = this.titleMessage.getMessage(context, focus);
