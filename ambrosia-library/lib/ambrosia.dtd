@@ -31,7 +31,7 @@
 <!ELEMENT selector (decision | hasValueDecision | compareDecision | andDecision | orDecision | pastDateDecision | trueDecision)* >
 <!ATTLIST selector selector CDATA #IMPLIED>
 
-<!ELEMENT model (missingValues | model)* >
+<!ELEMENT model (missingValues | model | title)* >
 <!ATTLIST model ref CDATA #IMPLIED >
 <!ATTLIST model indexRef CDATA #IMPLIED >
 <!ATTLIST model delegate CDATA #IMPLIED >
@@ -108,7 +108,7 @@
 <!ATTLIST htmlModel missing CDATA #IMPLIED >
 <!ATTLIST htmlModel max CDATA #IMPLIED >
 
-<!ELEMENT iconModel (missingValues | model)* >
+<!ELEMENT iconModel (missingValues | model | title)* >
 <!ATTLIST iconModel ref CDATA #IMPLIED >
 <!ATTLIST iconModel delegate CDATA #IMPLIED>
 <!ATTLIST iconModel tool CDATA #IMPLIED >

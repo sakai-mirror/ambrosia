@@ -23,6 +23,7 @@ package org.muse.ambrosia.impl;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.IconPropertyReference;
+import org.muse.ambrosia.api.Message;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
@@ -33,6 +34,8 @@ import org.w3c.dom.Element;
 public class UiIconPropertyReference extends UiPropertyReference implements IconPropertyReference
 {
 	protected String name = null;
+
+	protected Message titleMessage = null;
 
 	/**
 	 * No-arg constructor.
@@ -57,6 +60,14 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 		// icon
 		String icon = StringUtil.trimToNull(xml.getAttribute("icon"));
 		if (icon != null) setIcon(icon);
+
+		// title message
+		Element settingsXml = XmlHelper.getChildElementNamed(xml, "title");
+		if (settingsXml != null)
+		{
+			// let Message parse this
+			this.titleMessage = new UiMessage(service, settingsXml);
+		}
 	}
 
 	/**
@@ -80,8 +91,22 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 			iconName = super.read(context, focus);
 		}
 
-		// alt=\"" + Validator.escapeHtml(name) + "\"
-		return "<img src=\"" + context.getUrl(iconName) + "\" />";
+		String title = null;
+		if (this.titleMessage != null)
+		{
+			title = this.titleMessage.getMessage(context, focus);
+			if (title != null)
+			{
+				String t = Validator.escapeHtml(title);
+				title = "alt=\"" + t + "\" title=\"" + t + "\" ";
+			}
+			else
+			{
+				title = "";
+			}
+		}
+
+		return "<img src=\"" + context.getUrl(iconName) + "\" " + title + "/>";
 	}
 
 	/**
@@ -104,6 +129,15 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 	public IconPropertyReference setIcon(String name)
 	{
 		this.name = name;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IconPropertyReference setTitle(Message title)
+	{
+		this.titleMessage = title;
 		return this;
 	}
 }
