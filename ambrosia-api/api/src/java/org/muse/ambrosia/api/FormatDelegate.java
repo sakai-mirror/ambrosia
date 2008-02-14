@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 package org.muse.ambrosia.api;
 
 /**
- * FormatDelegate formats...
+ * FormatDelegate formats model references, both formatted and raw.
  */
 public interface FormatDelegate
 {
@@ -36,4 +36,15 @@ public interface FormatDelegate
 	 * @return The value formatted into a display string.
 	 */
 	String format(Context context, Object value);
+
+	/**
+	 * 'Format' the raw object value if needed - used in readObject().
+	 * 
+	 * @param context
+	 *        The Context.
+	 * @param value
+	 *        The value.
+	 * @return The raw object value 'formatted' in any way, or the raw value returned.
+	 */
+	Object formatObject(Context context, Object value);
 }

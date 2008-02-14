@@ -334,6 +334,12 @@ public class UiPropertyReference implements PropertyReference
 		// pull out the value object
 		Object value = getNestedValue(context, this.propertyReference, entity, false);
 
+		// give the format delegate a shot at manipulating the object
+		if (this.formatDelegate != null)
+		{
+			value = this.formatDelegate.formatObject(context, value);
+		}
+
 		return value;
 	}
 
