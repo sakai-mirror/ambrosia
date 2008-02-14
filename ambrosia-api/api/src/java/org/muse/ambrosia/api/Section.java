@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,9 +70,11 @@ public interface Section extends Container
 	 *        The reference to an array or collection to iterate over.
 	 * @param name
 	 *        The context name for the current iteration item.
+	 * @param empty
+	 *        A message to display if the iterator is empty.
 	 * @return self.
 	 */
-	Section setIterator(PropertyReference reference, String name);
+	Section setIterator(PropertyReference reference, String name, Message empty);
 
 	/**
 	 * Set the section title message.

@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,11 +43,14 @@ public class UiSection extends UiContainer implements Section
 	/** The message for the anchor. */
 	protected Message anchor = null;
 
+	/** The inclusion decision for each entity. */
+	protected Decision entityIncluded = null;
+
 	/** The reference to an entity to focus on. */
 	protected PropertyReference focusReference = null;
 
-	/** The inclusion decision for each entity. */
-	protected Decision entityIncluded = null;
+	/** Message to use if the iterator is empty. */
+	protected Message iteratorEmpty = null;
 
 	/** The context name for the current iteration object. */
 	protected String iteratorName = null;
@@ -168,6 +171,13 @@ public class UiSection extends UiContainer implements Section
 			{
 				this.iteratorReference = service.parsePropertyReference(innerXml);
 			}
+
+			// if iterator is empty
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "empty");
+			if (innerXml != null)
+			{
+				this.iteratorEmpty = new UiMessage(service, innerXml);
+			}
 		}
 	}
 
@@ -203,6 +213,16 @@ public class UiSection extends UiContainer implements Section
 		{
 			Collection c = (Collection) iterator;
 			int index = -1;
+			if (c.isEmpty())
+			{
+				if (this.iteratorEmpty != null)
+				{
+					response.println("<div class =\"ambrosiaInstructions\">" + this.iteratorEmpty.getMessage(context, focus) + "</div>");
+				}
+
+				return true;
+			}
+
 			for (Object o : c)
 			{
 				index++;
@@ -239,6 +259,17 @@ public class UiSection extends UiContainer implements Section
 		{
 			Object[] c = (Object[]) iterator;
 			int index = -1;
+
+			if (c.length == 0)
+			{
+				if (this.iteratorEmpty != null)
+				{
+					response.println("<div class =\"ambrosiaInstructions\">" + this.iteratorEmpty.getMessage(context, focus) + "</div>");
+				}
+
+				return true;
+			}
+
 			for (Object o : c)
 			{
 				index++;
@@ -306,10 +337,11 @@ public class UiSection extends UiContainer implements Section
 	/**
 	 * {@inheritDoc}
 	 */
-	public Section setIterator(PropertyReference reference, String name)
+	public Section setIterator(PropertyReference reference, String name, Message empty)
 	{
 		this.iteratorReference = reference;
 		this.iteratorName = name;
+		this.iteratorEmpty = empty;
 		return this;
 	}
 

@@ -61,7 +61,7 @@ public class UiEntityList extends UiComponent implements EntityList
 	/** Text message to use if there are no items to show in the list. */
 	protected Message emptyTitle = null;
 
-	/** The enitity actions defined related to this column. */
+	/** The entity actions defined related to this column. */
 	protected List<Component> entityActions = new ArrayList<Component>();
 
 	/** The inclusion decision for each entity. */
@@ -165,6 +165,13 @@ public class UiEntityList extends UiComponent implements EntityList
 			{
 				PropertyReference pRef = service.parsePropertyReference(innerXml);
 				if (pRef != null) this.iteratorReference = pRef;
+			}
+
+			// empty title
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "empty");
+			if (innerXml != null)
+			{
+				this.emptyTitle = new UiMessage(service, innerXml);
 			}
 		}
 

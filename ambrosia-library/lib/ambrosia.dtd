@@ -360,8 +360,9 @@
 <!ATTLIST entityList title CDATA #IMPLIED >
 
 <!ELEMENT emptyTitle (message) >
+<!ELEMENT empty (message) >
 
-<!ELEMENT iterator (model)* >
+<!ELEMENT iterator (model | empty)* >
 <!ATTLIST iterator model CDATA #IMPLIED >
 <!ATTLIST iterator name CDATA #IMPLIED >
 
