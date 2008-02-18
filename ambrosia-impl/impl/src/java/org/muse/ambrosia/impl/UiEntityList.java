@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -469,6 +469,7 @@ public class UiEntityList extends UiComponent implements EntityList
 								false, false);
 						response.println("<th scope=\"col\""
 								+ (c.getCentered() ? " style=\"text-align:center\"" : "")
+								+ (c.getRight() ? " style=\"text-align:right\"" : "")
 								+ "><a href=\"#\" onclick=\"act_"
 								+ sortId
 								+ "();return false;\">"
@@ -484,21 +485,23 @@ public class UiEntityList extends UiComponent implements EntityList
 						UiNavigation.generateLinkScript(context, sortId, false, false, submit, c.getSortDestinationAsc().getDestination(context,
 								focus), (String) context.get("sakai.return.url"), false, false);
 						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
-								+ "><a href=\"#\" onclick=\"act_" + sortId + "();return false;\">" + title.getMessage(context, focus) + "</a></th>");
+								+ (c.getRight() ? " style=\"text-align:right\"" : "") + "><a href=\"#\" onclick=\"act_" + sortId
+								+ "();return false;\">" + title.getMessage(context, focus) + "</a></th>");
 					}
 
 					// no sort
 					else
 					{
-						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">"
-								+ title.getMessage(context, focus) + "</th>");
+						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
+								+ (c.getRight() ? " style=\"text-align:right\"" : "") + ">" + title.getMessage(context, focus) + "</th>");
 					}
 				}
 
-				// for no title defined, put out a placeholder title
+				// for no title defined, put out a place-holder title
 				else
 				{
-					response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "") + ">" + "" + "</th>");
+					response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
+							+ (c.getRight() ? " style=\"text-align:right\"" : "") + ">" + "" + "</th>");
 				}
 
 				colNum++;
@@ -636,6 +639,10 @@ public class UiEntityList extends UiComponent implements EntityList
 					if (c.getCentered())
 					{
 						response.print("text-align:center;");
+					}
+					if (c.getRight())
+					{
+						response.print("text-align:right;");
 					}
 					if (c.getBottomed())
 					{

@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,13 +56,13 @@ public class UiEntityListColumn implements EntityListColumn
 	/** Components contained in this container. */
 	protected List<Component> contained = new ArrayList<Component>();
 
-	/** The enitity actions defined related to this column. */
+	/** The entity actions defined related to this column. */
 	protected List<Component> entityActions = new ArrayList<Component>();
 
 	/** The inclusion decision for each entity. */
 	protected Decision entityIncluded = null;
 
-	/** The naviations to use for the main text of the column. */
+	/** The navigations to use for the main text of the column. */
 	protected List<Navigation> entityNavigations = new ArrayList<Navigation>();
 
 	/** Footnotes for this column. */
@@ -79,6 +79,9 @@ public class UiEntityListColumn implements EntityListColumn
 
 	/** The no-wrapping indicator for the column. */
 	protected boolean noWrap = false;
+
+	/** The right-justified setting. */
+	protected boolean right = false;
 
 	/** The destination that leads to this column asc sort. */
 	protected Destination sortAsc = null;
@@ -144,6 +147,10 @@ public class UiEntityListColumn implements EntityListColumn
 		// short form for centered
 		String centered = StringUtil.trimToNull(xml.getAttribute("centered"));
 		if ((centered != null) && ("TRUE".equals(centered))) setCentered();
+
+		// short form for right-justified
+		String right = StringUtil.trimToNull(xml.getAttribute("right"));
+		if ((right != null) && ("TRUE".equals(right))) setRight();
 
 		// short form for bottomed
 		String bottomed = StringUtil.trimToNull(xml.getAttribute("bottomed"));
@@ -574,6 +581,14 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
+	public boolean getRight()
+	{
+		return this.right;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getSortAscIcon()
 	{
 		return this.sortAscIconPath;
@@ -765,6 +780,15 @@ public class UiEntityListColumn implements EntityListColumn
 	public EntityListColumn setNoWrap()
 	{
 		this.noWrap = true;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EntityListColumn setRight()
+	{
+		this.right = true;
 		return this;
 	}
 

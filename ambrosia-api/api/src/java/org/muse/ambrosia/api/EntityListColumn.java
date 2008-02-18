@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -204,6 +204,13 @@ public interface EntityListColumn
 	String getPrefixText(Context context, Object focus, String id);
 
 	/**
+	 * Access the right-justified setting.
+	 * 
+	 * @return the right-justified setting.
+	 */
+	boolean getRight();
+
+	/**
 	 * Access the sort asc icon path.
 	 * 
 	 * @return The sort asc icon path.
@@ -362,6 +369,13 @@ public interface EntityListColumn
 	 * @return self.
 	 */
 	EntityListColumn setNoWrap();
+
+	/**
+	 * Set the column data to be right justified.
+	 * 
+	 * @return self.
+	 */
+	EntityListColumn setRight();
 
 	/**
 	 * Set the two destinations for the sort headers - one for the one leading to the ascending sort, one for the one leading to the descending sort.
