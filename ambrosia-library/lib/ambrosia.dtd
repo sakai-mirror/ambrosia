@@ -49,6 +49,7 @@
 <!ATTLIST model true CDATA #IMPLIED >
 <!ATTLIST model false CDATA #IMPLIED >
 <!ATTLIST model messageRoot CDATA #IMPLIED >
+<!ATTLIST model stripP (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT missingValues (missing)* >
 <!ELEMENT missing EMPTY >
@@ -107,6 +108,7 @@
 <!ATTLIST htmlModel tool CDATA #IMPLIED >
 <!ATTLIST htmlModel missing CDATA #IMPLIED >
 <!ATTLIST htmlModel max CDATA #IMPLIED >
+<!ATTLIST htmlModel stripP (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT iconModel (missingValues | model | title)* >
 <!ATTLIST iconModel ref CDATA #IMPLIED >

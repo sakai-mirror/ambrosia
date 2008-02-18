@@ -31,12 +31,15 @@ import org.w3c.dom.Element;
  */
 public class UiHtmlPropertyReference extends UiPropertyReference implements HtmlPropertyReference
 {
-	final static String htmlEditorBlankLine = "<p>&nbsp;</p>";
-	
 	/** This blank line appears from tiny editor in IE 7. */
 	final static String htmlEditorBlankDoc = "<html />";
 
+	final static String htmlEditorBlankLine = "<p>&nbsp;</p>";
+
 	protected int maxChars = -1;
+
+	/** Set if we are going to strip surrounding paragraph marks from the value. */
+	protected boolean stripP = false;
 
 	/**
 	 * No-arg constructor.
@@ -70,6 +73,10 @@ public class UiHtmlPropertyReference extends UiPropertyReference implements Html
 			{
 			}
 		}
+
+		// stripP
+		String stripP = StringUtil.trimToNull(xml.getAttribute("stripP"));
+		if ((stripP != null) && ("TRUE".equals(stripP))) setStripP();
 	}
 
 	/**
@@ -91,6 +98,18 @@ public class UiHtmlPropertyReference extends UiPropertyReference implements Html
 		// if missing, don't do special treatment
 		if (value.equals(missingValue(context))) return value;
 
+		// strip surrounding <p>
+		if (this.stripP)
+		{
+			int start = 0;
+			if (value.startsWith("<p>")) start += 3;
+
+			int end = value.length();
+			if (value.endsWith("</p>")) end -= 4;
+
+			value = value.substring(start, end);
+		}
+
 		// truncate if desired and needed
 		if (this.maxChars > -1)
 		{
@@ -109,6 +128,15 @@ public class UiHtmlPropertyReference extends UiPropertyReference implements Html
 	public HtmlPropertyReference setMaxLength(int maxChars)
 	{
 		this.maxChars = maxChars;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public HtmlPropertyReference setStripP()
+	{
+		this.stripP = true;
 		return this;
 	}
 
