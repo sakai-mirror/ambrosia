@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ package org.muse.ambrosia.impl;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.DurationPropertyReference;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
@@ -103,7 +102,7 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 		long minutes = (time - (hours * (60 * 60))) / 60;
 		long seconds = (time - (hours * (60 * 60)) - (minutes * 60));
 
-		return Validator.escapeHtml(hours + ":" + fmtTwoDigit(minutes));
+		return hours + ":" + fmtTwoDigit(minutes);
 	}
 
 	/**

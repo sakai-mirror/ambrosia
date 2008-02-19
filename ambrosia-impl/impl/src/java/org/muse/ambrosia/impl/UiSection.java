@@ -30,10 +30,7 @@ import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Section;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * UiSection implements Section.
@@ -442,7 +439,7 @@ public class UiSection extends UiContainer implements Section
 		// anchor
 		if (this.anchor != null)
 		{
-			response.println("<a name=\"" + Validator.escapeHtml(this.anchor.getMessage(context, focus)) + "\"></a>");
+			response.println("<a name=\"" + this.anchor.getMessage(context, focus) + "\"></a>");
 		}
 
 		// title

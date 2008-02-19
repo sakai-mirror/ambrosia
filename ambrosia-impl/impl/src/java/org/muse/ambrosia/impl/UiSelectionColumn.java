@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.SelectionColumn;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
@@ -348,13 +347,13 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 
 				if (correct)
 				{
-					rv.append("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
-							+ Validator.escapeHtml(this.correctMessage.getMessage(context, entity)) + "\" />");
+					rv.append("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\"" + this.correctMessage.getMessage(context, entity)
+							+ "\" title=\"" + this.correctMessage.getMessage(context, entity) + "\"/>");
 				}
 				else
 				{
-					rv.append("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\""
-							+ Validator.escapeHtml(this.incorrectMessage.getMessage(context, entity)) + "\" />");
+					rv.append("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\"" + this.incorrectMessage.getMessage(context, entity)
+							+ "\" title=\"" + this.incorrectMessage.getMessage(context, entity) + "\"/>");
 				}
 			}
 
@@ -484,7 +483,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 
 		// this will become visible if a submit happens and the validation fails
 		return "<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + effectiveId + "\">"
-				+ Validator.escapeHtml(this.onEmptyAlertMsg.getMessage(context, focus)) + "</div>";
+				+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>";
 	}
 
 	/**

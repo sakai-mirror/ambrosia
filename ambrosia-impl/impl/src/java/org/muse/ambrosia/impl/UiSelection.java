@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.RenderListener;
 import org.muse.ambrosia.api.Selection;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -590,12 +589,14 @@ public class UiSelection extends UiComponent implements Selection
 					if (correct)
 					{
 						response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
-								+ Validator.escapeHtml(this.correctMessage.getMessage(context, focus)) + "\" />");
+								+ this.correctMessage.getMessage(context, focus) + "\" title=\"" + this.correctMessage.getMessage(context, focus)
+								+ "\"/>");
 					}
 					else
 					{
 						response.print("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\""
-								+ Validator.escapeHtml(this.incorrectMessage.getMessage(context, focus)) + "\" />");
+								+ this.incorrectMessage.getMessage(context, focus) + "\" title=\"" + this.incorrectMessage.getMessage(context, focus)
+								+ "\"/>");
 					}
 				}
 
@@ -696,12 +697,14 @@ public class UiSelection extends UiComponent implements Selection
 						if (correct)
 						{
 							response.print("<img src=\"" + context.getUrl(this.correctIcon) + "\" alt=\""
-									+ Validator.escapeHtml(this.correctMessage.getMessage(context, focus)) + "\" />");
+									+ this.correctMessage.getMessage(context, focus) + "\" title=\"" + this.correctMessage.getMessage(context, focus)
+									+ "\"/>");
 						}
 						else
 						{
 							response.print("<img src=\"" + context.getUrl(this.incorrectIcon) + "\" alt=\""
-									+ Validator.escapeHtml(this.incorrectMessage.getMessage(context, focus)) + "\" />");
+									+ this.incorrectMessage.getMessage(context, focus) + "\" title=\""
+									+ this.incorrectMessage.getMessage(context, focus) + "\"/>");
 						}
 					}
 

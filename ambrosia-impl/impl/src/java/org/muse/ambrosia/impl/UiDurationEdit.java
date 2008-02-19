@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import org.muse.ambrosia.api.DurationEdit;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
@@ -219,21 +218,21 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 		String value = "";
 		if (this.propertyReference != null)
 		{
-			value = this.propertyReference.read(context, focus);
+			value = StringUtil.trimToZero(this.propertyReference.read(context, focus));
 		}
 
 		if (onEmptyAlert)
 		{
 			// this will become visible if a submit happens and the validation fails
 			response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
-					+ Validator.escapeHtml(this.onEmptyAlertMsg.getMessage(context, focus)) + "</div>");
+					+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
 
 			// this marks the field as required
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
 		// the validation failure message
-		String failureMsg = Validator.escapeHtml(this.validationMsg.getMessage(context, focus));
+		String failureMsg = this.validationMsg.getMessage(context, focus);
 
 		// the "failure" panel shown if requirements are not met
 		response.println("<div class=\"ambrosiaConfirmPanel\" style=\"display:none; left:0px; top:0px; width:340px; height:120px\" id=\"failure_"
@@ -268,7 +267,7 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 		// TODO: make the icon link to a popup picker!
 
 		response.print("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
-				+ Integer.toString(numCols) + "\" value=\"" + Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
+				+ Integer.toString(numCols) + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
 				+ " onchange=\"ambrosiaDurationChange(this, 'invalid_" + id + "');\"" + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
 

@@ -50,6 +50,7 @@
 <!ATTLIST model false CDATA #IMPLIED >
 <!ATTLIST model messageRoot CDATA #IMPLIED >
 <!ATTLIST model stripP (TRUE|FALSE) #IMPLIED >
+<!ATTLIST model edit (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT missingValues (missing)* >
 <!ELEMENT missing EMPTY >
@@ -139,6 +140,7 @@
 <!ATTLIST textModel missing CDATA #IMPLIED >
 <!ATTLIST textModel max CDATA #IMPLIED >
 <!ATTLIST textModel stripHtml (TRUE|FALSE) #IMPLIED >
+<!ATTLIST textModel edit (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT urlModel (missingValues | model)* >
 <!ATTLIST urlModel ref CDATA #REQUIRED >

@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -223,7 +223,7 @@ public class UiTextEdit extends UiComponent implements TextEdit
 		String value = "";
 		if (this.propertyReference != null)
 		{
-			value = this.propertyReference.read(context, focus);
+			value = StringUtil.trimToZero(this.propertyReference.read(context, focus));
 		}
 
 		// single line
@@ -233,7 +233,7 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			{
 				// this will become visible if a submit happens and the validation fails
 				response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
-						+ Validator.escapeHtml(this.onEmptyAlertMsg.getMessage(context, focus)) + "</div>");
+						+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
 
 				// this marks the field as required
 				// response.println("<span class=\"reqStarInline\">*</span>");
@@ -247,8 +247,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 				response.println("</label>");
 			}
 
-			response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
-					+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
+			response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\"" + value
+					+ "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 
 			context.editComponentRendered(id);
 
@@ -262,7 +262,7 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			{
 				// this will become visible if a submit happens and the validation fails
 				response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
-						+ Validator.escapeHtml(this.onEmptyAlertMsg.getMessage(context, focus)) + "</div>");
+						+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
 
 				// this marks the field as required
 				// response.println("<span class=\"reqStarInline\">*</span>");
@@ -403,7 +403,7 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			for (Object option : (Collection) options)
 			{
 				String str = option.toString();
-				response.println("<option value=\"" + str + "\">" + Validator.escapeHtml(str) + "</option>");
+				response.println("<option value=\"" + str + "\">" + str + "</option>");
 			}
 		}
 

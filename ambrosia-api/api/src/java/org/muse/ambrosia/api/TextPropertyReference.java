@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,17 @@
 package org.muse.ambrosia.api;
 
 /**
- * UiTextPropertyReference handles plain text String selector values.
+ * TextPropertyReference handles plain text String selector values.
  */
 public interface TextPropertyReference extends PropertyReference
 {
+	/**
+	 * Set this to prepare for editing.
+	 * 
+	 * @return self.
+	 */
+	TextPropertyReference setEdit();
+
 	/**
 	 * Set the max length to show - anything longer will be truncated. If truncated, "..." is appended.
 	 * 

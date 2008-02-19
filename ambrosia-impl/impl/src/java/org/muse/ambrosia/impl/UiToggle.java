@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Toggle;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
@@ -199,11 +198,8 @@ public class UiToggle extends UiComponent implements Toggle
 
 					if (this.icon != null)
 					{
-						response.print("<img style=\"vertical-align:text-bottom;\" src=\""
-								+ context.getUrl(this.icon)
-								+ "\" "
-								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
-										+ Validator.escapeHtml(description) + "\" ") + " />");
+						response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.icon) + "\" "
+								+ ((description == null) ? "" : "title=\"" + description + "\" " + "alt=\"" + description + "\" ") + " />");
 					}
 
 					if (!disabled) response.print("</a>");
@@ -214,11 +210,8 @@ public class UiToggle extends UiComponent implements Toggle
 					if ((this.icon != null) && (this.iconStyle == Navigation.IconStyle.left))
 					{
 						if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
-						response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\""
-								+ context.getUrl(this.icon)
-								+ "\" "
-								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
-										+ Validator.escapeHtml(description) + "\" ") + " />");
+						response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\"" + context.getUrl(this.icon) + "\" "
+								+ ((description == null) ? "" : "title=\"" + description + "\" " + "alt=\"" + description + "\" ") + " />");
 						if (!disabled) response.print("</a>");
 					}
 
@@ -231,11 +224,8 @@ public class UiToggle extends UiComponent implements Toggle
 					if ((this.icon != null) && (this.iconStyle == Navigation.IconStyle.right))
 					{
 						if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
-						response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\""
-								+ context.getUrl(this.icon)
-								+ "\" "
-								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" " + "alt=\""
-										+ Validator.escapeHtml(description) + "\" ") + " />");
+						response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\"" + context.getUrl(this.icon) + "\" "
+								+ ((description == null) ? "" : "title=\"" + description + "\" " + "alt=\"" + description + "\" ") + " />");
 						if (!disabled) response.print("</a>");
 					}
 				}
@@ -261,7 +251,7 @@ public class UiToggle extends UiComponent implements Toggle
 								+ id
 								+ "();return false;\" "
 								+ ((accessKey == null) ? "" : "accesskey=\"" + accessKey.charAt(0) + "\" ")
-								+ ((description == null) ? "" : "title=\"" + Validator.escapeHtml(description) + "\" ")
+								+ ((description == null) ? "" : "title=\"" + description + "\" ")
 								+ (((this.icon != null) && (this.iconStyle == Navigation.IconStyle.left)) ? "style=\"padding-left:2em; background: #eee url('"
 										+ context.getUrl(this.icon) + "') .2em no-repeat;\""
 										: "")

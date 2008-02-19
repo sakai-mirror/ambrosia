@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -317,7 +317,8 @@ public class UiAttachmentsEdit extends UiComponent implements AttachmentsEdit
 					// for folders
 					if (props.getBooleanProperty(ResourceProperties.PROP_IS_COLLECTION))
 					{
-						response.print("<li><img src = \"/library/image/" + ContentTypeImageService.getContentTypeImage("folder") + "\" border=\"0\" />");
+						response.print("<li><img src = \"/library/image/" + ContentTypeImageService.getContentTypeImage("folder")
+								+ "\" border=\"0\" />");
 					}
 
 					// otherwise lookup the icon from the mime type
@@ -329,9 +330,8 @@ public class UiAttachmentsEdit extends UiComponent implements AttachmentsEdit
 					}
 
 					// the link
-					response.print("<a href=\"" + ref.getUrl() + "\" target=\"_blank\" title=\""
-							+ Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "\">"
-							+ Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "</a>");
+					response.print("<a href=\"" + ref.getUrl() + "\" target=\"_blank\" title=\"" + props.getPropertyFormatted("DAV:displayname")
+							+ "\">" + Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "</a>");
 
 					// size
 					if (this.size && (!props.getBooleanProperty(ResourceProperties.PROP_IS_COLLECTION)))

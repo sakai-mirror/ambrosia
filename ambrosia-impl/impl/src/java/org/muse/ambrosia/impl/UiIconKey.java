@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.IconKey;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -244,7 +242,7 @@ public class UiIconKey extends UiComponent implements IconKey
 		// title, if there is one and there is data
 		if ((this.title != null) && (!empty))
 		{
-			response.println("<div class =\"ambrosiaInstructions\">" + Validator.escapeHtml(this.title.getMessage(context, focus)) + "</div>");
+			response.println("<div class =\"ambrosiaInstructions\">" + this.title.getMessage(context, focus) + "</div>");
 		}
 
 		// start the table
@@ -267,14 +265,13 @@ public class UiIconKey extends UiComponent implements IconKey
 
 				if (icon != null)
 				{
-					// TODO: what escape for icon?
-					response.print("<img src=\"" + context.getUrl(icon) + "\" alt=\"" + Validator.escapeHtml(descriptionText) + "\" />");
+					response.print("<img src=\"" + context.getUrl(icon) + "\" alt=\"" + descriptionText + "\" />");
 				}
 
 				response.print("</td><td>");
 
 				// the description
-				response.print(Validator.escapeHtml(descriptionText));
+				response.print(descriptionText);
 
 				response.println("</td></tr>");
 			}
@@ -297,7 +294,7 @@ public class UiIconKey extends UiComponent implements IconKey
 		// title, if there is one and there is data
 		if ((this.title != null) && (!empty))
 		{
-			response.println("<div class =\"ambrosiaInstructions\">" + Validator.escapeHtml(this.title.getMessage(context, focus)) + "</div>");
+			response.println("<div class =\"ambrosiaInstructions\">" + this.title.getMessage(context, focus) + "</div>");
 		}
 
 		// start the table
@@ -320,13 +317,13 @@ public class UiIconKey extends UiComponent implements IconKey
 
 				if (icon != null)
 				{
-					response.print("<img src=\"" + context.getUrl(icon) + "\" alt=\"" + Validator.escapeHtml(description) + "\" />");
+					response.print("<img src=\"" + context.getUrl(icon) + "\" alt=\"" + description + "\" />");
 				}
 
 				response.print("</td><td>");
 
 				// the description
-				response.print(Validator.escapeHtml(description));
+				response.print(description);
 
 				response.println("</td></tr>");
 			}

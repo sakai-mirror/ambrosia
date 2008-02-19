@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,7 @@ import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.FillIn;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.api.Selection;
-import org.muse.ambrosia.api.TextEdit;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
@@ -258,13 +255,13 @@ public class UiFillIn extends UiComponent implements FillIn
 		{
 			// this will become visible if a submit happens and the validation fails
 			response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
-					+ Validator.escapeHtml(this.onEmptyAlertMsg.getMessage(context, focus)) + "</div>");
+					+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
 		}
 
 		// title
 		if (this.titleMessage != null)
 		{
-			response.println(Validator.escapeHtml(this.titleMessage.getMessage(context, focus)) + "<br />");
+			response.println(this.titleMessage.getMessage(context, focus) + "<br />");
 		}
 
 		// read the text
@@ -370,7 +367,7 @@ public class UiFillIn extends UiComponent implements FillIn
 				boxCount++;
 				if ((values != null) && (values.length > i))
 				{
-					response.print(Validator.escapeHtml(values[i]));
+					response.print(values[i]);
 				}
 				response.print("\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 			}
@@ -408,7 +405,7 @@ public class UiFillIn extends UiComponent implements FillIn
 				boxCount++;
 				if ((values != null) && (values.length > fillInParts.length - 1))
 				{
-					response.print(Validator.escapeHtml(values[fillInParts.length - 1]));
+					response.print(values[fillInParts.length - 1]);
 				}
 				response.print("\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 			}

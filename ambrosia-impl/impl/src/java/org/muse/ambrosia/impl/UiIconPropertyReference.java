@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.IconPropertyReference;
 import org.muse.ambrosia.api.Message;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
@@ -97,7 +96,7 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 			title = this.titleMessage.getMessage(context, focus);
 			if (title != null)
 			{
-				String t = Validator.escapeHtml(title);
+				String t = title;
 				title = "alt=\"" + t + "\" title=\"" + t + "\" ";
 			}
 			else

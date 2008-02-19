@@ -39,7 +39,6 @@ import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.Pager;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -475,7 +474,7 @@ public class UiEntityList extends UiComponent implements EntityList
 								+ "();return false;\">"
 								+ title.getMessage(context, focus)
 								+ ((icon != null) ? ("&nbsp;<img src=\"" + context.getUrl(icon) + "\""
-										+ ((iconAlt != null) ? (" alt=\"" + Validator.escapeHtml(iconAlt) + "\"") : "") + " />") : "") + "</a></th>");
+										+ ((iconAlt != null) ? (" alt=\"" + iconAlt + "\"") : "") + " />") : "") + "</a></th>");
 					}
 
 					// not currently sorting... can we sort?

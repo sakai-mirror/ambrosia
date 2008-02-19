@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,11 @@ package org.muse.ambrosia.impl;
 import java.io.PrintWriter;
 
 import org.muse.ambrosia.api.Context;
-import org.muse.ambrosia.api.CountEdit;
 import org.muse.ambrosia.api.Decision;
 import org.muse.ambrosia.api.FloatEdit;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
@@ -303,7 +301,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		String value = "";
 		if (this.propertyReference != null)
 		{
-			value = this.propertyReference.read(context, focus);
+			value = StringUtil.trimToZero(this.propertyReference.read(context, focus));
 		}
 
 		// read the default value
@@ -318,7 +316,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		{
 			// this will become visible if a submit happens and the validation fails
 			response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
-					+ Validator.escapeHtml(this.onEmptyAlertMsg.getMessage(context, focus)) + "</div>");
+					+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
 
 			// this marks the field as required
 			// response.println("<span class=\"reqStarInline\">*</span>");
@@ -358,20 +356,20 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		String failureMsg = null;
 		if ((minValue == null) && (maxValue == null))
 		{
-			failureMsg = Validator.escapeHtml(this.validationMsg.getMessage(context, focus));
+			failureMsg = this.validationMsg.getMessage(context, focus);
 		}
 
 		else if (maxValue == null)
 		{
 			context.put("ambrosia_min", minValue);
-			failureMsg = Validator.escapeHtml(this.validationMsgMin.getMessage(context, focus));
+			failureMsg = this.validationMsgMin.getMessage(context, focus);
 			context.remove("ambrosia_min");
 		}
 
 		else if (minValue == null)
 		{
 			context.put("ambrosia_max", maxValue);
-			failureMsg = Validator.escapeHtml(this.validationMsgMax.getMessage(context, focus));
+			failureMsg = this.validationMsgMax.getMessage(context, focus);
 			context.remove("ambrosia_max");
 		}
 
@@ -379,7 +377,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		{
 			context.put("ambrosia_min", minValue);
 			context.put("ambrosia_max", maxValue);
-			failureMsg = Validator.escapeHtml(this.validationMsgMinMax.getMessage(context, focus));
+			failureMsg = this.validationMsgMinMax.getMessage(context, focus);
 			context.remove("ambrosia_max");
 			context.remove("ambrosia_min");
 		}
@@ -417,7 +415,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		// TODO: make the icon link to a popup picker!
 
 		response.print("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
-				+ Integer.toString(numCols) + "\" value=\"" + Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
+				+ Integer.toString(numCols) + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
 				+ " onchange=\"ambrosiaFloatChange(this, " + valueOrNull(shadowId) + ", " + valueOrNull(this.sumToId) + ", "
 				+ valueOrNull(defaultValue) + ", " + valueOrNull(minValue) + ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\"" + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
@@ -435,8 +433,7 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		// the shadow value field (holding the last known value)
 		if (this.sumToId != null)
 		{
-			response.println("<input type=\"hidden\" name=\"" + shadowId + "\" id=\"" + shadowId + "\"value =\"" + Validator.escapeHtml(value)
-					+ "\" />");
+			response.println("<input type=\"hidden\" name=\"" + shadowId + "\" id=\"" + shadowId + "\"value =\"" + value + "\" />");
 		}
 
 		// the decode directive

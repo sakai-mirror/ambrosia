@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,7 +148,7 @@ public class UiUserInfoPropertyReference extends UiPropertyReference implements 
 		try
 		{
 			User user = UserDirectoryService.getUser((String) value);
-			return Validator.escapeHtml(fmt(user));
+			return fmt(user);
 		}
 		catch (UserNotDefinedException e)
 		{

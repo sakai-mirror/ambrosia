@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,12 @@ import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
- * UiTextPropertyReference handles plain text String selector values.
+ * UiTextPropertyReference implements TextPropertyReference
  */
 public class UiTextPropertyReference extends UiPropertyReference implements TextPropertyReference
 {
+	protected boolean edit = false;
+
 	protected int maxChars = -1;
 
 	protected boolean stripHtml = false;
@@ -73,6 +75,10 @@ public class UiTextPropertyReference extends UiPropertyReference implements Text
 		// strip html
 		String strip = StringUtil.trimToNull(xml.getAttribute("stripHtml"));
 		if ((strip != null) && ("TRUE".equals(strip))) setStripHtml();
+
+		// edit
+		String edit = StringUtil.trimToNull(xml.getAttribute("edit"));
+		if ((edit != null) && ("TRUE".equals(edit))) setEdit();
 	}
 
 	/**
@@ -90,7 +96,7 @@ public class UiTextPropertyReference extends UiPropertyReference implements Text
 	{
 		String value = super.read(context, focus);
 		if (value == null) return null;
-		
+
 		// if missing, don't do special treatment
 		if (value.equals(missingValue(context))) return value;
 
@@ -112,7 +118,22 @@ public class UiTextPropertyReference extends UiPropertyReference implements Text
 			}
 		}
 
+		// for editing, don't escape
+		if (this.edit)
+		{
+			return value;
+		}
+
 		return Validator.escapeHtml(value);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public TextPropertyReference setEdit()
+	{
+		this.edit = true;
+		return this;
 	}
 
 	/**

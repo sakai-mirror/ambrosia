@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import java.util.Date;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.DatePropertyReference;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
@@ -131,15 +130,14 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 				DateFormat dateFormat = DateFormat.getDateInstance(fmt);
 				DateFormat timeFormat = DateFormat.getTimeInstance(fmt);
 
-				return "<span style=\"white-space: nowrap;\">" + Validator.escapeHtml(dateFormat.format(date))
-						+ "</span><br /><span style=\"white-space: nowrap;\">" + Validator.escapeHtml(removeSeconds(timeFormat.format(date)))
-						+ "</span>";
+				return "<span style=\"white-space: nowrap;\">" + dateFormat.format(date) + "</span><br /><span style=\"white-space: nowrap;\">"
+						+ removeSeconds(timeFormat.format(date)) + "</span>";
 			}
 			else
 			{
 				DateFormat format = DateFormat.getDateTimeInstance(fmt, fmt);
 
-				return Validator.escapeHtml(removeSeconds(format.format(date)));
+				return removeSeconds(format.format(date));
 			}
 		}
 

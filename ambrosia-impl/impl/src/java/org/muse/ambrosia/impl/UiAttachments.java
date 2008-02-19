@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,16 +26,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.sakaiproject.content.cover.ContentTypeImageService;
-import org.sakaiproject.entity.api.EntityPropertyNotDefinedException;
-import org.sakaiproject.entity.api.EntityPropertyTypeException;
-import org.sakaiproject.entity.api.Reference;
-import org.sakaiproject.entity.api.ResourceProperties;
 import org.muse.ambrosia.api.Attachments;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
+import org.sakaiproject.content.cover.ContentTypeImageService;
+import org.sakaiproject.entity.api.EntityPropertyNotDefinedException;
+import org.sakaiproject.entity.api.EntityPropertyTypeException;
+import org.sakaiproject.entity.api.Reference;
+import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
@@ -300,7 +300,7 @@ public class UiAttachments extends UiComponent implements Attachments
 		if (this.raw)
 		{
 			response.print("<li>" + Validator.escapeHtml(ref.getReference()));
-			
+
 			// navigations
 			if (!this.navigations.isEmpty())
 			{
@@ -325,7 +325,8 @@ public class UiAttachments extends UiComponent implements Attachments
 					// for folders
 					if (props.getBooleanProperty(ResourceProperties.PROP_IS_COLLECTION))
 					{
-						response.print("<li><img src = \"/library/image/" + ContentTypeImageService.getContentTypeImage("folder") + "\" border=\"0\" />");
+						response.print("<li><img src = \"/library/image/" + ContentTypeImageService.getContentTypeImage("folder")
+								+ "\" border=\"0\" />");
 					}
 
 					// otherwise lookup the icon from the mime type
@@ -337,9 +338,8 @@ public class UiAttachments extends UiComponent implements Attachments
 					}
 
 					// the link
-					response.print("<a href=\"" + ref.getUrl() + "\" target=\"_blank\" title=\""
-							+ Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "\">"
-							+ Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "</a>");
+					response.print("<a href=\"" + ref.getUrl() + "\" target=\"_blank\" title=\"" + props.getPropertyFormatted("DAV:displayname")
+							+ "\">" + Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "</a>");
 
 					// size
 					if (this.size && (!props.getBooleanProperty(ResourceProperties.PROP_IS_COLLECTION)))

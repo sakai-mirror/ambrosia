@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.Warning;
 import org.sakaiproject.util.StringUtil;
-import org.sakaiproject.util.Validator;
 import org.w3c.dom.Element;
 
 /**
@@ -106,7 +105,7 @@ public class UiWarning extends UiComponent implements Warning
 		String msg = null;
 		if (this.message != null)
 		{
-			msg = Validator.escapeHtml(this.message.getMessage(context, focus));
+			msg = this.message.getMessage(context, focus);
 		}
 
 		// the "failure" panel shown if requirements are not met
