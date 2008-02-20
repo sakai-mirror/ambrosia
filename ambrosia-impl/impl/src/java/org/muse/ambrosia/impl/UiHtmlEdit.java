@@ -49,12 +49,6 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	/** The decision that controls if the field should get on-load focus. */
 	protected Decision focusDecision = null;
 
-	/** The number of columns per row for the box. */
-	protected int numCols = 80;
-
-	/** The number of rows for the text box. */
-	protected int numRows = 8;
-
 	/** The decision to control the onEmptyAlert. */
 	protected Decision onEmptyAlertDecision = null;
 
@@ -115,17 +109,6 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 		{
 			PropertyReference pRef = service.newPropertyReference().setReference(model);
 			setProperty(pRef);
-		}
-
-		// size
-		try
-		{
-			int rows = Integer.parseInt(xml.getAttribute("rows"));
-			int cols = Integer.parseInt(xml.getAttribute("cols"));
-			setSize(rows, cols);
-		}
-		catch (Throwable ignore)
-		{
 		}
 
 		// optional
@@ -233,115 +216,87 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 		String id = this.getClass().getSimpleName() + "_" + idRoot;
 		String decodeId = "decode_" + idRoot;
 
-		// read the current value
+		// read the current value object as a string
 		String value = "";
 		if (this.propertyReference != null)
 		{
-			value = StringUtil.trimToZero(this.propertyReference.read(context, focus));
+			Object valueObj = this.propertyReference.readObject(context, focus);
+			if (valueObj != null)
+			{
+				value = StringUtil.trimToZero(valueObj.toString());
+			}
 		}
 
-		// single line
-		if (numRows == 1)
+		if (onEmptyAlert)
 		{
-			if (onEmptyAlert)
-			{
-				// this will become visible if a submit happens and the validation fails
-				response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
-						+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
+			// this will become visible if a submit happens and the validation fails
+			response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
+					+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
 
-				// this marks the field as required
-				// response.println("<span class=\"reqStarInline\">*</span>");
-			}
-
-			// title
-			if (this.titleMessage != null)
-			{
-				response.println("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
-				response.println(this.titleMessage.getMessage(context, focus));
-				response.println("</label>");
-			}
-
-			response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\"" + value
-					+ "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
-
-			context.editComponentRendered(id);
+			// this marks the field as required
+			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
-		// or multi line
-		else
+		// our status object for enabling the editor
+		if (!readOnly && this.optional)
 		{
-			if (onEmptyAlert)
-			{
-				// this will become visible if a submit happens and the validation fails
-				response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
-						+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
-
-				// this marks the field as required
-				// response.println("<span class=\"reqStarInline\">*</span>");
-			}
-
-			// our status object for enabling the editor
-			if (!readOnly && this.optional)
-			{
-				String docsPath = context.getDocsPath();
-				context.addScript("var htmlComponent_" + id + "=new Object();\n");
-				context.addScript("htmlComponent_" + id + ".enabled=false;\n");
-				if (this.optional)
-				{
-					context.addScript("htmlComponent_" + id + ".renderedId=\"rendered_" + id + "\";\n");
-					context.addScript("htmlComponent_" + id + ".toggleId=\"toggle_" + id + "\";\n");
-				}
-				else
-				{
-					context.addScript("htmlComponent_" + id + ".renderedId=null;\n");
-					context.addScript("htmlComponent_" + id + ".toggleId=null;\n");
-				}
-				context.addScript("htmlComponent_" + id + ".textAreaId=\"" + id + "\";\n");
-			}
-
-			// the title (if defined), and the edit icon
-			if ((this.titleMessage != null) || (!readOnly && this.optional))
-			{
-				response.println("<div class=\"ambrosiaComponentTitle\">");
-				if (this.titleMessage != null)
-				{
-					response.println(this.titleMessage.getMessage(context, focus));
-				}
-				if (!readOnly && this.optional)
-				{
-					response.print("<a style=\"text-decoration:none;\" id=\"toggle_" + id
-							+ "\" href=\"#\" onclick=\"ambrosiaEnableHtmlEdit(htmlComponent_" + id + ");return false;\" title=\""
-							+ this.editAlt.getMessage(context, focus) + "\">");
-					response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.editIcon) + "\" />");
-					response.println("</a>");
-				}
-				response.println("</div>");
-			}
-
-			// the rendered content - initially visible
+			String docsPath = context.getDocsPath();
+			context.addScript("var htmlComponent_" + id + "=new Object();\n");
+			context.addScript("htmlComponent_" + id + ".enabled=false;\n");
 			if (this.optional)
 			{
-				response.println("<div id=\"rendered_" + id + "\" class=\"ambrosiaHtmlEditRendered\">");
-				if (value != null) response.println(value);
-				response.println("</div>");
+				context.addScript("htmlComponent_" + id + ".renderedId=\"rendered_" + id + "\";\n");
+				context.addScript("htmlComponent_" + id + ".toggleId=\"toggle_" + id + "\";\n");
 			}
-
-			// the edit textarea - initially invisible
-			String classSuffix = "";
-			if (this.textOnly)
+			else
 			{
-				classSuffix = "Tiny";
+				context.addScript("htmlComponent_" + id + ".renderedId=null;\n");
+				context.addScript("htmlComponent_" + id + ".toggleId=null;\n");
 			}
-			else if (this.small)
-			{
-				classSuffix = "Small";
-			}
-			response.println("<textarea" + (this.optional ? " style=\"display:none\"" : (" class=\"ambrosiaHtmlEdit" + classSuffix + "\""))
-					+ " id=\"" + id + "\" name=\"" + id + "\" cols=" + Integer.toString(numCols) + " rows=" + Integer.toString(numRows)
-					+ (readOnly ? " disabled=\"disabled\"" : "") + ">");
-			response.print(Validator.escapeHtmlTextarea(value));
-			response.println("</textarea>");
+			context.addScript("htmlComponent_" + id + ".textAreaId=\"" + id + "\";\n");
 		}
+
+		// the title (if defined), and the edit icon
+		if ((this.titleMessage != null) || (!readOnly && this.optional))
+		{
+			response.println("<div class=\"ambrosiaComponentTitle\">");
+			if (this.titleMessage != null)
+			{
+				response.println(this.titleMessage.getMessage(context, focus));
+			}
+			if (!readOnly && this.optional)
+			{
+				response.print("<a style=\"text-decoration:none;\" id=\"toggle_" + id
+						+ "\" href=\"#\" onclick=\"ambrosiaEnableHtmlEdit(htmlComponent_" + id + ");return false;\" title=\""
+						+ this.editAlt.getMessage(context, focus) + "\">");
+				response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.editIcon) + "\" />");
+				response.println("</a>");
+			}
+			response.println("</div>");
+		}
+
+		// the rendered content - initially visible
+		if (this.optional)
+		{
+			response.println("<div id=\"rendered_" + id + "\" class=\"ambrosiaHtmlEditRendered\">");
+			if (value != null) response.println(value);
+			response.println("</div>");
+		}
+
+		// the edit textarea - initially invisible
+		String classSuffix = "";
+		if (this.textOnly)
+		{
+			classSuffix = "Tiny";
+		}
+		else if (this.small)
+		{
+			classSuffix = "Small";
+		}
+		response.println("<textarea" + (this.optional ? " style=\"display:none\"" : (" class=\"ambrosiaHtmlEdit" + classSuffix + "\"")) + " id=\""
+				+ id + "\" name=\"" + id + "\" " + (readOnly ? " disabled=\"disabled\"" : "") + ">");
+		response.print(Validator.escapeHtmlTextarea(value));
+		response.println("</textarea>");
 
 		// the decode directive
 		if ((this.propertyReference != null) && (!readOnly))
@@ -414,17 +369,6 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	public HtmlEdit setReadOnly(Decision decision)
 	{
 		this.readOnly = decision;
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public HtmlEdit setSize(int rows, int cols)
-	{
-		this.numRows = rows;
-		this.numCols = cols;
-
 		return this;
 	}
 

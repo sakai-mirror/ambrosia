@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public interface TextEdit extends Component
 	TextEdit setFocus(Decision decision);
 
 	/**
-	 * Set an alert that will triger once on submit if the field is empty.
+	 * Set an alert that will trigger once on submit if the field is empty.
 	 * 
 	 * @param decision
 	 *        The decision to include the alert (if null, the alert is unconditionally included).
@@ -73,15 +73,13 @@ public interface TextEdit extends Component
 	TextEdit setReadOnly(Decision decision);
 
 	/**
-	 * Set the size of the text edit box in rows and columns.
+	 * Set the size of the text edit box in columns.
 	 * 
-	 * @param rows
-	 *        The number of rows to show.
 	 * @param cols
 	 *        The number of columns to show.
 	 * @return self.
 	 */
-	TextEdit setSize(int rows, int cols);
+	TextEdit setSize(int cols);
 
 	/**
 	 * Set the title text.

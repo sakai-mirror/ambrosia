@@ -108,8 +108,7 @@
 <!ATTLIST htmlModel delegate CDATA #IMPLIED>
 <!ATTLIST htmlModel tool CDATA #IMPLIED >
 <!ATTLIST htmlModel missing CDATA #IMPLIED >
-<!ATTLIST htmlModel max CDATA #IMPLIED >
-<!ATTLIST htmlModel stripP (TRUE|FALSE) #IMPLIED >
+<<!ATTLIST htmlModel stripP (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT iconModel (missingValues | model | title)* >
 <!ATTLIST iconModel ref CDATA #IMPLIED >
@@ -561,7 +560,6 @@
 <!ATTLIST textEdit id CDATA #IMPLIED >
 <!ATTLIST textEdit title CDATA #IMPLIED >
 <!ATTLIST textEdit model CDATA #IMPLIED >
-<!ATTLIST textEdit rows CDATA #IMPLIED >
 <!ATTLIST textEdit cols CDATA #IMPLIED >
 <!ATTLIST textEdit readOnly (TRUE|FALSE) #IMPLIED >
 <!ATTLIST textEdit options CDATA #IMPLIED >
@@ -599,8 +597,6 @@
 <!ATTLIST htmlEdit id CDATA #IMPLIED >
 <!ATTLIST htmlEdit title CDATA #IMPLIED >
 <!ATTLIST htmlEdit model CDATA #IMPLIED >
-<!ATTLIST htmlEdit rows CDATA #IMPLIED >
-<!ATTLIST htmlEdit cols CDATA #IMPLIED >
 <!ATTLIST htmlEdit readOnly (TRUE|FALSE) #IMPLIED >
 <!ATTLIST htmlEdit optional (TRUE|FALSE) #IMPLIED >
 <!ATTLIST htmlEdit small (TRUE|FALSE) #IMPLIED >

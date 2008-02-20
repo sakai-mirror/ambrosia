@@ -330,8 +330,9 @@ public class UiAttachmentsEdit extends UiComponent implements AttachmentsEdit
 					}
 
 					// the link
-					response.print("<a href=\"" + ref.getUrl() + "\" target=\"_blank\" title=\"" + props.getPropertyFormatted("DAV:displayname")
-							+ "\">" + Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "</a>");
+					response.print("<a href=\"" + ref.getUrl() + "\" target=\"_blank\" title=\""
+							+ Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "\">"
+							+ Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "</a>");
 
 					// size
 					if (this.size && (!props.getBooleanProperty(ResourceProperties.PROP_IS_COLLECTION)))

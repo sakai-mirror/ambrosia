@@ -44,9 +44,6 @@ public class UiTextEdit extends UiComponent implements TextEdit
 	/** The number of columns per row for the box. */
 	protected int numCols = 50;
 
-	/** The number of rows for the text box. */
-	protected int numRows = 4;
-
 	/** The decision to control the onEmptyAlert. */
 	protected Decision onEmptyAlertDecision = null;
 
@@ -114,9 +111,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 		// size
 		try
 		{
-			int rows = Integer.parseInt(xml.getAttribute("rows"));
 			int cols = Integer.parseInt(xml.getAttribute("cols"));
-			setSize(rows, cols);
+			setSize(cols);
 		}
 		catch (Throwable ignore)
 		{
@@ -219,70 +215,41 @@ public class UiTextEdit extends UiComponent implements TextEdit
 		if (id == null) id = this.getClass().getSimpleName() + "_" + idRoot;
 		String decodeId = "decode_" + idRoot;
 
-		// read the current value
+		// read the current value object, unformatted
 		String value = "";
 		if (this.propertyReference != null)
 		{
-			value = StringUtil.trimToZero(this.propertyReference.read(context, focus));
+			Object valueObj = this.propertyReference.readObject(context, focus);
+			if (valueObj != null)
+			{
+				value = StringUtil.trimToZero(valueObj.toString());
+			}
 		}
 
-		// single line
-		if (numRows == 1)
+		if (onEmptyAlert)
 		{
-			if (onEmptyAlert)
-			{
-				// this will become visible if a submit happens and the validation fails
-				response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
-						+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
+			// this will become visible if a submit happens and the validation fails
+			response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
+					+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
 
-				// this marks the field as required
-				// response.println("<span class=\"reqStarInline\">*</span>");
-			}
-
-			// title
-			if (this.titleMessage != null)
-			{
-				response.print("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
-				response.print(this.titleMessage.getMessage(context, focus));
-				response.println("</label>");
-			}
-
-			response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\"" + value
-					+ "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
-
-			context.editComponentRendered(id);
-
-			renderOptions(context, focus, id);
+			// this marks the field as required
+			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
-		// or multi line
-		else
+		// title
+		if (this.titleMessage != null)
 		{
-			if (onEmptyAlert)
-			{
-				// this will become visible if a submit happens and the validation fails
-				response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
-						+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
-
-				// this marks the field as required
-				// response.println("<span class=\"reqStarInline\">*</span>");
-			}
-
-			if (this.titleMessage != null)
-			{
-				response.print("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
-				response.print(this.titleMessage.getMessage(context, focus));
-				response.println("</label>");
-			}
-
-			// TODO: (readOnly ? " class=\"ambrosiaTextEditDisabled\"" : "") +
-			response.println("<textarea " + "id=\"" + id + "\" name=\"" + id + "\" cols=" + Integer.toString(numCols) + " rows="
-					+ Integer.toString(numRows) + (readOnly ? " disabled=\"disabled\"" : "") + ">");
-			response.print(Validator.escapeHtmlTextarea(value));
-			response.println("</textarea>");
-
-			context.editComponentRendered(id);
+			response.print("<label class=\"ambrosiaComponentTitle\" for=\"" + id + "\">");
+			response.print(this.titleMessage.getMessage(context, focus));
+			response.println("</label>");
 		}
+
+		response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
+				+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
+
+		context.editComponentRendered(id);
+
+		renderOptions(context, focus, id);
 
 		// the decode directive
 		if ((this.propertyReference != null) && (!readOnly))
@@ -361,9 +328,8 @@ public class UiTextEdit extends UiComponent implements TextEdit
 	/**
 	 * {@inheritDoc}
 	 */
-	public TextEdit setSize(int rows, int cols)
+	public TextEdit setSize(int cols)
 	{
-		this.numRows = rows;
 		this.numCols = cols;
 
 		return this;

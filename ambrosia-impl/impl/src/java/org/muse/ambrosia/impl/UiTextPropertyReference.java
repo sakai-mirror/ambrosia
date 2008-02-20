@@ -33,8 +33,6 @@ import org.w3c.dom.Element;
  */
 public class UiTextPropertyReference extends UiPropertyReference implements TextPropertyReference
 {
-	protected boolean edit = false;
-
 	protected int maxChars = -1;
 
 	protected boolean stripHtml = false;
@@ -75,10 +73,6 @@ public class UiTextPropertyReference extends UiPropertyReference implements Text
 		// strip html
 		String strip = StringUtil.trimToNull(xml.getAttribute("stripHtml"));
 		if ((strip != null) && ("TRUE".equals(strip))) setStripHtml();
-
-		// edit
-		String edit = StringUtil.trimToNull(xml.getAttribute("edit"));
-		if ((edit != null) && ("TRUE".equals(edit))) setEdit();
 	}
 
 	/**
@@ -118,22 +112,7 @@ public class UiTextPropertyReference extends UiPropertyReference implements Text
 			}
 		}
 
-		// for editing, don't escape
-		if (this.edit)
-		{
-			return value;
-		}
-
 		return Validator.escapeHtml(value);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public TextPropertyReference setEdit()
-	{
-		this.edit = true;
-		return this;
 	}
 
 	/**

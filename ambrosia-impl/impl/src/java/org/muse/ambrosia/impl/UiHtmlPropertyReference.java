@@ -36,8 +36,6 @@ public class UiHtmlPropertyReference extends UiPropertyReference implements Html
 
 	final static String htmlEditorBlankLine = "<p>&nbsp;</p>";
 
-	protected int maxChars = -1;
-
 	/** Set if we are going to strip surrounding paragraph marks from the value. */
 	protected boolean stripP = false;
 
@@ -60,19 +58,6 @@ public class UiHtmlPropertyReference extends UiPropertyReference implements Html
 	{
 		// do the property reference stuff
 		super(service, xml);
-
-		// max length
-		String max = StringUtil.trimToNull(xml.getAttribute("max"));
-		if (max != null)
-		{
-			try
-			{
-				setMaxLength(Integer.parseInt(max));
-			}
-			catch (NumberFormatException e)
-			{
-			}
-		}
 
 		// stripP
 		String stripP = StringUtil.trimToNull(xml.getAttribute("stripP"));
@@ -110,25 +95,7 @@ public class UiHtmlPropertyReference extends UiPropertyReference implements Html
 			value = value.substring(start, end);
 		}
 
-		// truncate if desired and needed
-		if (this.maxChars > -1)
-		{
-			if (value.length() > this.maxChars)
-			{
-				value = value.substring(0, this.maxChars) + "...";
-			}
-		}
-
 		return value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public HtmlPropertyReference setMaxLength(int maxChars)
-	{
-		this.maxChars = maxChars;
-		return this;
 	}
 
 	/**

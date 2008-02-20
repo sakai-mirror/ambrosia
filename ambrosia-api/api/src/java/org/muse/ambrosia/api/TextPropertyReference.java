@@ -27,13 +27,6 @@ package org.muse.ambrosia.api;
 public interface TextPropertyReference extends PropertyReference
 {
 	/**
-	 * Set this to prepare for editing.
-	 * 
-	 * @return self.
-	 */
-	TextPropertyReference setEdit();
-
-	/**
 	 * Set the max length to show - anything longer will be truncated. If truncated, "..." is appended.
 	 * 
 	 * @param maxChars

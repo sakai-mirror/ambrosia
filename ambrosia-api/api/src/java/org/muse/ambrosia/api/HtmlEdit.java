@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,17 +70,6 @@ public interface HtmlEdit extends Component
 	 * @return self.
 	 */
 	HtmlEdit setReadOnly(Decision decision);
-
-	/**
-	 * Set the size of the text edit box in rows and columns.
-	 * 
-	 * @param rows
-	 *        The number of rows to show.
-	 * @param cols
-	 *        The number of columns to show.
-	 * @return self.
-	 */
-	HtmlEdit setSize(int rows, int cols);
 
 	/**
 	 * Set the editor to use two lines of controls to allow for a smaller, more narrow screen-print.

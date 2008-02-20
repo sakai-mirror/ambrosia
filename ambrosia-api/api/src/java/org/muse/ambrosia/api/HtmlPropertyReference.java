@@ -27,15 +27,6 @@ package org.muse.ambrosia.api;
 public interface HtmlPropertyReference extends PropertyReference
 {
 	/**
-	 * Set the max length to show - anything longer will be truncated. If truncated, "..." is appended.
-	 * 
-	 * @param maxChars
-	 *        The maximum number of characters to show.
-	 * @return self.
-	 */
-	HtmlPropertyReference setMaxLength(int maxChars);
-
-	/**
 	 * Set if surrounding html paragraph marks should be removed. Default is to leave them.
 	 * 
 	 * @return self.
