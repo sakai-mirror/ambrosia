@@ -729,7 +729,7 @@ function ambrosiaTinyInit(picker)
 				{
 					theme_advanced_toolbar_location : "top"
 				},
-			// tab_focus: ":prev,:next",
+			tab_focus: ":prev,:next",
 			content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
 		});
 		tinyMCE.init(
@@ -751,7 +751,7 @@ function ambrosiaTinyInit(picker)
 					theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 					theme_advanced_buttons2: ""
 				},
-			// tab_focus: ":prev,:next",
+			tab_focus: ":prev,:next",
 			content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
 		});
 	}
@@ -777,7 +777,7 @@ function ambrosiaTinyInit(picker)
 				{
 					theme_advanced_toolbar_location : "top"
 				},
-			// tab_focus: ":prev,:next",
+			tab_focus: ":prev,:next",
 			content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
 		});
 		tinyMCE.init(
@@ -800,7 +800,7 @@ function ambrosiaTinyInit(picker)
 					theme_advanced_buttons1: "fullscreen, separator,undo,redo,separator,bold,italic,underline,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
 					theme_advanced_buttons2: ""
 				},
-			// tab_focus: ":prev,:next",
+			tab_focus: ":prev,:next",
 			content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
 		});
 	}
