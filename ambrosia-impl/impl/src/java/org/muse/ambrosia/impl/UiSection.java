@@ -64,6 +64,9 @@ public class UiSection extends UiContainer implements Section
 	/** The include decision for the title. */
 	protected Decision titleIncluded = null;
 
+	/** The treatment. */
+	protected String treatment = null;
+
 	/**
 	 * Public no-arg constructor.
 	 */
@@ -121,6 +124,13 @@ public class UiSection extends UiContainer implements Section
 		if (settingsXml != null)
 		{
 			this.anchor = new UiMessage(service, settingsXml);
+		}
+
+		// treatment
+		treatment = xml.getAttribute("treatment");
+		if (treatment != null)
+		{
+			setTreatment(treatment);
 		}
 
 		// entity included
@@ -392,6 +402,15 @@ public class UiSection extends UiContainer implements Section
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public Section setTreatment(String treatment)
+	{
+		this.treatment = treatment;
+		return this;
+	}
+
+	/**
 	 * Check if this title is highlighted.
 	 * 
 	 * @param context
@@ -433,8 +452,12 @@ public class UiSection extends UiContainer implements Section
 	{
 		PrintWriter response = context.getResponseWriter();
 
+		// let treatment pick the class
+		String cssClass = "ambrosiaSection";
+		if ("evaluation".equals(this.treatment)) cssClass = "ambrosiaEvaluation";
+
 		// start the section
-		response.println("<div class=\"ambrosiaSection\">");
+		response.println("<div class=\"" + cssClass + "\">");
 
 		// anchor
 		if (this.anchor != null)

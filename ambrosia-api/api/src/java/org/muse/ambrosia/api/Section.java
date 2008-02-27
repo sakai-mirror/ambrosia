@@ -103,4 +103,13 @@ public interface Section extends Container
 	 * @return self.
 	 */
 	Section setTitleIncluded(Decision... decision);
+
+	/**
+	 * Set the treatment.
+	 * 
+	 * @param treatment.
+	 *        The section treatment.
+	 * @return self.
+	 */
+	Section setTreatment(String treatment);
 }

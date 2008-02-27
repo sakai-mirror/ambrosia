@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,6 @@ import org.muse.ambrosia.api.EntityDisplayRow;
 import org.muse.ambrosia.api.EntityList;
 import org.muse.ambrosia.api.EntityListColumn;
 import org.muse.ambrosia.api.EnumPropertyReference;
-import org.muse.ambrosia.api.Evaluation;
 import org.muse.ambrosia.api.FileUpload;
 import org.muse.ambrosia.api.FillIn;
 import org.muse.ambrosia.api.FinePrint;
@@ -532,14 +531,6 @@ public class UiServiceImpl implements UiService
 	/**
 	 * {@inheritDoc}
 	 */
-	public Evaluation newEvaluation()
-	{
-		return new UiEvaluation();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public FileUpload newFileUpload()
 	{
 		return new UiFileUpload();
@@ -939,7 +930,6 @@ public class UiServiceImpl implements UiService
 		if (xml.getTagName().equals("entityActionBar")) return new UiEntityActionBar(this, xml);
 		if (xml.getTagName().equals("entityDisplay")) return new UiEntityDisplay(this, xml);
 		if (xml.getTagName().equals("entityList")) return new UiEntityList(this, xml);
-		if (xml.getTagName().equals("evaluation")) return new UiEvaluation(this, xml);
 		if (xml.getTagName().equals("floatEdit")) return new UiFloatEdit(this, xml);
 		if (xml.getTagName().equals("fileUpload")) return new UiFileUpload(this, xml);
 		if (xml.getTagName().equals("fillIn")) return new UiFillIn(this, xml);

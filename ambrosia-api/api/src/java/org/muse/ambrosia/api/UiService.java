@@ -285,13 +285,6 @@ public interface UiService
 	EnumPropertyReference newEnumPropertyReference();
 
 	/**
-	 * Construct a new Evaluation
-	 * 
-	 * @return a new Evaluation
-	 */
-	Evaluation newEvaluation();
-
-	/**
 	 * Construct a new FileUpload
 	 * 
 	 * @return a new FileUpload
