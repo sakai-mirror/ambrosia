@@ -452,12 +452,8 @@ public class UiSection extends UiContainer implements Section
 	{
 		PrintWriter response = context.getResponseWriter();
 
-		// let treatment pick the class
-		String cssClass = "ambrosiaSection";
-		if ("evaluation".equals(this.treatment)) cssClass = "ambrosiaEvaluation";
-
 		// start the section
-		response.println("<div class=\"" + cssClass + "\">");
+		response.println("<div class=\"ambrosiaSection\">");
 
 		// anchor
 		if (this.anchor != null)
@@ -480,8 +476,18 @@ public class UiSection extends UiContainer implements Section
 			response.println("</div>");
 		}
 
+		if ("evaluation".equals(this.treatment))
+		{
+			response.println("<div class=\"ambrosiaEvaluation\">");
+		}
+
 		// body... being a container, let the base class render the contained
 		super.render(context, focus);
+
+		if ("evaluation".equals(this.treatment))
+		{
+			response.println("</div>");
+		}
 
 		// end the section
 		response.println("</div>");
