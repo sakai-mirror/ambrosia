@@ -49,6 +49,12 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	/** The decision that controls if the field should get on-load focus. */
 	protected Decision focusDecision = null;
 
+	/** The number of columns per row for the box. */
+	protected int numCols = 80;
+
+	/** The number of rows for the text box. */
+	protected int numRows = 8;
+
 	/** The decision to control the onEmptyAlert. */
 	protected Decision onEmptyAlertDecision = null;
 
@@ -106,6 +112,17 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 		{
 			PropertyReference pRef = service.newPropertyReference().setReference(model);
 			setProperty(pRef);
+		}
+
+		// size
+		try
+		{
+			int rows = Integer.parseInt(xml.getAttribute("rows"));
+			int cols = Integer.parseInt(xml.getAttribute("cols"));
+			setSize(rows, cols);
+		}
+		catch (Throwable ignore)
+		{
 		}
 
 		// optional
@@ -280,7 +297,8 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			classSuffix = "Small";
 		}
 		response.println("<textarea" + (this.optional ? " style=\"display:none\"" : (" class=\"ambrosiaHtmlEdit" + classSuffix + "\"")) + " id=\""
-				+ id + "\" name=\"" + id + "\" " + (readOnly ? " disabled=\"disabled\"" : "") + ">");
+				+ id + "\" name=\"" + id + "\" " + (readOnly ? " disabled=\"disabled\"" : "") + " cols=" + Integer.toString(numCols) + " rows="
+				+ Integer.toString(numRows) + ">");
 		response.print(Validator.escapeHtmlTextarea(value));
 		response.println("</textarea>");
 
@@ -355,6 +373,17 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	public HtmlEdit setReadOnly(Decision decision)
 	{
 		this.readOnly = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public HtmlEdit setSize(int rows, int cols)
+	{
+		this.numRows = rows;
+		this.numCols = cols;
+
 		return this;
 	}
 

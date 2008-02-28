@@ -72,6 +72,17 @@ public interface HtmlEdit extends Component
 	HtmlEdit setReadOnly(Decision decision);
 
 	/**
+	 * Set the size of the text edit box in rows and columns.
+	 * 
+	 * @param rows
+	 *        The number of rows to show.
+	 * @param cols
+	 *        The number of columns to show.
+	 * @return self.
+	 */
+	HtmlEdit setSize(int rows, int cols);
+
+	/**
 	 * Set the editor to use two lines of controls to allow for a smaller, more narrow screen-print.
 	 * 
 	 * @return self.
