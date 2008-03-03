@@ -719,7 +719,7 @@ function ambrosiaTinyInit(picker)
 			convert_urls: false,
 			plugins: "safari,fullscreen",
 			theme: "advanced",
-			theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,sub,sup,underline,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+			theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
 			theme_advanced_buttons2: "",
 			theme_advanced_buttons3: "",
 			extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
@@ -739,8 +739,8 @@ function ambrosiaTinyInit(picker)
 			convert_urls: false,
 			plugins: "safari,fullscreen",
 			theme: "advanced",
-			theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
-			theme_advanced_buttons2: "link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+			theme_advanced_buttons1: "undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
+			theme_advanced_buttons2: "fullscreen,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
 			theme_advanced_buttons3: "",
 			extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
 									 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
@@ -748,7 +748,7 @@ function ambrosiaTinyInit(picker)
 			fullscreen_settings :
 				{
 					theme_advanced_toolbar_location : "top",
-					theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+					theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
 					theme_advanced_buttons2: ""
 				},
 			tab_focus: ":prev,:next",
@@ -766,7 +766,7 @@ function ambrosiaTinyInit(picker)
 			convert_urls: false,
 			plugins: "safari,fullscreen",
 			theme: "advanced",
-			theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+			theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
 			theme_advanced_buttons2: "",
 			theme_advanced_buttons3: "",
 			file_browser_callback: "ambrosiaFileBrowser",
@@ -787,8 +787,8 @@ function ambrosiaTinyInit(picker)
 			convert_urls: false,
 			plugins: "safari,fullscreen",
 			theme: "advanced",
-			theme_advanced_buttons1: "fullscreen, separator,undo,redo,separator,bold,italic,underline,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
-			theme_advanced_buttons2: "link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+			theme_advanced_buttons1: "undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
+			theme_advanced_buttons2: "fullscreen,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
 			theme_advanced_buttons3: "",
 			file_browser_callback: "ambrosiaFileBrowser",
 			extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
@@ -797,12 +797,12 @@ function ambrosiaTinyInit(picker)
 			fullscreen_settings :
 				{
 					theme_advanced_toolbar_location : "top",
-					theme_advanced_buttons1: "fullscreen, separator,undo,redo,separator,bold,italic,underline,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,charmap,separator,code",
+					theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
 					theme_advanced_buttons2: ""
 				},
 			tab_focus: ":prev,:next",
 			content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
-		});
+		});		
 	}
 }
 
