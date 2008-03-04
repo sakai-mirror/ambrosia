@@ -282,15 +282,23 @@ Sakai ~ insruction
 }
 
 /*
-Evaluation
+Section treatment = "evaluation"
 */
-.ambrosiaEvaluation
+.ambrosiaSectionEvaluation
 {
 	padding: 1em;
 	border: 3px double #A00000;
 	width: 70%;
 }
-	
+
+/*
+Section treatment = "indented"
+*/
+.ambrosiaSectionIndented
+{
+	margin-left: 2em;
+}
+
 /*
 EntityDisplay (EntityDisplay)
 Sakai ~ itemSummary

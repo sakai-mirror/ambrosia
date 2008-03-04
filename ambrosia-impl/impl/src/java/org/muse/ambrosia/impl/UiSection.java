@@ -127,7 +127,7 @@ public class UiSection extends UiContainer implements Section
 		}
 
 		// treatment
-		treatment = xml.getAttribute("treatment");
+		String treatment = xml.getAttribute("treatment");
 		if (treatment != null)
 		{
 			setTreatment(treatment);
@@ -476,15 +476,22 @@ public class UiSection extends UiContainer implements Section
 			response.println("</div>");
 		}
 
+		boolean closeDiv = false;
 		if ("evaluation".equals(this.treatment))
 		{
-			response.println("<div class=\"ambrosiaEvaluation\">");
+			response.println("<div class=\"ambrosiaSectionEvaluation\">");
+			closeDiv = true;
+		}
+		else if ("indented".equals(this.treatment))
+		{
+			response.println("<div class=\"ambrosiaSectionIndented\">");
+			closeDiv = true;
 		}
 
 		// body... being a container, let the base class render the contained
 		super.render(context, focus);
 
-		if ("evaluation".equals(this.treatment))
+		if (closeDiv)
 		{
 			response.println("</div>");
 		}
