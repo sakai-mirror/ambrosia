@@ -551,13 +551,14 @@
 <!ELEMENT valueMessage (message)* >
 <!ELEMENT displayMessage (message)* >
 
-<!ELEMENT textEdit (included | title | model | options | onEmptyAlert | readOnly | focus)* >
+<!ELEMENT textEdit (included | title | model | options | onEmptyAlert | readOnly | focus | destination)* >
 <!ATTLIST textEdit id CDATA #IMPLIED >
 <!ATTLIST textEdit title CDATA #IMPLIED >
 <!ATTLIST textEdit model CDATA #IMPLIED >
 <!ATTLIST textEdit cols CDATA #IMPLIED >
 <!ATTLIST textEdit readOnly (TRUE|FALSE) #IMPLIED >
 <!ATTLIST textEdit options CDATA #IMPLIED >
+<!ATTLIST textEdit destination CDATA #IMPLIED >
 
 <!ELEMENT options (model)* >
 
@@ -598,11 +599,12 @@
 <!ATTLIST htmlEdit optional (TRUE|FALSE) #IMPLIED >
 <!ATTLIST htmlEdit small (TRUE|FALSE) #IMPLIED >
 
-<!ELEMENT dateEdit (included | title | model | onEmptyAlert | readOnly | focus | icon)* >
+<!ELEMENT dateEdit (included | title | model | onEmptyAlert | readOnly | focus | icon | destination)* >
 <!ATTLIST dateEdit id CDATA #IMPLIED >
 <!ATTLIST dateEdit title CDATA #IMPLIED >
 <!ATTLIST dateEdit model CDATA #IMPLIED >
 <!ATTLIST dateEdit icon CDATA #IMPLIED >
+<!ATTLIST dateEdit destination CDATA #IMPLIED >
 
 <!ELEMENT durationEdit (included | title | model | onEmptyAlert | readOnly | focus | icon)* >
 <!ATTLIST durationEdit id CDATA #IMPLIED >

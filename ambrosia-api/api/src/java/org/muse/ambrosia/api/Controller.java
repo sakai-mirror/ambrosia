@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,13 @@ public interface Controller
 	 * Handle GET
 	 * 
 	 * @param req
+	 *        Servlet request
 	 * @param res
+	 *        Servlet response
 	 * @param context
+	 *        Ambrosia context
 	 * @param params
+	 *        request path, split by "/"
 	 */
 	void get(HttpServletRequest req, HttpServletResponse res, Context context, String[] params) throws IOException;
 
@@ -75,9 +79,13 @@ public interface Controller
 	 * Handle POST
 	 * 
 	 * @param req
+	 *        Servlet request
 	 * @param res
+	 *        Servlet response
 	 * @param context
+	 *        Ambrosia context
 	 * @param params
+	 *        request path, split by "/"
 	 */
 	void post(HttpServletRequest req, HttpServletResponse res, Context context, String[] params) throws IOException;
 }

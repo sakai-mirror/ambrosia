@@ -27,6 +27,15 @@ package org.muse.ambrosia.api;
 public interface TextEdit extends Component
 {
 	/**
+	 * Set the selection to auto-submit on change, and report this destination when it does.
+	 * 
+	 * @param destination
+	 *        The destination for the submit.
+	 * @return self
+	 */
+	TextEdit setDestination(Destination destination);
+
+	/**
 	 * Set a decision to enable on-load cursor focus on this field.
 	 * 
 	 * @param decision

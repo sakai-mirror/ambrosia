@@ -508,12 +508,6 @@ public class UiInterface extends UiContainer implements Interface
 			}
 		}
 
-		// focus_path
-		if (this.focus != null)
-		{
-			response.println("var focus_path=[\"" + this.focus + "\"];");
-		}
-
 		// validation
 		response.println("var enableValidate=true;");
 		response.println("function validate()");
@@ -543,18 +537,12 @@ public class UiInterface extends UiContainer implements Interface
 			response.println(script);
 		}
 
-		// and any focus path ids
+		// set the focus_path to the last collected in the context, our focus if set and the context has none
 		List<String> focusIds = context.getFocusIds();
-		if ((focusIds != null) && (!focusIds.isEmpty()))
+		if ((this.focus != null) && (focusIds.isEmpty())) focusIds.add(this.focus);
+		if (!focusIds.isEmpty())
 		{
-			StringBuffer buf = new StringBuffer();
-			for (String id : focusIds)
-			{
-				buf.append("\"" + id + "\",");
-			}
-			buf.setLength(buf.length() - 1);
-
-			response.println("focus_path = [" + buf.toString() + "];");
+			response.println("var focus_path = [\"" + focusIds.get(focusIds.size() - 1) + "\"];");
 		}
 
 		response.println("</script>");

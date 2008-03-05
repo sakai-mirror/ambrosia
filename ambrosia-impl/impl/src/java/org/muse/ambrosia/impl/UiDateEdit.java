@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.DateEdit;
 import org.muse.ambrosia.api.Decision;
+import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.sakaiproject.util.StringUtil;
@@ -51,12 +52,6 @@ public class UiDateEdit extends UiComponent implements DateEdit
 	/** The message selector for the invalid dismiss message. */
 	protected Message invalidOk = new UiMessage().setMessage("ok");
 
-	/** The number of columns per row for the box. */
-	protected int numCols = 17;
-
-	/** The number of rows for the text box. */
-	protected int numRows = 1;
-
 	/** The decision to control the onEmptyAlert. */
 	protected Decision onEmptyAlertDecision = null;
 
@@ -71,6 +66,9 @@ public class UiDateEdit extends UiComponent implements DateEdit
 
 	/** The read-only decision. */
 	protected Decision readOnly = null;
+
+	/** The destination to submit if we are submitting on change. */
+	protected Destination submitDestination = null;
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
@@ -111,6 +109,13 @@ public class UiDateEdit extends UiComponent implements DateEdit
 		{
 			PropertyReference pRef = service.newPropertyReference().setReference(model);
 			setProperty(pRef);
+		}
+
+		// short form for destination - attribute "destination" as the destination
+		String destination = StringUtil.trimToNull(xml.getAttribute("destination"));
+		if (destination != null)
+		{
+			setDestination(service.newDestination().setDestination(destination));
 		}
 
 		// title
@@ -179,6 +184,14 @@ public class UiDateEdit extends UiComponent implements DateEdit
 				this.iconAlt = new UiMessage(service, innerXml);
 			}
 		}
+
+		// submitDestination
+		settingsXml = XmlHelper.getChildElementNamed(xml, "destination");
+		if (settingsXml != null)
+		{
+			// let Destination parse this
+			this.submitDestination = new UiDestination(service, settingsXml);
+		}
 	}
 
 	/**
@@ -211,7 +224,8 @@ public class UiDateEdit extends UiComponent implements DateEdit
 
 		// set some ids
 		int idRoot = context.getUniqueId();
-		String id = this.getClass().getSimpleName() + "_" + idRoot;
+		String id = getId();
+		if (id == null) id = this.getClass().getSimpleName() + "_" + idRoot;
 		String decodeId = "decode_" + idRoot;
 
 		// read the current value
@@ -264,8 +278,17 @@ public class UiDateEdit extends UiComponent implements DateEdit
 			alt = this.iconAlt.getMessage(context, focus);
 		}
 
+		// what to do on change
+		String onchange = "";
+		if (this.submitDestination != null)
+		{
+			String destination = this.submitDestination.getDestination(context, focus);
+			onchange = "onchange=\"ambrosiaSubmit('" + destination + "')\" ";
+		}
+
 		// edit field
-		response.print("<span style=\"white-space:nowrap;\"><input style=\"font-size:.8em;width:12em\" type=\"text\" id=\"" + id + "\" name=\"" + id + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
+		response.print("<span style=\"white-space:nowrap;\"><input " + onchange + "style=\"font-size:.8em;width:12em\" type=\"text\" id=\"" + id
+				+ "\" name=\"" + id + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
 				+ " onchange=\"ambrosiaDateChange(this, 'invalid_" + id + "');\"" + " />");
 		if (this.icon != null)
 		{
@@ -312,6 +335,15 @@ public class UiDateEdit extends UiComponent implements DateEdit
 		context.addScript("ambrosiaValidateDate(document.getElementById('" + id + "'), 'invalid_" + id + "');");
 
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public DateEdit setDestination(Destination destination)
+	{
+		this.submitDestination = destination;
+		return this;
 	}
 
 	/**

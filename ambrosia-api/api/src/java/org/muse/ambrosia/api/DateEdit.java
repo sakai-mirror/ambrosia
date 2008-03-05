@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,15 @@ package org.muse.ambrosia.api;
  */
 public interface DateEdit extends Component
 {
+	/**
+	 * Set the selection to auto-submit on change, and report this destination when it does.
+	 * 
+	 * @param destination
+	 *        The destination for the submit.
+	 * @return self
+	 */
+	DateEdit setDestination(Destination destination);
+
 	/**
 	 * Set a decision to enable on-load cursor focus on this field.
 	 * 

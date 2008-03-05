@@ -26,6 +26,7 @@ import java.util.Collection;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
+import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
 import org.muse.ambrosia.api.TextEdit;
@@ -61,6 +62,9 @@ public class UiTextEdit extends UiComponent implements TextEdit
 
 	/** The read-only decision. */
 	protected Decision readOnly = null;
+
+	/** The destination to submit if we are submitting on change. */
+	protected Destination submitDestination = null;
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
@@ -106,6 +110,13 @@ public class UiTextEdit extends UiComponent implements TextEdit
 		{
 			PropertyReference pRef = service.newPropertyReference().setReference(options);
 			if (pRef != null) setOptions(pRef);
+		}
+
+		// short form for destination - attribute "destination" as the destination
+		String destination = StringUtil.trimToNull(xml.getAttribute("destination"));
+		if (destination != null)
+		{
+			setDestination(service.newDestination().setDestination(destination));
 		}
 
 		// size
@@ -179,6 +190,14 @@ public class UiTextEdit extends UiComponent implements TextEdit
 		{
 			this.focusDecision = service.parseDecisions(settingsXml);
 		}
+
+		// submitDestination
+		settingsXml = XmlHelper.getChildElementNamed(xml, "destination");
+		if (settingsXml != null)
+		{
+			// let Destination parse this
+			this.submitDestination = new UiDestination(service, settingsXml);
+		}
 	}
 
 	/**
@@ -244,8 +263,17 @@ public class UiTextEdit extends UiComponent implements TextEdit
 			response.println("</label>");
 		}
 
-		response.println("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols) + "\" value=\""
-				+ Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
+		// what to do on change
+		String onchange = "";
+		if (this.submitDestination != null)
+		{
+			String destination = this.submitDestination.getDestination(context, focus);
+			onchange = "onchange=\"ambrosiaSubmit('" + destination + "')\" ";
+		}
+
+		// the edit control
+		response.println("<input " + onchange + "type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\"" + Integer.toString(numCols)
+				+ "\" value=\"" + Validator.escapeHtml(value) + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 
 		context.editComponentRendered(id);
 
@@ -275,6 +303,15 @@ public class UiTextEdit extends UiComponent implements TextEdit
 		}
 
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public TextEdit setDestination(Destination destination)
+	{
+		this.submitDestination = destination;
+		return this;
 	}
 
 	/**
