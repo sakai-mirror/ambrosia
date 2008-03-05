@@ -52,7 +52,7 @@ public class UiDateEdit extends UiComponent implements DateEdit
 	protected Message invalidOk = new UiMessage().setMessage("ok");
 
 	/** The number of columns per row for the box. */
-	protected int numCols = 19;
+	protected int numCols = 17;
 
 	/** The number of rows for the text box. */
 	protected int numRows = 1;
@@ -264,8 +264,9 @@ public class UiDateEdit extends UiComponent implements DateEdit
 			alt = this.iconAlt.getMessage(context, focus);
 		}
 
-		response.print("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
-				+ Integer.toString(numCols) + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
+		// edit field
+		response.print("<span style=\"white-space:nowrap;\"><input style=\"font-size:.8em;\" type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
+				+ Integer.toString(this.numCols) + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
 				+ " onchange=\"ambrosiaDateChange(this, 'invalid_" + id + "');\"" + " />");
 		if (this.icon != null)
 		{

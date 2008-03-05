@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -264,4 +264,11 @@ public interface Navigation extends Component
 	 * @return self.
 	 */
 	Navigation setValidation(Decision decision);
+
+	/**
+	 * Set the text to be wrapped.
+	 * 
+	 * @return self.
+	 */
+	Navigation setWrap();
 }

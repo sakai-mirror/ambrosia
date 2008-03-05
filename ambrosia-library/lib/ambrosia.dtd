@@ -282,6 +282,7 @@
 <!ATTLIST navigation selectRequirementId CDATA #IMPLIED>
 <!ATTLIST navigation selectRequirementMessage CDATA #IMPLIED >
 <!ATTLIST navigation small (TRUE|FALSE) #IMPLIED >
+<!ATTLIST navigation wrap (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT toggle (included | title | disabled | icon)* >
 <!ATTLIST toggle id CDATA #IMPLIED >

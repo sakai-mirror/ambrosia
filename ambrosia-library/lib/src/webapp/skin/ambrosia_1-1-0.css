@@ -262,6 +262,11 @@ Sakai ~ itemAction
 	height: 2em;
 }
 
+.ambrosiaNavWrap
+{
+	height: 2em;
+}
+
 /*
 Divider in a navigation bar between navigations (use in a span around a &nbsp;)
 */

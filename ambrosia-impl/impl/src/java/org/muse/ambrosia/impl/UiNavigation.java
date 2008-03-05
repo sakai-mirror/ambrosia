@@ -164,6 +164,9 @@ public class UiNavigation extends UiComponent implements Navigation
 	/** Decision to force form validation when pressed. */
 	protected Decision validationDecision = null;
 
+	/** let the display wrap or not. */
+	protected boolean wrap = false;
+
 	/**
 	 * Public no-arg constructor.
 	 */
@@ -203,6 +206,13 @@ public class UiNavigation extends UiComponent implements Navigation
 		if (small != null)
 		{
 			setSmall();
+		}
+
+		// wrap?
+		String wrap = StringUtil.trimToNull(xml.getAttribute("wrap"));
+		if (wrap != null)
+		{
+			setWrap();
 		}
 
 		// short form for destination - attribute "destination" as the destination
@@ -722,6 +732,15 @@ public class UiNavigation extends UiComponent implements Navigation
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public Navigation setWrap()
+	{
+		this.wrap = true;
+		return this;
+	}
+
+	/**
 	 * Check if this is a default choice.
 	 * 
 	 * @param context
@@ -939,6 +958,10 @@ public class UiNavigation extends UiComponent implements Navigation
 		if (this.small)
 		{
 			response.print("<div class=\"ambrosiaNavSmall\">");
+		}
+		else if (this.wrap)
+		{
+			response.print("<span class=\"ambrosiaNavWrap\">");
 		}
 		else
 		{
