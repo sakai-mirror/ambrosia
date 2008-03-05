@@ -265,8 +265,7 @@ public class UiDateEdit extends UiComponent implements DateEdit
 		}
 
 		// edit field
-		response.print("<span style=\"white-space:nowrap;\"><input style=\"font-size:.8em;\" type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
-				+ Integer.toString(this.numCols) + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
+		response.print("<span style=\"white-space:nowrap;\"><input style=\"font-size:.8em;width:12em\" type=\"text\" id=\"" + id + "\" name=\"" + id + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
 				+ " onchange=\"ambrosiaDateChange(this, 'invalid_" + id + "');\"" + " />");
 		if (this.icon != null)
 		{
