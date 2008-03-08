@@ -371,6 +371,10 @@ function ambrosiaSelectDependencies(selected, dependencies)
 				{
 					target.checked = false;
 				}
+				else if (target.type == "checkbox")
+				{
+					target.checked = false;
+				}
 				if (target.onchange) target.onchange();
 			}
 		}
