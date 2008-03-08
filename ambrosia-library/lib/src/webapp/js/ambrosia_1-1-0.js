@@ -329,18 +329,20 @@ function ambrosiaNavigate(enabled, enableFunction, confirm, confirmDivId, valida
 	}
 }
 
-// dependencies is an array of arrays, the inner array[0] is the selection value, the rest are field ids
+// dependencies is an array of arrays, the inner array[0] is the selection value, a reversed flag, and the rest are field ids
 function ambrosiaSelectDependencies(selected, dependencies)
 {
 	for (var d=0; d < dependencies.length; d++)
 	{
 		var list = dependencies[d];
 		var value = list[0];
-		if (selected == value)
+		var reversed = list[1];
+		var doIt = (selected == value);
+		if (reversed) doIt = !doIt;
+		if (doIt)
 		{
-			for (var i=0; i < list.length; i++)
+			for (var i=2; i < list.length; i++)
 			{
-				if (i == 0) continue;
 				var target = document.getElementById(list[i]);
 				if (target == null) continue;
 				if (target.disabled == true)
@@ -356,9 +358,8 @@ function ambrosiaSelectDependencies(selected, dependencies)
 		
 		else
 		{
-			for (var i=0; i < list.length; i++)
+			for (var i=2; i < list.length; i++)
 			{
-				if (i == 0) continue;
 				var target = document.getElementById(list[i]);
 				if (target == null) continue;
 				target.disabled = true;

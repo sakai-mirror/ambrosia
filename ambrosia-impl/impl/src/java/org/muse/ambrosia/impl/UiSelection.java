@@ -54,11 +54,14 @@ public class UiSelection extends UiComponent implements Selection
 		Container container;
 
 		boolean separate = false;
+		
+		boolean reversed = false;
 
-		ContainerRef(Container c, boolean separate)
+		ContainerRef(Container c, boolean separate, boolean reversed)
 		{
 			this.container = c;
 			this.separate = separate;
+			this.reversed = reversed;
 		}
 	}
 
@@ -268,15 +271,19 @@ public class UiSelection extends UiComponent implements Selection
 						// is there a container?
 						Container container = null;
 						boolean separate = false;
+						boolean reversed = false;
 						Element containerXml = XmlHelper.getChildElementNamed(innerXml, "container");
 						if (containerXml != null)
 						{
 							String separateCode = StringUtil.trimToNull(containerXml.getAttribute("separate"));
 							separate = "TRUE".equals(separateCode);
 
+							String reversedCode = StringUtil.trimToNull(containerXml.getAttribute("reversed"));
+							reversed = "TRUE".equals(reversedCode);
+
 							container = new UiContainer(service, innerXml);
 						}
-						this.selectionContainers.add(new ContainerRef(container, separate));
+						this.selectionContainers.add(new ContainerRef(container, separate, reversed));
 					}
 				}
 			}
@@ -378,7 +385,7 @@ public class UiSelection extends UiComponent implements Selection
 	{
 		this.selectionValues.add(value);
 		this.selectionMessages.add(selector);
-		this.selectionContainers.add(new ContainerRef(new UiContainer(), false));
+		this.selectionContainers.add(new ContainerRef(new UiContainer(), false, false));
 
 		return this;
 	}
@@ -611,6 +618,8 @@ public class UiSelection extends UiComponent implements Selection
 			response.println("<input " + onclick + "type=\"checkbox\" name=\"" + id + "\" id=\"" + id + "\" value=\"" + values.get(0) + "\" "
 					+ (checked ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
 
+			context.editComponentRendered(id);
+
 			// the decode directive
 			if ((this.propertyReference != null) && (!readOnly))
 			{
@@ -743,6 +752,7 @@ public class UiSelection extends UiComponent implements Selection
 					needDependencies = true;
 
 					dependency.append("[\"" + val + "\",");
+					dependency.append(Boolean.toString(containerRef.reversed) + ",");
 					RenderListener listener = new RenderListener()
 					{
 						public void componentRendered(String id)
