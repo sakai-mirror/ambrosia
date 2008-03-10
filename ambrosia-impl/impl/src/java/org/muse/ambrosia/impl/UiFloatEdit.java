@@ -417,6 +417,8 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		response.print("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
 				+ Integer.toString(numCols) + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
 				+ " onchange=\"ambrosiaFloatChange(this, " + valueOrNull(shadowId) + ", " + valueOrNull(this.sumToId) + ", "
+				+ valueOrNull(defaultValue) + ", " + valueOrNull(minValue) + ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\""
+				+ " onkeyup=\"ambrosiaFloatChange(this, " + valueOrNull(shadowId) + ", " + valueOrNull(this.sumToId) + ", "
 				+ valueOrNull(defaultValue) + ", " + valueOrNull(minValue) + ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\"" + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
 

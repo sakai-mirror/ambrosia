@@ -435,6 +435,8 @@ public class UiCountEdit extends UiComponent implements CountEdit
 		response.print("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
 				+ Integer.toString(numCols) + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
 				+ " onchange=\"ambrosiaCountChange(this, " + valueOrNull(shadowId) + ", " + valueOrNull(summaryId) + ", " + valueOrNull(minValue)
+				+ ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\""
+				+ " onkeyup=\"ambrosiaCountChange(this, " + valueOrNull(shadowId) + ", " + valueOrNull(summaryId) + ", " + valueOrNull(minValue)
 				+ ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\"" + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
 
