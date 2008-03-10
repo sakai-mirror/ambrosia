@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,21 @@
 
 package org.muse.ambrosia.api;
 
+
 /**
  * Warning presents a warning indicator with popup text describing the warning.
  */
 public interface Warning extends Component
 {
+	/**
+	 * Set the icon.
+	 * 
+	 * @param url
+	 *        The full URL to the icon.
+	 * @return self.
+	 */
+	Warning setIcon(String url);
+
 	/**
 	 * Set the warning message.
 	 * 

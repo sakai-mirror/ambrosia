@@ -252,6 +252,7 @@
 <!ATTLIST warning id CDATA #IMPLIED >
 <!ATTLIST warning selector CDATA #IMPLIED >
 <!ATTLIST warning model CDATA #IMPLIED >
+<!ATTLIST warning icon CDATA #IMPLIED >
 
 <!ELEMENT alias (included)* >
 <!ATTLIST alias id CDATA #IMPLIED >

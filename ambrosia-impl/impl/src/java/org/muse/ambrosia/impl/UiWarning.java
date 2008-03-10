@@ -85,6 +85,10 @@ public class UiWarning extends UiComponent implements Warning
 		{
 			this.message = new UiMessage(service, settingsXml);
 		}
+
+		// short for description
+		String icon = StringUtil.trimToNull(xml.getAttribute("icon"));
+		if (icon != null) setIcon(icon);
 	}
 
 	/**
@@ -129,6 +133,15 @@ public class UiWarning extends UiComponent implements Warning
 		response.println("</a>");
 
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Warning setIcon(String icon)
+	{
+		this.warningIcon = icon;
+		return this;
 	}
 
 	/**
