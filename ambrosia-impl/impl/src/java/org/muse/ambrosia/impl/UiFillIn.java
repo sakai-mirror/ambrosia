@@ -365,7 +365,7 @@ public class UiFillIn extends UiComponent implements FillIn
 				response.print("<input type=\"text\" name=\"" + id + "\" id=\"" + id + Integer.toString(i) + "\" size=\""
 						+ Integer.toString(this.numCols) + "\" value=\"");
 				boxCount++;
-				if ((values != null) && (values.length > i))
+				if ((values != null) && (values.length > i) && (values[i] != null))
 				{
 					response.print(values[i]);
 				}
@@ -379,7 +379,7 @@ public class UiFillIn extends UiComponent implements FillIn
 			}
 
 			// with an input if we have a trailing pattern
-			if (fillInText.endsWith("{}"))
+			if ((fillInText != null) && (fillInText.endsWith("{}")))
 			{
 				// if marked correct, flag with an icon
 				if (correctMarkingIncluded && (corrects != null) && (corrects.length > (fillInParts.length - 1)) && (this.correctIcon != null))
@@ -403,7 +403,7 @@ public class UiFillIn extends UiComponent implements FillIn
 				response.print("<input type=\"text\" name=\"" + id + "\" id=\"" + id + Integer.toString(fillInParts.length - 1) + "\" size=\""
 						+ Integer.toString(this.numCols) + "\" value=\"");
 				boxCount++;
-				if ((values != null) && (values.length > fillInParts.length - 1))
+				if ((values != null) && (values.length > fillInParts.length - 1) && (values[fillInParts.length - 1] != null))
 				{
 					response.print(values[fillInParts.length - 1]);
 				}
