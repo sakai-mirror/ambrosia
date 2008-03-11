@@ -172,8 +172,9 @@ public class UiToggle extends UiComponent implements Toggle
 		String description = null;
 		if (this.description != null)
 		{
-			description = StringUtil.trimToNull(this.description.getMessage(context, focus));
+			description = this.description.getMessage(context, focus);
 		}
+		if (description == null) description = "";
 
 		PrintWriter response = context.getResponseWriter();
 
@@ -198,8 +199,8 @@ public class UiToggle extends UiComponent implements Toggle
 
 					if (this.icon != null)
 					{
-						response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.icon) + "\" "
-								+ ((description == null) ? "" : "title=\"" + description + "\" " + "alt=\"" + description + "\" ") + " />");
+						response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.icon) + "\" " + "title=\""
+								+ description + "\" " + "alt=\"" + description + "\" />");
 					}
 
 					if (!disabled) response.print("</a>");
@@ -211,7 +212,7 @@ public class UiToggle extends UiComponent implements Toggle
 					{
 						if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
 						response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\"" + context.getUrl(this.icon) + "\" "
-								+ ((description == null) ? "" : "title=\"" + description + "\" " + "alt=\"" + description + "\" ") + " />");
+								+ "title=\"" + description + "\" " + "alt=\"" + description + "\" />");
 						if (!disabled) response.print("</a>");
 					}
 
@@ -225,7 +226,7 @@ public class UiToggle extends UiComponent implements Toggle
 					{
 						if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
 						response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\"" + context.getUrl(this.icon) + "\" "
-								+ ((description == null) ? "" : "title=\"" + description + "\" " + "alt=\"" + description + "\" ") + " />");
+								+ "title=\"" + description + "\" " + "alt=\"" + description + "\" />");
 						if (!disabled) response.print("</a>");
 					}
 				}

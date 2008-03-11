@@ -42,8 +42,8 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 	/** an icon for the display. */
 	protected String icon = "!/ambrosia_library/icons/stopwatch.png";
 
-	/** The alt text for the icon. */
-	protected Message iconAlt = new UiMessage().setMessage("duration-alt");
+	/** The alt text for the icon. Null until we have an editor! */
+	protected Message iconAlt = null; /* new UiMessage().setMessage("duration-alt"); */
 
 	/** Icon for showing invalid. */
 	protected String invalidIcon = "!/ambrosia_library/icons/warning.png";
@@ -258,11 +258,12 @@ public class UiDurationEdit extends UiComponent implements DurationEdit
 		}
 
 		// icon text
-		String alt = "";
+		String alt = null;
 		if (this.iconAlt != null)
 		{
 			alt = this.iconAlt.getMessage(context, focus);
 		}
+		if (alt == null) alt = "";
 
 		// TODO: make the icon link to a popup picker!
 

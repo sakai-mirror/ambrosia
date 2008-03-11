@@ -97,18 +97,10 @@ public class UiIconPropertyReference extends UiPropertyReference implements Icon
 		if (this.titleMessage != null)
 		{
 			title = this.titleMessage.getMessage(context, focus);
-			if (title != null)
-			{
-				String t = title;
-				title = "alt=\"" + t + "\" title=\"" + t + "\" ";
-			}
-			else
-			{
-				title = "";
-			}
+			if (title == null) title = "";
 		}
 
-		return "<img src=\"" + context.getUrl(iconName) + "\" " + title + "/>";
+		return "<img src=\"" + context.getUrl(iconName) + "\" alt=\"" + title + "\" title=\"" + title + "\" />";
 	}
 
 	/**

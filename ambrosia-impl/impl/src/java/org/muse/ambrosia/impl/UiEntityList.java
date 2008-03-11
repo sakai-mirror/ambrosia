@@ -450,6 +450,7 @@ public class UiEntityList extends UiComponent implements EntityList
 							icon = c.getSortDescIcon();
 							if (c.getSortDescMsg() != null) iconAlt = c.getSortDescMsg().getMessage(context, focus);
 						}
+						if (iconAlt == null) iconAlt = "";
 
 						String destination = null;
 						if (asc)
@@ -463,7 +464,6 @@ public class UiEntityList extends UiComponent implements EntityList
 							if (c.getSortDestinationAsc() != null) destination = c.getSortDestinationAsc().getDestination(context, focus);
 						}
 
-						// TODO: do submit!
 						UiNavigation.generateLinkScript(context, sortId, false, false, submit, destination, (String) context.get("sakai.return.url"),
 								false, false);
 						response.println("<th scope=\"col\""
@@ -473,8 +473,8 @@ public class UiEntityList extends UiComponent implements EntityList
 								+ sortId
 								+ "();return false;\">"
 								+ title.getMessage(context, focus)
-								+ ((icon != null) ? ("&nbsp;<img src=\"" + context.getUrl(icon) + "\""
-										+ ((iconAlt != null) ? (" alt=\"" + iconAlt + "\"") : "") + " />") : "") + "</a></th>");
+								+ ((icon != null) ? ("&nbsp;<img src=\"" + context.getUrl(icon) + "\"" + " title=\"" + iconAlt + "\" alt=\""
+										+ iconAlt + "\"" + " />") : "") + "</a></th>");
 					}
 
 					// not currently sorting... can we sort?

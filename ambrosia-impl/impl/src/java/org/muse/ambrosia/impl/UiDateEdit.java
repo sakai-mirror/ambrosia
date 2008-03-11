@@ -272,11 +272,12 @@ public class UiDateEdit extends UiComponent implements DateEdit
 		}
 
 		// icon text
-		String alt = "";
+		String alt = null;
 		if (this.iconAlt != null)
 		{
 			alt = this.iconAlt.getMessage(context, focus);
 		}
+		if (alt == null) alt = "";
 
 		// what to do on change
 		String onchange = "";

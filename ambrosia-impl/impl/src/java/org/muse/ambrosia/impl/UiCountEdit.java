@@ -424,20 +424,20 @@ public class UiCountEdit extends UiComponent implements CountEdit
 		}
 
 		// icon text
-		String alt = "";
+		String alt = null;
 		if (this.iconAlt != null)
 		{
 			alt = this.iconAlt.getMessage(context, focus);
 		}
+		if (alt == null) alt = "";
 
 		// TODO: make the icon link to a popup picker!
 
 		response.print("<span style=\"white-space: nowrap;\"><input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" size=\""
 				+ Integer.toString(numCols) + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
 				+ " onchange=\"ambrosiaCountChange(this, " + valueOrNull(shadowId) + ", " + valueOrNull(summaryId) + ", " + valueOrNull(minValue)
-				+ ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\""
-				+ " onkeyup=\"ambrosiaCountChange(this, " + valueOrNull(shadowId) + ", " + valueOrNull(summaryId) + ", " + valueOrNull(minValue)
-				+ ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\"" + " />"
+				+ ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\"" + " onkeyup=\"ambrosiaCountChange(this, " + valueOrNull(shadowId)
+				+ ", " + valueOrNull(summaryId) + ", " + valueOrNull(minValue) + ", " + valueOrNull(maxValue) + ", 'invalid_" + id + "');\"" + " />"
 				+ ((this.icon != null) ? " <img src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt + "\" />" : ""));
 
 		// validate failure alert (will display:inline when made visible)

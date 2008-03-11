@@ -260,12 +260,14 @@ public class UiIconKey extends UiComponent implements IconKey
 
 				// the description
 				Message description = this.iconDescriptions.get(i);
-				String descriptionText = "";
+				String descriptionText = null;
 				if (description != null) descriptionText = description.getMessage(context, focus);
+				if (descriptionText == null) descriptionText = "";
 
+				// Note: since the description follows, don't put it on the icon as well.
 				if (icon != null)
 				{
-					response.print("<img src=\"" + context.getUrl(icon) + "\" alt=\"" + descriptionText + "\" />");
+					response.print("<img src=\"" + context.getUrl(icon) + "\" title=\"\" alt=\"\" />");
 				}
 
 				response.print("</td><td>");
@@ -312,12 +314,14 @@ public class UiIconKey extends UiComponent implements IconKey
 				if (this.iconReference != null) icon = this.iconReference.read(context, entity);
 
 				// the description
-				String description = "";
+				String description = null;
 				if (this.descriptionReference != null) description = this.descriptionReference.read(context, entity);
+				if (description == null) description = "";
 
+				// Note: since the description follows, don't put it on the icon as well.
 				if (icon != null)
 				{
-					response.print("<img src=\"" + context.getUrl(icon) + "\" alt=\"" + description + "\" />");
+					response.print("<img src=\"" + context.getUrl(icon) + "\" title=\"\" alt=\"\" />");
 				}
 
 				response.print("</td><td>");

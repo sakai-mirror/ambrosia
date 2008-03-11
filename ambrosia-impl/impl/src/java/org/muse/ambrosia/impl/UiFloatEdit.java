@@ -406,11 +406,12 @@ public class UiFloatEdit extends UiComponent implements FloatEdit
 		}
 
 		// icon text
-		String alt = "";
+		String alt = null;
 		if (this.iconAlt != null)
 		{
 			alt = this.iconAlt.getMessage(context, focus);
 		}
+		if (alt == null) alt = "";
 
 		// TODO: make the icon link to a popup picker!
 

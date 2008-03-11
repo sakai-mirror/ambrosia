@@ -842,6 +842,7 @@ public class UiNavigation extends UiComponent implements Navigation
 		{
 			description = StringUtil.trimToNull(this.description.getMessage(context, focus));
 		}
+		if (description == null) description = "";
 
 		// make it a two step / confirm?
 		boolean confirm = false;
@@ -980,7 +981,7 @@ public class UiNavigation extends UiComponent implements Navigation
 					if (this.icon != null)
 					{
 						response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.icon) + "\" "
-								+ ((description == null) ? "" : "title=\"" + description + "\" " + "alt=\"" + description + "\" ") + " />");
+								+ "title=\"" + description + "\" " + "alt=\"" + description + "\" />");
 					}
 
 					if (!disabled) response.print("</a>");
@@ -992,7 +993,7 @@ public class UiNavigation extends UiComponent implements Navigation
 					{
 						if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
 						response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\"" + context.getUrl(this.icon) + "\" "
-								+ ((description == null) ? "" : "title=\"" + description + "\" " + "alt=\"" + description + "\" ") + " />");
+								+ "title=\"" + description + "\" " + "alt=\"" + description + "\" />");
 						if (!disabled) response.print("</a>");
 					}
 
@@ -1006,7 +1007,7 @@ public class UiNavigation extends UiComponent implements Navigation
 					{
 						if (!disabled) response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
 						response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\"" + context.getUrl(this.icon) + "\" "
-								+ ((description == null) ? "" : "title=\"" + description + "\" " + "alt=\"" + description + "\" ") + " />");
+								+ "title=\"" + description + "\" " + "alt=\"" + description + "\" />");
 						if (!disabled) response.print("</a>");
 					}
 				}
@@ -1033,7 +1034,7 @@ public class UiNavigation extends UiComponent implements Navigation
 								+ id
 								+ "();return false;\" "
 								+ ((accessKey == null) ? "" : "accesskey=\"" + accessKey.charAt(0) + "\" ")
-								+ ((description == null) ? "" : "title=\"" + description + "\" ")
+								+ "title=\"" + description + "\" "
 								+ (((this.icon != null) && (this.iconStyle == IconStyle.left)) ? "style=\"padding-left:2em; background: #eee url('"
 										+ context.getUrl(this.icon) + "') .2em no-repeat;\"" : "")
 								+ (((this.icon != null) && (this.iconStyle == IconStyle.right)) ? "style=\"padding-left:.4em; padding-right:2em; background: #eee url('"
