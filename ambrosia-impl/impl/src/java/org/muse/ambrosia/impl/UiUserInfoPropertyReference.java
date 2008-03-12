@@ -22,6 +22,8 @@
 package org.muse.ambrosia.impl;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.muse.ambrosia.api.Context;
@@ -123,6 +125,32 @@ public class UiUserInfoPropertyReference extends UiPropertyReference implements 
 		{
 			Collection ids = (Collection) value;
 			List<User> users = UserDirectoryService.getUsers(ids);
+
+			// sort - by user sort name
+			if (this.selector == UserInfoPropertyReference.Selector.sortName)
+			{
+				Collections.sort(users, new Comparator()
+				{
+					public int compare(Object arg0, Object arg1)
+					{
+						int rv = ((User) arg0).getSortName().compareTo(((User) arg1).getSortName());
+						return rv;
+					}
+				});
+			}
+
+			// or by user display name
+			else if (this.selector == UserInfoPropertyReference.Selector.displayName)
+			{
+				Collections.sort(users, new Comparator()
+				{
+					public int compare(Object arg0, Object arg1)
+					{
+						int rv = ((User) arg0).getDisplayName().compareTo(((User) arg1).getDisplayName());
+						return rv;
+					}
+				});
+			}
 
 			StringBuilder rv = new StringBuilder();
 			for (User user : users)
