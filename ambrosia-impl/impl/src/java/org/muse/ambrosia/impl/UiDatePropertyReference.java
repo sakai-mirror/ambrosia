@@ -165,6 +165,7 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 	 */
 	protected String unFormat(String value)
 	{
+		value = StringUtil.trimToNull(value);
 		if (value == null) return null;
 
 		// assume single line, both date and time

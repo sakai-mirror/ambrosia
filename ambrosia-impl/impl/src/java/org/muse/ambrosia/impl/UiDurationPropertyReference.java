@@ -110,6 +110,9 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 	 */
 	protected String unFormat(String value)
 	{
+		value = StringUtil.trimToNull(value);
+		if (value == null) return null;
+
 		String[] parts = StringUtil.split(value, ":");
 		if (parts.length == 2)
 		{
