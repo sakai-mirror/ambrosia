@@ -128,6 +128,7 @@ public class UiDurationPropertyReference extends UiPropertyReference implements 
 			}
 		}
 
-		return value;
+		// if not as expected, complain
+		throw new IllegalArgumentException();
 	}
 }

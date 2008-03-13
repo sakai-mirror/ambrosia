@@ -767,15 +767,22 @@ public class UiPropertyReference implements PropertyReference
 		StringBuffer setter = new StringBuffer("set" + property);
 		setter.setCharAt(3, setter.substring(3, 4).toUpperCase().charAt(0));
 
-		// unformat the values
+		// unformat the values - in any are invalid, give up
 		String[] value = null;
-		if (valueSource != null)
+		try
 		{
-			value = new String[valueSource.length];
-			for (int i = 0; i < valueSource.length; i++)
+			if (valueSource != null)
 			{
-				value[i] = StringUtil.trimToNull(unFormat(valueSource[i]));
+				value = new String[valueSource.length];
+				for (int i = 0; i < valueSource.length; i++)
+				{
+					value[i] = StringUtil.trimToNull(unFormat(valueSource[i]));
+				}
 			}
+		}
+		catch (IllegalArgumentException e)
+		{
+			return;
 		}
 
 		try
@@ -963,10 +970,10 @@ public class UiPropertyReference implements PropertyReference
 				// multiple value string in set
 				else if (paramTypes[0] == Set.class)
 				{
-					// trim it into a List
-					Set valueSet = new HashSet(value.length);
 					if (value != null)
 					{
+						// trim it into a List
+						Set valueSet = new HashSet(value.length);
 						for (int i = 0; i < value.length; i++)
 						{
 							String v = StringUtil.trimToNull(value[i]);
@@ -975,9 +982,9 @@ public class UiPropertyReference implements PropertyReference
 								valueSet.add(v);
 							}
 						}
-					}
 
-					params[0] = valueSet;
+						params[0] = valueSet;
+					}
 				}
 
 				// TODO: other types

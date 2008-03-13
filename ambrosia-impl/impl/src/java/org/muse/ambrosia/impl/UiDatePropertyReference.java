@@ -182,7 +182,8 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 		}
 		catch (ParseException e)
 		{
-			return null;
+			// if not as expected, complain
+			throw new IllegalArgumentException();
 		}
 	}
 }
