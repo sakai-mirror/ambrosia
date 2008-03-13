@@ -279,18 +279,28 @@ public class UiDateEdit extends UiComponent implements DateEdit
 		}
 		if (alt == null) alt = "";
 
-		// what to do on change
-		String onchange = "";
+		// submit on change?
+		String submitOnChange = "null";
 		if (this.submitDestination != null)
 		{
 			String destination = this.submitDestination.getDestination(context, focus);
-			onchange = "onchange=\"ambrosiaSubmit('" + destination + "')\" ";
+			if (destination != null)
+			{
+				submitOnChange = "'" + destination + "'";
+			}
 		}
+//		// what to do on change
+//		String onchange = "";
+//		if (this.submitDestination != null)
+//		{
+//			String destination = this.submitDestination.getDestination(context, focus);
+//			onchange = "onchange=\"ambrosiaSubmit('" + destination + "')\" ";
+//		}
 
 		// edit field
-		response.print("<span style=\"white-space:nowrap;\"><input " + onchange + "style=\"font-size:.8em;width:12em\" type=\"text\" id=\"" + id
+		response.print("<span style=\"white-space:nowrap;\"><input " + /*onchange +*/ "style=\"font-size:.8em;width:12em\" type=\"text\" id=\"" + id
 				+ "\" name=\"" + id + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
-				+ " onchange=\"ambrosiaDateChange(this, 'invalid_" + id + "');\"" + " />");
+				+ " onchange=\"ambrosiaDateChange(this, 'invalid_" + id + "'," + submitOnChange + ");\"" + " />");
 		if (this.icon != null)
 		{
 			// for the date picker popup
@@ -333,7 +343,7 @@ public class UiDateEdit extends UiComponent implements DateEdit
 		}
 
 		// pre-validate
-		context.addScript("ambrosiaValidateDate(document.getElementById('" + id + "'), 'invalid_" + id + "');");
+		context.addScript("ambrosiaValidateDate(document.getElementById('" + id + "'), 'invalid_" + id + "',null);");
 
 		return true;
 	}

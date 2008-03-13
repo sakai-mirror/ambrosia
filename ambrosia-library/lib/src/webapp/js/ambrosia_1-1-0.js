@@ -113,12 +113,12 @@ function ambrosiaValidateDuration(source, validateId)
 	return true;
 }
 
-function ambrosiaDateChange(source, validateId)
+function ambrosiaDateChange(source, validateId, submit)
 {
-	ambrosiaValidateDate(source, validateId);
+	ambrosiaValidateDate(source, validateId, submit);
 }
 
-function ambrosiaValidateDate(source, validateId)
+function ambrosiaValidateDate(source, validateId, submit)
 {
 	if (source == null) return true;
 	// Dec 1, 2007 12:00 AM
@@ -135,8 +135,10 @@ function ambrosiaValidateDate(source, validateId)
 	}
 
 	ambrosiaHideInline(validateId);
+	if (submit != null) return ambrosiaSubmit(submit);
 	return true;
 }
+
 function ambrosiaCountChange(source, shadowId, summaryId, min, max, validateId)
 {
 	// validate
