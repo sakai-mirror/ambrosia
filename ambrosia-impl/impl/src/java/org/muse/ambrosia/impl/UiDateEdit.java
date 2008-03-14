@@ -289,24 +289,20 @@ public class UiDateEdit extends UiComponent implements DateEdit
 				submitOnChange = "'" + destination + "'";
 			}
 		}
-//		// what to do on change
-//		String onchange = "";
-//		if (this.submitDestination != null)
-//		{
-//			String destination = this.submitDestination.getDestination(context, focus);
-//			onchange = "onchange=\"ambrosiaSubmit('" + destination + "')\" ";
-//		}
 
 		// edit field
-		response.print("<span style=\"white-space:nowrap;\"><input " + /*onchange +*/ "style=\"font-size:.8em;width:12em\" type=\"text\" id=\"" + id
-				+ "\" name=\"" + id + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "")
-				+ " onchange=\"ambrosiaDateChange(this, 'invalid_" + id + "'," + submitOnChange + ");\"" + " />");
+		response.print("<span style=\"white-space:nowrap;\"><input " + "style=\"font-size:.8em;width:12em\" type=\"text\" id=\"" + id + "\" name=\""
+				+ id + "\" value=\"" + value + "\"" + (readOnly ? " disabled=\"disabled\"" : "") + " onchange=\"ambrosiaDateChange(this, 'invalid_"
+				+ id + "'," + submitOnChange + ");\"" + " />");
+
 		if (this.icon != null)
 		{
 			// for the date picker popup
 			context.addScript("function popupPicker_" + id + "()\n{\n  ambrosiaPopupDate(\"" + id + "\");\n}\n");
-			response.print("<a href=\"#\" onclick=\"popupPicker_" + id + "();return false;\"><img src=\"" + context.getUrl(this.icon) + "\" alt=\""
-					+ alt + "\" title=\"" + alt + "\" /></a>");
+			response.print("<a href=\"#\" onclick=\"popupPicker_" + id + "();return false;\"><img id=\"" + id
+					+ "_picker\" style=\"display:inline;\" src=\"" + context.getUrl(this.icon) + "\" alt=\"" + alt + "\" title=\"" + alt
+					+ "\" /></a>");
+			context.editComponentRendered(id + "_picker");
 		}
 
 		// validate failure alert (will display:inline when made visible)

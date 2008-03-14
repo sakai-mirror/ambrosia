@@ -355,6 +355,11 @@ function ambrosiaSelectDependencies(selected, dependencies)
 						target.checked = true;
 					}
 				}
+				if (target.tagName == "IMG")
+				{
+					if (target.style.display == "none")
+						target.style.display = "inline";
+				}
 			}
 		}
 		
@@ -376,6 +381,11 @@ function ambrosiaSelectDependencies(selected, dependencies)
 				else if (target.type == "checkbox")
 				{
 					target.checked = false;
+				}
+				else if (target.tagName == "IMG")
+				{
+					if (target.style.display == "inline")
+						target.style.display = "none";
 				}
 				if (target.onchange) target.onchange();
 			}
