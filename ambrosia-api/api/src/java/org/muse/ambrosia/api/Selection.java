@@ -90,6 +90,18 @@ public interface Selection extends Component
 	Selection setHeight(int height);
 
 	/**
+	 * Set an alert that will trigger once on submit if the field is empty.
+	 * 
+	 * @param decision
+	 *        The decision to include the alert (if null, the alert is unconditionally included).
+	 * @param selector
+	 *        The message selector.
+	 * @param references
+	 *        one or more (or an array) of PropertyReferences to form the additional values in the formatted message.
+	 */
+	Selection setOnEmptyAlert(Decision decision, String selector, PropertyReference... references);
+
+	/**
 	 * Set the orientation of multiple selection choices.
 	 * 
 	 * @param orientation
