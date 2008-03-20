@@ -191,7 +191,7 @@ public class UiPropertyReference implements PropertyReference
 		if (this.indexRef != null)
 		{
 			Object o = getNestedValue(context, this.indexRef, focus, false);
-			if (o != null) rv.append(o.toString());
+			if (o != null) rv.append(encode(o.toString()));
 		}
 
 		else
@@ -439,7 +439,7 @@ public class UiPropertyReference implements PropertyReference
 	 */
 	public void write(Context context, String... value)
 	{
-		// start with our entity from the contxt
+		// start with our entity from the context
 		Object entity = null;
 		if (this.entityReference != null)
 		{
@@ -463,6 +463,75 @@ public class UiPropertyReference implements PropertyReference
 		{
 			setValue(target, lastProperty, value);
 		}
+	}
+
+	/**
+	 * Decode the encode()ed value.
+	 * 
+	 * @param value
+	 *        The encode()ed value.
+	 * @return The decoded value.
+	 */
+	protected String decode(String value)
+	{
+		if (value == null) return value;
+
+		// if this is not encoded
+		if (!value.startsWith("x")) return value;
+
+		// decode each 4 character chunk, skipping the first character, as a hex value
+		StringBuilder rv = new StringBuilder();
+		for (int i = 1; i < value.length(); i += 4)
+		{
+			String next = value.substring(i, i + 4);
+			int c = Integer.parseInt(next, 16);
+			rv.append((char) c);
+		}
+
+		return rv.toString();
+	}
+
+	/**
+	 * Encode the value to make it safe for a property reference - only alpha-numeric characters.
+	 * 
+	 * @param value
+	 *        The value to encode.
+	 * @return The encoded value.
+	 */
+	protected String encode(String value)
+	{
+		if (value == null) return value;
+
+		StringBuilder rv = new StringBuilder();
+		rv.append("x");
+
+		// encode as a series of 4 character hex digits for each character
+		for (int i = 0; i < value.length(); i++)
+		{
+			int c = value.charAt(i);
+			String encoded = Integer.toString(c, 16);
+			switch (encoded.length())
+			{
+				case 1:
+				{
+					rv.append("000");
+					break;
+				}
+				case 2:
+				{
+					rv.append("00");
+					break;
+				}
+				case 3:
+				{
+					rv.append("0");
+					break;
+				}
+			}
+			rv.append(encoded);
+		}
+
+		return rv.toString();
 	}
 
 	/**
@@ -597,7 +666,7 @@ public class UiPropertyReference implements PropertyReference
 		// if the property is an index reference
 		if (property.startsWith("[") && property.endsWith("]"))
 		{
-			return getIndexValue(entity, property.substring(1, property.length() - 1));
+			return getIndexValue(entity, decode(property.substring(1, property.length() - 1)));
 		}
 
 		// another form of index, taking the index value from the nested references
