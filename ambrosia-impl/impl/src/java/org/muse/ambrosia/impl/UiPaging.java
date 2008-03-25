@@ -79,6 +79,8 @@ public class UiPaging implements Paging
 	 */
 	public Integer getCurLastItem()
 	{
+		if (this.size == 0) return this.maxItems;
+
 		int rv = this.current * this.size;
 		if (rv > this.maxItems) rv = this.maxItems;
 
