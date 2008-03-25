@@ -191,7 +191,7 @@ if (obj_caller && obj_caller.time_comp)
 	{
 	  if (i < 10)
 	  {
-	      if (i == dt_current_day.getHours())
+	      if (i == dt_current.getHours())
 	      {
 	        document.write('<option value=\"0'+i+'\" selected>0'+i);
 	      }
@@ -212,7 +212,7 @@ if (obj_caller && obj_caller.time_comp)
 	  }
 	  else
 	  {
-	    if (i == dt_current_day.getHours())
+	    if (i == dt_current.getHours())
 	    {
 	      document.write('<option value=\"'+i+'\" selected>'+i);
 	    }
@@ -228,7 +228,7 @@ if (obj_caller && obj_caller.time_comp)
 	{
 	  if (i < 10)
 	  {
-	  	  if (i == dt_current_day.getMinutes())
+	  	  if (i == dt_current.getMinutes())
 	  	  {
 	  	    document.write('<option value=\"0'+i+'\" selected>0'+i);
 	  	  }
@@ -239,7 +239,7 @@ if (obj_caller && obj_caller.time_comp)
 	  }
 	  	  else
 	  	  {
-	  	  if (i == dt_current_day.getMinutes())
+	  	  if (i == dt_current.getMinutes())
 	  	  {
 	  	    document.write('<option value=\"'+i+'\" selected>'+i);
 	  	  }
