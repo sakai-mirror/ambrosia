@@ -23,6 +23,7 @@ package org.muse.ambrosia.impl;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.muse.ambrosia.api.Context;
@@ -67,8 +68,14 @@ public class UiPager extends UiComponent implements Pager
 	/** The next page message. */
 	protected Message nextMessage = new UiMessage().setMessage("pager-next");
 
+	/** The model reference for the size options. */
+	protected PropertyReference pageSizeModel = null;
+
 	/** The list of page sizes we offer. */
 	protected List<Integer> pageSizes = new ArrayList<Integer>();
+
+	/** Message to show the page size options for 'all'. */
+	protected Message pageSizesAllMessage = new UiMessage().setMessage("pager-all");
 
 	/** Message to show the page size options - the {0} field is reserved for the count. */
 	protected Message pageSizesMessage = new UiMessage().setMessage("pager-sizes", new UiPropertyReference().setReference("ambrosia:option"));
@@ -249,6 +256,14 @@ public class UiPager extends UiComponent implements Pager
 				this.pageSizesMessage = new UiMessage(service, innerXml);
 			}
 
+			// model reference
+			innerXml = XmlHelper.getChildElementNamed(settingsXml, "model");
+			if (innerXml != null)
+			{
+				PropertyReference pRef = service.parsePropertyReference(innerXml);
+				if (pRef != null) setPageSizeProperty(pRef);
+			}
+
 			// the size options
 			NodeList contained = settingsXml.getChildNodes();
 			for (int i = 0; i < contained.getLength(); i++)
@@ -329,11 +344,29 @@ public class UiPager extends UiComponent implements Pager
 			response.println(this.curMessage.getMessage(context, focus));
 		}
 
+		List<Integer> sizes = new ArrayList<Integer>(this.pageSizes);
+		if (this.pageSizeModel != null)
+		{
+			Object o = this.pageSizeModel.readObject(context, focus);
+		
+			// add these to the static ones
+			if (o instanceof Collection)
+			{
+				for (Object obj : (Collection) o)
+				{
+					if (obj instanceof Integer)
+					{
+						sizes.add((Integer) obj);
+					}
+				}
+			}
+		}
+
 		// TODO: formatting the message and the dropdown
 		// render the page size dropdown
-		if (!this.pageSizes.isEmpty())
+		if (!sizes.isEmpty())
 		{
-			renderPageSizeDropdown(context, focus, response);
+			renderPageSizeDropdown(sizes, context, focus, response);
 		}
 
 		context.put(PagingPropertyReference.SELECTOR, PagingPropertyReference.NEXT);
@@ -400,6 +433,15 @@ public class UiPager extends UiComponent implements Pager
 	/**
 	 * {@inheritDoc}
 	 */
+	public Pager setPageSizeProperty(PropertyReference propertyReference)
+	{
+		this.pageSizeModel = propertyReference;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Pager setPageSizesMessage(String selector, PropertyReference... references)
 	{
 		this.pageSizesMessage = new UiMessage().setMessage(selector, references);
@@ -434,7 +476,7 @@ public class UiPager extends UiComponent implements Pager
 		return this;
 	}
 
-	protected void renderPageSizeDropdown(Context context, Object focus, PrintWriter response)
+	protected void renderPageSizeDropdown(List<Integer> sizes, Context context, Object focus, PrintWriter response)
 	{
 		// TODO: support validate setting, size
 		boolean validate = false;
@@ -442,13 +484,26 @@ public class UiPager extends UiComponent implements Pager
 
 		String id = this.getClass().getSimpleName() + context.getUniqueId();
 
+		String pagingRef = this.pagingModel.getFullReference(context);
+		PropertyReference sizePropRef = new UiPropertyReference().setReference(pagingRef + ".size");
+		String sizeValue = sizePropRef.read(context, focus);
+
 		// the dropdown
 		response.println("<select id=\"" + id + "\" size=\"" + size + "\" name=\"" + id + "\" onchange='act_" + id + "(this.value)'>");
-		for (Integer sizeOption : this.pageSizes)
+		for (Integer sizeOption : sizes)
 		{
-			// setup the option for the message
-			context.put("ambrosia:option", sizeOption.toString());
-			String msg = this.pageSizesMessage.getMessage(context, focus);
+			String msg = null;
+			if (sizeOption.intValue() != 0)
+			{
+				// setup the option for the message
+				context.put("ambrosia:option", sizeOption.toString());
+				msg = this.pageSizesMessage.getMessage(context, focus);
+				context.remove("ambrosia:option");
+			}
+			else
+			{
+				msg = this.pageSizesAllMessage.getMessage(context, focus);
+			}
 
 			// get a destination for the tool with this page size set
 			context.put(PagingPropertyReference.SELECTOR, PagingPropertyReference.SIZE);
@@ -457,7 +512,10 @@ public class UiPager extends UiComponent implements Pager
 			context.remove(PagingPropertyReference.SELECTOR_SIZE);
 			context.remove(PagingPropertyReference.SELECTOR);
 
-			response.println("    <option value=\"" + destination + "\">" + msg + "</option>");
+			String selected = "";
+			if (sizeOption.toString().equals(sizeValue)) selected = " SELECTED";
+
+			response.println("    <option value=\"" + destination + "\"" + selected + ">" + msg + "</option>");
 		}
 		response.println("</select>");
 

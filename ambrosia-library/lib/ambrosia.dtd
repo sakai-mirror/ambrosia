@@ -633,6 +633,6 @@
 
 <!ELEMENT paging (model) >
 
-<!ELEMENT sizeOptions (sizeOption | message)* >
+<!ELEMENT sizeOptions (sizeOption | message | model)* >
 <!ELEMENT sizeOption EMPTY >
 <!ATTLIST sizeOption size CDATA #IMPLIED >
