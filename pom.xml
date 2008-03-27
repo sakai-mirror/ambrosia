@@ -18,6 +18,7 @@
 		<module>ambrosia-api/api</module>
 		<module>ambrosia-impl/impl</module>
 		<module>ambrosia-impl/pack</module>
+		<module>ambrosia-util/util</module>
 		<module>ambrosia-library/lib</module>
 	</modules>
 
