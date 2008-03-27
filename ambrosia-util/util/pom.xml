@@ -9,40 +9,12 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<name>muse-ambrosia-impl</name>
+	<name>muse-ambrosia-util</name>
 	<groupId>org.muse.ambrosia</groupId>
-	<artifactId>muse-ambrosia-impl</artifactId>
+	<artifactId>muse-ambrosia-util</artifactId>
 	<packaging>jar</packaging>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-authz-api</artifactId>
-			<version>${sakai.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-entity-api</artifactId>
-			<version>${sakai.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-content-api</artifactId>
-			<version>${sakai.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-site-api</artifactId>
-			<version>${sakai.version}</version>
-			<scope>provided</scope>
-		</dependency>
 
 		<dependency>
 			<groupId>org.muse.ambrosia</groupId>
@@ -53,14 +25,14 @@
 
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-tool-api</artifactId>
+			<artifactId>sakai-component</artifactId>
 			<version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-user-api</artifactId>
+			<artifactId>sakai-tool-api</artifactId>
 			<version>${sakai.version}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -80,13 +52,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>${sakai.commons.logging.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>${sakai.servletapi.version}</version>
@@ -94,23 +59,18 @@
 		</dependency>
 
 		<dependency>
-			<groupId>commons-fileupload</groupId>
-			<artifactId>commons-fileupload</artifactId>
-			<version>${sakai.commons.fileupload.version}</version>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${sakai.commons.logging.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${sakai.spring.groupId}</groupId>
+			<artifactId>${sakai.spring.artifactId}</artifactId>
+			<version>${sakai.spring.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>
-
-	<build>
-		<resources>
-			<resource>
-				<directory>${basedir}/src/bundle</directory>
-				<includes>
-					<include>**/*.properties</include>
-				</includes>
-			</resource>
-		</resources>
-	</build>
 
 </project>
