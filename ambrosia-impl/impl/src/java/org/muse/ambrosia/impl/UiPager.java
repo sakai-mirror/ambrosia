@@ -68,6 +68,9 @@ public class UiPager extends UiComponent implements Pager
 	/** The next page message. */
 	protected Message nextMessage = new UiMessage().setMessage("pager-next");
 
+	/** The no selected message. */
+	protected Message noneMessage = new UiMessage().setMessage("pager-none");
+
 	/** The model reference for the size options. */
 	protected PropertyReference pageSizeModel = null;
 
@@ -338,17 +341,29 @@ public class UiPager extends UiComponent implements Pager
 		context.put(PagingPropertyReference.SELECTOR, PagingPropertyReference.PREV);
 		prev.render(context, focus);
 
-		// render the message
-		if (this.curMessage != null)
+		// render the message - the "viewing" one or the "none" one if there are no items
+		PropertyReference maxRef = new UiPropertyReference().setReference("paging.maxItems");
+		Object o = maxRef.readObject(context, focus);
+		if ((o != null) && (o instanceof Integer) && (((Integer) o) == 0))
 		{
-			response.println(this.curMessage.getMessage(context, focus));
+			if (this.noneMessage != null)
+			{
+				response.println(this.noneMessage.getMessage(context, focus));
+			}
+		}
+		else
+		{
+			if (this.curMessage != null)
+			{
+				response.println(this.curMessage.getMessage(context, focus));
+			}
 		}
 
 		List<Integer> sizes = new ArrayList<Integer>(this.pageSizes);
 		if (this.pageSizeModel != null)
 		{
-			Object o = this.pageSizeModel.readObject(context, focus);
-		
+			o = this.pageSizeModel.readObject(context, focus);
+
 			// add these to the static ones
 			if (o instanceof Collection)
 			{
