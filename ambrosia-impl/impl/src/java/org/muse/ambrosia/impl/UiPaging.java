@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.sakaiproject.util.StringUtil;
 public class UiPaging implements Paging
 {
 	/** The current page number (1 based). */
-	protected Integer current = new Integer(0);
+	protected Integer current = new Integer(1);
 
 	/** The max number of items. */
 	protected Integer maxItems = new Integer(0);
@@ -69,7 +69,7 @@ public class UiPaging implements Paging
 	public Integer getCurFirstItem()
 	{
 		int rv = ((this.current - 1) * this.size) + 1;
-		if (rv < 0) rv = 0;
+		if (rv <= 0) rv = 1;
 
 		return rv;
 	}
@@ -108,7 +108,7 @@ public class UiPaging implements Paging
 	 */
 	public Boolean getIsFirst()
 	{
-		return ((this.current == 1) || (this.current == 0));
+		return this.current == 1;
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class UiPaging implements Paging
 	 */
 	public Integer getMax()
 	{
-		if ((this.size == 0) || (this.maxItems == 0)) return 0;
+		if ((this.size == 0) || (this.maxItems == 0)) return 1;
 		return ((this.maxItems - 1) / this.size) + 1;
 	}
 
@@ -157,7 +157,7 @@ public class UiPaging implements Paging
 	 */
 	public Integer getPageForItem(Integer item)
 	{
-		if (this.size == 0) return 0;
+		if (this.size == 0) return 1;
 		return ((item - 1) / this.size) + 1;
 	}
 
