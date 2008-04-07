@@ -24,6 +24,7 @@ package org.muse.ambrosia.impl;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.DatePropertyReference;
@@ -127,15 +128,15 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 
 			if (multiLine)
 			{
-				DateFormat dateFormat = DateFormat.getDateInstance(fmt);
-				DateFormat timeFormat = DateFormat.getTimeInstance(fmt);
+				DateFormat dateFormat = DateFormat.getDateInstance(fmt, Locale.US);
+				DateFormat timeFormat = DateFormat.getTimeInstance(fmt, Locale.US);
 
 				return "<span style=\"white-space: nowrap;\">" + dateFormat.format(date) + "</span><br /><span style=\"white-space: nowrap;\">"
 						+ removeSeconds(timeFormat.format(date)) + "</span>";
 			}
 			else
 			{
-				DateFormat format = DateFormat.getDateTimeInstance(fmt, fmt);
+				DateFormat format = DateFormat.getDateTimeInstance(fmt, fmt, Locale.US);
 
 				return removeSeconds(format.format(date));
 			}
@@ -175,7 +176,7 @@ public class UiDatePropertyReference extends UiPropertyReference implements Date
 		if (shortFormat) fmt = DateFormat.SHORT;
 
 		// TODO: use the end-user's locale and time zone prefs
-		DateFormat format = DateFormat.getDateTimeInstance(fmt, fmt);
+		DateFormat format = DateFormat.getDateTimeInstance(fmt, fmt, Locale.US);
 		try
 		{
 			Date date = format.parse(addSeconds(value));
