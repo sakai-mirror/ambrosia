@@ -199,27 +199,36 @@ public class UiAttachments extends UiComponent implements Attachments
 		{
 			// get the attachments collection
 			Object a = this.attachments.readObject(context, focus);
-
-			if ((a != null) && (a instanceof Collection))
+			if (a != null)
 			{
-				for (Object r : (Collection) a)
+				// collection
+				if (a instanceof Collection)
 				{
-					if (r instanceof Reference)
+					for (Object r : (Collection) a)
 					{
-						renderReference(context, response, (Reference) r);
+						if (r instanceof Reference)
+						{
+							renderReference(context, response, (Reference) r);
+						}
 					}
 				}
-			}
 
-			// or array
-			else if ((a != null) && (a.getClass().isArray()))
-			{
-				for (Object r : (Object[]) a)
+				// or array
+				else if (a.getClass().isArray())
 				{
-					if (r instanceof Reference)
+					for (Object r : (Object[]) a)
 					{
-						renderReference(context, response, (Reference) r);
+						if (r instanceof Reference)
+						{
+							renderReference(context, response, (Reference) r);
+						}
 					}
+				}
+
+				// or a single reference
+				else if (a instanceof Reference)
+				{
+					renderReference(context, response, (Reference) a);
 				}
 			}
 		}
