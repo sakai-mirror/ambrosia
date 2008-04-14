@@ -212,6 +212,17 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 			readOnly = this.readOnly.decide(context, entity);
 		}
 
+		// alert if empty at submit?
+		boolean onEmptyAlert = false;
+		if (this.onEmptyAlertMsg != null)
+		{
+			onEmptyAlert = true;
+			if (this.onEmptyAlertDecision != null)
+			{
+				onEmptyAlert = this.onEmptyAlertDecision.decide(context, entity);
+			}
+		}
+
 		// read the entity id for this entity / column
 		String value = null;
 		if (this.valuePropertyReference != null)
@@ -219,7 +230,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 			value = this.valuePropertyReference.read(context, entity);
 		}
 
-		// if there's no identity reference, use the row number
+		// if there's no identity refernce, use the row number
 		else
 		{
 			value = Integer.toString(row);

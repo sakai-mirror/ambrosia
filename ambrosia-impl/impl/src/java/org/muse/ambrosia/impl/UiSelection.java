@@ -53,9 +53,9 @@ public class UiSelection extends UiComponent implements Selection
 	{
 		Container container;
 
-		boolean reversed = false;
-
 		boolean separate = false;
+		
+		boolean reversed = false;
 
 		ContainerRef(Container c, boolean separate, boolean reversed)
 		{
@@ -91,12 +91,6 @@ public class UiSelection extends UiComponent implements Selection
 
 	/** The value we use if the user does not selecet the selection. */
 	protected String notSelectedValue = "false";
-
-	/** The decision to control the onEmptyAlert. */
-	protected Decision onEmptyAlertDecision = null;
-
-	/** The message for the onEmptyAlert. */
-	protected Message onEmptyAlertMsg = null;
 
 	/** The orientation for multiple selection choices. */
 	protected Orientation orientation = Orientation.vertical;
@@ -371,19 +365,6 @@ public class UiSelection extends UiComponent implements Selection
 			// let Destination parse this
 			this.submitDestination = new UiDestination(service, settingsXml);
 		}
-
-		// onEmptyAlert
-		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
-		if (settingsXml != null)
-		{
-			Element innerXml = XmlHelper.getChildElementNamed(settingsXml, "message");
-			if (innerXml != null)
-			{
-				this.onEmptyAlertMsg = new UiMessage(service, innerXml);
-			}
-
-			this.onEmptyAlertDecision = service.parseDecisions(settingsXml);
-		}
 	}
 
 	/**
@@ -429,17 +410,6 @@ public class UiSelection extends UiComponent implements Selection
 		if (this.singleSelectDecision != null)
 		{
 			single = this.singleSelectDecision.decide(context, focus);
-		}
-
-		// alert if empty at submit?
-		boolean onEmptyAlert = false;
-		if (this.onEmptyAlertMsg != null)
-		{
-			onEmptyAlert = true;
-			if (this.onEmptyAlertDecision != null)
-			{
-				onEmptyAlert = this.onEmptyAlertDecision.decide(context, focus);
-			}
 		}
 
 		// find values and display text
@@ -588,13 +558,6 @@ public class UiSelection extends UiComponent implements Selection
 			}
 		}
 
-		if (onEmptyAlert)
-		{
-			// this will become visible if a submit happens and the validation fails
-			response.println("<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + id + "\">"
-					+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
-		}
-
 		// title
 		if (this.titleMessage != null)
 		{
@@ -628,7 +591,7 @@ public class UiSelection extends UiComponent implements Selection
 				if (checked)
 				{
 					// is the value correct?
-					boolean correct = (correctValue == null) ? false : Boolean.parseBoolean(correctValue) == checked;
+					boolean correct = Boolean.parseBoolean(correctValue) == checked;
 
 					if (correct)
 					{
@@ -738,7 +701,7 @@ public class UiSelection extends UiComponent implements Selection
 					if (selected)
 					{
 						// is this one the correct one?
-						boolean correct = (correctValue == null) ? false : correctValue.equals(val);
+						boolean correct = correctValue.equals(val);
 
 						if (correct)
 						{
@@ -857,21 +820,6 @@ public class UiSelection extends UiComponent implements Selection
 						+ "prop_" + decodeId + "\" value=\"" + this.propertyReference.getFullReference(context) + "\" />");
 			}
 
-			// for onEmptyAlert, add some client-side validation
-			if ((onEmptyAlert) && (!readOnly) && single)
-			{
-				StringBuffer buf = new StringBuffer();
-				for (int i = 0; i < values.size(); i++)
-				{
-					buf.append("!document.getElementById('" + id + "_" + Integer.toString(i) + "').checked &&");
-				}
-				buf.setLength(buf.length() - 3);
-
-				context.addValidation("	if (" + buf.toString() + ")\n" + "	{\n"
-						+ "		if (document.getElementById('alert_" + id + "').style.display == \"none\")\n" + "		{\n"
-						+ "			document.getElementById('alert_" + id + "').style.display = \"\";\n" + "			rv=false;\n" + "		}\n" + "	}\n");
-			}
-
 			if (fragment.length() > 0)
 			{
 				response.print(fragment);
@@ -914,17 +862,6 @@ public class UiSelection extends UiComponent implements Selection
 	public Selection setHeight(int height)
 	{
 		this.height = height;
-
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Selection setOnEmptyAlert(Decision decision, String selector, PropertyReference... references)
-	{
-		this.onEmptyAlertDecision = decision;
-		this.onEmptyAlertMsg = new UiMessage().setMessage(selector, references);
 
 		return this;
 	}
