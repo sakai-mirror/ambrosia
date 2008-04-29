@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Overlay;
+import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 
 /**
@@ -32,6 +33,12 @@ import org.w3c.dom.Element;
  */
 public class UiOverlay extends UiContainer implements Overlay
 {
+	/** Height. */
+	protected String height = "250px";
+
+	/** Width. */
+	protected String width = "500px";
+
 	/**
 	 * Public no-arg constructor.
 	 */
@@ -51,6 +58,13 @@ public class UiOverlay extends UiContainer implements Overlay
 	{
 		// do the container thing
 		super(service, xml);
+
+		// width and height
+		String width = StringUtil.trimToNull(xml.getAttribute("width"));
+		if (width != null) setWidth(width);
+
+		String height = StringUtil.trimToNull(xml.getAttribute("height"));
+		if (height != null) setHeight(height);
 	}
 
 	/**
@@ -64,8 +78,8 @@ public class UiOverlay extends UiContainer implements Overlay
 		PrintWriter response = context.getResponseWriter();
 
 		// setup the container
-		response.println("<div id=\"" + getId(context)
-				+ "\" class=\"ambrosiaOverlay\" style=\"width:500px;height:250px;overflow:hidden;visibility:hidden\">");
+		response.println("<div id=\"" + getId(context) + "\" class=\"ambrosiaOverlay\" style=\"width:" + this.width + ";height:" + this.height
+				+ ";overflow:hidden;visibility:hidden\">");
 
 		// render the contents
 		super.render(context, focus);
@@ -74,5 +88,23 @@ public class UiOverlay extends UiContainer implements Overlay
 		response.println("</div>");
 
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Overlay setHeight(String height)
+	{
+		this.height = height;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Overlay setWidth(String width)
+	{
+		this.width = width;
+		return this;
 	}
 }

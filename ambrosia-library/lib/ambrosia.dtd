@@ -524,6 +524,8 @@
 
 <!ELEMENT overlay (included | container)* >
 <!ATTLIST overlay id CDATA #IMPLIED >
+<!ATTLIST overlay width CDATA #IMPLIED >
+<!ATTLIST overlay height CDATA #IMPLIED >
 
 <!ELEMENT anchor (message) >
 
