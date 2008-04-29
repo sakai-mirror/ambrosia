@@ -663,6 +663,7 @@ function ambrosiaToggleVisibility(name)
 	}
 	else
 	{
+		if (el.scrollTop) el.scrollTop = 0;
 		el.style.overflow = "hidden";
 		el.style.visibility = "hidden";
 	}
