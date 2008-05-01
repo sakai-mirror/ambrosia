@@ -597,11 +597,9 @@
 <!ATTLIST htmlEdit id CDATA #IMPLIED >
 <!ATTLIST htmlEdit title CDATA #IMPLIED >
 <!ATTLIST htmlEdit model CDATA #IMPLIED >
-<!ATTLIST htmlEdit rows CDATA #IMPLIED >
-<!ATTLIST htmlEdit cols CDATA #IMPLIED >
 <!ATTLIST htmlEdit readOnly (TRUE|FALSE) #IMPLIED >
 <!ATTLIST htmlEdit optional (TRUE|FALSE) #IMPLIED >
-<!ATTLIST htmlEdit small (TRUE|FALSE) #IMPLIED >
+<!ATTLIST htmlEdit size (SMALL|FULL|TALL) #IMPLIED >
 
 <!ELEMENT dateEdit (included | title | model | onEmptyAlert | readOnly | focus | icon | destination)* >
 <!ATTLIST dateEdit id CDATA #IMPLIED >

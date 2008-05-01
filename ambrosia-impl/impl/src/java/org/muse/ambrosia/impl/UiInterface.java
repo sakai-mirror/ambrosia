@@ -500,12 +500,13 @@ public class UiInterface extends UiContainer implements Interface
 			if (this.attachmentPicker != null)
 			{
 				String dest = context.get("sakai.return.url") + this.attachmentPicker.getDestination(context, focus);
-				response.println("ambrosiaTinyInit('" + dest + "');");
+				response.println("var ambrosiaTinyPicker='" + dest + "';");
 			}
 			else
 			{
-				response.println("ambrosiaTinyInit(null);");
+				response.println("var ambrosiaTinyPicker=null;");
 			}
+			response.println("ambrosiaTinyInit(ambrosiaTinyPicker, 'all');");
 		}
 
 		// validation

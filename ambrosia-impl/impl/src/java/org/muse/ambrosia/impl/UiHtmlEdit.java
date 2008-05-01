@@ -49,12 +49,6 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	/** The decision that controls if the field should get on-load focus. */
 	protected Decision focusDecision = null;
 
-	/** The number of columns per row for the box. */
-	protected int numCols = 80;
-
-	/** The number of rows for the text box. */
-	protected int numRows = 8;
-
 	/** The decision to control the onEmptyAlert. */
 	protected Decision onEmptyAlertDecision = null;
 
@@ -73,8 +67,8 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	/** The read-only decision. */
 	protected Decision readOnly = null;
 
-	/** If set, the editor is going to use two lines to keep the width down. */
-	protected boolean small = false;
+	/** Size. */
+	protected Sizes size = Sizes.full;
 
 	/** The message that will provide title text. */
 	protected Message titleMessage = null;
@@ -114,17 +108,6 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			setProperty(pRef);
 		}
 
-		// size
-		try
-		{
-			int rows = Integer.parseInt(xml.getAttribute("rows"));
-			int cols = Integer.parseInt(xml.getAttribute("cols"));
-			setSize(rows, cols);
-		}
-		catch (Throwable ignore)
-		{
-		}
-
 		// optional
 		String optional = StringUtil.trimToNull(xml.getAttribute("optional"));
 		if ((optional != null) && (optional.equals("TRUE")))
@@ -132,11 +115,22 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			setOptional();
 		}
 
-		// small
-		String small = StringUtil.trimToNull(xml.getAttribute("small"));
-		if ((small != null) && (small.equals("TRUE")))
+		// size
+		String size = StringUtil.trimToNull(xml.getAttribute("size"));
+		if (size != null)
 		{
-			setSmall();
+			if (size.equals("SMALL"))
+			{
+				setSize(Sizes.small);
+			}
+			else if (size.equals("TALL"))
+			{
+				setSize(Sizes.tall);
+			}
+			else if (size.equals("FULL"))
+			{
+				setSize(Sizes.full);
+			}
 		}
 
 		// title
@@ -261,6 +255,7 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 				context.addScript("htmlComponent_" + id + ".toggleId=null;\n");
 			}
 			context.addScript("htmlComponent_" + id + ".textAreaId=\"" + id + "\";\n");
+			context.addScript("htmlComponent_" + id + ".mode=\"" + this.size.toString() + "\";\n");
 		}
 
 		// the title (if defined), and the edit icon
@@ -282,25 +277,24 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			response.println("</div>");
 		}
 
+		// container div
+		response.println("<div class=\"ambrosiaHtmlEditContainer ambrosiaHtmlEditSize_" + this.size.toString() + "\">");
+
+		// the edit textarea - initially invisible if optional
+		response.println("<textarea " + (this.optional ? "style=\"display:none; position:absolute; top:0px; left:0px;\"" : (" class=\"ambrosiaHtmlEdit_" + this.size.toString() + "\""))
+				+ " id=\"" + id + "\" name=\"" + id + "\" " + (readOnly ? " disabled=\"disabled\"" : "") + ">");
+		response.print(Validator.escapeHtmlTextarea(value));
+		response.println("</textarea>");
+
 		// the rendered content - initially visible
 		if (this.optional)
 		{
-			response.println("<div id=\"rendered_" + id + "\" class=\"ambrosiaHtmlEditRendered\">");
+			response.println("<div id=\"rendered_" + id + "\" class=\"ambrosiaHtmlEditRendered ambrosiaHtmlEditSize_" + this.size.toString() + "\">");
 			if (value != null) response.println(value);
 			response.println("</div>");
 		}
 
-		// the edit textarea - initially invisible
-		String classSuffix = "";
-		if (this.small)
-		{
-			classSuffix = "Small";
-		}
-		response.println("<textarea" + (this.optional ? " style=\"display:none\"" : (" class=\"ambrosiaHtmlEdit" + classSuffix + "\"")) + " id=\""
-				+ id + "\" name=\"" + id + "\" " + (readOnly ? " disabled=\"disabled\"" : "") + " cols=" + Integer.toString(numCols) + " rows="
-				+ Integer.toString(numRows) + ">");
-		response.print(Validator.escapeHtmlTextarea(value));
-		response.println("</textarea>");
+		response.println("</div>");
 
 		// the decode directive
 		if ((this.propertyReference != null) && (!readOnly))
@@ -379,20 +373,9 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 	/**
 	 * {@inheritDoc}
 	 */
-	public HtmlEdit setSize(int rows, int cols)
+	public HtmlEdit setSize(Sizes size)
 	{
-		this.numRows = rows;
-		this.numCols = cols;
-
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public HtmlEdit setSmall()
-	{
-		this.small = true;
+		this.size = size;
 		return this;
 	}
 

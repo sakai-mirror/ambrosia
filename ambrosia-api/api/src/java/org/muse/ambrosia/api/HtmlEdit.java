@@ -26,6 +26,12 @@ package org.muse.ambrosia.api;
  */
 public interface HtmlEdit extends Component
 {
+	/** Three sizes. */
+	enum Sizes
+	{
+		full, small, tall
+	}
+
 	/**
 	 * Set a decision to enable on-load cursor focus on this field.
 	 * 
@@ -36,7 +42,7 @@ public interface HtmlEdit extends Component
 	HtmlEdit setFocus(Decision decision);
 
 	/**
-	 * Set an alert that will triger once on submit if the field is empty.
+	 * Set an alert that will trigger once on submit if the field is empty.
 	 * 
 	 * @param decision
 	 *        The decision to include the alert (if null, the alert is unconditionally included).
@@ -72,22 +78,13 @@ public interface HtmlEdit extends Component
 	HtmlEdit setReadOnly(Decision decision);
 
 	/**
-	 * Set the size of the text edit box in rows and columns.
+	 * Set the editor size.
 	 * 
-	 * @param rows
-	 *        The number of rows to show.
-	 * @param cols
-	 *        The number of columns to show.
+	 * @param size
+	 *        The size.
 	 * @return self.
 	 */
-	HtmlEdit setSize(int rows, int cols);
-
-	/**
-	 * Set the editor to use two lines of controls to allow for a smaller, more narrow screen-print.
-	 * 
-	 * @return self.
-	 */
-	HtmlEdit setSmall();
+	HtmlEdit setSize(Sizes size);
 
 	/**
 	 * Set the title text.

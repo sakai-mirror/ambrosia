@@ -442,5 +442,44 @@ Rendered text for html edit.
 .ambrosiaHtmlEditRendered
 {
 	border: 1px solid #bbb;
-	padding: 1em;
+	padding: 0px 4px 0px 4px;
+	overflow: auto;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+/*
+Container for the editor / rendered components
+*/
+.ambrosiaHtmlEditContainer
+{
+	position: relative;
+}
+
+/*
+size for "small" html edit. (will be 2 (border) + 4+4 (padding) wider, 2 (border) higher)
+*/
+.ambrosiaHtmlEditSize_small
+{
+	width: 394px;
+	height: 154px;
+}
+
+/*
+size for "full" html edit.
+*/
+.ambrosiaHtmlEditSize_full
+{
+	width: 795px;
+	height: 142px;
+}
+
+/*
+size for "tall" html edit.
+*/
+.ambrosiaHtmlEditSize_tall
+{
+	width: 795px;
+	height: 231px;
 }

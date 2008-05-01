@@ -726,126 +726,221 @@ function ambrosiaDoneAttachments()
 
 var ambrosiaTinyCss = null;
 
-function ambrosiaTinyInit(picker)
+function ambrosiaTinyInit(picker, mode)
 {
+	// mode: all, full, small, tall
+	var tinyMode = "none";
+	if (mode == "all") tinyMode = "textareas";
+
 	if (picker == null)
 	{
-		tinyMCE.init(
+		// full and tall will be 7 pixels taller than height
+		if ((mode == "full") || (mode == "all"))
 		{
-			mode: "textareas",
-			editor_selector: "ambrosiaHtmlEdit",
-			convert_urls: false,
-			plugins: "safari,fullscreen",
-			theme: "advanced",
-			theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
-			theme_advanced_buttons2: "",
-			theme_advanced_buttons3: "",
-			extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
-									 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
-			fullscreen_new_window : true,
-			fullscreen_settings :
-				{
-					theme_advanced_toolbar_location : "top"
-				},
-			tab_focus: ":prev,:next",
-			content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
-		});
-		tinyMCE.init(
+			tinyMCE.init(
+			{
+				mode: tinyMode,
+				editor_selector: "ambrosiaHtmlEdit_full",
+				convert_urls: false,
+				plugins: "safari,fullscreen",
+				theme: "advanced",
+				theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,backcolor,charmap,separator,code",
+				theme_advanced_buttons2: "",
+				theme_advanced_buttons3: "",
+				extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
+										 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
+				fullscreen_new_window : true,
+				fullscreen_settings :
+					{
+						theme_advanced_toolbar_location : "top"
+					},
+				tab_focus: ":prev,:next",
+				content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss,
+				width: 805,
+				height: 137
+			});
+		}
+		
+		if ((mode == "tall") || (mode == "all"))
 		{
-			mode: "textareas",
-			editor_selector: "ambrosiaHtmlEditSmall",
-			convert_urls: false,
-			plugins: "safari,fullscreen",
-			theme: "advanced",
-			theme_advanced_buttons1: "undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
-			theme_advanced_buttons2: "fullscreen,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
-			theme_advanced_buttons3: "",
-			extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
-									 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
-			fullscreen_new_window : true,
-			fullscreen_settings :
-				{
-					theme_advanced_toolbar_location : "top",
-					theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
-					theme_advanced_buttons2: ""
-				},
-			tab_focus: ":prev,:next",
-			content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
-		});
+			tinyMCE.init(
+			{
+				mode: tinyMode,
+				editor_selector: "ambrosiaHtmlEdit_tall",
+				convert_urls: false,
+				plugins: "safari,fullscreen",
+				theme: "advanced",
+				theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,backcolor,charmap,separator,code",
+				theme_advanced_buttons2: "",
+				theme_advanced_buttons3: "",
+				extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
+										 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
+				fullscreen_new_window : true,
+				fullscreen_settings :
+					{
+						theme_advanced_toolbar_location : "top"
+					},
+				tab_focus: ":prev,:next",
+				content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss,
+				width: 805,
+				height: 226
+			});
+		}
+
+		// small will be 10 pixels taller than height, min of 156px
+		if ((mode == "small") || (mode == "all"))
+		{
+			tinyMCE.init(
+			{
+				mode: tinyMode,
+				editor_selector: "ambrosiaHtmlEdit_small",
+				convert_urls: false,
+				plugins: "safari,fullscreen",
+				theme: "advanced",
+				theme_advanced_buttons1: "undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
+				theme_advanced_buttons2: "fullscreen,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,backcolor,charmap,separator,code",
+				theme_advanced_buttons3: "",
+				extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
+										 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
+				fullscreen_new_window : true,
+				fullscreen_settings :
+					{
+						theme_advanced_toolbar_location : "top",
+						theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,backcolor,charmap,separator,code",
+						theme_advanced_buttons2: ""
+					},
+				tab_focus: ":prev,:next",
+				content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss,
+				width: 404,
+				height: 146
+			});
+		}
 	}
 	else
 	{
 		ambrosiaFileBrowserDestination = picker;
 
-		tinyMCE.init(
+		if ((mode == "full") || (mode == "all"))
 		{
-			mode: "textareas",
-			editor_selector: "ambrosiaHtmlEdit",
-			convert_urls: false,
-			plugins: "safari,fullscreen",
-			theme: "advanced",
-			theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
-			theme_advanced_buttons2: "",
-			theme_advanced_buttons3: "",
-			file_browser_callback: "ambrosiaFileBrowser",
-			extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
-									 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
-			fullscreen_new_window : true,
-			fullscreen_settings :
-				{
-					theme_advanced_toolbar_location : "top"
-				},
-			tab_focus: ":prev,:next",
-			content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
-		});
-		tinyMCE.init(
+			tinyMCE.init(
+			{
+				mode: tinyMode,
+				editor_selector: "ambrosiaHtmlEdit_full",
+				convert_urls: false,
+				plugins: "safari,fullscreen",
+				theme: "advanced",
+				theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,backcolor,charmap,separator,code",
+				theme_advanced_buttons2: "",
+				theme_advanced_buttons3: "",
+				file_browser_callback: "ambrosiaFileBrowser",
+				extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
+										 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
+				fullscreen_new_window : true,
+				fullscreen_settings :
+					{
+						theme_advanced_toolbar_location : "top"
+					},
+				tab_focus: ":prev,:next",
+				content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss,
+				width: 805,
+				height: 137
+			});
+		}
+
+		if ((mode == "tall") || (mode == "all"))
 		{
-			mode: "textareas",
-			editor_selector: "ambrosiaHtmlEditSmall",
-			convert_urls: false,
-			plugins: "safari,fullscreen",
-			theme: "advanced",
-			theme_advanced_buttons1: "undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
-			theme_advanced_buttons2: "fullscreen,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
-			theme_advanced_buttons3: "",
-			file_browser_callback: "ambrosiaFileBrowser",
-			extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
-									 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
-			fullscreen_new_window : true,
-			fullscreen_settings :
-				{
-					theme_advanced_toolbar_location : "top",
-					theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
-					theme_advanced_buttons2: ""
-				},
-			tab_focus: ":prev,:next",
-			content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss
-		});		
+			tinyMCE.init(
+			{
+				mode: tinyMode,
+				editor_selector: "ambrosiaHtmlEdit_tall",
+				convert_urls: false,
+				plugins: "safari,fullscreen",
+				theme: "advanced",
+				theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,backcolor,charmap,separator,code",
+				theme_advanced_buttons2: "",
+				theme_advanced_buttons3: "",
+				file_browser_callback: "ambrosiaFileBrowser",
+				extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
+										 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
+				fullscreen_new_window : true,
+				fullscreen_settings :
+					{
+						theme_advanced_toolbar_location : "top"
+					},
+				tab_focus: ":prev,:next",
+				content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss,
+				width: 805,
+				height: 226
+			});
+		}
+
+		if ((mode == "small") || (mode == "all"))
+		{
+			tinyMCE.init(
+			{
+				mode: tinyMode,
+				editor_selector: "ambrosiaHtmlEdit_small",
+				convert_urls: false,
+				plugins: "safari,fullscreen",
+				theme: "advanced",
+				theme_advanced_buttons1: "undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist",
+				theme_advanced_buttons2: "fullscreen,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolor,backcolor,charmap,separator,code",
+				theme_advanced_buttons3: "",
+				file_browser_callback: "ambrosiaFileBrowser",
+				extended_valid_elements: "+a[id|style|rel|rev|charset|hreflang|dir|lang|tabindex|accesskey|type|name|href|target:_blank|title|class|onfocus|onblur|onclick|" + 
+										 "ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup]",
+				fullscreen_new_window : true,
+				fullscreen_settings :
+					{
+						theme_advanced_toolbar_location : "top",
+						theme_advanced_buttons1: "fullscreen,separator,undo,redo,separator,bold,italic,underline,strikethrough,sub,sup,separator,outdent,indent,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,separator,link,unlink,image,separator,fontselect,fontsizeselect,forecolorpicker,backcolorpicker,charmap,separator,code",
+						theme_advanced_buttons2: ""
+					},
+				tab_focus: ":prev,:next",
+				content_css: (ambrosiaTinyCss == null) ? "" : ambrosiaTinyCss,
+				width: 404,
+				height: 146
+			});
+		}
 	}
 }
 
 function ambrosiaEnableHtmlEdit(htmlComponent)
 {
+	if (htmlComponent == null) return;
+	if (htmlComponent.renderedId == null) return;
+	if (htmlComponent.textAreaId == null) return;
+	if (htmlComponent.toggleId == null) return;
+	if (htmlComponent.mode == null) return;
+	var renderedEl = document.getElementById(htmlComponent.renderedId);
+	if (renderedEl == null) return;
+	var textAreaIdEl = document.getElementById(htmlComponent.textAreaId);
+	if (textAreaIdEl == null) return;
+	var toggelEl = document.getElementById(htmlComponent.toggleId);
+	if (toggelEl == null) return;
+
 	if (!htmlComponent.enabled)
 	{
 		htmlComponent.enabled = true;
-
-		if (htmlComponent.renderedId != null)
-		{
-			var renderedEl = document.getElementById(htmlComponent.renderedId);
-			if (renderedEl != null) renderedEl.style.display = "none";
-		}
-
-		if (htmlComponent.toggleId != null)
-		{
-			var toggleEl = document.getElementById(htmlComponent.toggleId);
-			if (toggleEl != null) toggleEl.style.display = "none";
-		}
-
-		var textAreaIdEl = document.getElementById(htmlComponent.textAreaId);
+		// toggleEl.style.display = "none";
 		textAreaIdEl.style.display = "";
-	
+		ambrosiaTinyInit(ambrosiaTinyPicker, htmlComponent.mode);
 		tinyMCE.execCommand("mceAddControl", false, htmlComponent.textAreaId);
+		
+		renderedEl.style.display = "none";
+	}
+	else
+	{
+		var editor = tinyMCE.get(htmlComponent.textAreaId);
+		if (editor == null) return;
+
+		htmlComponent.enabled = false;
+		var newContent = editor.getContent();
+		renderedEl.innerHTML = newContent;
+		renderedEl.style.display = "";
+		tinyMCE.execCommand('mceRemoveControl', false, htmlComponent.textAreaId);
+		textAreaIdEl.style.display = "none";
+		// toggleEl.style.display = "none";
 	}
 }
 
