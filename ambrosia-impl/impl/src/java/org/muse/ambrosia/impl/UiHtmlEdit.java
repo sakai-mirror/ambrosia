@@ -277,24 +277,40 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			response.println("</div>");
 		}
 
-		// container div
-		response.println("<div class=\"ambrosiaHtmlEditContainer ambrosiaHtmlEditSize_" + this.size.toString() + "\">");
+		// container div (for optional)
+		if (!readOnly && this.optional)
+		{
+			response.println("<div class=\"ambrosiaHtmlEditContainer ambrosiaHtmlEditSize_" + this.size.toString() + "\">");
+		}
 
-		// the edit textarea - initially invisible if optional
-		response.println("<textarea " + (this.optional ? "style=\"display:none; position:absolute; top:0px; left:0px;\"" : (" class=\"ambrosiaHtmlEdit_" + this.size.toString() + "\""))
-				+ " id=\"" + id + "\" name=\"" + id + "\" " + (readOnly ? " disabled=\"disabled\"" : "") + ">");
-		response.print(Validator.escapeHtmlTextarea(value));
-		response.println("</textarea>");
+		// the edit textarea (if not optional)
+		if (!(!readOnly && this.optional))
+		{
+			response.println("<textarea "
+					+ (this.optional ? "style=\"display:none; position:absolute; top:0px; left:0px;\"" : (" class=\"ambrosiaHtmlEdit_"
+							+ this.size.toString() + "\"")) + " id=\"" + id + "\" name=\"" + id + "\" " + (readOnly ? " disabled=\"disabled\"" : "")
+					+ ">");
+			response.print(Validator.escapeHtmlTextarea(value));
+			response.println("</textarea>");
+		}
+
+		// for optional, a hidden field to hold the value
+		else
+		{
+			response.println("<input type=\"hidden\" id=\"" + id + "\" name=\"" + id + "\"/>");
+			// pre-populate
+			context.addScript("document.getElementById(\"" + id + "\").value = document.getElementById(\"rendered_" + id + "\").innerHTML;\n");
+		}
 
 		// the rendered content - initially visible
-		if (this.optional)
+		if (!readOnly && this.optional)
 		{
 			response.println("<div id=\"rendered_" + id + "\" class=\"ambrosiaHtmlEditRendered ambrosiaHtmlEditSize_" + this.size.toString() + "\">");
 			if (value != null) response.println(value);
 			response.println("</div>");
-		}
 
-		response.println("</div>");
+			response.println("</div>");
+		}
 
 		// the decode directive
 		if ((this.propertyReference != null) && (!readOnly))

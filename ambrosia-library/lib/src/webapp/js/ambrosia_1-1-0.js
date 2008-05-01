@@ -914,8 +914,8 @@ function ambrosiaEnableHtmlEdit(htmlComponent)
 	if (htmlComponent.mode == null) return;
 	var renderedEl = document.getElementById(htmlComponent.renderedId);
 	if (renderedEl == null) return;
-	var textAreaIdEl = document.getElementById(htmlComponent.textAreaId);
-	if (textAreaIdEl == null) return;
+	var textAreaEl = document.getElementById(htmlComponent.textAreaId);
+	if (textAreaEl == null) return;
 	var toggelEl = document.getElementById(htmlComponent.toggleId);
 	if (toggelEl == null) return;
 
@@ -923,23 +923,22 @@ function ambrosiaEnableHtmlEdit(htmlComponent)
 	{
 		htmlComponent.enabled = true;
 		// toggleEl.style.display = "none";
-		textAreaIdEl.style.display = "";
 		ambrosiaTinyInit(ambrosiaTinyPicker, htmlComponent.mode);
-		tinyMCE.execCommand("mceAddControl", false, htmlComponent.textAreaId);
-		
-		renderedEl.style.display = "none";
+		tinyMCE.execCommand("mceAddControl", false, htmlComponent.renderedId);
+
+		var editor = tinyMCE.get(htmlComponent.renderedId);
+		editor.onChange.add(function(ed){textAreaEl.value = ed.getContent();});
 	}
 	else
 	{
-		var editor = tinyMCE.get(htmlComponent.textAreaId);
+		var editor = tinyMCE.get(htmlComponent.renderedId);
 		if (editor == null) return;
 
 		htmlComponent.enabled = false;
 		var newContent = editor.getContent();
-		renderedEl.innerHTML = newContent;
-		renderedEl.style.display = "";
-		tinyMCE.execCommand('mceRemoveControl', false, htmlComponent.textAreaId);
-		textAreaIdEl.style.display = "none";
+		textAreaEl.value = newContent;
+
+		tinyMCE.execCommand('mceRemoveControl', false, htmlComponent.renderedId);
 		// toggleEl.style.display = "none";
 	}
 }
