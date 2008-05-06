@@ -412,6 +412,10 @@ public class UiInterface extends UiContainer implements Interface
 		// wrap up in a form - back to the current destination
 		String href = (String) context.get("sakai.destination.url");
 		response.println("<div class=\"ambrosiaInterface\">");
+		
+		// enable the following line for our excessive height fix
+		// response.println("<div id=\"ambrosiaInterfaceScroll\" class=\"ambrosiaInterfaceScroll\">");
+
 		response.println("<form name=\"" + name + "\" method=\"post\" action=\"" + href
 				+ "\" enctype=\"multipart/form-data\" onsubmit=\"return validate();\" " + (this.noAutoComplete ? "autocomplete=\"off\" " : "") + ">");
 
@@ -487,6 +491,9 @@ public class UiInterface extends UiContainer implements Interface
 			}
 		}
 		response.println("</div>");
+
+		// enable the following line for our excessive height fix
+		// response.println("</div>");
 
 		// end
 		response.println("</form></div>");

@@ -21,6 +21,32 @@
 
 // functions for Ambrosia applications (1.1)
 
+// note: make sure this loads AFTER the sakai headscripts
+// take over the setMainFrameHeightNow funciton
+// disabled: window.sakaiSetMainFrameHeightNow = window.setMainFrameHeightNow;
+// disabled: window.setMainFrameHeightNow = ambrosiaSetMainFrameHeightNow;
+function ambrosiaSetMainFrameHeightNow(id)
+{
+	var frame = parent.document.getElementById(id);
+	if (frame != null)
+	{
+		// only if we are really large
+		var height = document.body.offsetHeight;
+		if (height > 32000)
+		{
+			// this makes the scrolling div holding the interface have a scroll bar that fits on the screen
+			var newHeight = parent.innerHeight - frame.offsetTop;
+			var scrollingDiv = document.getElementById("ambrosiaInterfaceScroll");
+			if (scrollingDiv != null)
+			{
+				scrollingDiv.style.height = newHeight + "px";
+				scrollingDiv.style.overflow="auto";
+			}
+		}
+	}
+	sakaiSetMainFrameHeightNow(id);
+}
+
 function trim(s)
 {
 	return s.replace(/^\s+/g, "").replace(/\s+$/g, "");
