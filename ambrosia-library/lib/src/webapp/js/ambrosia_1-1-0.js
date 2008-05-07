@@ -983,3 +983,23 @@ function ambrosiaPopupDate(id)
 	popup.popup();
 	//el.select();
 }
+
+window.sakaiSetFocus = window.setFocus;
+window.setFocus = ambrosiaSetFocus;
+function ambrosiaSetFocus(elements)
+{
+	if ((elements != null) && (elements.length == 1))
+	{
+		var focus = document.getElementById(elements[0]);
+		if ((focus != null) && ("none" == focus.style.display))
+		{
+			var editor = tinyMCE.get(focus.id);
+			if (editor != null)
+			{
+				editor.focus(false);
+				return;
+			}
+		}
+	}
+	sakaiSetFocus(elements);
+}
