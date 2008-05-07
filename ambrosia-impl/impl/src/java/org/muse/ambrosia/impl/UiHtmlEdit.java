@@ -220,7 +220,8 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 
 		// set some ids
 		int idRoot = context.getUniqueId();
-		String id = this.getClass().getSimpleName() + "_" + idRoot;
+		String id = getId();
+		if (id == null) id = this.getClass().getSimpleName() + "_" + idRoot;
 		String decodeId = "decode_" + idRoot;
 
 		// read the current value object as a string
