@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,6 +126,15 @@ public interface Selection extends Component
 	 * @return self.
 	 */
 	Selection setReadOnly(Decision decision);
+
+	/**
+	 * Set the select-all option as or as part of the title setting.
+	 * 
+	 * @param setting
+	 *        the select-all setting
+	 * @return self.
+	 */
+	Selection setSelectAll(boolean setting);
 
 	/**
 	 * Set the value that is decoded when the user makes the selection.

@@ -21,7 +21,9 @@
 
 package org.muse.ambrosia.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Decision;
@@ -72,6 +74,9 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	/** The rad-only decision. */
 	protected Decision readOnly = null;
 
+	/** If we should include select-all or not. */
+	protected boolean selectAll = true;
+
 	/** If true, we are selecting a single value, else we can select many values. */
 	protected boolean singleSelect = true;
 
@@ -120,6 +125,10 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		// single select
 		String single = StringUtil.trimToNull(xml.getAttribute("single"));
 		if ((single != null) && ("TRUE".equals(multiple))) setSingle();
+
+		// select all
+		String selectAll = StringUtil.trimToNull(xml.getAttribute("selectAll"));
+		if ((selectAll != null) && ("FALSE".equals(selectAll))) setSelectAll(false);
 
 		// onEmptyAlert
 		settingsXml = XmlHelper.getChildElementNamed(xml, "onEmptyAlert");
@@ -365,7 +374,17 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		else
 		{
 			rv.append("<input type=\"checkbox\" id=\"" + uid + "\" name=\"" + effectiveId + "\" value=\"" + value + "\" "
-					+ (checked ? "CHECKED" : "") + (readOnly ? " disabled=\"disabled\"" : "") + " />");
+					+ " onchange=\"ambrosiaSelectChange(this, ids_" + effectiveId + ", 'all_" + effectiveId + "');\"" + (checked ? "CHECKED" : "")
+					+ (readOnly ? " disabled=\"disabled\"" : "") + " />");
+
+			// collect the ids of each checkbox generated
+			List<String> ids = (List<String>) context.get("UiSelectionColumn:" + effectiveId);
+			if (ids == null)
+			{
+				ids = new ArrayList<String>();
+				context.put("UiSelectionColumn:" + effectiveId, ids);
+			}
+			ids.add(uid);
 		}
 
 		// the label
@@ -437,6 +456,21 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 			}
 		}
 
+		// the list of ids of the checkboxes
+		List<String> ids = (List<String>) context.get("UiSelectionColumn:" + effectiveId);
+		StringBuilder buf = new StringBuilder();
+		buf.append("var ids_" + effectiveId + "=[");
+		if ((ids != null) && (!ids.isEmpty()))
+		{
+			for (String id : ids)
+			{
+				buf.append("\"" + id + "\",");
+			}
+			buf.setLength(buf.length() - 1);
+		}
+		buf.append("];\n");
+		context.addScript(buf.toString());
+
 		return rv.toString();
 	}
 
@@ -473,6 +507,57 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		// this will become visible if a submit happens and the validation fails
 		return "<div class=\"ambrosiaAlert\" style=\"display:none\" id=\"alert_" + effectiveId + "\">"
 				+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getTitle(Context context, Object focus, String effectiveId)
+	{
+		StringBuilder rv = new StringBuilder();
+
+		// first, the select all if needed
+		if (this.selectAll)
+		{
+			boolean single = this.singleSelect;
+			if (this.singleSelectDecision != null)
+			{
+				single = this.singleSelectDecision.decide(context, focus);
+			}
+			if (!single)
+			{
+				rv.append("<input type=\"checkbox\" id=\"all_" + effectiveId + "\"" + " onchange=\"ambrosiaSelectGroup(this, ids_" + effectiveId
+						+ ");\"" + " />");
+			}
+		}
+
+		// next, the title if defined
+		if (this.title != null)
+		{
+			rv.append(this.title.getMessage(context, focus));
+		}
+
+		if (rv.length() > 0) return rv.toString();
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean hasTitle(Context context, Object focus)
+	{
+		if (this.title != null) return true;
+		if (!this.selectAll) return false;
+
+		// if we are going to put a checkbox for select-all up top, this counts as a title
+		boolean single = this.singleSelect;
+		if (this.singleSelectDecision != null)
+		{
+			single = this.singleSelectDecision.decide(context, focus);
+		}
+		if (!single) return true;
+
+		return false;
 	}
 
 	/**
@@ -546,6 +631,15 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	public SelectionColumn setReadOnly(Decision decision)
 	{
 		this.readOnly = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public SelectionColumn setSelectAll(boolean setting)
+	{
+		this.selectAll = setting;
 		return this;
 	}
 

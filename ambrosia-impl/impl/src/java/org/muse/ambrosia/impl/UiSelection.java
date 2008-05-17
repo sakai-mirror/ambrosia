@@ -110,6 +110,9 @@ public class UiSelection extends UiComponent implements Selection
 	/** The read only decision. */
 	protected Decision readOnly = null;
 
+	/** If we should include select-all or not. */
+	protected boolean selectAll = true;
+
 	/** The value we find if the user selects the selection. */
 	protected String selectedValue = "true";
 
@@ -196,6 +199,10 @@ public class UiSelection extends UiComponent implements Selection
 		// selected value
 		String value = StringUtil.trimToNull(xml.getAttribute("value"));
 		if (value != null) this.selectedValue = value;
+
+		// select all
+		String selectAll = StringUtil.trimToNull(xml.getAttribute("selectAll"));
+		if ((selectAll != null) && ("FALSE".equals(selectAll))) setSelectAll(false);
 
 		// orientation
 		String orientation = StringUtil.trimToNull(xml.getAttribute("orientation"));
@@ -595,8 +602,22 @@ public class UiSelection extends UiComponent implements Selection
 					+ this.onEmptyAlertMsg.getMessage(context, focus) + "</div>");
 		}
 
-		// title
-		if (this.titleMessage != null)
+		boolean includeSelectAll = this.selectAll && (!single);
+
+		// title if we are doing select all
+		if (includeSelectAll)
+		{
+			response.print("<input type=\"checkbox\" id=\"all_" + id + "\"" + " onchange=\"ambrosiaSelectGroup(this, ids_" + id + ");\"" + " />");
+			if (this.titleMessage != null)
+			{
+				response.print("<label for=\"all_" + id + "\">");
+				response.print(this.titleMessage.getMessage(context, focus));
+				response.println("</label><br /><br />");
+			}
+		}
+
+		// title otherwise
+		else if (this.titleMessage != null)
 		{
 			response.print("<div class=\"ambrosiaComponentTitle\">");
 			response.print(this.titleMessage.getMessage(context, focus));
@@ -703,6 +724,10 @@ public class UiSelection extends UiComponent implements Selection
 			else if (this.submitValue)
 			{
 				onclick = "onclick=\"ambrosiaSubmit(this.value)\" ";
+			}
+			else if (includeSelectAll)
+			{
+				onclick = "onclick=\"ambrosiaSelectChange(this, ids_" + id + ", 'all_" + id + "');\" ";
 			}
 
 			// collect the rendered ids
@@ -842,6 +867,20 @@ public class UiSelection extends UiComponent implements Selection
 				context.editComponentRendered(thisId);
 			}
 
+			// record the group of checkbox element ids
+			if (includeSelectAll)
+			{
+				StringBuilder buf = new StringBuilder();
+				buf.append("var ids_" + id + "=[");
+				for (String oneId : ids)
+				{
+					buf.append("\"" + oneId + "\",");
+				}
+				buf.setLength(buf.length() - 1);
+				buf.append("];\n");
+				context.addScript(buf.toString());
+			}
+
 			if (needDependencies)
 			{
 				dependency.setLength(dependency.length() - 1);
@@ -867,9 +906,9 @@ public class UiSelection extends UiComponent implements Selection
 				}
 				buf.setLength(buf.length() - 3);
 
-				context.addValidation("	if (" + buf.toString() + ")\n" + "	{\n"
-						+ "		if (document.getElementById('alert_" + id + "').style.display == \"none\")\n" + "		{\n"
-						+ "			document.getElementById('alert_" + id + "').style.display = \"\";\n" + "			rv=false;\n" + "		}\n" + "	}\n");
+				context.addValidation("	if (" + buf.toString() + ")\n" + "	{\n" + "		if (document.getElementById('alert_" + id
+						+ "').style.display == \"none\")\n" + "		{\n" + "			document.getElementById('alert_" + id + "').style.display = \"\";\n"
+						+ "			rv=false;\n" + "		}\n" + "	}\n");
 			}
 
 			if (fragment.length() > 0)
@@ -953,6 +992,15 @@ public class UiSelection extends UiComponent implements Selection
 	public Selection setReadOnly(Decision decision)
 	{
 		this.readOnly = decision;
+		return this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Selection setSelectAll(boolean setting)
+	{
+		this.selectAll = setting;
 		return this;
 	}
 

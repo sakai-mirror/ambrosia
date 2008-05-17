@@ -428,6 +428,7 @@
 <!ATTLIST selectionColumn model CDATA #IMPLIED >
 <!ATTLIST selectionColumn correct CDATA #IMPLIED >
 <!ATTLIST selectionColumn id CDATA #IMPLIED >
+<!ATTLIST selectionColumn selectAll (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT orderColumn (value | model | asAlert | entityIncluded | included | sort | title | container | entityNavigations | footnotes | navigations)* >
 <!ATTLIST orderColumn model CDATA #IMPLIED >
@@ -543,6 +544,7 @@
 <!ATTLIST selection height CDATA #IMPLIED >
 <!ATTLIST selection destination CDATA #IMPLIED >
 <!ATTLIST selection submitValue (TRUE|FALSE) #IMPLIED >
+<!ATTLIST selection selectAll (TRUE|FALSE) #IMPLIED >
 
 <!ELEMENT correct (model) >
 

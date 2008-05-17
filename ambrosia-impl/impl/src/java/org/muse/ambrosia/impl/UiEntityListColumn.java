@@ -661,9 +661,14 @@ public class UiEntityListColumn implements EntityListColumn
 	/**
 	 * {@inheritDoc}
 	 */
-	public Message getTitle()
+	public String getTitle(Context context, Object focus, String effectiveId)
 	{
-		return this.title;
+		if (this.title != null)
+		{
+			return this.title.getMessage(context, focus);
+		}
+
+		return null;
 	}
 
 	/**
@@ -680,6 +685,14 @@ public class UiEntityListColumn implements EntityListColumn
 	public Integer getWidthEm()
 	{
 		return this.widthEm;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean hasTitle(Context context, Object focus)
+	{
+		return this.title != null;
 	}
 
 	/**
