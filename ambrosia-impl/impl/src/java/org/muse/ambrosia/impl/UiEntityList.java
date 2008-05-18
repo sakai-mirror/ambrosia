@@ -429,8 +429,13 @@ public class UiEntityList extends UiComponent implements EntityList
 					// navigation render id for sort
 					String sortId = id + "_s" + colNum;
 
+					if (empty)
+					{
+						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
+								+ (c.getRight() ? " style=\"text-align:right\"" : "") + ">&nbsp;</th>");
+					}
 					// if this is the sort column
-					if ((c.getSortingDecision() != null) && (c.getSortingDecision().decide(context, focus)))
+					else if ((c.getSortingDecision() != null) && (c.getSortingDecision().decide(context, focus)))
 					{
 						// show the asc or desc... each a nav to the sort asc or desc
 						boolean asc = true;
