@@ -218,6 +218,41 @@ function ambrosiaFloatChange(source, shadowId, summaryId, defaultValue, min, max
 	}
 }
 
+function ambrosiaSelectChange(source, idsArray, selectAllId)
+{
+	var selectAllEl = document.getElementById(selectAllId);
+	if (selectAllEl == null) return;
+
+	// check the group to see if all are checked
+	var allChecked = true;
+	for (var i in idsArray)
+	{
+		var el = document.getElementById(idsArray[i]);
+		if (el != null)
+		{
+			if (!el.checked)
+			{
+				allChecked = false;
+			}
+		}
+	}
+
+	selectAllEl.checked = allChecked;
+}
+
+function ambrosiaSelectGroup(source, idsArray)
+{
+	var setting = source.checked;
+	for (var i in idsArray)
+	{
+		var el = document.getElementById(idsArray[i]);
+		if (el != null)
+		{
+			el.checked = setting;
+		}
+	}
+}	
+
 function ambrosiaValidateFloat(source, min, max, validateId)
 {
 	if (source == null) return true;

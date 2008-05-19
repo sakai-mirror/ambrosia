@@ -276,9 +276,15 @@ public interface EntityListColumn
 	/**
 	 * Access the column title message.
 	 * 
+	 * @param context
+	 *        The Context.
+	 * @param focus
+	 *        The focus object.
+	 * @param effectiveId
+	 *        The effective id
 	 * @return The column title message.
 	 */
-	Message getTitle();
+	String getTitle(Context context, Object focus, String effectiveId);
 
 	/**
 	 * Access the column pixel width.
@@ -293,6 +299,17 @@ public interface EntityListColumn
 	 * @return The width (in css "em" ) for this column, or null if no specific width is set.
 	 */
 	Integer getWidthEm();
+
+	/**
+	 * Check if there is a title
+	 * 
+	 * @param context
+	 *        The context.
+	 * @param focus
+	 *        The focus object.
+	 * @return true if there is a title, false if not.
+	 */
+	boolean hasTitle(Context context, Object focus);
 
 	/**
 	 * Check if the entire column is to be included.

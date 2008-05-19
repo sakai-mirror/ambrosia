@@ -403,7 +403,7 @@ public class UiEntityList extends UiComponent implements EntityList
 
 			cols++;
 
-			if (c.getTitle() != null)
+			if (c.hasTitle(context, focus))
 			{
 				needHeaders = true;
 			}
@@ -419,7 +419,8 @@ public class UiEntityList extends UiComponent implements EntityList
 				// included?
 				if (!c.included(context)) continue;
 
-				Message title = c.getTitle();
+				String effectiveId = getId() + "_" + idRoot + "_" + colNum;
+				String title = c.getTitle(context, focus, effectiveId);
 				if (title != null)
 				{
 					// submit?
@@ -428,8 +429,13 @@ public class UiEntityList extends UiComponent implements EntityList
 					// navigation render id for sort
 					String sortId = id + "_s" + colNum;
 
+					if (empty)
+					{
+						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
+								+ (c.getRight() ? " style=\"text-align:right\"" : "") + ">&nbsp;</th>");
+					}
 					// if this is the sort column
-					if ((c.getSortingDecision() != null) && (c.getSortingDecision().decide(context, focus)))
+					else if ((c.getSortingDecision() != null) && (c.getSortingDecision().decide(context, focus)))
 					{
 						// show the asc or desc... each a nav to the sort asc or desc
 						boolean asc = true;
@@ -472,7 +478,7 @@ public class UiEntityList extends UiComponent implements EntityList
 								+ "><a href=\"#\" onclick=\"act_"
 								+ sortId
 								+ "();return false;\">"
-								+ title.getMessage(context, focus)
+								+ title
 								+ ((icon != null) ? ("&nbsp;<img src=\"" + context.getUrl(icon) + "\"" + " title=\"" + iconAlt + "\" alt=\""
 										+ iconAlt + "\"" + " />") : "") + "</a></th>");
 					}
@@ -485,14 +491,14 @@ public class UiEntityList extends UiComponent implements EntityList
 								focus), (String) context.get("sakai.return.url"), false, false);
 						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
 								+ (c.getRight() ? " style=\"text-align:right\"" : "") + "><a href=\"#\" onclick=\"act_" + sortId
-								+ "();return false;\">" + title.getMessage(context, focus) + "</a></th>");
+								+ "();return false;\">" + title + "</a></th>");
 					}
 
 					// no sort
 					else
 					{
 						response.println("<th scope=\"col\"" + (c.getCentered() ? " style=\"text-align:center\"" : "")
-								+ (c.getRight() ? " style=\"text-align:right\"" : "") + ">" + title.getMessage(context, focus) + "</th>");
+								+ (c.getRight() ? " style=\"text-align:right\"" : "") + ">" + title + "</th>");
 					}
 				}
 
