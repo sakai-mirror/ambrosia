@@ -607,7 +607,7 @@ public class UiSelection extends UiComponent implements Selection
 		// title if we are doing select all
 		if (includeSelectAll)
 		{
-			response.print("<input type=\"checkbox\" id=\"all_" + id + "\"" + " onchange=\"ambrosiaSelectGroup(this, ids_" + id + ");\"" + " />");
+			response.print("<input type=\"checkbox\" id=\"all_" + id + "\"" + " onclick=\"ambrosiaSelectGroup(this, ids_" + id + ");\"" + " />");
 			if (this.titleMessage != null)
 			{
 				response.print("<label for=\"all_" + id + "\">");
