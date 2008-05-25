@@ -385,7 +385,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 		else
 		{
 			rv.append("<input type=\"checkbox\" id=\"" + uid + "\" name=\"" + effectiveId + "\" value=\"" + value + "\" "
-					+ " onchange=\"ambrosiaSelectChange(this, ids_" + effectiveId + ", 'all_" + effectiveId + "');\"" + (checked ? "CHECKED" : "")
+					+ " onclick=\"ambrosiaSelectChange(this, ids_" + effectiveId + ", 'all_" + effectiveId + "');\"" + (checked ? "CHECKED" : "")
 					+ (readOnly ? " disabled=\"disabled\"" : "") + " />");
 
 			// collect the ids of each checkbox generated
@@ -537,7 +537,7 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 			}
 			if (!single)
 			{
-				rv.append("<input type=\"checkbox\" id=\"all_" + effectiveId + "\"" + " onchange=\"ambrosiaSelectGroup(this, ids_" + effectiveId
+				rv.append("<input type=\"checkbox\" id=\"all_" + effectiveId + "\"" + " onclick=\"ambrosiaSelectGroup(this, ids_" + effectiveId
 						+ ");\"" + " />");
 			}
 		}
