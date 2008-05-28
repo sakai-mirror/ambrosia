@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="**/.DS_Store" kind="src" path="impl/src/java"/>
-	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>
+	<classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ambrosia-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util-api"/>
@@ -14,5 +14,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/content-api"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-fileupload/jars/commons-fileupload-1.1.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/authz-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ambrosia-util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

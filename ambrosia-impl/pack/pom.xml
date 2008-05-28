@@ -27,6 +27,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.muse.ambrosia</groupId>
+			<artifactId>muse-ambrosia-util</artifactId>
+			<version>${ambrosia.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-util</artifactId>
 			<version>${sakai.version}</version>
