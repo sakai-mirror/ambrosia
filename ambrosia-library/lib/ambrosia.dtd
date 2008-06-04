@@ -360,7 +360,7 @@
 <!ATTLIST row title CDATA #IMPLIED >
 <!ATTLIST row model CDATA #IMPLIED >
 
-<!ELEMENT entityList (included | emptyTitle | entityActions | entityIncluded | colorize | iterator | title | titleIncluded | columns | headings | pager)* >
+<!ELEMENT entityList (included | emptyTitle | entityActions | entityIncluded | colorize | iterator | title | titleIncluded | columns | headings | pager | anchor)* >
 <!ATTLIST entityList id CDATA #IMPLIED >
 <!ATTLIST entityList style (FLAT|FORM) #IMPLIED >
 <!ATTLIST entityList title CDATA #IMPLIED >
@@ -395,6 +395,8 @@
 <!ELEMENT entityNavigations (navigation)* >
 
 <!ELEMENT entityActions (navigation | container)* >
+
+<!ELEMENT actions (navigation | container)* >
 
 <!ELEMENT footnotes (footnote)* >
 <!ELEMENT footnote EMPTY >
@@ -595,7 +597,7 @@
 
 <!ELEMENT initialValue (model)* >
 
-<!ELEMENT htmlEdit (included | title | model | onEmptyAlert | readOnly | focus)* >
+<!ELEMENT htmlEdit (included | title | model | onEmptyAlert | readOnly | focus | actions)* >
 <!ATTLIST htmlEdit id CDATA #IMPLIED >
 <!ATTLIST htmlEdit title CDATA #IMPLIED >
 <!ATTLIST htmlEdit model CDATA #IMPLIED >

@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,6 +72,16 @@ public interface EntityList extends Component
 	 * @return self.
 	 */
 	EntityList addHeading(Decision decision, String selector, PropertyReference... properties);
+
+	/**
+	 * Set the section link anchor (internal page address)
+	 * 
+	 * @param selection
+	 *        The message selector.
+	 * @param references
+	 *        one or more (or an array) of UiPropertyReferences to form the additional values in the formatted message.
+	 */
+	EntityList setAnchor(String selection, PropertyReference... references);
 
 	/**
 	 * Set some entity rows, those that meet the decision criteria, to have a background color.

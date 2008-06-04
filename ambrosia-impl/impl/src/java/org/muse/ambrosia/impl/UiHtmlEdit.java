@@ -278,6 +278,8 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			response.println("</div>");
 		}
 
+		renderActions(context, focus);
+
 		// container div (for optional)
 		if (!readOnly && this.optional)
 		{

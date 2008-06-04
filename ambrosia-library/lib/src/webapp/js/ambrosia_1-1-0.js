@@ -59,6 +59,8 @@ function showConfirm(name)
 	{
 		el.style.left = ((document.body.scrollWidth / 2) - (parseInt(el.style.width) / 2)) + "px";
 		el.style.top = (-1 * (parseInt(el.style.height) + 10)) + "px";
+		confirmX=window.pageXOffset;
+		confirmY=window.pageYOffset;
 		if (parent) parent.window.scrollTo(0,0);
 		window.scrollTo(0,0);
 	}
@@ -76,6 +78,8 @@ function showConfirm(name)
 }
 
 var confirmedAction="";
+var confirmX=0;
+var confirmY=0;
 
 function hideConfirm(name, action)
 {
@@ -91,6 +95,7 @@ function hideConfirm(name, action)
 	{
 		el.style.top = (-1 * (parseInt(el.style.height) + 10)) + "px"
 		el.style.display = "none";
+		window.scrollTo(confirmX,confirmY);
 		if (confirmedAction != "") eval(confirmedAction);
 		confirmedAction="";
 	}

@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,18 @@
 
 package org.muse.ambrosia.impl;
 
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Component;
 import org.muse.ambrosia.api.Decision;
+import org.muse.ambrosia.api.Section;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * UiComponent implements Component.
@@ -37,6 +44,9 @@ public class UiComponent implements Component
 
 	/** next automatic id to generate. */
 	static long nextId = 0;
+
+	/** The entity actions defined related to this column. */
+	protected List<Component> actions = new ArrayList<Component>();
 
 	/** The id of this element - can be referenced by an alias, for instance. */
 	protected String id = null;
@@ -71,6 +81,37 @@ public class UiComponent implements Component
 		// id - may override the auto-generated one
 		String id = StringUtil.trimToNull(xml.getAttribute("id"));
 		if (id != null) setId(id);
+
+		// actions
+		settingsXml = XmlHelper.getChildElementNamed(xml, "actions");
+		if (settingsXml != null)
+		{
+			NodeList contained = settingsXml.getChildNodes();
+			for (int i = 0; i < contained.getLength(); i++)
+			{
+				Node node = contained.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element componentXml = (Element) node;
+
+					// create a component from each node in the container
+					Component c = service.parseComponent(componentXml);
+					if (c != null)
+					{
+						this.actions.add(c);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Component addAction(Component action)
+	{
+		this.actions.add(action);
+		return this;
 	}
 
 	/**
@@ -79,16 +120,6 @@ public class UiComponent implements Component
 	public String getId()
 	{
 		return this.id;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected String getId(Context context)
-	{
-		String iteration = (String) context.get("ambrosia_iteration_index");
-
-		return this.id + ((iteration != null) ? ("_" + iteration) : "");
 	}
 
 	/**
@@ -149,5 +180,60 @@ public class UiComponent implements Component
 		{
 			this.id = "a" + nextId++;
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected String getId(Context context)
+	{
+		String iteration = (String) context.get("ambrosia_iteration_index");
+
+		return this.id + ((iteration != null) ? ("_" + iteration) : "");
+	}
+
+	/**
+	 * Render an action bar if any actions are defined for the section
+	 * 
+	 * @param context
+	 *        The context.
+	 * @param focus
+	 *        The focus.
+	 */
+	public void renderActions(Context context, Object focus)
+	{
+		// if we have none, do nothing
+		if (this.actions.isEmpty()) return;
+
+		PrintWriter response = context.getResponseWriter();
+
+		// the bar
+		response.println("<div class=\"ambrosiaComponentActionBar\">");
+
+		// the actions
+		boolean needDivider = false;
+		for (Component c : this.actions)
+		{
+			// render into a buffer
+			context.setCollecting();
+			boolean rendered = c.render(context, focus);
+			String rendering = context.getCollected();
+
+			if (rendered)
+			{
+				// add a divider if needed
+				if (needDivider)
+				{
+					response.println("<span class=\"ambrosiaDivider\">&nbsp;</span>");
+				}
+
+				response.print(rendering);
+
+				// if rendered, we need a divider
+				needDivider = true;
+			}
+		}
+
+		response.println("</div>");
 	}
 }

@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2007 The Regents of the University of Michigan & Foothill College, ETUDES Project
+ * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,15 @@ package org.muse.ambrosia.api;
  */
 public interface Component
 {
+	/**
+	 * Add an action related to the section.
+	 * 
+	 * @param action
+	 *        The action (navigation) to add.
+	 * @return self.
+	 */
+	Component addAction(Component action);
+
 	/**
 	 * Access the id.
 	 * 
@@ -54,6 +63,16 @@ public interface Component
 	 * @return true if rendered, false if not.
 	 */
 	boolean render(Context context, Object focus);
+
+	/**
+	 * Render an action bar if any actions are defined for the component
+	 * 
+	 * @param context
+	 *        The context.
+	 * @param focus
+	 *        The focus.
+	 */
+	void renderActions(Context context, Object focus);
 
 	/**
 	 * Set the id of this component, which can be referenced by an Alias, for example.

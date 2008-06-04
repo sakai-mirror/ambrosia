@@ -48,6 +48,9 @@ import org.w3c.dom.NodeList;
  */
 public class UiEntityList extends UiComponent implements EntityList
 {
+	/** The message for the anchor. */
+	protected Message anchor = null;
+
 	/** The color for colorized rows. */
 	protected String colorizeBkg = null;
 
@@ -292,6 +295,13 @@ public class UiEntityList extends UiComponent implements EntityList
 		if (settingsXml != null)
 		{
 			this.pager = new UiPager(service, settingsXml);
+		}
+
+		// anchor
+		settingsXml = XmlHelper.getChildElementNamed(xml, "anchor");
+		if (settingsXml != null)
+		{
+			this.anchor = new UiMessage(service, settingsXml);
 		}
 
 		// we need an id
@@ -655,6 +665,12 @@ public class UiEntityList extends UiComponent implements EntityList
 					}
 					response.print("\">");
 
+					// anchor
+					if (this.anchor != null)
+					{
+						response.println("<a name=\"" + this.anchor.getMessage(context, entity) + "\"></a>");
+					}
+
 					// if the entity is to be included in this column
 					if (c.getIsEntityIncluded(context, entity))
 					{
@@ -789,6 +805,15 @@ public class UiEntityList extends UiComponent implements EntityList
 		response.println("</div>");
 
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EntityList setAnchor(String selection, PropertyReference... references)
+	{
+		this.anchor = new UiMessage().setMessage(selection, references);
+		return this;
 	}
 
 	/**

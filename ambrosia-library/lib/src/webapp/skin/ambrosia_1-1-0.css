@@ -162,6 +162,15 @@ Entity action bar that contains the navigations that pertain to entities in a li
 }
 
 /*
+Component action bar that contains the navigations that pertain to a component
+*/
+.ambrosiaComponentActionBar
+{
+	line-height: 2em;
+	padding-left: 1em;
+}
+
+/*
 Container for fine print (FinePrint)
 */
 .ambrosiaFinePrint
