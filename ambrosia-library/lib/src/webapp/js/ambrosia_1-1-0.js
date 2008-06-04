@@ -61,14 +61,14 @@ function showConfirm(name)
 		el.style.top = (-1 * (parseInt(el.style.height) + 10)) + "px";
 		if (parent)
 		{
-			confirmX=parent.window.pageXOffset;
-			confirmY=parent.window.pageYOffset;
+			confirmX = (parent.window.pageXOffset) ? parent.window.pageXOffset : (parent.document.documentElement.scrollLeft + parent.document.body.scrollLeft);
+			confirmY = (parent.window.pageYOffset) ? parent.window.pageYOffset : (parent.document.documentElement.scrollTop + parent.document.body.scrollTop);
 			parent.window.scrollTo(0,0);
 		}
 		else
 		{
-			confirmX=window.pageXOffset;
-			confirmY=window.pageYOffset;
+			confirmX = (window.pageXOffset) ? window.pageXOffset : (document.documentElement.scrollLeft + document.body.scrollLeft);
+			confirmY = (window.pageYOffset) ? window.pageYOffset : (document.documentElement.scrollTop + document.body.scrollTop);
 			window.scrollTo(0,0);
 		}
 	}
