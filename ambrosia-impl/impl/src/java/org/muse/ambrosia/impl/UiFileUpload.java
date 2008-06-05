@@ -29,6 +29,7 @@ import org.muse.ambrosia.api.Destination;
 import org.muse.ambrosia.api.FileUpload;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.PropertyReference;
+import org.muse.ambrosia.api.Navigation.IconStyle;
 import org.sakaiproject.util.StringUtil;
 import org.w3c.dom.Element;
 
@@ -137,7 +138,20 @@ public class UiFileUpload extends UiComponent implements FileUpload
 		{
 			this.uploadSubmit = new UiMessage(service, settingsXml);
 		}
+
+		settingsXml = XmlHelper.getChildElementNamed(xml, "destination");
+		if (settingsXml != null)
+		{
+			// let Destination parse this
+			this.uploadDestination = new UiDestination(service, settingsXml);
+		}
 	}
+
+	/** Full URL to the icon. */
+	protected String icon = null;
+
+	/** Icon placement: left or right. */
+	protected IconStyle iconStyle = IconStyle.left;
 
 	/**
 	 * {@inheritDoc}
@@ -201,17 +215,97 @@ public class UiFileUpload extends UiComponent implements FileUpload
 
 			if (this.uploadSubmit != null)
 			{
-				boolean dflt = false;
-
-				response.println("<input type=\"submit\" " + (dflt ? "class=\"active\"" : "") + " name=\"" + id + "_u" + "\" id=\"" + id + "_u"
-						+ "\" value=\"" + this.uploadSubmit.getMessage(context, focus) + "\" />");
-
-				// if we have a destination set, encode it
-				if (this.uploadDestination != null)
+				// title
+				String title = "";
+				if (this.title != null)
 				{
-					response.println("<input type=\"hidden\" name =\"" + "destination_" + id + "\" value=\""
-							+ this.uploadDestination.getDestination(context, focus) + "\" />");
+					title = this.uploadSubmit.getMessage(context, focus);
 				}
+
+				// access key
+				String accessKey = null;
+
+				// description
+				String description = "";
+
+				// make it a two step / confirm?
+				boolean confirm = false;
+
+				// are there requirements?
+				boolean requirements = false;
+
+				boolean validate = false;
+
+				// our action javascript
+				UiNavigation.generateLinkScript(context, id, confirm, validate, true, (this.uploadDestination != null ? this.uploadDestination
+						.getDestination(context, focus) : ""), (String) context.get("sakai.return.url"), requirements, false);
+
+				response.print("<span class=\"ambrosiaNavNormal\">");
+
+				// do a button
+				response
+						.println("<input type=\"button\" "
+								+ " name=\""
+								+ id
+								+ "\" id=\""
+								+ id
+								+ "\" value=\""
+								+ title
+								+ "\""
+								+ " onclick=\"act_"
+								+ id
+								+ "();return false;\" "
+								+ ((accessKey == null) ? "" : "accesskey=\"" + accessKey.charAt(0) + "\" ")
+								+ "title=\""
+								+ description
+								+ "\" "
+								+ (((this.icon != null) && (this.iconStyle == IconStyle.left)) ? "style=\"padding-left:2em; background: #eee url('"
+										+ context.getUrl(this.icon) + "') .2em no-repeat;\"" : "")
+								+ (((this.icon != null) && (this.iconStyle == IconStyle.right)) ? "style=\"padding-left:.4em; padding-right:2em; background: #eee url('"
+										+ context.getUrl(this.icon) + "') right no-repeat;\""
+										: "") + "/>");
+
+				// link code (instead of button) if we ever want it
+				// // no title special case
+				// if (title.length() == 0)
+				// {
+				// response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
+				//
+				// if (this.icon != null)
+				// {
+				// response.print("<img style=\"vertical-align:text-bottom;\" src=\"" + context.getUrl(this.icon) + "\" " + "title=\""
+				// + description + "\" " + "alt=\"" + description + "\" />");
+				// }
+				//
+				// response.print("</a>");
+				// }
+				//
+				// else
+				// {
+				// if ((this.icon != null) && (this.iconStyle == IconStyle.left))
+				// {
+				// response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
+				// response.print("<img style=\"vertical-align:text-bottom; padding-right:0.3em;\" src=\"" + context.getUrl(this.icon)
+				// + "\" " + "title=\"" + description + "\" " + "alt=\"" + description + "\" />");
+				// response.print("</a>");
+				// }
+				//
+				// response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
+				//
+				// response.print(title);
+				//
+				// response.print("</a>");
+				//
+				// if ((this.icon != null) && (this.iconStyle == IconStyle.right))
+				// {
+				// response.print("<a href=\"#\" onclick=\"act_" + id + "();return false;\">");
+				// response.print("<img style=\"vertical-align:text-bottom; padding-left:0.3em;\" src=\"" + context.getUrl(this.icon)
+				// + "\" " + "title=\"" + description + "\" " + "alt=\"" + description + "\" />");
+				// response.print("</a>");
+				// }
+				// }
+				//
+				// response.println();
 			}
 
 			// for onEmptyAlert, add some client-side validation
@@ -224,6 +318,15 @@ public class UiFileUpload extends UiComponent implements FileUpload
 		}
 
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public FileUpload setDestination(Destination destination)
+	{
+		this.uploadDestination = destination;
+		return this;
 	}
 
 	/**
