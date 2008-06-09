@@ -458,7 +458,8 @@ public class UiSection extends UiContainer implements Section
 		// anchor
 		if (this.anchor != null)
 		{
-			response.println("<a name=\"" + this.anchor.getMessage(context, focus) + "\"></a>");
+			String anchorStr = this.anchor.getMessage(context, focus);
+			response.println("<a id=\"" + anchorStr + "\" name=\"" + anchorStr + "\"></a>");
 		}
 
 		// title

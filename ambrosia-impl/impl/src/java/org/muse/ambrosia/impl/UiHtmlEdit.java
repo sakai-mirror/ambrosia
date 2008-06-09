@@ -281,7 +281,7 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 		renderActions(context, focus);
 
 		// container div (for optional)
-		if (!readOnly && this.optional)
+		if (!readOnly /* && this.optional */)
 		{
 			response.println("<div class=\"ambrosiaHtmlEditContainer ambrosiaHtmlEditSize_" + this.size.toString() + "\">");
 		}
@@ -311,9 +311,9 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			response.println("<div id=\"rendered_" + id + "\" class=\"ambrosiaHtmlEditRendered ambrosiaHtmlEditSize_" + this.size.toString() + "\">");
 			if (value != null) response.println(value);
 			response.println("</div>");
-
-			response.println("</div>");
 		}
+
+		if (!readOnly) response.println("</div>");
 
 		// the decode directive
 		if ((this.propertyReference != null) && (!readOnly))

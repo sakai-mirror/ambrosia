@@ -44,6 +44,9 @@ import org.w3c.dom.NodeList;
  */
 public class UiInterface extends UiContainer implements Interface
 {
+	/** The anchor reference. */
+	protected PropertyReference anchor = null;
+
 	/** Optional Destination for the attachment picker UI for this view. */
 	protected Destination attachmentPicker = null;
 
@@ -126,6 +129,14 @@ public class UiInterface extends UiContainer implements Interface
 		if (footer != null)
 		{
 			setFooter(footer);
+		}
+
+		// short for anchor
+		String anchor = StringUtil.trimToNull(xml.getAttribute("anchor"));
+		if (anchor != null)
+		{
+			PropertyReference pRef = service.newPropertyReference().setReference(anchor);
+			this.anchor = pRef;
 		}
 
 		// focus
@@ -412,7 +423,7 @@ public class UiInterface extends UiContainer implements Interface
 		// wrap up in a form - back to the current destination
 		String href = (String) context.get("sakai.destination.url");
 		response.println("<div class=\"ambrosiaInterface\">");
-		
+
 		// enable the following line for our excessive height fix
 		// response.println("<div id=\"ambrosiaInterfaceScroll\" class=\"ambrosiaInterfaceScroll\">");
 
@@ -516,6 +527,14 @@ public class UiInterface extends UiContainer implements Interface
 			response.println("ambrosiaTinyInit(ambrosiaTinyPicker, 'all');");
 		}
 
+		// anchor
+		String anchorId = null;
+		if (this.anchor != null)
+		{
+			anchorId = this.anchor.read(context, focus);
+		}
+		response.println("var ambrosiaAnchorId=" + ((anchorId == null) ? "null" : ("'" + anchorId + "'")) + ";");
+		
 		// validation
 		response.println("var enableValidate=true;");
 		response.println("function validate()");
@@ -568,6 +587,15 @@ public class UiInterface extends UiContainer implements Interface
 		}
 
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Interface setAnchor(PropertyReference anchor)
+	{
+		this.anchor = anchor;
+		return this;
 	}
 
 	/**

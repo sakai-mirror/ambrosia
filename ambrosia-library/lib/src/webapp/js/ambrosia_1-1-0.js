@@ -22,29 +22,61 @@
 // functions for Ambrosia applications (1.1)
 
 // note: make sure this loads AFTER the sakai headscripts
-// take over the setMainFrameHeightNow funciton
-// disabled: window.sakaiSetMainFrameHeightNow = window.setMainFrameHeightNow;
-// disabled: window.setMainFrameHeightNow = ambrosiaSetMainFrameHeightNow;
+// take over the setMainFrameHeightNow function
+window.sakaiSetMainFrameHeightNow = window.setMainFrameHeightNow;
+window.setMainFrameHeightNow = ambrosiaSetMainFrameHeightNow;
 function ambrosiaSetMainFrameHeightNow(id)
 {
 	var frame = parent.document.getElementById(id);
 	if (frame != null)
 	{
 		// only if we are really large
-		var height = document.body.offsetHeight;
-		if (height > 32000)
+		var scrollingDiv = document.getElementById("ambrosiaInterfaceScroll");
+		if (scrollingDiv != null)
 		{
-			// this makes the scrolling div holding the interface have a scroll bar that fits on the screen
-			var newHeight = parent.innerHeight - frame.offsetTop;
-			var scrollingDiv = document.getElementById("ambrosiaInterfaceScroll");
-			if (scrollingDiv != null)
+			var height = document.body.offsetHeight;
+			if (height > 32000)
 			{
+				// this makes the scrolling div holding the interface have a scroll bar that fits on the screen
+				var newHeight = parent.innerHeight - frame.offsetTop;
 				scrollingDiv.style.height = newHeight + "px";
 				scrollingDiv.style.overflow="auto";
 			}
 		}
+
+		// scroll both window and parent to 0 to assure we are at the top	
+		window.scrollTo(0,0);
+		parent.window.scrollTo(0,0);
+	
+		sakaiSetMainFrameHeightNow(id);
+		
+		// anchor
+		if (ambrosiaAnchorId != null)
+		{
+			var anchor = document.getElementById(ambrosiaAnchorId);
+			if (anchor != null)
+			{
+				var posInParent = findPosition(frame);
+				var anchorPos = findPosition(anchor);
+				parent.window.scrollTo(posInParent[0]+anchorPos[0], posInParent[1]+anchorPos[1]-12);
+			}
+		}
 	}
-	sakaiSetMainFrameHeightNow(id);
+	
+	// not in a frame
+	else
+	{
+		// anchor
+		if (ambrosiaAnchorId != null)
+		{
+			var anchor = document.getElementById(ambrosiaAnchorId);
+			if (anchor != null)
+			{
+				var anchorPos = findPosition(anchor);
+				window.scrollTo(anchorPos[0], anchorPos[1]-12);
+			}
+		}
+	}
 }
 
 function trim(s)

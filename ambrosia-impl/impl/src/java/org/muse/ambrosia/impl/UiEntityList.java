@@ -668,7 +668,8 @@ public class UiEntityList extends UiComponent implements EntityList
 					// anchor
 					if (this.anchor != null)
 					{
-						response.println("<a name=\"" + this.anchor.getMessage(context, entity) + "\"></a>");
+						String anchorStr = this.anchor.getMessage(context, focus);
+						response.println("<a id=\"" + anchorStr + "\" name=\"" + anchorStr + "\"></a>");
 					}
 
 					// if the entity is to be included in this column
