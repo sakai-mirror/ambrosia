@@ -217,7 +217,7 @@ public class UiFileUpload extends UiComponent implements FileUpload
 			{
 				// title
 				String title = "";
-				if (this.title != null)
+				if (this.uploadSubmit != null)
 				{
 					title = this.uploadSubmit.getMessage(context, focus);
 				}
