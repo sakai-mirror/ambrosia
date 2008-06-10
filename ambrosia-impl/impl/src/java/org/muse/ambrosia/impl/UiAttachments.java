@@ -31,7 +31,6 @@ import org.muse.ambrosia.api.Context;
 import org.muse.ambrosia.api.Message;
 import org.muse.ambrosia.api.Navigation;
 import org.muse.ambrosia.api.PropertyReference;
-import org.muse.ambrosia.util.EscapeRefUrl;
 import org.sakaiproject.content.cover.ContentTypeImageService;
 import org.sakaiproject.entity.api.EntityPropertyNotDefinedException;
 import org.sakaiproject.entity.api.EntityPropertyTypeException;
@@ -44,7 +43,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * UiAttachments implements Attachments
+ * UiAttachments...
  */
 public class UiAttachments extends UiComponent implements Attachments
 {
@@ -338,11 +337,8 @@ public class UiAttachments extends UiComponent implements Attachments
 								+ "\" border=\"0\" alt=\"" + type + "\"/>");
 					}
 
-					// form the URL safely
-					String link = EscapeRefUrl.escapeRefUrl(ref.getReference(), ref.getUrl());
-
 					// the link
-					response.print("<a href=\"" + link + "\" target=\"_blank\" title=\""
+					response.print("<a href=\"" + ref.getUrl() + "\" target=\"_blank\" title=\""
 							+ Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "\">"
 							+ Validator.escapeHtml(props.getPropertyFormatted("DAV:displayname")) + "</a>");
 

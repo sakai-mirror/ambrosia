@@ -52,13 +52,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.muse.ambrosia</groupId>
-			<artifactId>muse-ambrosia-util</artifactId>
-			<version>${ambrosia.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-tool-api</artifactId>
 			<version>${sakai.version}</version>
