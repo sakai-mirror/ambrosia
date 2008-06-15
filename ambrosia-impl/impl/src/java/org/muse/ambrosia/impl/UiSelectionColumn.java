@@ -516,8 +516,15 @@ public class UiSelectionColumn extends UiEntityListColumn implements SelectionCo
 	{
 		StringBuilder rv = new StringBuilder();
 
-		// first, the select all if needed
-		if (this.selectAll)
+		// read only?
+		boolean readOnly = false;
+		if (this.readOnly != null)
+		{
+			readOnly = this.readOnly.decide(context, focus);
+		}
+
+		// first, the select all if needed and not read-only
+		if (this.selectAll && (!readOnly))
 		{
 			boolean single = this.singleSelect;
 			if (this.singleSelectDecision != null)
