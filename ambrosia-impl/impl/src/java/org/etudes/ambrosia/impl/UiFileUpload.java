@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
  * 
  * Portions completed before September 1, 2008
  * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
@@ -247,7 +247,7 @@ public class UiFileUpload extends UiComponent implements FileUpload
 
 				// do a button
 				response
-						.println("<input type=\"button\" "
+						.print("<input type=\"button\" "
 								+ " name=\""
 								+ id
 								+ "\" id=\""
@@ -267,6 +267,8 @@ public class UiFileUpload extends UiComponent implements FileUpload
 								+ (((this.icon != null) && (this.iconStyle == IconStyle.right)) ? "style=\"padding-left:.4em; padding-right:2em; background: #eee url('"
 										+ context.getUrl(this.icon) + "') right no-repeat;\""
 										: "") + "/>");
+
+				response.println("</span>");
 
 				// link code (instead of button) if we ever want it
 				// // no title special case
