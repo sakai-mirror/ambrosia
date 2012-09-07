@@ -298,11 +298,13 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 		if (!(!readOnly && this.optional))
 		{
 			response.println("<textarea "
-					+ (this.optional ? "style=\"display:none; position:absolute; top:0px; left:0px;\"" : (" class=\"ambrosiaHtmlEdit_"
-							+ this.size.toString() + "\"")) + " id=\"" + id + "\" name=\"" + id + "\" " + (readOnly ? " disabled=\"disabled\"" : "")
+					+ (this.optional ? "style=\"display:none; position:absolute; top:0px; left:0px;\"" : "")
+							 + " id=\"" + id + "\" name=\"" + id + "\" " + (readOnly ? " disabled=\"disabled\"" : "")
 					+ ">");
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
+			response.println("<script type=\"text/javascript\" defer=\"1\">sakai.editor.collectionId =\"" + context.getDocsPath() + "\";");
+			response.println("sakai.editor.launch('" + id + "',true,getWidth('ambcss','.ambrosiaHtmlEditSize_"+ this.size.toString() + "'),getHeight('ambcss','.ambrosiaHtmlEditSize_"+ this.size.toString() + "'));</script>");
 		}
 
 		// for optional, a hidden field to hold the value
@@ -345,6 +347,7 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			// add the field name / id to the focus path
 			context.addFocusId(id);
 		}
+		response.println("<div class=\"ckeditorGap_"+ this.size.toString() +"\"></div>");
 
 		return true;
 	}

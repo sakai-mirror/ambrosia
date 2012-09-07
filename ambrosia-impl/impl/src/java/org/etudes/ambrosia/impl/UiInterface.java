@@ -392,6 +392,9 @@ public class UiInterface extends UiContainer implements Interface
 			}
 			else
 			{
+				response.println("<script type=\"text/javascript\" src=\"/ckeditor/ckeditor/ckeditor.js\"></script>\n");
+				response.println("<script type=\"text/javascript\" src=\"/ckeditor/ckeditor.launch.js\"></script>\n");
+				
 				response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce.js" + "\"></script>\n");
 				String css = findCss(headInclude);
 				if (css == null)
@@ -409,7 +412,7 @@ public class UiInterface extends UiContainer implements Interface
 			response.println("<script type=\"text/javascript\" src=\"/ambrosia_library/calendar/calendar2.js\"></script>");
 
 			// our css
-			response.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"/ambrosia_library/skin/ambrosia.css\" />");
+			response.println("<link rel=\"stylesheet\" type=\"text/css\" id=\"ambcss\" href=\"/ambrosia_library/skin/ambrosia.css\" />");
 
 			// use our title
 			// TODO: we might want to send in the placement title and deal with that...
@@ -556,7 +559,7 @@ public class UiInterface extends UiContainer implements Interface
 			{
 				response.println("var ambrosiaTinyPicker=null;");
 			}
-			response.println("ambrosiaTinyInit(ambrosiaTinyPicker, 'all');");
+			//response.println("ambrosiaTinyInit(ambrosiaTinyPicker, 'all');");
 		}
 
 		// anchor

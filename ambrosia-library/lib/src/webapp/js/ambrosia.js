@@ -1396,3 +1396,27 @@ function ambrosiaHideColumn(id,n)
 	if (n == 0) return;
 	$("#" + id + " tr td:nth-child(" + n + "), #" + id + " tr th:nth-child(" + n + ")").hide();
 }
+
+function getStyle(stylesheetId,className) { 
+   var stylesheet = document.getElementById(stylesheetId); 
+ 
+   if (stylesheet) { 
+      stylesheet = stylesheet.sheet; 
+
+      var classes = stylesheet.rules || stylesheet.cssRules 
+      for(var x=0;x<classes.length;x++) { 
+        if(classes[x].selectorText==className) { 
+               return classes[x].style;
+        } 
+    } 
+  } 
+}
+
+function getWidth(stylesheetId, className) {
+   return getStyle(stylesheetId,className).width;
+}
+
+function getHeight(stylesheetId, className) {
+   return getStyle(stylesheetId,className).height;
+}
+
