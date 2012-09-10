@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2012 Etudes, Inc.
  * 
  * Portions completed before September 1, 2008
  * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
@@ -304,7 +304,7 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
 			response.println("<script type=\"text/javascript\" defer=\"1\">sakai.editor.collectionId =\"" + context.getDocsPath() + "\";");
-			response.println("sakai.editor.launch('" + id + "',true,getWidth('ambcss','.ambrosiaHtmlEditSize_"+ this.size.toString() + "'),getHeight('ambcss','.ambrosiaHtmlEditSize_"+ this.size.toString() + "'));</script>");
+			response.println("sakai.editor.launch('" + id + "',true,getWidth('.ambrosiaHtmlEditSize_"+ this.size.toString() + "'),getHeight('.ambrosiaHtmlEditSize_"+ this.size.toString() + "'));</script>");
 		}
 
 		// for optional, a hidden field to hold the value

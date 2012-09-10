@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010, 2011 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2011, 2012 Etudes, Inc.
  * 
  * Portions completed before September 1, 2008
  * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
@@ -1397,26 +1397,25 @@ function ambrosiaHideColumn(id,n)
 	$("#" + id + " tr td:nth-child(" + n + "), #" + id + " tr th:nth-child(" + n + ")").hide();
 }
 
-function getStyle(stylesheetId,className) { 
-   var stylesheet = document.getElementById(stylesheetId); 
- 
-   if (stylesheet) { 
-      stylesheet = stylesheet.sheet; 
-
-      var classes = stylesheet.rules || stylesheet.cssRules 
-      for(var x=0;x<classes.length;x++) { 
-        if(classes[x].selectorText==className) { 
-               return classes[x].style;
+function getStyle(className) { 
+  var ss = document.styleSheets; 
+  for (var i=0; i<ss.length; i++) { 
+    var ss = document.styleSheets; 
+    var rules = ss[i].cssRules || ss[i].rules; 
+    for (var j=0; j<rules.length; j++) { 
+        if (rules[j].selectorText === className) { 
+            return rules[j].style;
         } 
     } 
-  } 
+} 
 }
 
-function getWidth(stylesheetId, className) {
-   return getStyle(stylesheetId,className).width;
+
+function getWidth(className) {
+	 return getStyle(className).width;
 }
 
-function getHeight(stylesheetId, className) {
-   return getStyle(stylesheetId,className).height;
+function getHeight(className) {
+   return getStyle(className).height;
 }
 
