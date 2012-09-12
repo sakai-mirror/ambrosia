@@ -3,7 +3,7 @@
  * $Id$
  ***********************************************************************************
  *
- * Copyright (c) 2008, 2009, 2010 Etudes, Inc.
+ * Copyright (c) 2008, 2009, 2010, 2012 Etudes, Inc.
  * 
  * Portions completed before September 1, 2008
  * Copyright (c) 2007, 2008 The Regents of the University of Michigan & Foothill College, ETUDES Project
@@ -381,21 +381,20 @@ public class UiInterface extends UiContainer implements Interface
 			// for rich editing - tiny
 			if (this.popup)
 			{
-				response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce_popup.js"
+				/*response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce_popup.js"
 						+ "\"></script>\n");
 
 				// strips tiny's popup css addition
 				response.println("<script type=\"text/javascript\" language=\"JavaScript\">");
 				response.println("var allLinks=document.getElementsByTagName(\"link\");");
 				response.println("allLinks[allLinks.length-1].parentNode.removeChild(allLinks[allLinks.length-1]);");
-				response.println("</script>");
+				response.println("</script>");*/
 			}
 			else
 			{
 				response.println("<script type=\"text/javascript\" src=\"/ckeditor/ckeditor/ckeditor.js\"></script>\n");
 				response.println("<script type=\"text/javascript\" src=\"/ckeditor/ckeditor.launch.js\"></script>\n");
 				
-				response.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"/tiny_mce/tiny_mce/tiny_mce.js" + "\"></script>\n");
 				String css = findCss(headInclude);
 				if (css == null)
 				{
@@ -405,7 +404,6 @@ public class UiInterface extends UiContainer implements Interface
 				{
 					css += ",/ambrosia_library/skin/ambrosia.css";
 				}
-				response.println("<script type=\"text/javascript\" language=\"JavaScript\">ambrosiaTinyCss=\"" + css + "\";</script>");
 			}
 
 			// for date popup
@@ -546,21 +544,6 @@ public class UiInterface extends UiContainer implements Interface
 
 		// scripts
 		response.println("<script language=\"JavaScript\">");
-
-		// for tiny_mce
-		if (!popup)
-		{
-			if (this.attachmentPicker != null)
-			{
-				String dest = context.get("sakai.return.url") + this.attachmentPicker.getDestination(context, focus);
-				response.println("var ambrosiaTinyPicker='" + dest + "';");
-			}
-			else
-			{
-				response.println("var ambrosiaTinyPicker=null;");
-			}
-			//response.println("ambrosiaTinyInit(ambrosiaTinyPicker, 'all');");
-		}
 
 		// anchor
 		String anchorId = null;

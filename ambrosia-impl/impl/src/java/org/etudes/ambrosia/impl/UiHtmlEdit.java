@@ -247,45 +247,6 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
-		// our status object for enabling the editor
-		if (!readOnly && this.optional)
-		{
-			String docsPath = context.getDocsPath();
-			context.addScript("var htmlComponent_" + id + "=new Object();\n");
-			context.addScript("htmlComponent_" + id + ".enabled=false;\n");
-			if (this.optional)
-			{
-				context.addScript("htmlComponent_" + id + ".renderedId=\"rendered_" + id + "\";\n");
-				context.addScript("htmlComponent_" + id + ".toggleId=\"toggle_" + id + "\";\n");
-			}
-			else
-			{
-				context.addScript("htmlComponent_" + id + ".renderedId=null;\n");
-				context.addScript("htmlComponent_" + id + ".toggleId=null;\n");
-			}
-			context.addScript("htmlComponent_" + id + ".textAreaId=\"" + id + "\";\n");
-			context.addScript("htmlComponent_" + id + ".mode=\"" + this.size.toString() + "\";\n");
-		}
-
-		// the title (if defined), and the edit icon
-		if ((this.titleMessage != null) || (!readOnly && this.optional))
-		{
-			response.println("<div class=\"ambrosiaComponentTitle\">");
-			if (this.titleMessage != null)
-			{
-				response.println(this.titleMessage.getMessage(context, focus));
-			}
-			if (!readOnly && this.optional)
-			{
-				response.print("<a style=\"text-decoration:none;\" id=\"toggle_" + id
-						+ "\" href=\"#\" onclick=\"ambrosiaEnableHtmlEdit(htmlComponent_" + id + ");return false;\" title=\""
-						+ this.editAlt.getMessage(context, focus) + "\">");
-				response.print("<img style=\"vertical-align:text-bottom; border-style: none;\" src=\"" + context.getUrl(this.editIcon) + "\" />");
-				response.println("</a>");
-			}
-			response.println("</div>");
-		}
-
 		renderActions(context, focus);
 
 		// container div (for optional)
