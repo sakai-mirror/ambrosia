@@ -404,6 +404,18 @@ public class UiInterface extends UiContainer implements Interface
 				{
 					css += ",/ambrosia_library/skin/ambrosia.css";
 				}
+				if (this.attachmentPicker != null)
+				{
+					response.println("<script language=\"JavaScript\">");
+					response.println("var enableBrowse=true;");
+					response.println("</script>");
+				}
+				else
+				{
+					response.println("<script language=\"JavaScript\">");
+					response.println("var enableBrowse=false;");
+					response.println("</script>");
+				}
 			}
 
 			// for date popup

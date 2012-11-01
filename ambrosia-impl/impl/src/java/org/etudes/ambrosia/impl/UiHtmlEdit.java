@@ -25,7 +25,6 @@
 package org.etudes.ambrosia.impl;
 
 import java.io.PrintWriter;
-
 import org.etudes.ambrosia.api.Context;
 import org.etudes.ambrosia.api.Decision;
 import org.etudes.ambrosia.api.HtmlEdit;
@@ -247,6 +246,25 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			// response.println("<span class=\"reqStarInline\">*</span>");
 		}
 
+		// the title (if defined), and the edit icon
+		if ((this.titleMessage != null) || (!readOnly && this.optional))
+		{
+			response.println("<div class=\"ambrosiaComponentTitle\">");
+			if (this.titleMessage != null)
+			{
+				response.println(this.titleMessage.getMessage(context, focus));
+			}
+			if (!readOnly && this.optional)
+			{
+				response.print("<a style=\"text-decoration:none;\" id=\"toggle_" + id
+						+ "\" href=\"#\" onclick=\"ambrosiaEnableHtmlEdit(htmlComponent_" + id + ");return false;\" title=\""
+						+ this.editAlt.getMessage(context, focus) + "\">");
+				response.print("<img style=\"vertical-align:text-bottom; border-style: none;\" src=\"" + context.getUrl(this.editIcon) + "\" />");
+				response.println("</a>");
+			}
+			response.println("</div>");
+		}
+
 		renderActions(context, focus);
 
 		// container div (for optional)
@@ -265,7 +283,16 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 			response.print(Validator.escapeHtmlTextarea(value));
 			response.println("</textarea>");
 			response.println("<script type=\"text/javascript\" defer=\"1\">sakai.editor.collectionId =\"" + context.getDocsPath() + "\";");
-			response.println("sakai.editor.launch('" + id + "',true,getWidth('.ambrosiaHtmlEditSize_"+ this.size.toString() + "'),getHeight('.ambrosiaHtmlEditSize_"+ this.size.toString() + "'));</script>");
+			response.println("if (enableBrowse == false)");
+			response.println("{");
+			response.println("function config(){}");
+			response.println("config.prototype.disableBrowseServer=true;");
+			response.println("sakai.editor.launch('" + id + "',new config(),getWidth('.ambrosiaHtmlEditSize_"+ this.size.toString() + "'),getHeight('.ambrosiaHtmlEditSize_"+ this.size.toString() + "'));");
+			response.println("}");
+			response.println("else {");
+			response.println("sakai.editor.launch('" + id + "',true,getWidth('.ambrosiaHtmlEditSize_"+ this.size.toString() + "'),getHeight('.ambrosiaHtmlEditSize_"+ this.size.toString() + "'));");
+		    response.println("}");
+		    response.println("</script>");
 		}
 
 		// for optional, a hidden field to hold the value
@@ -312,6 +339,8 @@ public class UiHtmlEdit extends UiComponent implements HtmlEdit
 
 		return true;
 	}
+	
+
 
 	/**
 	 * {@inheritDoc}
